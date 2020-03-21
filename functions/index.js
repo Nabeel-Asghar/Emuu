@@ -4,16 +4,17 @@ const app = require("express")();
 
 const { getAllPosts, createPost } = require("./handlers/posts");
 
-const { signup, login } = require("./handlers/users");
+const { signup, login, uploadProfilePicture } = require("./handlers/users");
 
 const FBAuth = require("./util/FBAuth");
 
 // posts routes
-app.get("/posts", FBAuth, getAllPosts);
+app.get("/posts", getAllPosts);
 app.post("/posts", FBAuth, createPost);
 
 // signup and login
 app.post("/signup", signup);
 app.post("/login", login);
+app.post("/user/image", FBAuth, uploadProfilePicture);
 
 exports.api = functions.https.onRequest(app);
