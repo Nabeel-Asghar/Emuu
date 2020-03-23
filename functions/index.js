@@ -15,6 +15,8 @@ app.post("/posts", FBAuth, createPost);
 // signup and login
 app.post("/signup", signup);
 app.post("/login", login);
+
+// upload profile image
 app.post("/user/image", FBAuth, uploadProfilePicture);
 
 exports.api = functions.https.onRequest(app);

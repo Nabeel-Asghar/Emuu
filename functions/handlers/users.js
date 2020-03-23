@@ -108,9 +108,10 @@ exports.uploadProfilePicture = (req, res) => {
   let imageToBeUploaded = {};
 
   busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
-    console.log(fieldname);
-    console.log(filename);
-    console.log(mimetype);
+    if (!mimetype.includes("image")) {
+      return res.status(400).json({ error: "Please upload an image." });
+    }
+
     const imageExtension = filename.split(".")[filename.split(".").length - 1];
 
     imageFileName = `${Math.round(
