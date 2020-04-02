@@ -5,14 +5,21 @@ const storageBucketVar = config.storageBucket;
 const firebase = require("firebase");
 firebase.initializeApp(config);
 
-const { validateSignUpData, validateLoginData } = require("../util/validators");
+const {
+  validateSignUpData,
+  validateLoginData,
+  reduceUserDetails
+} = require("../util/validators");
 
+// signup
 exports.signup = (req, res) => {
   const newUser = {
     email: req.body.email,
     password: req.body.password,
     confirmPassword: req.body.confirmPassword,
-    handle: req.body.handle
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    photographer: req.body.photographer
   };
 
   const { valid, errors } = validateSignUpData(newUser);
@@ -23,45 +30,37 @@ exports.signup = (req, res) => {
 
   let token, userId;
 
-  db.doc(`/users/${newUser.handle}`)
-    .get()
-    .then(doc => {
-      if (doc.exists) {
-        return res.status(400).json({ handle: "this handle is already taken" });
-      } else {
-        return firebase
-          .auth()
-          .createUserWithEmailAndPassword(newUser.email, newUser.password);
-      }
-    })
+  firebase
+    .auth()
+    .createUserWithEmailAndPassword(newUser.email, newUser.password)
     .then(data => {
       userId = data.user.uid;
+      console.log(userId);
       return data.user.getIdToken();
     })
     .then(tokenID => {
       token = tokenID;
       const userCredentials = {
-        handle: newUser.handle,
         email: newUser.email,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        photographer: newUser.photographer,
         createdAt: new Date().toISOString(),
-        imageUrl: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultProfilePicture}?alt=media`,
-        userId
+        profileImage: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultProfilePicture}?alt=media`
       };
-      return db.doc(`/users/${newUser.handle}`).set(userCredentials);
+      console.log(userId);
+      return db.doc(`/users/${userId}`).set(userCredentials);
     })
     .then(() => {
       return res.status(201).json({ token });
     })
     .catch(err => {
       console.error(err);
-      if ((err.code = "auth/email-already-in-use")) {
-        return res.status(400).json({ email: "Email is already in use" });
-      } else {
-        return res.status(500).json({ error: err.code });
-      }
+      return res.status(500).json({ error: err.code });
     });
 };
 
+// login
 exports.login = (req, res) => {
   const user = {
     email: req.body.email,
@@ -96,6 +95,23 @@ exports.login = (req, res) => {
     });
 };
 
+// add user details
+exports.addUserDetails = (req, res) => {
+  // details such as
+  let userDetails = req.body;
+
+  db.doc(`/users/${req.user.uid}`)
+    .update(userDetails)
+    .then(() => {
+      return res.json({ message: "Details added successfully." });
+    })
+    .catch(err => {
+      console.erroor(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+// upload profile image for user
 exports.uploadProfilePicture = (req, res) => {
   const BusBoy = require("busboy");
   const path = require("path");
@@ -138,8 +154,8 @@ exports.uploadProfilePicture = (req, res) => {
       })
       .then(() => {
         console.log(config.storageBucket);
-        const imageUrl = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
-        return db.doc(`/users/${req.user.handle}`).update({ imageUrl });
+        const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+        return db.doc(`/users/${req.user.email}`).update({ profileImage });
       })
       .then(() => {
         return res.json({

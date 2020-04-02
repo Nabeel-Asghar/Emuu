@@ -19,16 +19,14 @@ module.exports = (req, res, next) => {
       req.user = decodedToken;
       return db
         .collection("users")
-        .where("userId", "==", req.user.uid)
-        .limit(1)
+        .doc(req.user.uid)
         .get();
     })
     .then(data => {
-      req.user.handle = data.docs[0].data().handle;
       return next();
     })
     .catch(err => {
       console.error("Error verifying token", err);
-      return res.status(403).json({ err });
+      return res.status(403).json("Invalid login token");
     });
 };
