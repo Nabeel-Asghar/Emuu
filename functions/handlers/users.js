@@ -50,7 +50,7 @@ exports.signup = (req, res) => {
       };
       console.log(userId);
 
-      // we also want to put user details in profile page when the person is a photographer
+      //  user details in photographer and users table when person is a photographer
       if (userCredentials.photographer === true) {
         db.doc(`/photographer/${userId}`)
           .set(userCredentials)
@@ -183,3 +183,5 @@ exports.uploadProfilePicture = (req, res) => {
   });
   busboy.end(req.rawBody);
 };
+
+exports.getPhotographerProfile = (req, res) => {};

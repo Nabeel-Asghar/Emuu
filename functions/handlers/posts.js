@@ -1,7 +1,7 @@
 const { db } = require("../util/admin");
 
 exports.getAllPosts = (req, res) => {
-  db.collection("posts")
+  db.collection("photographer")
     .orderBy("createdAt", "desc")
     .get()
     .then(data => {
@@ -9,9 +9,11 @@ exports.getAllPosts = (req, res) => {
 
       data.forEach(doc => {
         posts.push({
-          postID: doc.id,
-          body: doc.data().body,
-          userHandle: doc.data().userHandle,
+          photographerID: doc.id,
+          email: doc.data().email,
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          profileImage: doc.data().profileImage,
           createdAt: doc.data().createdAt
         });
       });
