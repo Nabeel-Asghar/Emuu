@@ -6,6 +6,26 @@ let db = {
       lastName: "Teef",
       profileImageUrl:
         "https://firebasestorage.googleapis.com/v0/b/photospot-5f554.appspot.com/o/100274903.jpg?alt=media",
+      photographer: true
+    },
+
+    {
+      email: "user2@gmail.com",
+      firstName: "Ahmed",
+      lastName: "Feeder",
+      profileImageUrl:
+        "https://firebasestorage.googleapis.com/v0/b/photospot-5f554.appspot.com/o/100274903.jpg?alt=media",
+      photographer: false
+    }
+  ],
+
+  photographer: [
+    {
+      email: "user@gmail.com",
+      firstName: "Barbar",
+      lastName: "Teef",
+      profileImageUrl:
+        "https://firebasestorage.googleapis.com/v0/b/photospot-5f554.appspot.com/o/100274903.jpg?alt=media",
       photographer: true,
       photographyPictures: "",
       bio:

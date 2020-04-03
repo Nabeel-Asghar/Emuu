@@ -49,7 +49,21 @@ exports.signup = (req, res) => {
         profileImage: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultProfilePicture}?alt=media`
       };
       console.log(userId);
-      return db.doc(`/users/${userId}`).set(userCredentials);
+
+      // we also want to put user details in profile page when the person is a photographer
+      if (userCredentials.photographer === true) {
+        db.doc(`/photographer/${userId}`)
+          .set(userCredentials)
+          .then(() => {
+            return db.doc(`/users/${userId}`).set(userCredentials);
+          })
+          .catch(err => {
+            console.erroor(err);
+            return res.status(500).json({ error: err.code });
+          });
+      } else {
+        return db.doc(`/users/${userId}`).set(userCredentials);
+      }
     })
     .then(() => {
       return res.status(201).json({ token });
