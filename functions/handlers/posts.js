@@ -1,6 +1,6 @@
 const { db } = require("../util/admin");
 
-exports.getAllPosts = (req, res) => {
+exports.getAllPhotographers = (req, res) => {
   db.collection("photographer")
     .orderBy("createdAt", "desc")
     .get()

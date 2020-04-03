@@ -184,4 +184,29 @@ exports.uploadProfilePicture = (req, res) => {
   busboy.end(req.rawBody);
 };
 
-exports.getPhotographerProfile = (req, res) => {};
+exports.getYourPhotographerProfile = (req, res) => {
+  let userid = req.user.uid;
+
+  db.collection("photographer")
+    .doc(userid)
+    .get()
+    .then(doc => {
+      if (!doc.exists) {
+        return res.json({ message: "You are not a photographer." });
+      }
+
+      let page = [];
+
+      page.push({
+        photographerID: userid,
+        email: doc.data().email,
+        firstName: doc.data().firstName,
+        lastName: doc.data().lastName,
+        profileImage: doc.data().profileImage,
+        createdAt: doc.data().createdAt
+      });
+
+      return res.json(page);
+    })
+    .catch(err => console.error(err));
+};
