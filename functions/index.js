@@ -9,7 +9,8 @@ const {
   login,
   uploadProfilePicture,
   addUserDetails,
-  getYourPhotographerProfile
+  getYourPhotographerPage,
+  getYourUserProfile
 } = require("./handlers/users");
 
 const FBAuth = require("./util/FBAuth");
@@ -17,7 +18,7 @@ const FBAuth = require("./util/FBAuth");
 // user routes
 app.post("/signup", signup);
 app.post("/login", login);
-app.post("/photographerprofile", FBAuth, addUserDetails);
+//app.post("/photographerprofile", FBAuth, addUserDetails);
 
 // upload profile image
 app.post("/user/image", FBAuth, uploadProfilePicture);
@@ -27,7 +28,8 @@ app.get("/posts", getAllPhotographers);
 app.post("/posts", FBAuth, createPost);
 // app.get('/photographers/:photographerId', getPhotographer)
 
-// get profile page as a photographer
-app.get("/yourphotographerprofile", FBAuth, getYourPhotographerProfile);
+// get photographer page and
+app.get("/yourphotographerpage", FBAuth, getYourPhotographerPage);
+app.get("/youruserprofile", FBAuth, getYourUserProfile);
 
 exports.api = functions.https.onRequest(app);
