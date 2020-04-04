@@ -2,34 +2,43 @@ const functions = require("firebase-functions");
 
 const app = require("express")();
 
-const { getAllPhotographers, createPost } = require("./handlers/posts");
+const {
+  getAllPhotographers,
+  createPost,
+  getSpecificPhotographer,
+} = require("./handlers/posts");
 
 const {
   signup,
   login,
   uploadProfilePicture,
-  addUserDetails,
+  setYourPhotographyPage,
   getYourPhotographerPage,
-  getYourUserProfile
+  getYourUserProfile,
 } = require("./handlers/users");
 
 const FBAuth = require("./util/FBAuth");
 
-// user routes
+//--------User Routes-----------------
 app.post("/signup", signup);
 app.post("/login", login);
-//app.post("/photographerprofile", FBAuth, addUserDetails);
 
 // upload profile image
 app.post("/user/image", FBAuth, uploadProfilePicture);
 
-// posts routes
-app.get("/posts", getAllPhotographers);
-app.post("/posts", FBAuth, createPost);
-// app.get('/photographers/:photographerId', getPhotographer)
+// create photography page
+app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
+
+// TODO: app.post("/photographyimages", FBAuth, uploadYourPhotographyImages)
 
 // get photographer page and
 app.get("/yourphotographerpage", FBAuth, getYourPhotographerPage);
-app.get("/youruserprofile", FBAuth, getYourUserProfile);
+// TODO: app.get("/youruserprofile", FBAuth, getYourUserProfile);
+
+//----------Consumer Routes---------------
+
+// getting all photographers and picking one
+app.get("/photographers", getAllPhotographers);
+app.get("/photographers/:photographerId", getSpecificPhotographer);
 
 exports.api = functions.https.onRequest(app);

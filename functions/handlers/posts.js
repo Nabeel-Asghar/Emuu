@@ -43,3 +43,33 @@ exports.createPost = (req, res) => {
       console.log(err);
     });
 };
+
+exports.getSpecificPhotographer = (req, res) => {
+  let photographerIdOfPageClicked = req.params.photographerId;
+
+  db.collection("photographer")
+    .doc(photographerIdOfPageClicked)
+    .get()
+    .then(doc => {
+      console.log(photographerIdOfPageClicked);
+
+      if (!doc.exists) {
+        return res.json({ message: "Page not found." });
+      }
+
+      let photographer = [];
+
+      photographer.push({
+        photographerID: photographerIdOfPageClicked,
+        email: doc.data().email,
+        firstName: doc.data().firstName,
+        lastName: doc.data().lastName,
+        profileImage: doc.data().profileImage,
+        createdAt: doc.data().createdAt
+      });
+      return res.json(photographer);
+    })
+    .catch(err => {
+      res.status(500).json({ error: `Something went wrong.` });
+    });
+};
