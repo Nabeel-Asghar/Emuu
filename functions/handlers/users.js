@@ -184,7 +184,7 @@ exports.uploadProfilePicture = (req, res) => {
   busboy.end(req.rawBody);
 };
 
-exports.getYourPhotographerProfile = (req, res) => {
+exports.getYourPhotographerPage = (req, res) => {
   let userid = req.user.uid;
 
   db.collection("photographer")
@@ -210,3 +210,5 @@ exports.getYourPhotographerProfile = (req, res) => {
     })
     .catch(err => console.error(err));
 };
+
+exports.getYourUserProfile = (req, res) => {};
