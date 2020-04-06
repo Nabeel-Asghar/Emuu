@@ -19,6 +19,8 @@ const {
   getYourUserProfile,
 } = require("./handlers/users");
 
+const { completedOrders } = require("./handlers/administrator");
+
 const FBAuth = require("./util/FBAuth");
 
 //--------User Routes-----------------
@@ -41,6 +43,9 @@ app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
 //----------Consumer Routes---------------
 app.get("/photographers", getAllPhotographers);
 app.get("/photographers/:photographerId", getSpecificPhotographer);
-app.post("/photographers/:photographerId/book", bookPhotographer);
+app.post("/photographers/:photographerId/book", FBAuth, bookPhotographer);
+
+//Administrator
+app.get("/admin/completedOrders", completedOrders);
 
 exports.api = functions.https.onRequest(app);

@@ -74,4 +74,35 @@ exports.getSpecificPhotographer = (req, res) => {
     });
 };
 
-exports.bookPhotographer = (req, res) => {};
+exports.bookPhotographer = (req, res) => {
+  let userid = req.user.uid;
+  let photographerBooked = req.params.photographerId;
+
+  db.collection("orders")
+    .doc(userid)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        return res.json({
+          message: "You may only have one pending order at a time.",
+        });
+      } else {
+        db.collection("orders")
+          .doc(userid)
+          .set({
+            photographer: photographerBooked,
+            consumer: userid,
+            location: req.body.location,
+            paymentStatus: "pending",
+            paymentToPhotographer: "pending",
+            createdAt: new Date().toISOString(),
+          })
+          .then(() => {
+            return res.json({
+              message:
+                "Order complete, you will recieve an email with a confirmation.",
+            });
+          });
+      }
+    });
+};
