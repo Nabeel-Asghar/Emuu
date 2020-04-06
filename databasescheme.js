@@ -56,7 +56,7 @@ let db = {
     },
   ],
 
-  ordersTable: [
+  orders [
     {
       photographer: "userid from users",
       consumer: "userid from users",
@@ -66,4 +66,17 @@ let db = {
       createdAt: "2020-03-21T20:15:39.344Z",
     },
   ],
+
+  completedOrders [
+    {
+      photographer: "userid from users",
+      consumer: "userid from users",
+      location: "Detroit, MI",
+      paymentStatus: "pending/completed",
+      paymentToPhotographer: "pending/completed", // this is completed after paymentStatus is completed and the current date is the day of the photoshoot before midnight
+      dateCompleted: "2020-03-21T20:15:39.344Z",
+      dateOrdered: "2020-03-21T20:15:39.344Z"
+    },
+  ],
+
 };
