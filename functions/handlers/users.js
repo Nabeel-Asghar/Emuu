@@ -109,7 +109,7 @@ exports.login = (req, res) => {
     });
 };
 
-// add user details
+// set details for your photography page
 exports.setYourPhotographyPage = (req, res) => {
   // details such as
   let pageDetails = req.body;
@@ -187,15 +187,16 @@ exports.uploadProfilePicture = (req, res) => {
 // getting the current user photography page
 exports.getYourPhotographerPage = (req, res) => {
   let userid = req.user.uid;
+  let photographer = res.locals.photographer;
+
+  if (!photographer) {
+    return res.json({ message: "You are not a photographer." });
+  }
 
   db.collection("photographer")
     .doc(userid)
     .get()
     .then((doc) => {
-      if (!doc.exists) {
-        return res.json({ message: "You are not a photographer." });
-      }
-
       let page = [];
 
       page.push({
@@ -214,3 +215,70 @@ exports.getYourPhotographerPage = (req, res) => {
 
 // get current user profile page
 exports.getYourUserProfile = (req, res) => {};
+
+// photographers can upload pictures for their page
+exports.uploadYourPhotographyImages = (req, res) => {
+  let photographer = res.locals.photographer;
+
+  if (!photographer) {
+    return res.json({ message: "You are not a photographer." });
+  }
+
+  const BusBoy = require("busboy");
+  const path = require("path");
+  const os = require("os");
+  const fs = require("fs");
+
+  const busboy = new BusBoy({ headers: req.headers });
+
+  let imageFileName;
+  let imageToAdd;
+  let imagesToUpload = [];
+
+  busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
+    if (!mimetype.includes("image")) {
+      return res.status(400).json({ error: "Please upload an image." });
+    }
+
+    const imageExtension = filename.split(".")[filename.split(".").length - 1];
+
+    imageFileName = `${Math.round(
+      Math.random() * 1000000000
+    )}.${imageExtension}`;
+
+    const filepath = path.join(os.tmpdir(), imageFileName);
+    imageToAdd = { imageFileName, filepath, mimetype };
+
+    file.pipe(fs.createWriteStream(filepath));
+    imagesToUpload.push(imageToAdd);
+  });
+
+  busboy.on("finish", () => {
+    let promises = [];
+    let imageUrls = [];
+
+    imagesToUpload.forEach((imageToBeUploaded) => {
+      console.log(imageToBeUploaded.imageFileName);
+      url = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageToBeUploaded.imageFileName}?alt=media`;
+      imageUrls.push(url);
+      promises.push(
+        admin
+          .storage()
+          .bucket(config.storageBucket)
+          .upload(imageToBeUploaded.filepath, {
+            resumable: false,
+            metadata: {
+              metadata: {
+                contentType: imageToBeUploaded.mimetype,
+              },
+            },
+          })
+      );
+    });
+
+    db.doc(`/photographer/${req.user.uid}`).update({ images: imageUrls });
+    res.writeHead(200, { Connection: "close" });
+    res.end("All images uploaded successfully.");
+  });
+  busboy.end(req.rawBody);
+};

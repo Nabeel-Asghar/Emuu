@@ -6,12 +6,14 @@ const {
   getAllPhotographers,
   createPost,
   getSpecificPhotographer,
+  bookPhotographer,
 } = require("./handlers/posts");
 
 const {
   signup,
   login,
   uploadProfilePicture,
+  uploadYourPhotographyImages,
   setYourPhotographyPage,
   getYourPhotographerPage,
   getYourUserProfile,
@@ -23,22 +25,22 @@ const FBAuth = require("./util/FBAuth");
 app.post("/signup", signup);
 app.post("/login", login);
 
+// get photographer page or user page
+app.get("/yourphotographerpage", FBAuth, getYourPhotographerPage);
+app.get("/youruserprofile", FBAuth, getYourUserProfile);
+
 // upload profile image
-app.post("/user/image", FBAuth, uploadProfilePicture);
+app.post("/user/profileimage", FBAuth, uploadProfilePicture);
 
 // create photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
 
-// TODO: app.post("/photographyimages", FBAuth, uploadYourPhotographyImages)
-
-// get photographer page and
-app.get("/yourphotographerpage", FBAuth, getYourPhotographerPage);
-// TODO: app.get("/youruserprofile", FBAuth, getYourUserProfile);
+// upload images for your page
+app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
 
 //----------Consumer Routes---------------
-
-// getting all photographers and picking one
 app.get("/photographers", getAllPhotographers);
 app.get("/photographers/:photographerId", getSpecificPhotographer);
+app.post("/photographers/:photographerId/book", bookPhotographer);
 
 exports.api = functions.https.onRequest(app);
