@@ -15,17 +15,15 @@ module.exports = (req, res, next) => {
   admin
     .auth()
     .verifyIdToken(idToken)
-    .then(decodedToken => {
+    .then((decodedToken) => {
       req.user = decodedToken;
-      return db
-        .collection("users")
-        .doc(req.user.uid)
-        .get();
+      return db.collection("users").doc(req.user.uid).get();
     })
-    .then(data => {
+    .then((doc) => {
+      res.locals.photographer = doc.data().photographer;
       return next();
     })
-    .catch(err => {
+    .catch((err) => {
       console.error("Error verifying token", err);
       return res.status(403).json("Invalid login token");
     });

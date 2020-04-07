@@ -6,7 +6,8 @@ let db = {
       lastName: "Teef",
       profileImageUrl:
         "https://firebasestorage.googleapis.com/v0/b/photospot-5f554.appspot.com/o/100274903.jpg?alt=media",
-      photographer: true
+      photographer: true,
+      createdAt: "2020-03-21T20:15:39.344Z",
     },
 
     {
@@ -15,8 +16,9 @@ let db = {
       lastName: "Feeder",
       profileImageUrl:
         "https://firebasestorage.googleapis.com/v0/b/photospot-5f554.appspot.com/o/100274903.jpg?alt=media",
-      photographer: false
-    }
+      photographer: false,
+      createdAt: "2020-03-21T20:15:39.344Z",
+    },
   ],
 
   photographer: [
@@ -40,8 +42,8 @@ let db = {
       createdAt: "2020-03-21T20:15:39.344Z",
       ratePerHour: "$40",
       reviewCount: 5,
-      rating: 4.3
-    }
+      rating: 4.3,
+    },
   ],
 
   reviewsTable: [
@@ -49,16 +51,32 @@ let db = {
       reviewer: "userid from users",
       reviewee: "userid from users",
       rating: 5,
-      body: "Very clean teef cut"
-    }
+      body: "Very clean teef cut",
+      createdAt: "2020-03-21T20:15:39.344Z",
+    },
   ],
 
-  ordersTable: [
+  orders [
     {
       photographer: "userid from users",
       consumer: "userid from users",
       location: "Detroit, MI",
-      status: "pending/completed"
-    }
-  ]
+      paymentStatus: "pending/completed",
+      paymentToPhotographer: "pending/completed", // this is completed after paymentStatus is completed and the current date is the day of the photoshoot before midnight
+      createdAt: "2020-03-21T20:15:39.344Z",
+    },
+  ],
+
+  completedOrders [
+    {
+      photographer: "userid from users",
+      consumer: "userid from users",
+      location: "Detroit, MI",
+      paymentStatus: "pending/completed",
+      paymentToPhotographer: "pending/completed", // this is completed after paymentStatus is completed and the current date is the day of the photoshoot before midnight
+      dateCompleted: "2020-03-21T20:15:39.344Z",
+      dateOrdered: "2020-03-21T20:15:39.344Z"
+    },
+  ],
+
 };

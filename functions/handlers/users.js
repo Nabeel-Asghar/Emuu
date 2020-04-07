@@ -8,7 +8,7 @@ firebase.initializeApp(config);
 const {
   validateSignUpData,
   validateLoginData,
-  reduceUserDetails
+  reduceUserDetails,
 } = require("../util/validators");
 
 // signup
@@ -19,7 +19,7 @@ exports.signup = (req, res) => {
     confirmPassword: req.body.confirmPassword,
     firstName: req.body.firstName,
     lastName: req.body.lastName,
-    photographer: req.body.photographer
+    photographer: req.body.photographer,
   };
 
   const { valid, errors } = validateSignUpData(newUser);
@@ -33,12 +33,12 @@ exports.signup = (req, res) => {
   firebase
     .auth()
     .createUserWithEmailAndPassword(newUser.email, newUser.password)
-    .then(data => {
+    .then((data) => {
       userId = data.user.uid;
       console.log(userId);
       return data.user.getIdToken();
     })
-    .then(tokenID => {
+    .then((tokenID) => {
       token = tokenID;
       const userCredentials = {
         email: newUser.email,
@@ -46,7 +46,7 @@ exports.signup = (req, res) => {
         lastName: newUser.lastName,
         photographer: newUser.photographer,
         createdAt: new Date().toISOString(),
-        profileImage: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultProfilePicture}?alt=media`
+        profileImage: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultProfilePicture}?alt=media`,
       };
       console.log(userId);
 
@@ -57,7 +57,7 @@ exports.signup = (req, res) => {
           .then(() => {
             return db.doc(`/users/${userId}`).set(userCredentials);
           })
-          .catch(err => {
+          .catch((err) => {
             console.erroor(err);
             return res.status(500).json({ error: err.code });
           });
@@ -68,7 +68,7 @@ exports.signup = (req, res) => {
     .then(() => {
       return res.status(201).json({ token });
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
       return res.status(500).json({ error: err.code });
     });
@@ -78,7 +78,7 @@ exports.signup = (req, res) => {
 exports.login = (req, res) => {
   const user = {
     email: req.body.email,
-    password: req.body.password
+    password: req.body.password,
   };
 
   const { valid, errors } = validateLoginData(user);
@@ -88,20 +88,20 @@ exports.login = (req, res) => {
   firebase
     .auth()
     .signInWithEmailAndPassword(user.email, user.password)
-    .then(data => {
+    .then((data) => {
       return data.user.getIdToken();
     })
-    .then(token => {
+    .then((token) => {
       return res.json(token);
     })
-    .catch(err => {
+    .catch((err) => {
       console.error(err);
       if (
         (err.code = "auth/email-already-in-use") ||
         (err.code = "auth/wrong-password")
       ) {
         return res.status(400).json({
-          email: "Your login or password was incorrect. Please try again"
+          email: "Your login or password was incorrect. Please try again",
         });
       } else {
         return res.status(500).json({ error: err.code });
@@ -109,17 +109,17 @@ exports.login = (req, res) => {
     });
 };
 
-// add user details
-exports.addUserDetails = (req, res) => {
+// set details for your photography page
+exports.setYourPhotographyPage = (req, res) => {
   // details such as
-  let userDetails = req.body;
+  let pageDetails = req.body;
 
-  db.doc(`/users/${req.user.uid}`)
+  db.doc(`/photographers/${req.user.uid}`)
     .update(userDetails)
     .then(() => {
       return res.json({ message: "Details added successfully." });
     })
-    .catch(err => {
+    .catch((err) => {
       console.erroor(err);
       return res.status(500).json({ error: err.code });
     });
@@ -162,21 +162,21 @@ exports.uploadProfilePicture = (req, res) => {
         resumable: false,
         metadata: {
           metadata: {
-            contentType: imageToBeUploaded.mimetype
-          }
-        }
+            contentType: imageToBeUploaded.mimetype,
+          },
+        },
       })
       .then(() => {
         console.log(config.storageBucket);
         const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
-        return db.doc(`/users/${req.user.email}`).update({ profileImage });
+        return db.doc(`/users/${req.user.uid}`).update({ profileImage });
       })
       .then(() => {
         return res.json({
-          message: "Image uploaded successfully!"
+          message: "Image uploaded successfully!",
         });
       })
-      .catch(err => {
+      .catch((err) => {
         console.log(err);
         return res.status(500).json({ error: err.code });
       });
@@ -184,17 +184,19 @@ exports.uploadProfilePicture = (req, res) => {
   busboy.end(req.rawBody);
 };
 
+// getting the current user photography page
 exports.getYourPhotographerPage = (req, res) => {
   let userid = req.user.uid;
+  let photographer = res.locals.photographer;
+
+  if (!photographer) {
+    return res.json({ message: "You are not a photographer." });
+  }
 
   db.collection("photographer")
     .doc(userid)
     .get()
-    .then(doc => {
-      if (!doc.exists) {
-        return res.json({ message: "You are not a photographer." });
-      }
-
+    .then((doc) => {
       let page = [];
 
       page.push({
@@ -203,12 +205,12 @@ exports.getYourPhotographerPage = (req, res) => {
         firstName: doc.data().firstName,
         lastName: doc.data().lastName,
         profileImage: doc.data().profileImage,
-        createdAt: doc.data().createdAt
+        createdAt: doc.data().createdAt,
       });
 
       return res.json(page);
     })
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
 };
 
 exports.getYourUserProfile = (req, res) => {
@@ -238,3 +240,72 @@ exports.getYourUserProfile = (req, res) => {
     })
     .catch(err => console.error(err));
 };
+
+
+// photographers can upload pictures for their page
+exports.uploadYourPhotographyImages = (req, res) => {
+  let photographer = res.locals.photographer;
+
+  if (!photographer) {
+    return res.json({ message: "You are not a photographer." });
+  }
+
+  const BusBoy = require("busboy");
+  const path = require("path");
+  const os = require("os");
+  const fs = require("fs");
+
+  const busboy = new BusBoy({ headers: req.headers });
+
+  let imageFileName;
+  let imageToAdd;
+  let imagesToUpload = [];
+
+  busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
+    if (!mimetype.includes("image")) {
+      return res.status(400).json({ error: "Please upload an image." });
+    }
+
+    const imageExtension = filename.split(".")[filename.split(".").length - 1];
+
+    imageFileName = `${Math.round(
+      Math.random() * 1000000000
+    )}.${imageExtension}`;
+
+    const filepath = path.join(os.tmpdir(), imageFileName);
+    imageToAdd = { imageFileName, filepath, mimetype };
+
+    file.pipe(fs.createWriteStream(filepath));
+    imagesToUpload.push(imageToAdd);
+  });
+
+  busboy.on("finish", () => {
+    let promises = [];
+    let imageUrls = [];
+
+    imagesToUpload.forEach((imageToBeUploaded) => {
+      console.log(imageToBeUploaded.imageFileName);
+      url = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageToBeUploaded.imageFileName}?alt=media`;
+      imageUrls.push(url);
+      promises.push(
+        admin
+          .storage()
+          .bucket(config.storageBucket)
+          .upload(imageToBeUploaded.filepath, {
+            resumable: false,
+            metadata: {
+              metadata: {
+                contentType: imageToBeUploaded.mimetype,
+              },
+            },
+          })
+      );
+    });
+
+    db.doc(`/photographer/${req.user.uid}`).update({ images: imageUrls });
+    res.writeHead(200, { Connection: "close" });
+    res.end("All images uploaded successfully.");
+  });
+  busboy.end(req.rawBody);
+};
+
