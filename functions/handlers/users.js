@@ -213,8 +213,34 @@ exports.getYourPhotographerPage = (req, res) => {
     .catch((err) => console.error(err));
 };
 
-// get current user profile page
-exports.getYourUserProfile = (req, res) => {};
+exports.getYourUserProfile = (req, res) => {
+  let userid = req.user.uid;
+
+  db.collection("users")
+    .doc(userid)
+    .get()
+    .then(doc => {
+      if (!doc.exists) {
+        return res.json({ message: "You are not a user." });
+      }
+
+      let page = [];
+
+      page.push({
+        userID: userid,
+        email: doc.data().email,
+        firstName: doc.data().firstName,
+        lastName: doc.data().lastName,
+        photographer: doc.data().photographer,
+        profileImage: doc.data().profileImage,
+        createdAt: doc.data().createdAt
+      });
+
+      return res.json(page);
+    })
+    .catch(err => console.error(err));
+};
+
 
 // photographers can upload pictures for their page
 exports.uploadYourPhotographyImages = (req, res) => {
@@ -282,3 +308,4 @@ exports.uploadYourPhotographyImages = (req, res) => {
   });
   busboy.end(req.rawBody);
 };
+
