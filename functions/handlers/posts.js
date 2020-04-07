@@ -92,6 +92,7 @@ exports.bookPhotographer = (req, res) => {
           .set({
             photographer: photographerBooked,
             consumer: userid,
+            shootDate: req.body.date,
             location: req.body.location,
             paymentStatus: "pending",
             paymentToPhotographer: "pending",

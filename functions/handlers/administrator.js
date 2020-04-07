@@ -1,9 +1,6 @@
 const { admin, db } = require("../util/admin");
 
 exports.completedOrders = (req, res) => {
-  // let userid = req.user.uid;
-  // let photographerBooked = req.params.photographerId;
-
   db.collection("orders")
     .get()
     .then((snapshot) => {
@@ -15,6 +12,7 @@ exports.completedOrders = (req, res) => {
           let userid = doc.data().consumer;
           let photographerBooked = doc.data().photographer;
           let location = doc.data().location;
+          let shootDate = doc.data().shootDate;
           let dateOrdered = doc.data().createdAt;
 
           db.collection("completedOrders")
@@ -23,6 +21,7 @@ exports.completedOrders = (req, res) => {
               userid: userid,
               photographer: photographerBooked,
               location: location,
+              shoottDate: shootDate,
               dateOrdered: dateOrdered,
               dateCompleted: new Date().toISOString(),
               paymentStatus: "completed",
