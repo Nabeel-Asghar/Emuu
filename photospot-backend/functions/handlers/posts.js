@@ -14,6 +14,7 @@ exports.getAllPhotographers = (req, res) => {
           firstName: doc.data().firstName,
           lastName: doc.data().lastName,
           profileImage: doc.data().profileImage,
+          images: doc.data().images,
           createdAt: doc.data().createdAt,
         });
       });

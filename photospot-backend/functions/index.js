@@ -1,6 +1,10 @@
 const functions = require("firebase-functions");
+const cors = require("cors");
 
 const app = require("express")();
+
+// Automatically allow cross-origin requests
+app.use(cors({ origin: true }));
 
 const {
   getAllPhotographers,
