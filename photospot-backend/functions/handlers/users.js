@@ -101,7 +101,7 @@ exports.login = (req, res) => {
         (err.code = "auth/wrong-password")
       ) {
         return res.status(400).json({
-          email: "Your login or password was incorrect. Please try again",
+          general: "Your login or password was incorrect. Please try again",
         });
       } else {
         return res.status(500).json({ error: err.code });
@@ -219,7 +219,7 @@ exports.getYourUserProfile = (req, res) => {
   db.collection("users")
     .doc(userid)
     .get()
-    .then(doc => {
+    .then((doc) => {
       if (!doc.exists) {
         return res.json({ message: "You are not a user." });
       }
@@ -233,14 +233,13 @@ exports.getYourUserProfile = (req, res) => {
         lastName: doc.data().lastName,
         photographer: doc.data().photographer,
         profileImage: doc.data().profileImage,
-        createdAt: doc.data().createdAt
+        createdAt: doc.data().createdAt,
       });
 
       return res.json(page);
     })
-    .catch(err => console.error(err));
+    .catch((err) => console.error(err));
 };
-
 
 // photographers can upload pictures for their page
 exports.uploadYourPhotographyImages = (req, res) => {
@@ -308,4 +307,3 @@ exports.uploadYourPhotographyImages = (req, res) => {
   });
   busboy.end(req.rawBody);
 };
-
