@@ -15,7 +15,6 @@ class home extends Component {
   componentDidMount() {
     API.get("photographers")
       .then((res) => {
-        console.log(res.data);
         this.setState({
           allPhotographers: res.data,
         });
@@ -26,7 +25,10 @@ class home extends Component {
   render() {
     let recentPhotographers = this.state.allPhotographers ? (
       this.state.allPhotographers.map((photographer) => (
-        <Photographer photographer={photographer} />
+        <Photographer
+          key={photographer.photographerID}
+          photographer={photographer}
+        />
       ))
     ) : (
       <p>Loading...</p>

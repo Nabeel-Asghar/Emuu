@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Link from "react-router-dom/Link";
+import { Link } from "react-router-dom";
 
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
@@ -22,6 +22,7 @@ const styles = {
 
   content: {
     padding: 25,
+    objectFit: "cover",
   },
 };
 
@@ -44,7 +45,7 @@ class photographer extends Component {
           image={profileImage}
           title="Profile Image"
         />
-        <CardContent class={classes.content}>
+        <CardContent className={classes.content}>
           <Typography
             variant="h5"
             component={Link}
