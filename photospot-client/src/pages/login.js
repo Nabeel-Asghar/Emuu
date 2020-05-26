@@ -41,6 +41,7 @@ class login extends Component {
     API.post("/login", userData)
       .then((res) => {
         console.log(res.data);
+        localStorage.setItem("FireBaseIdToken", `Bearer ${res.data.token}`);
         this.setState({
           loading: false,
         });
@@ -82,6 +83,7 @@ class login extends Component {
               error={errors.email ? true : false}
               value={this.state.email}
               onChange={this.handleChange}
+              variant="outlined"
               fullWidth
             />
             <TextField
@@ -95,6 +97,7 @@ class login extends Component {
               value={this.state.password}
               onChange={this.handleChange}
               fullWidth
+              variant="outlined"
             />
             {errors.general && (
               <Typography variant="body2" className={classes.customError}>
