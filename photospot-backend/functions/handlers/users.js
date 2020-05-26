@@ -58,7 +58,7 @@ exports.signup = (req, res) => {
             return db.doc(`/users/${userId}`).set(userCredentials);
           })
           .catch((err) => {
-            console.erroor(err);
+            console.error(err);
             return res.status(500).json({ error: err.code });
           });
       } else {
@@ -92,7 +92,7 @@ exports.login = (req, res) => {
       return data.user.getIdToken();
     })
     .then((token) => {
-      return res.json(token);
+      return res.json({ token });
     })
     .catch((err) => {
       console.error(err);
