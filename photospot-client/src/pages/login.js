@@ -41,7 +41,7 @@ class login extends Component {
     API.post("/login", userData)
       .then((res) => {
         console.log(res.data);
-        localStorage.setItem("FireBaseIdToken", `Bearer ${res.data.token}`);
+        localStorage.setItem("FirebaseIdToken", `Bearer ${res.data.token}`);
         this.setState({
           loading: false,
         });
