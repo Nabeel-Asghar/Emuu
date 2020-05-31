@@ -3,6 +3,10 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import "./App.css";
 import tokenDecoder from "jwt-decode";
 
+// Redux
+import { Provider } from "react-redux";
+import store from "./redux/store";
+
 // Theme
 import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
@@ -70,6 +74,7 @@ if (token) {
   if (decodedToken.exp * 1000 < Date.now()) {
     window.location.href = "/login";
     authenticated = false;
+    localStorage.clear();
   } else {
     authenticated = true;
   }
@@ -79,28 +84,30 @@ class App extends Component {
   render() {
     return (
       <MuiThemeProvider theme={theme}>
-        <div className="App">
-          <BrowserRouter>
-            <Navbar />
-            <div className="container">
-              <Switch>
-                <Route exact path="/" component={home} />
-                <AuthRoute
-                  exact
-                  path="/login"
-                  component={login}
-                  authenticated={authenticated}
-                />
-                <AuthRoute
-                  exact
-                  path="/signup"
-                  component={signup}
-                  authenticated={authenticated}
-                />
-              </Switch>
-            </div>
-          </BrowserRouter>
-        </div>
+        <Provider store={store}>
+          <div className="App">
+            <BrowserRouter>
+              <Navbar />
+              <div className="container">
+                <Switch>
+                  <Route exact path="/" component={home} />
+                  <AuthRoute
+                    exact
+                    path="/login"
+                    component={login}
+                    authenticated={authenticated}
+                  />
+                  <AuthRoute
+                    exact
+                    path="/signup"
+                    component={signup}
+                    authenticated={authenticated}
+                  />
+                </Switch>
+              </div>
+            </BrowserRouter>
+          </div>
+        </Provider>
       </MuiThemeProvider>
     );
   }

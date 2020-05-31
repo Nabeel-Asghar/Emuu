@@ -20,6 +20,7 @@ module.exports = (req, res, next) => {
       return db.collection("users").doc(req.user.uid).get();
     })
     .then((doc) => {
+      // Add photographer status to response to allow for less reads
       res.locals.photographer = doc.data().photographer;
       return next();
     })
