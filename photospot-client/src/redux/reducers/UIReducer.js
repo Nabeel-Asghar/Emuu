@@ -1,10 +1,10 @@
 const intialState = {
   loading: false,
-  errors: null,
+  errors: {},
 };
 
 export default function (state = intialState, action) {
-  switch (action.types) {
+  switch (action.type) {
     case "SET_ERRORS":
       return {
         ...state,
