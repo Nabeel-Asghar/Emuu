@@ -6,6 +6,11 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
 
+// Redux
+import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { logoutUser } from "../redux/actions/userActions";
+
 export class Navbar extends Component {
   render() {
     return (
@@ -20,10 +25,33 @@ export class Navbar extends Component {
           <Button color="inherit" component={Link} to="/signup">
             Signup
           </Button>
+          <Button
+            color="inherit"
+            component={Link}
+            to="/login"
+            onClick={() => {
+              this.props.logoutUser();
+            }}
+          >
+            Logout
+          </Button>
         </Toolbar>
       </AppBar>
     );
   }
 }
 
-export default Navbar;
+Navbar.propTypes = {
+  logoutUser: PropTypes.func.isRequired,
+};
+
+const mapActionsToProps = {
+  logoutUser,
+};
+
+const mapStateToProps = (state) => ({
+  user: state.user,
+  UI: state.UI,
+});
+
+export default connect(mapStateToProps, mapActionsToProps)(Navbar);

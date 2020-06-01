@@ -4,13 +4,16 @@ export const loginUser = (userData, history) => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
   API.post("/login", userData)
     .then((res) => {
+      console.log("shouldnt be here");
       setAuthorizationHeader(res.data.token);
       dispatch(getUserData());
       dispatch({ type: "CLEAR_ERRORS" });
       history.push("/");
     })
     .catch((err) => {
-      console.log("here");
+      // console.log(err);
+      // console.log(err.response);
+      // console.log(err.response.data);
       dispatch({
         type: "SET_ERRORS",
         payload: err.response.data,
@@ -28,7 +31,6 @@ export const signupUser = (newUserData, history) => (dispatch) => {
       history.push("/");
     })
     .catch((err) => {
-      console.log("here");
       dispatch({
         type: "SET_ERRORS",
         payload: err.response.data,
@@ -38,7 +40,7 @@ export const signupUser = (newUserData, history) => (dispatch) => {
 
 export const logoutUser = () => (dispatch) => {
   localStorage.removeItem("FirebaseIdToken");
-  delete API.defaults.headers.catch["Authorization"];
+  delete API.defaults.headers.common["Authorization"];
   dispatch({ type: "SET_UNAUTHENTICATED" });
 };
 
