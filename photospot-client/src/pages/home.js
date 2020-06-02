@@ -1,38 +1,30 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
+import withStyles from "@material-ui/core/styles/withStyles";
+import PropTypes from "prop-types";
 
-// Base instance
-import API from "../api";
+// Redux
+import { connect } from "react-redux";
+import { getPhotographers } from "../redux/actions/dataActions";
 
 // Photographer
 import Photographer from "../components/photographer";
 
-class home extends Component {
-  state = {
-    allPhotographers: null,
-  };
+const styles = (theme) => ({
+  ...theme.spreadThis,
+});
 
+class home extends Component {
   componentDidMount() {
-    API.get("photographers")
-      .then((res) => {
-        this.setState({
-          allPhotographers: res.data,
-        });
-      })
-      .catch((err) => console.log(err.response));
+    this.props.getPhotographers();
   }
 
   render() {
-    let recentPhotographers = this.state.allPhotographers ? (
-      this.state.allPhotographers.map((photographer) => (
-        <Photographer
-          key={photographer.photographerID}
-          photographer={photographer}
-        />
-      ))
-    ) : (
-      <p>Loading...</p>
-    );
+    const allThePhotographers = this.props.allPhotographers || {};
+
+    let recentPhotographers = Object.keys(allThePhotographers).map((key) => (
+      <Photographer key={key} photographer={allThePhotographers[key]} />
+    ));
 
     return (
       <Grid container spacing={10}>
@@ -46,5 +38,15 @@ class home extends Component {
     );
   }
 }
+const mapStateToProps = (state) => ({
+  allPhotographers: state.data.allPhotographers,
+});
 
-export default home;
+const mapActionsToProps = {
+  getPhotographers,
+};
+
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(withStyles(styles)(home));
