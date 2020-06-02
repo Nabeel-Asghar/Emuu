@@ -1,6 +1,5 @@
 const intialState = {
   authenticated: false,
-  email: {},
 };
 
 export default function (state = intialState, action) {

@@ -4,16 +4,12 @@ export const loginUser = (userData, history) => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
   API.post("/login", userData)
     .then((res) => {
-      console.log("shouldnt be here");
       setAuthorizationHeader(res.data.token);
       dispatch(getUserData());
       dispatch({ type: "CLEAR_ERRORS" });
       history.push("/");
     })
     .catch((err) => {
-      // console.log(err);
-      // console.log(err.response);
-      // console.log(err.response.data);
       dispatch({
         type: "SET_ERRORS",
         payload: err.response.data,
