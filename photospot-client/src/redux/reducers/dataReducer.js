@@ -1,5 +1,6 @@
 const intialState = {
   allPhotographers: [],
+  photographerPage: [],
 };
 
 export default function (state = intialState, action) {
@@ -8,6 +9,11 @@ export default function (state = intialState, action) {
       return {
         ...state,
         allPhotographers: { ...action.payload },
+      };
+
+    case "SET_PHOTOGRAHPER_PAGE":
+      return {
+        photographerPage: { ...action.payload },
       };
     default:
       return state;

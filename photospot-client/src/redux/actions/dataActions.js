@@ -1,4 +1,5 @@
 import API from "../../api";
+import store from "../store";
 
 // export const getPhotographerPage = (photographerID) => (dispatch) => {
 //   dispatch({ type: LOADING_DATA });
@@ -16,6 +17,7 @@ import API from "../../api";
 //       });
 //     });
 // };
+
 export const getPhotographers = () => (dispatch) => {
   dispatch({ type: "LOADING_DATA" });
   API.get("photographers")
@@ -34,4 +36,22 @@ export const getPhotographers = () => (dispatch) => {
         payload: null,
       })
     );
+};
+
+export const getPhotographerPage = (photographerID) => (dispatch) => {
+  dispatch({ type: "LOADING_DATA" });
+  API.get(`/photographers/${photographerID}`)
+    .then((res) => {
+      let something = res.data;
+      dispatch({
+        type: "SET_PHOTOGRAHPER_PAGE",
+        payload: res.data,
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: "SET_PHOTOGRAHPER_PAGE",
+        payload: null,
+      });
+    });
 };

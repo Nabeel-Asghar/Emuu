@@ -38,6 +38,7 @@ class photographer extends Component {
         profileImage,
       },
     } = this.props;
+
     return (
       <Card className={classes.card}>
         <CardMedia

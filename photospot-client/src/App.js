@@ -16,7 +16,7 @@ import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import home from "./pages/home";
 import login from "./pages/login";
 import signup from "./pages/signup";
-import photographer from "./pages/photographer";
+import specificPhotographer from "./pages/specificPhotographer";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -101,7 +101,7 @@ class App extends Component {
                   <Route
                     exact
                     path="/photographers/:photographerID"
-                    component={photographer}
+                    component={specificPhotographer}
                   />
                 </Switch>
               </div>
