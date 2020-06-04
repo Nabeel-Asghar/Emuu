@@ -6,11 +6,18 @@ import Photographer from "../components/photographer";
 // Material UI
 import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
+import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
 
 // Redux
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getPhotographerPage } from "../redux/actions/dataActions";
+
+// Components
+import ProfileImage from "../components/photographer-page/profileImage";
+import ProfileDetails from "../components/photographer-page/profileDetails";
+import PhotoSamples from "../components/photographer-page/photoSamples";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -55,26 +62,35 @@ class specificPhotographer extends Component {
   }
 
   render() {
-    // const photoDetails = this.props.photographerDetails;
-
-    // console.log(formatted[0]);
-    // console.log(formatted[1]);
-    // console.log(formatted[2]);
-
-    // let thePhotographerPage = Object.keys(photoDetails).map((key) => (
-    //   <Photographer key={key} photographer={photoDetails[key]} />
-    // ));
-
-    // console.log(thePhotographerPage[0]);
-
-    console.log(this.state.email);
+    const { classes } = this.props;
+    console.log(this.state.images);
 
     return (
-      <Grid container spacing={10}>
-        <Grid item sm={8} xs={12}>
-          {/* {thePhotographerPage} */}
+      <Grid container spacing={3}>
+        <Grid item sm={3} xs={12}>
+          <ProfileImage profileImage={this.state.profileImage} />
         </Grid>
-        <Grid item sm={4} xs={12}></Grid>
+        <Grid item sm={6} xs={12}>
+          <ProfileDetails
+            firstName={this.state.firstName}
+            lastName={this.state.lastName}
+          />
+        </Grid>
+
+        <Grid item sm={3} xs={12}>
+          <Button>Book</Button>
+        </Grid>
+
+        <Grid item sm={12}>
+          {/* <Typography>{this.state.images}</Typography>; */}
+          {/* {this.state.images.map(function (imageSrc) {
+            return (
+              <li key={imgSrc}>
+                <img src={imgSrc} />
+              </li>
+            );
+          })} */}
+        </Grid>
       </Grid>
     );
   }
