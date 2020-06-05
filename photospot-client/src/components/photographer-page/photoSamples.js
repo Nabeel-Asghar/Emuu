@@ -9,9 +9,8 @@ import "@brainhubeu/react-carousel/lib/style.css";
 
 const styles = {
   img: {
-    maxWidth: "150px",
-    width: "100%",
-    height: "auto",
+    width: "300px",
+    height: "300px",
   },
 };
 
@@ -19,25 +18,17 @@ class photoSamples extends Component {
   render() {
     const { classes, images } = this.props;
 
+    var imageContainer = [];
+
+    for (var i = 0; i < images.length; i++) {
+      imageContainer.push(<img className={classes.img} src={images[i]} />);
+    }
+
     return (
       <div>
-        {/* <Carousel slidesPerPage={4} arrows infinite> */}
-
-        {images.forEach((image) => {
-          console.log(image);
-          return (
-            <img
-              src={
-                "https://firebasestorage.googleapis.com/v0/b/photospot-5f554.appspot.com/o/498732913.jpg?alt=media"
-              }
-            />
-          );
-        })}
-
-        {/* <img src={imageOne} />
-            <img src={imageTwo} />
-            <img src={imageThree} /> */}
-        {/* </Carousel> */}
+        <Carousel slidesPerPage={4} arrows infinite centered>
+          {imageContainer}
+        </Carousel>
       </div>
     );
   }

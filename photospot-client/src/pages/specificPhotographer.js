@@ -63,7 +63,6 @@ class specificPhotographer extends Component {
 
   render() {
     const { classes } = this.props;
-    console.log(this.state.images);
 
     return (
       <Grid container spacing={3}>
@@ -82,14 +81,7 @@ class specificPhotographer extends Component {
         </Grid>
 
         <Grid item sm={12}>
-          {/* <Typography>{this.state.images}</Typography>; */}
-          {/* {this.state.images.map(function (imageSrc) {
-            return (
-              <li key={imgSrc}>
-                <img src={imgSrc} />
-              </li>
-            );
-          })} */}
+          <PhotoSamples images={this.state.images} />
         </Grid>
       </Grid>
     );
