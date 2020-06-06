@@ -18,6 +18,7 @@ import { getPhotographerPage } from "../redux/actions/dataActions";
 import ProfileImage from "../components/photographer-page/profileImage";
 import ProfileDetails from "../components/photographer-page/profileDetails";
 import PhotoSamples from "../components/photographer-page/photoSamples";
+import Bio from "../components/photographer-page/bio";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -33,6 +34,7 @@ class specificPhotographer extends Component {
       bio: "",
       profileImage: "",
       images: [],
+      bio: "",
     };
   }
 
@@ -43,9 +45,12 @@ class specificPhotographer extends Component {
   };
 
   assignValues(details) {
-    const formatted = [];
-
     const photoDetails = Object.values(details);
+
+    this.setState({
+      bio:
+        "Hello my name is Xile studios and were are live from the 6ix and we running through the s&d drills.",
+    });
 
     photoDetails.forEach((task) =>
       Object.entries(task).forEach(([key, value]) => {
@@ -58,6 +63,7 @@ class specificPhotographer extends Component {
     const photographerID = this.props.match.params.photographerID;
     this.props.getPhotographerPage(photographerID);
     const photoDetails = this.props.photographerDetails;
+    console.log(photoDetails);
     this.assignValues(photoDetails);
   }
 
@@ -82,6 +88,10 @@ class specificPhotographer extends Component {
 
         <Grid item sm={12}>
           <PhotoSamples images={this.state.images} />
+        </Grid>
+
+        <Grid item sm={12}>
+          <Bio bio={this.state.bio} />
         </Grid>
       </Grid>
     );
