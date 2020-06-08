@@ -34,7 +34,7 @@ class specificPhotographer extends Component {
       bio: "",
       profileImage: "",
       images: [],
-      bio: "",
+      ratePerHour: 0,
     };
   }
 
@@ -46,11 +46,6 @@ class specificPhotographer extends Component {
 
   assignValues(details) {
     const photoDetails = Object.values(details);
-
-    this.setState({
-      bio:
-        "Hello my name is Xile studios and were are live from the 6ix and we running through the s&d drills.",
-    });
 
     photoDetails.forEach((task) =>
       Object.entries(task).forEach(([key, value]) => {

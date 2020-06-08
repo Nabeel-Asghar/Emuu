@@ -39,5 +39,8 @@
       "last 1 safari version"
     ],
     "proxy": "https://us-central1-photospot-5f554.cloudfunctions.net/api"
+  },
+  "devDependencies": {
+    "websocket-extensions": "^0.1.4"
   }
 }

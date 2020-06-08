@@ -67,6 +67,16 @@ exports.getSpecificPhotographer = (req, res) => {
         lastName: doc.data().lastName,
         profileImage: doc.data().profileImage,
         images: doc.data().images,
+        company: doc.data().company,
+        bio: doc.data().bio,
+        instagram: doc.data().instagram,
+        location_city: doc.data().location_city,
+        location_state: doc.data().location_state,
+        ratePerHour: doc.data().ratePerHour,
+        tags: doc.data().tags,
+        website: doc.data().website,
+        videography: doc.data().videography,
+        willingnessToTravel: doc.data().willingnessToTravel,
         createdAt: doc.data().createdAt,
       });
       return res.json(photographer);
