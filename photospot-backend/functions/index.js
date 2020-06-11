@@ -11,6 +11,7 @@ const {
   createPost,
   getSpecificPhotographer,
   bookPhotographer,
+  reviewPhotographer,
 } = require("./handlers/posts");
 
 const {
@@ -48,6 +49,7 @@ app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
 app.get("/photographers", getAllPhotographers);
 app.get("/photographers/:photographerId", getSpecificPhotographer);
 app.post("/photographers/:photographerId/book", FBAuth, bookPhotographer);
+app.post("/photographers/:photographerId/review", FBAuth, reviewPhotographer);
 
 //Administrator
 app.get("/admin/completedOrders", completedOrders);
