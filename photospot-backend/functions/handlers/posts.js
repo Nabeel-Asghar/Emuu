@@ -45,6 +45,50 @@ exports.createPost = (req, res) => {
     });
 };
 
+exports.reviewPhotographer = (req, res) => {
+  let reviewID = req.user.uid;
+  let photographerBeingReviewed = req.params.photographerId;
+
+  const newReview = {
+    description: req.body.description,
+    rating: req.body.rating,
+    userID: reviewID,
+    photographerID: photographerBeingReviewed,
+    firstName: res.locals.firstName,
+    lastName: res.locals.lastName,
+    createdAt: new Date().toISOString(),
+  };
+
+  db.collection("users")
+    .doc(reviewID)
+    .collection("orders")
+    .doc(photographerBeingReviewed)
+    .get()
+    .then((doc) => {
+      if (!doc.exists || doc.get("paymentToPhotographer") == "pending") {
+        return res.json({
+          message:
+            "You may only review if you completed a shoot with this photographer.",
+        });
+      } else {
+        db.collection("photographer")
+          .doc(photographerBeingReviewed)
+          .collection("reviews")
+          .doc(reviewID)
+          .set(newReview)
+          .then(() => {
+            return res.json({
+              message: "Review added successfully!",
+            });
+          })
+          .catch((err) => {
+            res.status(500).json({ error: `something went wrong` });
+            console.log(err);
+          });
+      }
+    });
+};
+
 exports.getSpecificPhotographer = (req, res) => {
   let photographerIdOfPageClicked = req.params.photographerId;
 
@@ -78,6 +122,8 @@ exports.getSpecificPhotographer = (req, res) => {
 exports.bookPhotographer = (req, res) => {
   let userid = req.user.uid;
   let photographerBooked = req.params.photographerId;
+  let shootDate = req.body.date;
+  let location = req.body.location;
 
   db.collection("orders")
     .doc(userid)
@@ -91,10 +137,10 @@ exports.bookPhotographer = (req, res) => {
         db.collection("orders")
           .doc(userid)
           .set({
-            photographer: photographerBooked,
-            consumer: userid,
-            shootDate: req.body.date,
-            location: req.body.location,
+            photographerID: photographerBooked,
+            consumerID: userid,
+            shootDate: shootDate,
+            location: location,
             paymentStatus: "pending",
             paymentToPhotographer: "pending",
             createdAt: new Date().toISOString(),
@@ -104,6 +150,38 @@ exports.bookPhotographer = (req, res) => {
               message:
                 "Order complete, you will recieve an email with a confirmation.",
             });
+          })
+          .catch((err) => {
+            res.status(500).json({ error: `something went wrong` });
+            console.log(err);
+          });
+
+        db.collection("photographer")
+          .doc(photographerBooked)
+          .collection("orders")
+          .doc(userid)
+          .set({
+            photographerID: photographerBooked,
+            consumerID: userid,
+            shootDate: shootDate,
+            location: location,
+            paymentStatus: "pending",
+            paymentToPhotographer: "pending",
+            createdAt: new Date().toISOString(),
+          });
+
+        db.collection("users")
+          .doc(userid)
+          .collection("orders")
+          .doc(photographerBooked)
+          .set({
+            photographerID: photographerBooked,
+            consumerID: userid,
+            shootDate: shootDate,
+            location: location,
+            paymentStatus: "pending",
+            paymentToPhotographer: "pending",
+            createdAt: new Date().toISOString(),
           });
       }
     });
