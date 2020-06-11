@@ -1,14 +1,10 @@
 // React
 import React, { Component } from "react";
-import photographer from "../components/photographer";
-import Photographer from "../components/photographer";
 
 // Material UI
 import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
-import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
-
 // Redux
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
@@ -19,6 +15,8 @@ import ProfileImage from "../components/photographer-page/profileImage";
 import ProfileDetails from "../components/photographer-page/profileDetails";
 import PhotoSamples from "../components/photographer-page/photoSamples";
 import Bio from "../components/photographer-page/bio";
+
+import equal from "fast-deep-equal";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -58,8 +56,14 @@ class specificPhotographer extends Component {
     const photographerID = this.props.match.params.photographerID;
     this.props.getPhotographerPage(photographerID);
     const photoDetails = this.props.photographerDetails;
-    console.log(photoDetails);
     this.assignValues(photoDetails);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!equal(this.props.photographerDetails, prevProps.photographerDetails)) {
+      console.log(this.props.photographerDetails);
+      this.assignValues(this.props.photographerDetails);
+    }
   }
 
   render() {
@@ -68,35 +72,44 @@ class specificPhotographer extends Component {
     return (
       <Grid container spacing={3}>
         <Grid item sm={3} xs={12}>
-          <ProfileImage profileImage={this.state.profileImage} />
+          <ProfileImage
+            key={this.state.profileImage}
+            profileImage={this.state.profileImage}
+          />
         </Grid>
         <Grid item sm={6} xs={12}>
           <ProfileDetails
+            key={this.state.firstName}
             firstName={this.state.firstName}
             lastName={this.state.lastName}
           />
         </Grid>
 
         <Grid item sm={3} xs={12}>
-          <Button>Book</Button>
+          <Button
+            variant="outlined"
+            color="primary"
+            onClick={() =>
+              this.props.history.push(
+                `${this.props.history.location.pathname}/book`
+              )
+            }
+          >
+            Book
+          </Button>
         </Grid>
 
         <Grid item sm={12}>
-          <PhotoSamples images={this.state.images} />
+          <PhotoSamples key={this.state.images} images={this.state.images} />
         </Grid>
 
         <Grid item sm={12}>
-          <Bio bio={this.state.bio} />
+          <Bio key={this.state.bio} bio={this.state.bio} />
         </Grid>
       </Grid>
     );
   }
 }
-
-photographer.PropTypes = {
-  getUserData: PropTypes.func.isRequired,
-  data: PropTypes.object.isRequired,
-};
 
 const mapStateToProps = (state) => ({
   photographerDetails: state.data.photographerPage,

@@ -21,7 +21,9 @@ class photoSamples extends Component {
     var imageContainer = [];
 
     for (var i = 0; i < images.length; i++) {
-      imageContainer.push(<img className={classes.img} src={images[i]} />);
+      imageContainer.push(
+        <img key={i} className={classes.img} src={images[i]} />
+      );
     }
 
     return (

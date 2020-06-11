@@ -17,6 +17,7 @@ import home from "./pages/home";
 import login from "./pages/login";
 import signup from "./pages/signup";
 import specificPhotographer from "./pages/specificPhotographer";
+import book from "./pages/book";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -102,6 +103,11 @@ class App extends Component {
                     exact
                     path="/photographers/:photographerID"
                     component={specificPhotographer}
+                  />
+                  <Route
+                    exact
+                    path="/photographers/:photographerID/book"
+                    component={book}
                   />
                 </Switch>
               </div>

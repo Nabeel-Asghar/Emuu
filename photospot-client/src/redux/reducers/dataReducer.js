@@ -14,7 +14,7 @@ export default function (state = intialState, action) {
     case "SET_PHOTOGRAHPER_PAGE":
       return {
         ...state,
-        photographerPage: { ...action.payload },
+        photographerPage: [...action.payload],
       };
     default:
       return state;
