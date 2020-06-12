@@ -22,6 +22,8 @@ module.exports = (req, res, next) => {
     .then((doc) => {
       // Add photographer status to response to allow for less reads
       res.locals.photographer = doc.data().photographer;
+      res.locals.firstName = doc.data().firstName;
+      res.locals.lastName = doc.data().lastName;
       return next();
     })
     .catch((err) => {
