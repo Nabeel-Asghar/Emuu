@@ -42,7 +42,7 @@ export const getPhotographerPage = (photographerID) => (dispatch) => {
   dispatch({ type: "LOADING_DATA" });
   API.get(`/photographers/${photographerID}`)
     .then((res) => {
-      let something = res.data;
+      console.log("Getting photographer page details");
       dispatch({
         type: "SET_PHOTOGRAHPER_PAGE",
         payload: res.data,

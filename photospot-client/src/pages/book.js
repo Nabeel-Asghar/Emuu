@@ -14,6 +14,9 @@ import { getPhotographerPage } from "../redux/actions/dataActions";
 
 // Components
 import Card from "../components/booking/card";
+import Date from "../components/booking/date";
+
+import equal from "fast-deep-equal";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -30,6 +33,7 @@ class book extends Component {
       profileImage: "",
       images: [],
       ratePerHour: 0,
+      selectedDate: new Date(),
     };
   }
 
@@ -37,7 +41,11 @@ class book extends Component {
     details.forEach((task) =>
       Object.entries(task).forEach(([key, value]) => {
         if (key === "photographerID" && value === id) {
+          console.log("true");
           return true;
+        } else {
+          console.log("false");
+          return false;
         }
       })
     );
@@ -61,34 +69,45 @@ class book extends Component {
 
   componentDidMount() {
     const photographerID = this.props.match.params.photographerID;
+    this.props.getPhotographerPage(photographerID);
     const photoDetails = this.props.photographerDetails;
-    if (this.verifyID(photoDetails)) {
-      this.assignValues(photoDetails, photographerID);
-    } else {
-      this.props.getPhotographerPage(photographerID);
-      const photoDetails = this.props.photographerDetails;
-      this.assignValues(photoDetails);
+    this.assignValues(photoDetails);
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!equal(this.props.photographerDetails, prevProps.photographerDetails)) {
+      this.assignValues(this.props.photographerDetails);
     }
   }
 
-  render() {
-    let theCard = (
-      <Card
-        key={this.state.photographerID}
-        photographerID={this.state.photographerID}
-        firstName={this.state.firstName}
-        lastName={this.state.lastName}
-        profileImage={this.state.profileImage}
-      />
-    );
+  handleDateChange = (date) => {
+    this.setState({
+      selectedDate: date,
+    });
+  };
 
+  render() {
     return (
       <Grid container spacing={3}>
         <Grid item xs={2} />
         <Grid item xs={8}>
-          {theCard}
+          <Card
+            key={this.state.photographerID}
+            photographerID={this.state.photographerID}
+            firstName={this.state.firstName}
+            lastName={this.state.lastName}
+            profileImage={this.state.profileImage}
+          />
         </Grid>
         <Grid item xs={2} />
+        <Grid item xs={2} />
+        <Grid item xs={6}>
+          <Date
+            theDate={this.state.selectedDate}
+            parentCallback={this.handleDateChange}
+          />
+        </Grid>
+        <Grid item xs={2}></Grid>
       </Grid>
     );
   }

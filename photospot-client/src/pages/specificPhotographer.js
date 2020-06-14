@@ -61,7 +61,6 @@ class specificPhotographer extends Component {
 
   componentDidUpdate(prevProps) {
     if (!equal(this.props.photographerDetails, prevProps.photographerDetails)) {
-      console.log(this.props.photographerDetails);
       this.assignValues(this.props.photographerDetails);
     }
   }

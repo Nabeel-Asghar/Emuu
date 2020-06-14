@@ -37,7 +37,6 @@ class card extends Component {
       profileImage,
     } = this.props;
 
-    console.log(firstName);
     return (
       <Card className={classes.card}>
         <CardMedia
@@ -47,10 +46,7 @@ class card extends Component {
         />
         <CardContent className={classes.content}>
           <Typography variant="h5">
-            {firstName}&nbsp;{lastName}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            Hello world
+            Book with&nbsp;{firstName}&nbsp;{lastName}
           </Typography>
         </CardContent>
       </Card>
