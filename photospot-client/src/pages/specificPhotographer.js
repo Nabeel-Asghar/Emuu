@@ -6,7 +6,6 @@ import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Button from "@material-ui/core/Button";
 // Redux
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getPhotographerPage } from "../redux/actions/dataActions";
 
@@ -66,8 +65,6 @@ class specificPhotographer extends Component {
   }
 
   render() {
-    const { classes } = this.props;
-
     return (
       <Grid container spacing={3}>
         <Grid item sm={3} xs={12}>
