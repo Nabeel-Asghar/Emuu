@@ -6,10 +6,8 @@ import Typography from "@material-ui/core/Typography";
 
 // Card MUI
 import Card from "@material-ui/core/Card";
-import CardHeader from "@material-ui/core/CardHeader";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
 
 const styles = {
   card: {
@@ -34,8 +32,9 @@ class photographer extends Component {
         photographerID,
         firstName,
         lastName,
-        createdAt,
         profileImage,
+        location_city,
+        location_state,
       },
     } = this.props;
 
@@ -55,7 +54,7 @@ class photographer extends Component {
             {firstName}&nbsp;{lastName}
           </Typography>
           <Typography variant="body2" color="textSecondary">
-            {createdAt}
+            {location_city},&nbsp;{location_state}
           </Typography>
         </CardContent>
       </Card>
