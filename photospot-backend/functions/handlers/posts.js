@@ -13,6 +13,8 @@ exports.getAllPhotographers = (req, res) => {
           email: doc.data().email,
           firstName: doc.data().firstName,
           lastName: doc.data().lastName,
+          location_city: doc.data().location_city,
+          location_state: doc.data().location_state,
           profileImage: doc.data().profileImage,
           images: doc.data().images,
           createdAt: doc.data().createdAt,
