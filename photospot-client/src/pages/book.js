@@ -3,20 +3,18 @@ import withStyles from "@material-ui/core/styles/withStyles";
 
 // MUI
 import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
-import Button from "@material-ui/core/Button";
 
 // Redux
-import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { getPhotographerPage } from "../redux/actions/dataActions";
 
 // Components
 import Card from "../components/booking/card";
 import Date from "../components/booking/date";
-
 import equal from "fast-deep-equal";
+
+// Date format
+import { format } from "date-fns";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -106,6 +104,7 @@ class book extends Component {
             theDate={this.state.selectedDate}
             parentCallback={this.handleDateChange}
           />
+          {console.log(this.state.selectedDate)}
         </Grid>
         <Grid item xs={2}></Grid>
       </Grid>
