@@ -18,6 +18,7 @@ import login from "./pages/login";
 import signup from "./pages/signup";
 import specificPhotographer from "./pages/specificPhotographer";
 import book from "./pages/book";
+import profileImage from "./pages/profileImage";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -69,6 +70,9 @@ const theme = createMuiTheme({
       marginTop: "10px",
       marginBottom: "10px",
     },
+    centerGrid: {
+      textAlign: "center",
+    },
   },
 });
 
@@ -99,6 +103,11 @@ class App extends Component {
                   <Route exact path="/" component={home} />
                   <AuthRoute exact path="/login" component={login} />
                   <AuthRoute exact path="/signup" component={signup} />
+                  <Route
+                    exact
+                    path="/signup/profileImage"
+                    component={profileImage}
+                  />
                   <Route
                     exact
                     path="/photographers/:photographerID"
