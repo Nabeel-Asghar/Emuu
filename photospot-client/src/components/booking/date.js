@@ -1,8 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-
-import withStyles from "@material-ui/core/styles/withStyles";
-import Typography from "@material-ui/core/Typography";
 
 import { DatePicker } from "@material-ui/pickers";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
@@ -22,6 +18,7 @@ class date extends Component {
             openTo="date"
             value={theDate}
             onChange={this.props.parentCallback}
+            format="MM/dd/yyyy"
           />
         </MuiPickersUtilsProvider>
       </div>
