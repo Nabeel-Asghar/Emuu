@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Typography } from "@material-ui/core";
@@ -15,7 +14,7 @@ const styles = {
 
 class bio extends Component {
   render() {
-    const { classes, bio } = this.props;
+    const { bio } = this.props;
     return <Typography variant="body2">{bio}</Typography>;
   }
 }

@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 
 import withStyles from "@material-ui/core/styles/withStyles";
-import Typography from "@material-ui/core/Typography";
 
-import Carousel, { Dots } from "@brainhubeu/react-carousel";
+import Carousel from "@brainhubeu/react-carousel";
 import "@brainhubeu/react-carousel/lib/style.css";
 
 const styles = {
@@ -22,7 +20,12 @@ class photoSamples extends Component {
 
     for (var i = 0; i < images.length; i++) {
       imageContainer.push(
-        <img key={i} className={classes.img} src={images[i]} />
+        <img
+          key={i}
+          className={classes.img}
+          src={images[i]}
+          alt="Photographer Image"
+        />
       );
     }
 
