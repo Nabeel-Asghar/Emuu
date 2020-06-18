@@ -119,11 +119,42 @@ exports.getSpecificPhotographer = (req, res) => {
     });
 };
 
+exports.getPhotographerSchedule = (req, res) => {
+  let photographerBooked = req.params.photographerId;
+
+  db.collection("photographer")
+    .doc(photographerBooked)
+    .collection("bookings")
+    .get()
+    .then((snapshot) => {
+      timings = [];
+
+      snapshot.forEach((doc) => {
+        timings.push(doc.data());
+      });
+
+      return res.json(timings);
+    })
+    .catch(() => {
+      console.log("Error getting documents", err);
+      return res.json("No book times available.");
+    });
+};
+
 exports.bookPhotographer = (req, res) => {
   let userid = req.user.uid;
   let photographerBooked = req.params.photographerId;
   let shootDate = req.body.date;
+  let shootTime = req.body.time;
   let location = req.body.location;
+
+  db.collection("photographer")
+    .doc(photographerBooked)
+    .collection("bookings")
+    .doc(shootDate)
+    .update({
+      [shootTime]: true,
+    });
 
   db.collection("orders")
     .doc(userid)
