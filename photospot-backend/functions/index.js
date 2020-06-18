@@ -12,6 +12,7 @@ const {
   getSpecificPhotographer,
   bookPhotographer,
   reviewPhotographer,
+  getPhotographerSchedule,
 } = require("./handlers/posts");
 
 const {
@@ -50,6 +51,11 @@ app.get("/photographers", getAllPhotographers);
 app.get("/photographers/:photographerId", getSpecificPhotographer);
 app.post("/photographers/:photographerId/book", FBAuth, bookPhotographer);
 app.post("/photographers/:photographerId/review", FBAuth, reviewPhotographer);
+app.get(
+  "/photographers/:photographerId/bookingTimes",
+  FBAuth,
+  getPhotographerSchedule
+);
 
 //Administrator
 app.get("/admin/completedOrders", completedOrders);
