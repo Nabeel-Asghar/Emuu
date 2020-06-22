@@ -55,3 +55,15 @@ export const getPhotographerPage = (photographerID) => (dispatch) => {
       });
     });
 };
+
+export const getBookingTimes = (photographerID) => (dispatch) => {
+  dispatch({ type: "LOADING_DATA" });
+  API.get(`/photographers/${photographerID}/bookingTimes`).then((res) => {
+    console.log("Getting bookings for that photographer on that date");
+
+    dispatch({
+      type: "GET_BOOKING_TIMINGS",
+      payload: res.data,
+    });
+  });
+};

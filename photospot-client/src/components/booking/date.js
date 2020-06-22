@@ -2,7 +2,7 @@ import React, { Component } from "react";
 
 import { DatePicker } from "@material-ui/pickers";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
-import DateFnsUtils from "@date-io/date-fns";
+import MomentUtils from "@date-io/moment";
 
 class date extends Component {
   render() {
@@ -10,7 +10,7 @@ class date extends Component {
 
     return (
       <div>
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <MuiPickersUtilsProvider utils={MomentUtils}>
           <DatePicker
             autoOk
             orientation="landscape"

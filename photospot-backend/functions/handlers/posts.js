@@ -143,7 +143,9 @@ exports.getPhotographerSchedule = (req, res) => {
       timings = [];
 
       snapshot.forEach((doc) => {
-        timings.push(doc.data());
+        var theDay = doc.id;
+        var timingsForEachDay = { [theDay]: doc.data() };
+        timings.push(timingsForEachDay);
       });
 
       return res.json(timings);

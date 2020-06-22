@@ -6,15 +6,19 @@ import Grid from "@material-ui/core/Grid";
 
 // Redux
 import { connect } from "react-redux";
-import { getPhotographerPage } from "../redux/actions/dataActions";
+import {
+  getPhotographerPage,
+  getBookingTimes,
+} from "../redux/actions/dataActions";
 
 // Components
 import Card from "../components/booking/card";
 import Date from "../components/booking/date";
 import equal from "fast-deep-equal";
+import Time from "../components/booking/time";
 
 // Date format
-import { format } from "date-fns";
+import moment from "moment";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -32,6 +36,9 @@ class book extends Component {
       images: [],
       ratePerHour: 0,
       selectedDate: new Date(),
+      formattedDate: "",
+      availability: [],
+      timeslots: [],
     };
   }
 
@@ -65,10 +72,19 @@ class book extends Component {
     );
   }
 
+  assignTimes(times) {
+    this.setState({
+      availability: times,
+    });
+  }
+
   componentDidMount() {
     const photographerID = this.props.match.params.photographerID;
     this.props.getPhotographerPage(photographerID);
+    this.props.getBookingTimes(photographerID);
     const photoDetails = this.props.photographerDetails;
+    const bookTimings = this.props.timings;
+    this.assignTimes(bookTimings);
     this.assignValues(photoDetails);
   }
 
@@ -76,12 +92,39 @@ class book extends Component {
     if (!equal(this.props.photographerDetails, prevProps.photographerDetails)) {
       this.assignValues(this.props.photographerDetails);
     }
+    if (!equal(this.props.timings, prevProps.timings)) {
+      this.assignTimes(this.props.timings);
+    }
   }
 
+  // When date changes, change the selected date and find all time slots for that date
   handleDateChange = (date) => {
     this.setState({
       selectedDate: date,
+      formattedDate: moment(date).format("MM-D-YYYY"),
     });
+
+    let found = false;
+
+    // Iterate through all given timeslots on all dates to find the selected date slots
+    const arrayOfTimeSlots = Object.values(this.state.availability);
+
+    arrayOfTimeSlots.forEach((task) =>
+      Object.entries(task).forEach(([key, value]) => {
+        if (key === moment(date).format("MM-D-YYYY")) {
+          this.setState({
+            timeslots: [value],
+          });
+          found = true;
+        }
+      })
+    );
+
+    if (!found) {
+      this.setState({
+        timeslots: null,
+      });
+    }
   };
 
   render() {
@@ -104,7 +147,9 @@ class book extends Component {
             theDate={this.state.selectedDate}
             parentCallback={this.handleDateChange}
           />
-          {console.log(this.state.selectedDate)}
+        </Grid>
+        <Grid item xs={2}>
+          <Time key={this.state.timeslots} timeslots={this.state.timeslots} />
         </Grid>
         <Grid item xs={2}></Grid>
       </Grid>
@@ -114,10 +159,12 @@ class book extends Component {
 
 const mapStateToProps = (state) => ({
   photographerDetails: state.data.photographerPage,
+  timings: state.data.timings,
 });
 
 const mapActionsToProps = {
   getPhotographerPage,
+  getBookingTimes,
 };
 
 export default connect(
