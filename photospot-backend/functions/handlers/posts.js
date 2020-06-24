@@ -161,14 +161,12 @@ exports.bookPhotographer = (req, res) => {
   let photographerBooked = req.params.photographerId;
   let shootDate = req.body.date;
   let shootTime = req.body.time;
-  let location = req.body.location;
 
   let booking = {
     photographerID: photographerBooked,
     consumerID: userid,
     shootDate: shootDate,
     shootTime: shootTime,
-    location: location,
     paymentStatus: "pending",
     paymentToPhotographer: "pending",
     createdAt: new Date().toISOString(),
