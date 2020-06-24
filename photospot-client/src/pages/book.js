@@ -39,6 +39,7 @@ class book extends Component {
       formattedDate: "",
       availability: [],
       timeslots: [],
+      selectedTime: null,
     };
   }
 
@@ -127,6 +128,18 @@ class book extends Component {
     }
   };
 
+  handleRadioChange = (event) => {
+    this.setState({
+      selectedTime: event.target.value,
+    });
+  };
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+    console.log(this.state.formattedDate);
+    console.log(this.state.selectedTime);
+  };
+
   render() {
     return (
       <Grid container spacing={3}>
@@ -142,14 +155,20 @@ class book extends Component {
         </Grid>
         <Grid item xs={2} />
         <Grid item xs={2} />
-        <Grid item xs={6}>
+        <Grid item xs={5}>
           <Date
             theDate={this.state.selectedDate}
             parentCallback={this.handleDateChange}
           />
         </Grid>
         <Grid item xs={2}>
-          <Time key={this.state.timeslots} timeslots={this.state.timeslots} />
+          <Time
+            key={this.state.timeslots}
+            timeslots={this.state.timeslots}
+            handleSubmit={this.handleSubmit}
+            handleRadioChange={this.handleRadioChange}
+            time={this.state.selectedTime}
+          />
         </Grid>
         <Grid item xs={2}></Grid>
       </Grid>

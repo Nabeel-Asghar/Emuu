@@ -30,11 +30,9 @@ class photoSamples extends Component {
     }
 
     return (
-      <div>
-        <Carousel slidesPerPage={4} arrows infinite centered>
-          {imageContainer}
-        </Carousel>
-      </div>
+      <Carousel slidesPerPage={4} arrows infinite centered>
+        {imageContainer}
+      </Carousel>
     );
   }
 }
