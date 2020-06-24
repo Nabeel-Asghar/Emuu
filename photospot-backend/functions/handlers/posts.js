@@ -148,13 +148,16 @@ exports.bookPhotographer = (req, res) => {
   let shootTime = req.body.time;
   let location = req.body.location;
 
-  db.collection("photographer")
-    .doc(photographerBooked)
-    .collection("bookings")
-    .doc(shootDate)
-    .update({
-      [shootTime]: true,
-    });
+  let booking = {
+    photographerID: photographerBooked,
+    consumerID: userid,
+    shootDate: shootDate,
+    shootTime: shootTime,
+    location: location,
+    paymentStatus: "pending",
+    paymentToPhotographer: "pending",
+    createdAt: new Date().toISOString(),
+  };
 
   db.collection("orders")
     .doc(userid)
@@ -164,56 +167,46 @@ exports.bookPhotographer = (req, res) => {
         return res.json({
           message: "You may only have one pending order at a time.",
         });
-      } else {
-        db.collection("orders")
-          .doc(userid)
-          .set({
-            photographerID: photographerBooked,
-            consumerID: userid,
-            shootDate: shootDate,
-            location: location,
-            paymentStatus: "pending",
-            paymentToPhotographer: "pending",
-            createdAt: new Date().toISOString(),
-          })
-          .then(() => {
-            return res.json({
-              message:
-                "Order complete, you will recieve an email with a confirmation.",
-            });
-          })
-          .catch((err) => {
-            res.status(500).json({ error: `something went wrong` });
-            console.log(err);
-          });
-
-        db.collection("photographer")
-          .doc(photographerBooked)
-          .collection("orders")
-          .doc(userid)
-          .set({
-            photographerID: photographerBooked,
-            consumerID: userid,
-            shootDate: shootDate,
-            location: location,
-            paymentStatus: "pending",
-            paymentToPhotographer: "pending",
-            createdAt: new Date().toISOString(),
-          });
-
-        db.collection("users")
-          .doc(userid)
-          .collection("orders")
-          .doc(photographerBooked)
-          .set({
-            photographerID: photographerBooked,
-            consumerID: userid,
-            shootDate: shootDate,
-            location: location,
-            paymentStatus: "pending",
-            paymentToPhotographer: "pending",
-            createdAt: new Date().toISOString(),
-          });
       }
+    });
+
+  db.collection("photographer")
+    .doc(photographerBooked)
+    .collection("bookings")
+    .doc(shootDate)
+    .update({
+      [shootTime]: true,
+    });
+
+  db.collection("photographer")
+    .doc(photographerBooked)
+    .collection("orders")
+    .doc(userid)
+    .set({
+      booking,
+    });
+
+  db.collection("users")
+    .doc(userid)
+    .collection("orders")
+    .doc(photographerBooked)
+    .set({
+      booking,
+    });
+
+  db.collection("orders")
+    .doc(userid)
+    .set({
+      booking,
+    })
+    .then(() => {
+      return res.json({
+        message:
+          "Order complete, you will recieve an email with a confirmation.",
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: `something went wrong` });
+      console.log(err);
     });
 };
