@@ -59,6 +59,8 @@ class profileImage extends Component {
         this.assignStates(key, value);
       })
     );
+
+    console.log(this.state.email);
   }
 
   componentDidMount() {

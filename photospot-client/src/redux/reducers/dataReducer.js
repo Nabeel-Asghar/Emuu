@@ -23,6 +23,11 @@ export default function (state = intialState, action) {
         ...state,
         timings: [...action.payload],
       };
+
+    case "BOOK_PHOTOGRAHPER":
+      return {
+        ...state,
+      };
     default:
       return state;
   }

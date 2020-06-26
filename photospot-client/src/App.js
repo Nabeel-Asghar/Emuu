@@ -73,6 +73,10 @@ const theme = createMuiTheme({
     centerGrid: {
       textAlign: "center",
     },
+    cardAction: {
+      display: "block",
+      textAlign: "initial",
+    },
   },
 });
 

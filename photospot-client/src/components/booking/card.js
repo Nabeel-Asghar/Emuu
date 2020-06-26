@@ -23,7 +23,7 @@ const styles = {
   },
 };
 
-class card extends Component {
+class ProfileCard extends Component {
   render() {
     const {
       classes,
@@ -50,4 +50,4 @@ class card extends Component {
   }
 }
 
-export default withStyles(styles)(card);
+export default withStyles(styles)(ProfileCard);

@@ -67,3 +67,19 @@ export const getBookingTimes = (photographerID) => (dispatch) => {
     });
   });
 };
+
+export const bookPhotographer = (photographerID, bookingDetails) => (
+  dispatch
+) => {
+  API.post(`/photographers/${photographerID}/book`, bookingDetails)
+    .then((res) => {
+      console.log(res.data);
+      dispatch({ type: "BOOK_PHOTOGRAPHER", payload: res.data });
+    })
+    .catch((err) => {
+      dispatch({
+        type: "SET_ERRORS",
+        payload: err.response.data,
+      });
+    });
+};

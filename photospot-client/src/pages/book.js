@@ -9,13 +9,15 @@ import { connect } from "react-redux";
 import {
   getPhotographerPage,
   getBookingTimes,
+  bookPhotographer,
 } from "../redux/actions/dataActions";
 
 // Components
-import Card from "../components/booking/card";
+import ProfileCard from "../components/booking/card";
 import Date from "../components/booking/date";
 import equal from "fast-deep-equal";
 import Time from "../components/booking/time";
+import Confirmbook from "../components/booking/confirmbook";
 
 // Date format
 import moment from "moment";
@@ -40,6 +42,7 @@ class book extends Component {
       availability: [],
       timeslots: [],
       selectedTime: null,
+      open: false,
     };
   }
 
@@ -136,16 +139,45 @@ class book extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    console.log(this.state.formattedDate);
-    console.log(this.state.selectedTime);
+    this.handleClickOpen();
+  };
+
+  handleClickOpen = () => {
+    this.setState({
+      open: true,
+    });
+  };
+
+  handleDisagree = () => {
+    this.setState({
+      open: false,
+    });
+  };
+
+  handleAgree = () => {
+    let bookingDetails = {
+      date: this.state.formattedDate,
+      time: this.state.selectedTime,
+    };
+    this.props.bookPhotographer(
+      this.props.match.params.photographerID,
+      bookingDetails
+    );
+
+    console.log("Booked!");
+
+    this.setState({
+      open: false,
+    });
   };
 
   render() {
+    const { classes } = this.props;
     return (
       <Grid container spacing={3}>
         <Grid item xs={2} />
         <Grid item xs={8}>
-          <Card
+          <ProfileCard
             key={this.state.photographerID}
             photographerID={this.state.photographerID}
             firstName={this.state.firstName}
@@ -161,7 +193,7 @@ class book extends Component {
             parentCallback={this.handleDateChange}
           />
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs={3}>
           <Time
             key={this.state.timeslots}
             timeslots={this.state.timeslots}
@@ -170,6 +202,16 @@ class book extends Component {
             time={this.state.selectedTime}
           />
         </Grid>
+        <Confirmbook
+          open={this.state.open}
+          handleAgree={this.handleAgree}
+          handleDisagree={this.handleDisagree}
+          firstName={this.state.firstName}
+          lastName={this.state.lastName}
+          date={moment(this.state.formattedDate).format("dddd, MMMM Do")}
+          time={this.state.selectedTime}
+        />
+
         <Grid item xs={2}></Grid>
       </Grid>
     );
@@ -184,6 +226,7 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = {
   getPhotographerPage,
   getBookingTimes,
+  bookPhotographer,
 };
 
 export default connect(
