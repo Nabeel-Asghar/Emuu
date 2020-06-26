@@ -132,6 +132,22 @@ exports.getSpecificPhotographer = (req, res) => {
     });
 };
 
+exports.getPricing = (req, res) => {
+  let photographerId = req.params.photographerId;
+  db.collection("photographer")
+    .doc(photographerId)
+    .collection("pricing")
+    .doc("pricing")
+    .get()
+    .then((doc) => {
+      return res.json(doc.data());
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.json("No pricing available for this photographer.");
+    });
+};
+
 exports.getPhotographerSchedule = (req, res) => {
   let photographerBooked = req.params.photographerId;
 

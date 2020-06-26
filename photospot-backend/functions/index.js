@@ -13,6 +13,7 @@ const {
   bookPhotographer,
   reviewPhotographer,
   getPhotographerSchedule,
+  getPricing,
 } = require("./handlers/posts");
 
 const {
@@ -56,6 +57,7 @@ app.get(
   FBAuth,
   getPhotographerSchedule
 );
+app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);
 
 //Administrator
 app.get("/admin/completedOrders", completedOrders);
