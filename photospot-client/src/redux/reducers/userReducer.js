@@ -1,5 +1,6 @@
 const intialState = {
   authenticated: false,
+  credentials: {},
 };
 
 export default function (state = intialState, action) {
@@ -16,7 +17,7 @@ export default function (state = intialState, action) {
     case "SET_USER":
       return {
         authenticated: true,
-        ...action.payload,
+        credentials: { ...action.payload },
       };
     default:
       return state;

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
@@ -24,18 +23,14 @@ const styles = {
   },
 };
 
-class photographer extends Component {
+class ProfileCard extends Component {
   render() {
     const {
       classes,
-      photographer: {
-        photographerID,
-        firstName,
-        lastName,
-        profileImage,
-        location_city,
-        location_state,
-      },
+      photographerID,
+      firstName,
+      lastName,
+      profileImage,
     } = this.props;
 
     return (
@@ -46,15 +41,8 @@ class photographer extends Component {
           title="Profile Image"
         />
         <CardContent className={classes.content}>
-          <Typography
-            variant="h5"
-            component={Link}
-            to={`/photographers/${photographerID}`}
-          >
-            {firstName}&nbsp;{lastName}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            {location_city},&nbsp;{location_state}
+          <Typography variant="h5">
+            Book with&nbsp;{firstName}&nbsp;{lastName}
           </Typography>
         </CardContent>
       </Card>
@@ -62,4 +50,4 @@ class photographer extends Component {
   }
 }
 
-export default withStyles(styles)(photographer);
+export default withStyles(styles)(ProfileCard);

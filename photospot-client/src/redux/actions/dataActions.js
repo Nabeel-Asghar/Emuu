@@ -1,4 +1,5 @@
 import API from "../../api";
+import store from "../store";
 
 // export const getPhotographerPage = (photographerID) => (dispatch) => {
 //   dispatch({ type: LOADING_DATA });
@@ -16,6 +17,7 @@ import API from "../../api";
 //       });
 //     });
 // };
+
 export const getPhotographers = () => (dispatch) => {
   dispatch({ type: "LOADING_DATA" });
   API.get("photographers")
@@ -34,4 +36,50 @@ export const getPhotographers = () => (dispatch) => {
         payload: null,
       })
     );
+};
+
+export const getPhotographerPage = (photographerID) => (dispatch) => {
+  dispatch({ type: "LOADING_DATA" });
+  API.get(`/photographers/${photographerID}`)
+    .then((res) => {
+      console.log("Getting photographer page details");
+      dispatch({
+        type: "SET_PHOTOGRAHPER_PAGE",
+        payload: res.data,
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: "SET_PHOTOGRAHPER_PAGE",
+        payload: null,
+      });
+    });
+};
+
+export const getBookingTimes = (photographerID) => (dispatch) => {
+  dispatch({ type: "LOADING_DATA" });
+  API.get(`/photographers/${photographerID}/bookingTimes`).then((res) => {
+    console.log("Getting bookings for that photographer on that date");
+
+    dispatch({
+      type: "GET_BOOKING_TIMINGS",
+      payload: res.data,
+    });
+  });
+};
+
+export const bookPhotographer = (photographerID, bookingDetails) => (
+  dispatch
+) => {
+  API.post(`/photographers/${photographerID}/book`, bookingDetails)
+    .then((res) => {
+      console.log(res.data);
+      dispatch({ type: "BOOK_PHOTOGRAPHER", payload: res.data });
+    })
+    .catch((err) => {
+      dispatch({
+        type: "SET_ERRORS",
+        payload: err.response.data,
+      });
+    });
 };

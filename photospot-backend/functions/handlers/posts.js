@@ -13,6 +13,8 @@ exports.getAllPhotographers = (req, res) => {
           email: doc.data().email,
           firstName: doc.data().firstName,
           lastName: doc.data().lastName,
+          location_city: doc.data().location_city,
+          location_state: doc.data().location_state,
           profileImage: doc.data().profileImage,
           images: doc.data().images,
           createdAt: doc.data().createdAt,
@@ -110,12 +112,39 @@ exports.getSpecificPhotographer = (req, res) => {
         firstName: doc.data().firstName,
         lastName: doc.data().lastName,
         profileImage: doc.data().profileImage,
+        images: doc.data().images,
+        company: doc.data().company,
+        bio: doc.data().bio,
+        instagram: doc.data().instagram,
+        location_city: doc.data().location_city,
+        location_state: doc.data().location_state,
+        ratePerHour: doc.data().ratePerHour,
+        tags: doc.data().tags,
+        website: doc.data().website,
+        videography: doc.data().videography,
+        willingnessToTravel: doc.data().willingnessToTravel,
         createdAt: doc.data().createdAt,
       });
       return res.json(photographer);
     })
     .catch((err) => {
       res.status(500).json({ error: `Something went wrong.` });
+    });
+};
+
+exports.getPricing = (req, res) => {
+  let photographerId = req.params.photographerId;
+  db.collection("photographer")
+    .doc(photographerId)
+    .collection("pricing")
+    .doc("pricing")
+    .get()
+    .then((doc) => {
+      return res.json(doc.data());
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.json("No pricing available for this photographer.");
     });
 };
 
@@ -130,7 +159,9 @@ exports.getPhotographerSchedule = (req, res) => {
       timings = [];
 
       snapshot.forEach((doc) => {
-        timings.push(doc.data());
+        var theDay = doc.id;
+        var timingsForEachDay = { [theDay]: doc.data() };
+        timings.push(timingsForEachDay);
       });
 
       return res.json(timings);
@@ -146,14 +177,12 @@ exports.bookPhotographer = (req, res) => {
   let photographerBooked = req.params.photographerId;
   let shootDate = req.body.date;
   let shootTime = req.body.time;
-  let location = req.body.location;
 
   let booking = {
     photographerID: photographerBooked,
     consumerID: userid,
     shootDate: shootDate,
     shootTime: shootTime,
-    location: location,
     paymentStatus: "pending",
     paymentToPhotographer: "pending",
     createdAt: new Date().toISOString(),
