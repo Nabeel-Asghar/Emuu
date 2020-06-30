@@ -1,39 +1,36 @@
 import React, { Component } from "react";
-
 import withStyles from "@material-ui/core/styles/withStyles";
-
+import Gallery from "react-photo-gallery";
 import Carousel from "@brainhubeu/react-carousel";
 import "@brainhubeu/react-carousel/lib/style.css";
+import ImageGallery from "react-image-gallery";
 
-const styles = {
-  img: {
-    width: "300px",
-    height: "300px",
-  },
-};
+import "react-image-gallery/styles/css/image-gallery.css";
+
+const styles = (theme) => ({
+  ...theme.spreadThis,
+});
 
 class photoSamples extends Component {
   render() {
     const { classes, images } = this.props;
 
-    var imageContainer = [];
+    const imageslist = [
+      {
+        original: "https://picsum.photos/id/1018/1000/600/",
+        thumbnail: "https://picsum.photos/id/1018/250/150/",
+      },
+      {
+        original: "https://picsum.photos/id/1015/1200/600/",
+        thumbnail: "https://picsum.photos/id/1015/250/150/",
+      },
+      {
+        original: "https://picsum.photos/id/1019/1000/500/",
+        thumbnail: "https://picsum.photos/id/1019/250/150/",
+      },
+    ];
 
-    for (var i = 0; i < images.length; i++) {
-      imageContainer.push(
-        <img
-          key={i}
-          className={classes.img}
-          src={images[i]}
-          alt="Photographer Image"
-        />
-      );
-    }
-
-    return (
-      <Carousel slidesPerPage={4} arrows infinite centered>
-        {imageContainer}
-      </Carousel>
-    );
+    return <ImageGallery items={imageslist} showPlayButton={false} />;
   }
 }
 

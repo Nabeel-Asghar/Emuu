@@ -77,6 +77,44 @@ const theme = createMuiTheme({
       display: "block",
       textAlign: "initial",
     },
+    gridList: {
+      width: "500px",
+      height: "450px",
+    },
+
+    container: {
+      textAlign: "center",
+    },
+
+    text: {
+      marginTop: "110px",
+    },
+
+    centered: {
+      position: "absolute",
+      top: "100 %",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+    },
+
+    profilePic: {
+      height: "250px",
+      width: "100%",
+      objectFit: "cover",
+    },
+
+    avatar: {
+      width: "200px",
+      height: "200px",
+      borderRadius: "50%",
+      objectFit: "cover",
+    },
+
+    bookButton: {
+      marginTop: "15px",
+      marginBottom: "15px",
+      width: "110px",
+    },
   },
 });
 
