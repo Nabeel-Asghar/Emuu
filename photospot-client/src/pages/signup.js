@@ -50,11 +50,15 @@ class signup extends Component {
     });
 
     if (this.state.photographer === "true") {
-      this.state.photographer = true;
+      this.setState({
+        photographer: true,
+      });
     }
 
     if (this.state.photographer === "false") {
-      this.state.photographer = false;
+      this.setState({
+        photographer: true,
+      });
     }
 
     const newUserData = {

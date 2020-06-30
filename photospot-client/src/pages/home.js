@@ -1,9 +1,12 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
+<<<<<<< HEAD
 import PropTypes from "prop-types";
 import ChatListComponent from "../components/chatList";
 import ChatViewComponent from "../components/chatView";
+=======
+>>>>>>> f6f2e4d0008379332d02dbe06981f3b05a563249
 
 // Redux
 import { connect } from "react-redux";

@@ -8,6 +8,7 @@ firebase.initializeApp(config);
 const {
   validateSignUpData,
   validateLoginData,
+  validatePhotographerPageData,
   reduceUserDetails,
 } = require("../util/validators");
 
@@ -111,16 +112,33 @@ exports.login = (req, res) => {
 
 // set details for your photography page
 exports.setYourPhotographyPage = (req, res) => {
-  // details such as
-  let pageDetails = req.body;
+  const userDetails = {
+    bio: req.body.bio,
+    tags: req.body.tags,
+    //calender availability no clue how to do this
+    videography: req.body.videography,
+    location_city: req.body.location_city,
+    location_state: req.body.location_state,
+    willingnessToTravel: req.body.willingnessToTravel,
+    company: req.body.company,
+    website: req.body.website,
+    instagram: req.body.instagram,
+    ratePerHour: req.body.ratePerHour,
+  };
 
-  db.doc(`/photographers/${req.user.uid}`)
+  const { valid, errors } = validatePhotographerPageData(userDetails);
+
+  if (!valid) return res.status(400).json(errors);
+
+  console.log(req.user.uid);
+
+  db.doc(`/photographer/${req.user.uid}`)
     .update(userDetails)
     .then(() => {
-      return res.json({ message: "Details added successfully." });
+      return res.json({ message: "Your photographer page has been updated." });
     })
     .catch((err) => {
-      console.erroor(err);
+      console.error(err);
       return res.status(500).json({ error: err.code });
     });
 };

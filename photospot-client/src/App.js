@@ -16,7 +16,9 @@ import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import home from "./pages/home";
 import login from "./pages/login";
 import signup from "./pages/signup";
-import photographer from "./pages/photographer";
+import specificPhotographer from "./pages/specificPhotographer";
+import book from "./pages/book";
+import profileImage from "./pages/profileImage";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -118,6 +120,13 @@ const theme = createMuiTheme({
       marginTop: "10px",
       marginBottom: "10px",
     },
+    centerGrid: {
+      textAlign: "center",
+    },
+    cardAction: {
+      display: "block",
+      textAlign: "initial",
+    },
   },
 });
 
@@ -150,8 +159,18 @@ class App extends Component {
                   <AuthRoute exact path="/signup" component={signup} />
                   <Route
                     exact
+                    path="/signup/profileImage"
+                    component={profileImage}
+                  />
+                  <Route
+                    exact
                     path="/photographers/:photographerID"
-                    component={photographer}
+                    component={specificPhotographer}
+                  />
+                  <Route
+                    exact
+                    path="/photographers/:photographerID/book"
+                    component={book}
                   />
                 </Switch>
               </div>
