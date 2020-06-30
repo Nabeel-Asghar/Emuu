@@ -15,6 +15,8 @@ const {
   getPhotographerSchedule,
 } = require("./handlers/posts");
 
+const { getMessages } = require("./handlers/messages");
+
 const {
   signup,
   login,
@@ -23,6 +25,7 @@ const {
   setYourPhotographyPage,
   getYourPhotographerPage,
   getYourUserProfile,
+  chatMessaging,
 } = require("./handlers/users");
 
 const { completedOrders } = require("./handlers/administrator");
@@ -46,11 +49,14 @@ app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
 // upload images for your page
 app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
 
+//app.get("/messaging", FBAuth, chatMessaging);
+
 //----------Consumer Routes---------------
 app.get("/photographers", getAllPhotographers);
 app.get("/photographers/:photographerId", getSpecificPhotographer);
 app.post("/photographers/:photographerId/book", FBAuth, bookPhotographer);
 app.post("/photographers/:photographerId/review", FBAuth, reviewPhotographer);
+app.get("/messages", FBAuth, getMessages);
 app.get(
   "/photographers/:photographerId/bookingTimes",
   FBAuth,
