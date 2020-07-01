@@ -209,6 +209,7 @@ signup.propTypes = {
 const mapStateToProps = (state) => ({
   user: state.user,
   UI: state.UI,
+  authenticated: state.user.authenticated,
 });
 
 export default connect(mapStateToProps, { signupUser })(
