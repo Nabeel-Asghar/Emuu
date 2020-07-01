@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
 import AppIcon from "../images/logo.png";
@@ -51,6 +52,9 @@ class login extends Component {
   };
 
   render() {
+    if (this.props.authenticated === true) {
+      return <Redirect to="/" />;
+    }
     const {
       classes,
       UI: { loading },
@@ -122,6 +126,7 @@ login.propTypes = {
 const mapStateToProps = (state) => ({
   user: state.user,
   UI: state.UI,
+  authenticated: state.user.authenticated,
 });
 
 const mapActionsToProps = {
