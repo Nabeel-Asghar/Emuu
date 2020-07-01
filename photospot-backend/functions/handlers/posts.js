@@ -124,6 +124,7 @@ exports.getSpecificPhotographer = (req, res) => {
         videography: doc.data().videography,
         willingnessToTravel: doc.data().willingnessToTravel,
         createdAt: doc.data().createdAt,
+        background: doc.data().background,
       });
       return res.json(photographer);
     })
