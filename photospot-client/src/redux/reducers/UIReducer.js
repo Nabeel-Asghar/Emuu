@@ -23,6 +23,11 @@ export default function (state = intialState, action) {
         ...state,
         loading: true,
       };
+    case "SET_RESPONSE":
+      return {
+        ...state,
+        theResponse: action.response,
+      };
     default:
       return state;
   }
