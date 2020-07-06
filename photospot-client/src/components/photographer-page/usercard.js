@@ -10,14 +10,15 @@ const styles = (theme) => ({
 class usercard extends Component {
   render() {
     const {
+      classes,
+      firstName,
+      lastName,
+      profileImage,
+      background,
+    } = this.props;
     return (
       <div className={classes.container}>
-        <img
-          className={classes.profilePic}
-          src={
-            "https://static.photocdn.pt/images/articles/2019/07/19/nature_photography_tips_for_beginners.jpg"
-          }
-        />
+        <img className={classes.profilePic} src={background} />
 
         <div className={classes.centered}>
           <img className={classes.avatar} src={profileImage} />
