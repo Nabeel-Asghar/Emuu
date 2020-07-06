@@ -1,8 +1,5 @@
 import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
-import Gallery from "react-photo-gallery";
-import Carousel from "@brainhubeu/react-carousel";
-import "@brainhubeu/react-carousel/lib/style.css";
 import ImageGallery from "react-image-gallery";
 
 import "react-image-gallery/styles/css/image-gallery.css";
@@ -17,7 +14,17 @@ class photoSamples extends Component {
 
     var imageContainer = [];
 
-    return <ImageGallery items={imageslist} showPlayButton={false} />;
+    for (var i = 0; i < images.length; i++) {
+      var img = new Image();
+      img.src = images[i];
+
+      imageContainer.push({
+        original: img.src,
+        thumbnail: img.src,
+      });
+    }
+
+    return <ImageGallery items={imageContainer} showPlayButton={false} />;
   }
 }
 
