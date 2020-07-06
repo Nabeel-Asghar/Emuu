@@ -36,6 +36,7 @@ class specificPhotographer extends Component {
       images: [],
       realImages: [],
       ratePerHour: 0,
+      background: "",
     };
   }
 
@@ -76,6 +77,7 @@ class specificPhotographer extends Component {
           <Grid item xs={12}>
             <Usercard
               profileImage={this.state.profileImage}
+              background={this.state.background}
               firstName={this.state.firstName}
               lastName={this.state.lastName}
             />
