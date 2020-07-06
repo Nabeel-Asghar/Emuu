@@ -144,12 +144,14 @@ class App extends Component {
                 <Switch>
                   <Route exact path="/" component={home} />
                   <Route exact path="/login" component={login} />
+                  <Route exact path="/signup" component={signup} />
+                  <Route exact path="/profileImage" component={profileImage} />
                   <Route
                     exact
                     path="/photographers/:photographerID"
                     component={specificPhotographer}
                   />
-                  <Route
+                  <AuthRoute
                     exact
                     path="/photographers/:photographerID/book"
                     component={book}
