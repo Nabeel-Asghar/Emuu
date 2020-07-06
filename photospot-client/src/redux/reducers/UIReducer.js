@@ -1,5 +1,6 @@
 const intialState = {
   loading: false,
+  theResponse: "",
 };
 
 export default function (state = intialState, action) {

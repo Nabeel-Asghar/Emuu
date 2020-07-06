@@ -9,7 +9,7 @@ const styles = (theme) => ({
 
 class usercard extends Component {
   render() {
-    const { classes, firstName, lastName, profileImage } = this.props;
+    const {
     return (
       <div className={classes.container}>
         <img
