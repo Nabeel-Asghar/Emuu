@@ -19,6 +19,7 @@ import signup from "./pages/signup";
 import specificPhotographer from "./pages/specificPhotographer";
 import book from "./pages/book";
 import profileImage from "./pages/profileImage";
+import editPhotographyPage from "./pages/editPhotographyPage";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -150,6 +151,11 @@ class App extends Component {
                     exact
                     path="/photographers/:photographerID"
                     component={specificPhotographer}
+                  />
+                  <Route
+                    exact
+                    path="/yourPhotographyProfile"
+                    component={editPhotographyPage}
                   />
                   <AuthRoute
                     exact

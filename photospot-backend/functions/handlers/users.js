@@ -112,28 +112,27 @@ exports.login = (req, res) => {
 
 // set details for your photography page
 exports.setYourPhotographyPage = (req, res) => {
-  const userDetails = {
+  const photographerPageDetails = {
     bio: req.body.bio,
-    tags: req.body.tags,
-    //calender availability no clue how to do this
-    videography: req.body.videography,
+    background: req.body.background,
+    images: req.body.images,
     location_city: req.body.location_city,
     location_state: req.body.location_state,
-    willingnessToTravel: req.body.willingnessToTravel,
+    profileImage: req.body.profileImage,
     company: req.body.company,
     website: req.body.website,
     instagram: req.body.instagram,
     ratePerHour: req.body.ratePerHour,
   };
 
-  const { valid, errors } = validatePhotographerPageData(userDetails);
+  const { valid, errors } = validatePhotographerPageData(
+    photographerPageDetails
+  );
 
   if (!valid) return res.status(400).json(errors);
 
-  console.log(req.user.uid);
-
   db.doc(`/photographer/${req.user.uid}`)
-    .update(userDetails)
+    .update(photographerPageDetails)
     .then(() => {
       return res.json({ message: "Your photographer page has been updated." });
     })
@@ -218,17 +217,23 @@ exports.getYourPhotographerPage = (req, res) => {
       let page = [];
 
       page.push({
-        photographerID: userid,
-        email: doc.data().email,
-        firstName: doc.data().firstName,
-        lastName: doc.data().lastName,
+        bio: doc.data().bio,
+        background: doc.data().background,
+        images: doc.data().images,
+        location_city: doc.data().location_city,
+        location_state: doc.data().location_state,
         profileImage: doc.data().profileImage,
-        createdAt: doc.data().createdAt,
+        company: doc.data().company,
+        website: doc.data().website,
+        instagram: doc.data().instagram,
+        ratePerHour: doc.data().location_state,
       });
 
       return res.json(page);
     })
-    .catch((err) => console.error(err));
+    .catch((err) => {
+      return res.status(403).json({ error: err });
+    });
 };
 
 exports.getYourUserProfile = (req, res) => {

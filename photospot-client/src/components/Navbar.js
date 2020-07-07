@@ -48,6 +48,13 @@ const Navbar = () => {
 
         {authenticated && (
           <div>
+            <Button
+              color="inherit"
+              component={Link}
+              to="/yourPhotographyProfile"
+            >
+              Your Photographer Profile
+            </Button>
             <IconButton
               aria-label="account of current user"
               aria-controls="menu-appbar"

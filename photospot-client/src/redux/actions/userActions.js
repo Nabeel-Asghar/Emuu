@@ -65,6 +65,15 @@ export const uploadProfileImage = (formData) => (dispatch) => {
     .catch((err) => console.log(err));
 };
 
+export const getYourPhotographyPage = () => (dispatch) => {
+  return API.get("/yourphotographerpage")
+    .then((res) => {
+      dispatch({ type: "SET_YOUR_PHOTOGRAPHY_PAGE", payload: res.data });
+      return true;
+    })
+    .catch((err) => console.log(err));
+};
+
 const setAuthorizationHeader = (token) => {
   const FirebaseIdToken = `Bearer ${token}`;
   localStorage.setItem("FirebaseIdToken", FirebaseIdToken);

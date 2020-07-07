@@ -1,6 +1,7 @@
 const intialState = {
   authenticated: false,
   credentials: {},
+  yourPhotographyPageDetails: {},
 };
 
 export default function (state = intialState, action) {
@@ -18,6 +19,12 @@ export default function (state = intialState, action) {
       return {
         authenticated: true,
         credentials: { ...action.payload },
+      };
+
+    case "SET_YOUR_PHOTOGRAPHY_PAGE":
+      return {
+        authenticated: true,
+        yourPhotographyPageDetails: { ...action.payload },
       };
     default:
       return state;

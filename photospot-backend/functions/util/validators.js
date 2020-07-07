@@ -72,10 +72,6 @@ exports.validatePhotographerPageData = (data) => {
     errors.location_state = "Must not be empty";
   }
 
-  if (data.willingnessToTravel === null) {
-    errors.willingnessToTravel = "Must be a valid value";
-  }
-
   if (data.ratePerHour === null) {
     errors.ratePerHour = "Must be a valid value";
   }

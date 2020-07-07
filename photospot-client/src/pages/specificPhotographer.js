@@ -34,7 +34,6 @@ class specificPhotographer extends Component {
       bio: "",
       profileImage: "",
       images: [],
-      realImages: [],
       ratePerHour: 0,
       background: "",
     };
