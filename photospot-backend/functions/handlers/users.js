@@ -217,6 +217,9 @@ exports.getYourPhotographerPage = (req, res) => {
       let page = [];
 
       page.push({
+        firstName: doc.data().firstName,
+        lastName: doc.data().lastName,
+        email: doc.data().email,
         bio: doc.data().bio,
         background: doc.data().background,
         images: doc.data().images,
