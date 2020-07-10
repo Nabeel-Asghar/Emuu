@@ -20,6 +20,7 @@ import specificPhotographer from "./pages/specificPhotographer";
 import book from "./pages/book";
 import profileImage from "./pages/profileImage";
 import editPhotographyPage from "./pages/editPhotographyPage";
+import photographyPictures from "./pages/photographyPictures";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -120,6 +121,11 @@ const theme = createMuiTheme({
       marginBottom: "15px",
       width: "110px",
     },
+    horseShit: {
+      maxWidth: "100%",
+      maxHeight: "100%",
+      objectFit: "cover",
+    },
   },
 });
 
@@ -160,6 +166,11 @@ class App extends Component {
                     exact
                     path="/yourPhotographyProfile"
                     component={editPhotographyPage}
+                  />
+                  <Route
+                    exact
+                    path="/uploadPhotographyPictures"
+                    component={photographyPictures}
                   />
                   <AuthRoute
                     exact
