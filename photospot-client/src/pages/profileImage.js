@@ -25,12 +25,14 @@ class profileImage extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const image = this.state.profileImage[0];
+
     const formData = new FormData();
     formData.append("image", image, image.name);
     this.props.uploadProfileImage(formData);
   };
 
   onDrop(picture) {
+    console.log(picture);
     this.setState({
       profileImage: picture,
     });
@@ -48,7 +50,7 @@ class profileImage extends Component {
             imgExtension={[".jpg", ".gif", ".png", ".gif"]}
             maxFileSize={5242880}
             withPreview={true}
-            singleImage={true}
+            singleImage={false}
             withLabel={false}
           />
           <Button onClick={this.handleSubmit}>Upload</Button>

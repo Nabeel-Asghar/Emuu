@@ -5,6 +5,7 @@
 4. With any new changes, submit to backend 
 */
 import React, { Component } from "react";
+import { withRouter, Link } from "react-router-dom";
 
 // Material UI
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -95,6 +96,7 @@ class editPhotographyPage extends Component {
 
   handleBackgroundChange = (event) => {
     const image = event.target.files[0];
+    console.log(image);
     {
       image &&
         this.setState({
@@ -110,6 +112,7 @@ class editPhotographyPage extends Component {
 
   handleProfileImageChange = (event) => {
     const image = event.target.files[0];
+    console.log(image);
     {
       image &&
         this.setState({
@@ -125,6 +128,7 @@ class editPhotographyPage extends Component {
 
   render() {
     const { classes } = this.props;
+
     return (
       <Paper>
         <EditableUsercard
@@ -155,9 +159,19 @@ class editPhotographyPage extends Component {
             shrink: true,
           }}
         />
-        <div className={classes.photoContainer}>
-          <PhotoSamples images={this.state.images} />
-        </div>
+
+        <Button>
+          <Link
+            to={{
+              pathname: "/uploadPhotographyPictures",
+              state: {
+                images: this.state.images,
+              },
+            }}
+          >
+            <PhotoSamples key={this.state.images} images={this.state.images} />
+          </Link>
+        </Button>
       </Paper>
     );
   }
