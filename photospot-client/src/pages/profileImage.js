@@ -25,7 +25,7 @@ class profileImage extends Component {
   handleSubmit = (event) => {
     event.preventDefault();
     const image = this.state.profileImage[0];
-
+    console.log(image);
     const formData = new FormData();
     formData.append("image", image, image.name);
     this.props.uploadProfileImage(formData);
