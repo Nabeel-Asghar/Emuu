@@ -24,6 +24,7 @@ const {
   setYourPhotographyPage,
   getYourPhotographerPage,
   getYourUserProfile,
+  deleteImages,
 } = require("./handlers/users");
 
 const { completedOrders } = require("./handlers/administrator");
@@ -44,8 +45,9 @@ app.post("/user/profileimage", FBAuth, uploadProfilePicture);
 // create photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
 
-// upload images for your page
+// images for your page
 app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
+app.post("/photographyimages/delete", FBAuth, deleteImages);
 
 //----------Consumer Routes---------------
 app.get("/photographers", getAllPhotographers);

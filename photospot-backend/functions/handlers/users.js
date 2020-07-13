@@ -327,9 +327,39 @@ exports.uploadYourPhotographyImages = (req, res) => {
       );
     });
 
-    db.doc(`/photographer/${req.user.uid}`).update({ images: imageUrls });
+    console.log("ImageURLS:", imageUrls);
+
+    imageUrls.forEach((image) => {
+      db.doc(`/photographer/${req.user.uid}`)
+        .update({
+          images: admin.firestore.FieldValue.arrayUnion(image),
+        })
+        .catch((err) => {
+          return res.json({ error: err });
+        });
+    });
+
     res.writeHead(200, { Connection: "close" });
     res.end("All images uploaded successfully.");
   });
+
   busboy.end(req.rawBody);
+};
+
+exports.deleteImages = (req, res) => {
+  let userid = req.user.uid;
+  let theImagesToDelete = req.body;
+  console.log("Here: ", theImagesToDelete);
+
+  const docs = db.collection("photographer").doc(userid);
+
+  theImagesToDelete.forEach((image) => {
+    docs
+      .update({ images: admin.firestore.FieldValue.arrayRemove(image) })
+      .catch((err) => {
+        res.json({ error: err });
+      });
+  });
+
+  return res.json({ message: "Pictures deleted" });
 };
