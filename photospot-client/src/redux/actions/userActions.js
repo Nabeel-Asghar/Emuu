@@ -74,6 +74,35 @@ export const getYourPhotographyPage = () => (dispatch) => {
     .catch((err) => console.log(err));
 };
 
+export const deleteImages = (images) => (dispatch) => {
+  dispatch({ type: "LOADING_UI" });
+  API.post("/photographyimages/delete", images)
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) =>
+      dispatch({
+        type: "SET_ERRORS",
+        payload: err.response.data,
+      })
+    );
+};
+
+export const uploadImages = (images) => (dispatch) => {
+  dispatch({ type: "LOADING_UI" });
+  API.post("/photographyimages", images)
+    .then((res) => {
+      console.log(res.data);
+      dispatch({ type: "CLEAR_ERRORS" });
+    })
+    .catch((err) =>
+      dispatch({
+        type: "SET_ERRORS",
+        payload: err.response.data,
+      })
+    );
+};
+
 const setAuthorizationHeader = (token) => {
   const FirebaseIdToken = `Bearer ${token}`;
   localStorage.setItem("FirebaseIdToken", FirebaseIdToken);

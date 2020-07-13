@@ -131,47 +131,62 @@ class editPhotographyPage extends Component {
 
     return (
       <Paper>
-        <EditableUsercard
-          profileImage={this.state.profileImage}
-          background={this.state.background}
-          firstName={this.state.firstName}
-          lastName={this.state.lastName}
-          handleBackgroundChange={this.handleBackgroundChange}
-          handleEditBackground={this.handleEditBackground}
-          handleProfileImageChange={this.handleProfileImageChange}
-          handleEditProfileImage={this.handleEditProfileImage}
-        />
-        <TextField
-          id="standard-full-width"
-          name="bio"
-          type="text"
-          label="Biography"
-          style={{ margin: 8 }}
-          value={this.state.bio}
-          helperText="Tell us about yourself"
-          fullWidth
-          multiline
-          rows={4}
-          margin="normal"
-          variant="outlined"
-          onChange={this.handleChange}
-          InputLabelProps={{
-            shrink: true,
-          }}
-        />
-
-        <Button>
-          <Link
-            to={{
-              pathname: "/uploadPhotographyPictures",
-              state: {
-                images: this.state.images,
-              },
-            }}
-          >
+        <Grid container>
+          <Grid item xs={12}>
+            <EditableUsercard
+              profileImage={this.state.profileImage}
+              background={this.state.background}
+              firstName={this.state.firstName}
+              lastName={this.state.lastName}
+              handleBackgroundChange={this.handleBackgroundChange}
+              handleEditBackground={this.handleEditBackground}
+              handleProfileImageChange={this.handleProfileImageChange}
+              handleEditProfileImage={this.handleEditProfileImage}
+            />
+          </Grid>
+          <Grid item xs={1} />
+          <Grid item xs={10}>
+            <TextField
+              id="standard-full-width"
+              name="bio"
+              type="text"
+              label="Biography"
+              style={{ margin: 8 }}
+              value={this.state.bio}
+              helperText="Tell us about yourself"
+              fullWidth
+              multiline
+              rows={4}
+              margin="normal"
+              variant="outlined"
+              onChange={this.handleChange}
+              InputLabelProps={{
+                shrink: true,
+              }}
+            />
+          </Grid>
+          <Grid item xs={1} />
+          <Grid item xs={1} />
+          <Grid item xs={10}>
             <PhotoSamples key={this.state.images} images={this.state.images} />
-          </Link>
-        </Button>
+          </Grid>
+          <Grid item xs={1} />
+          <Grid item xs={12} className={classes.centerGrid}>
+            <Button
+              variant="contained"
+              color="primary"
+              component={Link}
+              to={{
+                pathname: "/uploadPhotographyPictures",
+                state: {
+                  images: this.state.images,
+                },
+              }}
+            >
+              Change Pictures
+            </Button>
+          </Grid>
+        </Grid>
       </Paper>
     );
   }
