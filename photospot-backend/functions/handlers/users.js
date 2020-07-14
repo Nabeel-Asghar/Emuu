@@ -184,14 +184,15 @@ exports.uploadProfilePicture = (req, res) => {
         },
       })
       .then(() => {
-        console.log(config.storageBucket);
         const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
         return db.doc(`/users/${req.user.uid}`).update({ profileImage });
       })
       .then(() => {
-        return res.json({
-          message: "Image uploaded successfully!",
-        });
+        const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+        return db.doc(`/photographer/${req.user.uid}`).update({ profileImage });
+      })
+      .then(() => {
+        return res.json({ message: "Profile Image update" });
       })
       .catch((err) => {
         console.log(err);
