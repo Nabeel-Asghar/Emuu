@@ -143,6 +143,7 @@ exports.setYourPhotographyPage = (req, res) => {
     });
 };
 
+// set your photographer bio
 exports.setPhotographerBio = (req, res) => {
   const photographerPageDetails = {
     bio: req.body.bio,
@@ -216,6 +217,62 @@ exports.uploadProfilePicture = (req, res) => {
       })
       .then(() => {
         return res.json({ message: "Profile Image update" });
+      })
+      .catch((err) => {
+        console.log(err);
+        return res.status(500).json({ error: err.code });
+      });
+  });
+  busboy.end(req.rawBody);
+};
+
+// upload your background picture for your page
+exports.uploadBackgroundPicture = (req, res) => {
+  const BusBoy = require("busboy");
+  const path = require("path");
+  const os = require("os");
+  const fs = require("fs");
+
+  const busboy = new BusBoy({ headers: req.headers });
+
+  let imageFileName;
+  let imageToBeUploaded = {};
+
+  busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
+    if (!mimetype.includes("image")) {
+      return res.status(400).json({ error: "Please upload an image." });
+    }
+
+    const imageExtension = filename.split(".")[filename.split(".").length - 1];
+
+    imageFileName = `${Math.round(
+      Math.random() * 1000000000
+    )}.${imageExtension}`;
+
+    const filepath = path.join(os.tmpdir(), imageFileName);
+    imageToBeUploaded = { filepath, mimetype };
+
+    file.pipe(fs.createWriteStream(filepath));
+  });
+
+  busboy.on("finish", () => {
+    admin
+      .storage()
+      .bucket(config.storageBucket)
+      .upload(imageToBeUploaded.filepath, {
+        resumable: false,
+        metadata: {
+          metadata: {
+            contentType: imageToBeUploaded.mimetype,
+          },
+        },
+      })
+      .then(() => {
+        const background = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+        return db.doc(`/photographer/${req.user.uid}`).update({ background });
+      })
+      .then(() => {
+        return res.json({ message: "Background Image update" });
       })
       .catch((err) => {
         console.log(err);

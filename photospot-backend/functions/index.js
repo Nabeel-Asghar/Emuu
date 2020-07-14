@@ -20,6 +20,7 @@ const {
   signup,
   login,
   uploadProfilePicture,
+  uploadBackgroundPicture,
   uploadYourPhotographyImages,
   setYourPhotographyPage,
   setPhotographerBio,
@@ -43,11 +44,10 @@ app.get("/youruserprofile", FBAuth, getYourUserProfile);
 // upload profile image
 app.post("/user/profileimage", FBAuth, uploadProfilePicture);
 
-// create photography page
+// photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
 app.post("/editphotographypage/bio", FBAuth, setPhotographerBio);
-
-// images for your page
+app.post("/editphotographypage/background", FBAuth, uploadBackgroundPicture);
 app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
 app.post("/photographyimages/delete", FBAuth, deleteImages);
 
