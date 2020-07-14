@@ -22,6 +22,7 @@ import {
   getYourPhotographyPage,
   editPhotographerBio,
   uploadProfileImage,
+  uploadBackgroundImage,
 } from "../redux/actions/userActions";
 
 import equal from "fast-deep-equal";
@@ -107,6 +108,10 @@ class editPhotographyPage extends Component {
           background: URL.createObjectURL(image),
         });
     }
+    const formData = new FormData();
+    formData.append("image", image, image.name);
+    console.log(formData);
+    this.props.uploadBackgroundImage(formData);
   };
 
   handleEditBackground = () => {
@@ -255,6 +260,7 @@ const mapActionsToProps = {
   getYourPhotographyPage,
   editPhotographerBio,
   uploadProfileImage,
+  uploadBackgroundImage,
 };
 
 export default connect(

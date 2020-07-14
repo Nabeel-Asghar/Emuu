@@ -117,6 +117,21 @@ export const editPhotographerBio = (bio) => (dispatch) => {
     );
 };
 
+export const uploadBackgroundImage = (image) => (dispatch) => {
+  API.post("/editphotographypage/background", image)
+    .then((res) => {
+      console.log(res.data);
+      console.log("Done");
+      dispatch({ type: "CLEAR_ERRORS" });
+    })
+    .catch((err) =>
+      dispatch({
+        type: "SET_ERRORS",
+        payload: err.response.data,
+      })
+    );
+};
+
 const setAuthorizationHeader = (token) => {
   const FirebaseIdToken = `Bearer ${token}`;
   localStorage.setItem("FirebaseIdToken", FirebaseIdToken);
