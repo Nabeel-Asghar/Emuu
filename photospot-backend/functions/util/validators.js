@@ -57,6 +57,18 @@ exports.validateLoginData = (data) => {
   };
 };
 
+exports.validateBio = (data) => {
+  let errors = {};
+
+  if (isEmpty(data.bio)) {
+    errors.bio = "Must not be empty";
+  }
+  return {
+    errors,
+    valid: Object.keys(errors).length === 0 ? true : false,
+  };
+};
+
 exports.validatePhotographerPageData = (data) => {
   let errors = {};
 

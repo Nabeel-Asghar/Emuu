@@ -22,6 +22,7 @@ const {
   uploadProfilePicture,
   uploadYourPhotographyImages,
   setYourPhotographyPage,
+  setPhotographerBio,
   getYourPhotographerPage,
   getYourUserProfile,
   deleteImages,
@@ -44,6 +45,7 @@ app.post("/user/profileimage", FBAuth, uploadProfilePicture);
 
 // create photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
+app.post("/editphotographypage/bio", FBAuth, setPhotographerBio);
 
 // images for your page
 app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);

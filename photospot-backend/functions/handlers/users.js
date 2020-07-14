@@ -9,6 +9,7 @@ const {
   validateSignUpData,
   validateLoginData,
   validatePhotographerPageData,
+  validateBio,
   reduceUserDetails,
 } = require("../util/validators");
 
@@ -135,6 +136,28 @@ exports.setYourPhotographyPage = (req, res) => {
     .update(photographerPageDetails)
     .then(() => {
       return res.json({ message: "Your photographer page has been updated." });
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
+exports.setPhotographerBio = (req, res) => {
+  const photographerPageDetails = {
+    bio: req.body.bio,
+  };
+
+  console.log(photographerPageDetails);
+
+  const { valid, errors } = validateBio(photographerPageDetails);
+
+  if (!valid) return res.status(400).json(errors);
+
+  db.doc(`/photographer/${req.user.uid}`)
+    .update(photographerPageDetails)
+    .then(() => {
+      return res.json({ message: "Your bio has been updated." });
     })
     .catch((err) => {
       console.error(err);
