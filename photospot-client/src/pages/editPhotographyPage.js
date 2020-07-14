@@ -13,22 +13,23 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import Radio from "@material-ui/core/Radio";
-import RadioGroup from "@material-ui/core/RadioGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import FormControl from "@material-ui/core/FormControl";
-import FormLabel from "@material-ui/core/FormLabel";
+import EditIcon from "@material-ui/icons/Edit";
 import Paper from "@material-ui/core/Paper";
 
 // Redux
 import { connect } from "react-redux";
-import { getYourPhotographyPage } from "../redux/actions/userActions";
+import {
+  getYourPhotographyPage,
+  editPhotographerBio,
+  uploadProfileImage,
+} from "../redux/actions/userActions";
 
 import equal from "fast-deep-equal";
 
 // Components
 import EditableUsercard from "../components/your-photography-page/editableUsercard";
 import PhotoSamples from "../components/photographer-page/photoSamples";
+import EditBio from "../components/your-photography-page/editBio";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -38,6 +39,7 @@ class editPhotographyPage extends Component {
   constructor() {
     super();
     this.state = {
+      disableTextField: true,
       firstName: "",
       lastName: "",
       email: "",
@@ -51,6 +53,8 @@ class editPhotographyPage extends Component {
       instagram: "",
       website: "",
       ratePerHour: "",
+      open: false,
+      fakeBio: "",
     };
   }
 
@@ -90,7 +94,7 @@ class editPhotographyPage extends Component {
 
   handleChange = (event) => {
     this.setState({
-      [event.target.name]: event.target.value,
+      fakeBio: event.target.value,
     });
   };
 
@@ -126,6 +130,42 @@ class editPhotographyPage extends Component {
     fileInput.click();
   };
 
+  handleEditBio = () => {
+    this.setState({
+      disableTextField: false,
+    });
+  };
+
+  handleClickOpen = () => {
+    this.setState({
+      open: true,
+      fakeBio: this.state.bio,
+    });
+  };
+
+  handleDisagree = () => {
+    this.setState({
+      open: false,
+    });
+  };
+
+  handleAgree = (event) => {
+    this.setState({
+      open: false,
+    });
+    this.setState({
+      bio: this.state.fakeBio,
+    });
+    const details = {
+      bio: this.state.fakeBio,
+    };
+
+    console.log("REAL ", this.state.bio);
+    console.log("FAKE", this.state.fakeBio);
+
+    this.props.editPhotographerBio(details);
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -147,11 +187,11 @@ class editPhotographyPage extends Component {
           <Grid item xs={1} />
           <Grid item xs={10}>
             <TextField
+              disabled
               id="standard-full-width"
               name="bio"
               type="text"
               label="Biography"
-              style={{ margin: 8 }}
               value={this.state.bio}
               helperText="Tell us about yourself"
               fullWidth
@@ -165,12 +205,18 @@ class editPhotographyPage extends Component {
               }}
             />
           </Grid>
-          <Grid item xs={1} />
-          <Grid item xs={1} />
-          <Grid item xs={10}>
-            <PhotoSamples key={this.state.images} images={this.state.images} />
+          <EditBio
+            open={this.state.open}
+            handleAgree={this.handleAgree}
+            handleDisagree={this.handleDisagree}
+            handleChange={this.handleChange}
+            bio={this.state.fakeBio}
+          />
+          <Grid item xs={1}>
+            <Button onClick={this.handleClickOpen}>
+              <EditIcon color="primary" />
+            </Button>
           </Grid>
-          <Grid item xs={1} />
           <Grid item xs={12} className={classes.centerGrid}>
             <Button
               variant="contained"
@@ -186,6 +232,11 @@ class editPhotographyPage extends Component {
               Change Pictures
             </Button>
           </Grid>
+          <Grid item xs={1} />
+          <Grid item xs={10}>
+            <PhotoSamples key={this.state.images} images={this.state.images} />
+          </Grid>
+          <Grid item xs={1} />
         </Grid>
       </Paper>
     );
@@ -198,6 +249,8 @@ const mapStateToProps = (state) => ({
 
 const mapActionsToProps = {
   getYourPhotographyPage,
+  editPhotographerBio,
+  uploadProfileImage,
 };
 
 export default connect(

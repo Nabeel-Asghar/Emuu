@@ -103,6 +103,20 @@ export const uploadImages = (images) => (dispatch) => {
     );
 };
 
+export const editPhotographerBio = (bio) => (dispatch) => {
+  API.post("/editphotographypage/bio", bio)
+    .then((res) => {
+      console.log(res.data);
+      dispatch({ type: "CLEAR_ERRORS" });
+    })
+    .catch((err) =>
+      dispatch({
+        type: "SET_ERRORS",
+        payload: err.response.data,
+      })
+    );
+};
+
 const setAuthorizationHeader = (token) => {
   const FirebaseIdToken = `Bearer ${token}`;
   localStorage.setItem("FirebaseIdToken", FirebaseIdToken);
