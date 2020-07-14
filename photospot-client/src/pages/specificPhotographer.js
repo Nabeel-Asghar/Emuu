@@ -1,10 +1,13 @@
 // React
 import React, { Component } from "react";
+import equal from "fast-deep-equal";
 
 // Material UI
 import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Button from "@material-ui/core/Button";
+import Paper from "@material-ui/core/Paper";
+
 // Redux
 import { connect } from "react-redux";
 import { getPhotographerPage } from "../redux/actions/dataActions";
@@ -14,8 +17,8 @@ import ProfileImage from "../components/photographer-page/profileImage";
 import ProfileDetails from "../components/photographer-page/profileDetails";
 import PhotoSamples from "../components/photographer-page/photoSamples";
 import Bio from "../components/photographer-page/bio";
-
-import equal from "fast-deep-equal";
+import Usercard from "../components/photographer-page/usercard";
+import Rating from "../components/photographer-page/rating";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -32,6 +35,7 @@ class specificPhotographer extends Component {
       profileImage: "",
       images: [],
       ratePerHour: 0,
+      background: "",
     };
   }
 
@@ -65,44 +69,48 @@ class specificPhotographer extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
-      <Grid container spacing={3}>
-        <Grid item sm={3} xs={12}>
-          <ProfileImage
-            key={this.state.profileImage}
-            profileImage={this.state.profileImage}
-          />
-        </Grid>
-        <Grid item sm={6} xs={12}>
-          <ProfileDetails
-            key={this.state.firstName}
-            firstName={this.state.firstName}
-            lastName={this.state.lastName}
-          />
-        </Grid>
+      <Paper>
+        <Grid container direction="column" alignItems="center" justify="center">
+          <Grid item xs={12}>
+            <Usercard
+              profileImage={this.state.profileImage}
+              background={this.state.background}
+              firstName={this.state.firstName}
+              lastName={this.state.lastName}
+            />
+          </Grid>
 
-        <Grid item sm={3} xs={12}>
-          <Button
-            variant="outlined"
-            color="primary"
-            onClick={() =>
-              this.props.history.push(
-                `${this.props.history.location.pathname}/book`
-              )
-            }
-          >
-            Book
-          </Button>
-        </Grid>
+          <Grid item xs={12}>
+            <Rating />
+          </Grid>
 
-        <Grid item sm={12}>
-          <PhotoSamples key={this.state.images} images={this.state.images} />
-        </Grid>
+          <Grid item xs={12}>
+            <Button
+              className={classes.bookButton}
+              variant="contained"
+              color="primary"
+              onClick={() =>
+                this.props.history.push(
+                  `${this.props.history.location.pathname}/book`
+                )
+              }
+            >
+              Book
+            </Button>
+          </Grid>
 
-        <Grid item sm={12}>
-          <Bio key={this.state.bio} bio={this.state.bio} />
+          <Grid item />
+          <Grid item xs={10}>
+            <PhotoSamples key={this.state.images} images={this.state.images} />
+          </Grid>
+          <Grid item />
+          <Grid item sm={12}>
+            <Bio key={this.state.bio} bio={this.state.bio} />
+          </Grid>
         </Grid>
-      </Grid>
+      </Paper>
     );
   }
 }

@@ -57,6 +57,18 @@ exports.validateLoginData = (data) => {
   };
 };
 
+exports.validateBio = (data) => {
+  let errors = {};
+
+  if (isEmpty(data.bio)) {
+    errors.bio = "Must not be empty";
+  }
+  return {
+    errors,
+    valid: Object.keys(errors).length === 0 ? true : false,
+  };
+};
+
 exports.validatePhotographerPageData = (data) => {
   let errors = {};
 
@@ -70,10 +82,6 @@ exports.validatePhotographerPageData = (data) => {
 
   if (isEmpty(data.location_state)) {
     errors.location_state = "Must not be empty";
-  }
-
-  if (data.willingnessToTravel === null) {
-    errors.willingnessToTravel = "Must be a valid value";
   }
 
   if (data.ratePerHour === null) {

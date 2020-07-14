@@ -1,16 +1,12 @@
 import React, { Component } from "react";
-
 import withStyles from "@material-ui/core/styles/withStyles";
+import ImageGallery from "react-image-gallery";
 
-import Carousel from "@brainhubeu/react-carousel";
-import "@brainhubeu/react-carousel/lib/style.css";
+import "react-image-gallery/styles/css/image-gallery.css";
 
-const styles = {
-  img: {
-    width: "300px",
-    height: "300px",
-  },
-};
+const styles = (theme) => ({
+  ...theme.spreadThis,
+});
 
 class photoSamples extends Component {
   render() {
@@ -19,21 +15,16 @@ class photoSamples extends Component {
     var imageContainer = [];
 
     for (var i = 0; i < images.length; i++) {
-      imageContainer.push(
-        <img
-          key={i}
-          className={classes.img}
-          src={images[i]}
-          alt="Photographer Image"
-        />
-      );
+      var img = new Image();
+      img.src = images[i];
+
+      imageContainer.push({
+        original: img.src,
+        thumbnail: img.src,
+      });
     }
 
-    return (
-      <Carousel slidesPerPage={4} arrows infinite centered>
-        {imageContainer}
-      </Carousel>
-    );
+    return <ImageGallery items={imageContainer} showPlayButton={false} />;
   }
 }
 

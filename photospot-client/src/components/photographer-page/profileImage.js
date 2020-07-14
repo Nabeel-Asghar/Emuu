@@ -4,9 +4,8 @@ import withStyles from "@material-ui/core/styles/withStyles";
 
 const styles = {
   img: {
-    maxWidth: "150px",
-    width: "100%",
-    height: "auto",
+    width: "125px",
+    height: "125px",
     align: "right",
   },
 };

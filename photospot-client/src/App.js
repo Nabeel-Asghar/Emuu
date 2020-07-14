@@ -19,6 +19,8 @@ import signup from "./pages/signup";
 import specificPhotographer from "./pages/specificPhotographer";
 import book from "./pages/book";
 import profileImage from "./pages/profileImage";
+import editPhotographyPage from "./pages/editPhotographyPage";
+import photographyPictures from "./pages/photographyPictures";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -30,16 +32,16 @@ import API from "./api";
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: "#a7c0cd",
-      main: "#78909c",
-      dark: "#4b636e",
-      contrastText: "#fafafa",
+      light: "#7986cb",
+      main: "#3f51b5",
+      dark: "#303f9f",
+      contrastText: "#fff",
     },
     secondary: {
-      light: "#cfcfcf",
-      main: "#9e9e9e",
-      dark: "#707070",
-      contrastText: "#fafafa",
+      light: "#ff4081",
+      main: "#f50057",
+      dark: "#c51162",
+      contrastText: "#fff",
     },
   },
   typography: {
@@ -63,6 +65,10 @@ const theme = createMuiTheme({
 
     button: {
       marginTop: "10px",
+      position: "relative",
+    },
+    progress: {
+      position: "absolute",
     },
     customError: {
       color: "red",
@@ -76,6 +82,49 @@ const theme = createMuiTheme({
     cardAction: {
       display: "block",
       textAlign: "initial",
+    },
+    gridList: {
+      width: "500px",
+      height: "450px",
+    },
+
+    container: {
+      textAlign: "center",
+    },
+
+    text: {
+      marginTop: "110px",
+    },
+
+    centered: {
+      position: "absolute",
+      top: "100 %",
+      left: "50%",
+      transform: "translate(-50%, -50%)",
+    },
+
+    profilePic: {
+      height: "250px",
+      width: "100%",
+      objectFit: "cover",
+    },
+
+    avatar: {
+      width: "200px",
+      height: "200px",
+      borderRadius: "50%",
+      objectFit: "cover",
+    },
+
+    bookButton: {
+      marginTop: "15px",
+      marginBottom: "15px",
+      width: "110px",
+    },
+    horseShit: {
+      maxWidth: "100%",
+      maxHeight: "100%",
+      objectFit: "cover",
     },
   },
 });
@@ -105,19 +154,25 @@ class App extends Component {
               <div className="container">
                 <Switch>
                   <Route exact path="/" component={home} />
-                  <AuthRoute exact path="/login" component={login} />
-                  <AuthRoute exact path="/signup" component={signup} />
-                  <Route
-                    exact
-                    path="/signup/profileImage"
-                    component={profileImage}
-                  />
+                  <Route exact path="/login" component={login} />
+                  <Route exact path="/signup" component={signup} />
+                  <Route exact path="/profileImage" component={profileImage} />
                   <Route
                     exact
                     path="/photographers/:photographerID"
                     component={specificPhotographer}
                   />
                   <Route
+                    exact
+                    path="/yourPhotographyProfile"
+                    component={editPhotographyPage}
+                  />
+                  <Route
+                    exact
+                    path="/uploadPhotographyPictures"
+                    component={photographyPictures}
+                  />
+                  <AuthRoute
                     exact
                     path="/photographers/:photographerID/book"
                     component={book}

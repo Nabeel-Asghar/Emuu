@@ -20,10 +20,13 @@ const {
   signup,
   login,
   uploadProfilePicture,
+  uploadBackgroundPicture,
   uploadYourPhotographyImages,
   setYourPhotographyPage,
+  setPhotographerBio,
   getYourPhotographerPage,
   getYourUserProfile,
+  deleteImages,
 } = require("./handlers/users");
 
 const { completedOrders } = require("./handlers/administrator");
@@ -41,11 +44,12 @@ app.get("/youruserprofile", FBAuth, getYourUserProfile);
 // upload profile image
 app.post("/user/profileimage", FBAuth, uploadProfilePicture);
 
-// create photography page
+// photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
-
-// upload images for your page
+app.post("/editphotographypage/bio", FBAuth, setPhotographerBio);
+app.post("/editphotographypage/background", FBAuth, uploadBackgroundPicture);
 app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
+app.post("/photographyimages/delete", FBAuth, deleteImages);
 
 //----------Consumer Routes---------------
 app.get("/photographers", getAllPhotographers);

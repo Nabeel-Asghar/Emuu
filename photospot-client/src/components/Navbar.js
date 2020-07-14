@@ -1,57 +1,94 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
+import { withRouter, Link } from "react-router-dom";
 
 //Material UI
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Button from "@material-ui/core/Button";
+import IconButton from "@material-ui/core/IconButton";
+import MenuItem from "@material-ui/core/MenuItem";
+import Menu from "@material-ui/core/Menu";
+import { AccountCircle } from "@material-ui/icons";
 
 // Redux
-import PropTypes from "prop-types";
-import { connect } from "react-redux";
 import { logoutUser } from "../redux/actions/userActions";
+import { useSelector, useDispatch } from "react-redux";
 
-export class Navbar extends Component {
-  render() {
-    return (
-      <AppBar>
-        <Toolbar className="nav-container">
-          <Button color="inherit" component={Link} to="/login">
-            Login
-          </Button>
-          <Button color="inherit" component={Link} to="/">
-            Home
-          </Button>
-          <Button color="inherit" component={Link} to="/signup">
-            Signup
-          </Button>
-          <Button
-            color="inherit"
-            component={Link}
-            to="/login"
-            onClick={() => {
-              this.props.logoutUser();
-            }}
-          >
-            Logout
-          </Button>
-        </Toolbar>
-      </AppBar>
-    );
-  }
-}
+const Navbar = () => {
+  const authenticated = useSelector((state) => state.user.authenticated);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const dispatch = useDispatch();
 
-Navbar.propTypes = {
-  logoutUser: PropTypes.func.isRequired,
+  const handleMenu = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  return (
+    <AppBar>
+      <Toolbar className="nav-container">
+        {!authenticated && (
+          <div>
+            <Button color="inherit" component={Link} to="/login">
+              Login
+            </Button>
+            <Button color="inherit" component={Link} to="/signup">
+              Signup
+            </Button>
+          </div>
+        )}
+
+        <Button color="inherit" component={Link} to="/">
+          Home
+        </Button>
+
+        {authenticated && (
+          <div>
+            <Button
+              color="inherit"
+              component={Link}
+              to="/yourPhotographyProfile"
+            >
+              Your Photographer Profile
+            </Button>
+            <IconButton
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
+            >
+              <AccountCircle />
+            </IconButton>
+            <Menu
+              id="menu-appbar"
+              anchorEl={anchorEl}
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              keepMounted
+              transformOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+              open={open}
+              onClose={handleClose}
+            >
+              <MenuItem component={Link} to="/profileImage">
+                Profile
+              </MenuItem>
+              <MenuItem onClick={() => dispatch(logoutUser())}>Logout</MenuItem>
+            </Menu>
+          </div>
+        )}
+      </Toolbar>
+    </AppBar>
+  );
 };
 
-const mapActionsToProps = {
-  logoutUser,
-};
-
-const mapStateToProps = (state) => ({
-  user: state.user,
-  UI: state.UI,
-});
-
-export default connect(mapStateToProps, mapActionsToProps)(Navbar);
+export default withRouter(Navbar);
