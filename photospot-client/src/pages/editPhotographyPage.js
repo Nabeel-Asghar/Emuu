@@ -123,6 +123,10 @@ class editPhotographyPage extends Component {
           profileImage: URL.createObjectURL(image),
         });
     }
+    const formData = new FormData();
+    formData.append("image", image, image.name);
+    console.log(formData);
+    this.props.uploadProfileImage(formData);
   };
 
   handleEditProfileImage = () => {
