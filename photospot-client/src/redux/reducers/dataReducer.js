@@ -12,7 +12,12 @@ export default function (state = intialState, action) {
         ...state,
         allPhotographers: { ...action.payload },
       };
-    case "SET_MESSAGES":
+    case "GET_MESSAGES":
+      return {
+        ...state,
+        allMessages: { ...action.payload },
+      };
+    case "UPDATE_MESSAGES":
       return {
         ...state,
         allMessages: { ...action.payload },
@@ -28,6 +33,10 @@ export default function (state = intialState, action) {
         timings: [...action.payload],
       };
     case "BOOK_PHOTOGRAHPER":
+      return {
+        ...state,
+      };
+    case "SEND_MESSAGE":
       return {
         ...state,
       };

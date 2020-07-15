@@ -20,26 +20,32 @@ const styles = (theme) => ({
 });
 
 class ChatViewComponent extends Component {
-  render() {
-    const { classes, user, chat } = this.props;
+  componentDidUpdate = () => {
+    const container = document.getElementById("chatview-container");
+    if (container) container.scrollTo(0, container.scrollHeight);
+  };
 
-    console.log(user);
+  render() {
+    const { classes, userEmail, chat } = this.props;
 
     if (chat === undefined) {
-      return <main className={classes.content}></main>;
+      return <main id="chatview-container" className={classes.content} />;
     } else {
       return (
         <div>
-          <div></div>
-          <main className={classes.content}>
+          <div className={classes.chatHeader}>
+            Your conversation with{" "}
+            {chat.users.filter((_usr) => _usr !== userEmail)[0]}
+          </div>
+          <main id="chatview-container" className={classes.chatViewContainer}>
             {chat.messages.map((_msg, _index) => {
               return (
                 <div
                   key={_index}
                   className={
                     _msg.sender === this.props.userEmail
-                      ? classes.userSent
-                      : classes.friendSent
+                      ? classes.friendSent
+                      : classes.userSent
                   }
                 >
                   {_msg.message}

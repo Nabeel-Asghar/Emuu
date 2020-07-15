@@ -21,16 +21,15 @@ const styles = (theme) => ({
 class ChatListComponent extends Component {
   render() {
     const { classes, selectChatFn, chat } = this.props;
-    console.log(chat);
 
     if (!chat || chat.length === 0) {
       return <div>Login in to chat.</div>;
     } else {
       return (
-        <main className={classes.root}>
+        <main>
           <Button
             variant="contained"
-            fullwidth="true"
+            fullWidth={false}
             color="primary"
             className={classes.newChatBtn}
             onClick={this.newChat}

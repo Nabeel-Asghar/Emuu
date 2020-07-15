@@ -16,7 +16,7 @@ const {
   getPricing,
 } = require("./handlers/posts");
 
-const { getMessages } = require("./handlers/messages");
+const { getMessages, sendMessage } = require("./handlers/messages");
 
 const {
   signup,
@@ -50,14 +50,16 @@ app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
 // upload images for your page
 app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
 
-//app.get("/messaging", FBAuth, chatMessaging);
+// messaging ==========================================
+app.get("/messages", FBAuth, getMessages);
+app.post("/chats/:docKey", FBAuth, sendMessage);
 
 //----------Consumer Routes---------------
 app.get("/photographers", getAllPhotographers);
 app.get("/photographers/:photographerId", getSpecificPhotographer);
 app.post("/photographers/:photographerId/book", FBAuth, bookPhotographer);
 app.post("/photographers/:photographerId/review", FBAuth, reviewPhotographer);
-app.get("/messages", FBAuth, getMessages);
+
 app.get(
   "/photographers/:photographerId/bookingTimes",
   FBAuth,

@@ -35,23 +35,6 @@ export const getPhotographers = () => (dispatch) => {
     );
 };
 
-export const getChatList = () => (dispatch) => {
-  dispatch({ type: "LOADING_DATA" });
-  API.get("messages")
-    .then((res) => {
-      dispatch({
-        type: "SET_MESSAGES",
-        payload: res.data,
-      });
-    })
-    .catch(() =>
-      dispatch({
-        type: "SET_MESSAGES",
-        payload: null,
-      })
-    );
-};
-
 export const getPhotographerPage = (photographerID) => (dispatch) => {
   dispatch({ type: "LOADING_DATA" });
   API.get(`/photographers/${photographerID}`)
@@ -94,6 +77,38 @@ export const bookPhotographer = (photographerID, bookingDetails) => (
       dispatch({
         type: "SET_ERRORS",
         payload: err.response.data,
+      });
+    });
+};
+
+export const getChatList = () => (dispatch) => {
+  dispatch({ type: "LOADING_DATA" });
+  API.onSnapshot("messages")
+    .then((res) => {
+      dispatch({
+        type: "GET_MESSAGES",
+        payload: res.data,
+      });
+    })
+    .catch(() =>
+      dispatch({
+        type: "GET_MESSAGES",
+        payload: null,
+      })
+    );
+};
+
+export const sendMessage = (docKey, sentMessage) => (dispatch) => {
+  API.post(`/chats/${docKey}`, sentMessage)
+    .then((res) => {
+      console.log("2");
+      console.log(res.data);
+      dispatch({ type: "SEND_MESSAGE", payload: res.data });
+    })
+    .catch((err) => {
+      dispatch({
+        type: "SET_ERRORS",
+        payload: null,
       });
     });
 };

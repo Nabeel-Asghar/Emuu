@@ -19,6 +19,7 @@ import signup from "./pages/signup";
 import specificPhotographer from "./pages/specificPhotographer";
 import book from "./pages/book";
 import profileImage from "./pages/profileImage";
+import messaging from "./pages/messaging";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -46,18 +47,6 @@ const theme = createMuiTheme({
     useNextVariants: true,
   },
   spreadThis: {
-    content: {
-      height: "calc(100vh - 100px)",
-      overflow: "auto",
-      padding: "25px",
-      marginLeft: "300px",
-      boxSizing: "border-box",
-      overflowY: "scroll",
-      top: "50px",
-      width: "calc(100% - 300px)",
-      position: "absolute",
-    },
-
     userSent: {
       float: "left",
       clear: "both",
@@ -84,16 +73,69 @@ const theme = createMuiTheme({
       borderRadius: "10px",
     },
 
+    //Left Grid
+    UserList: {
+      marginTop: "13px",
+      backgroundColor: "#fffffff",
+      height: "calc(100% - 35px)",
+      boxShadow: "0px 0px 3px black",
+    },
+
+    //Right grid
+    ChatList: {
+      boxSizing: "border-box",
+      overflowY: "auto",
+    },
+
+    //Messages
+    chatViewContainer: {
+      height: "calc(100vh - 200px)",
+      overflow: "auto",
+    },
+
+    //Send Message
+    chatTextBoxContainer: {
+      position: "absolute",
+      bottom: "15px",
+      left: "315px",
+      boxSizing: "border-box",
+      overflow: "auto",
+      width: "calc(100% - 300px - 50px)",
+    },
+
+    chatTextBox: {
+      width: "calc(100% - 25px)",
+    },
+
+    sendBtn: {
+      color: "blue",
+      cursor: "pointer",
+      "&:hover": {
+        color: "gray",
+      },
+    },
+
+    listItem: {
+      cursor: "pointer",
+    },
+    newChatBtn: {
+      borderRadius: "0px",
+    },
+    unreadMessage: {
+      color: "red",
+      position: "absolute",
+      top: "0",
+      right: "5px",
+    },
+
     chatHeader: {
-      width: "calc(100% - 301px)",
+      position: "sticky",
       height: "50px",
       backgroundColor: "#344195",
-      position: "fixed",
-      marginLeft: "301px",
       fontSize: "18px",
       textAlign: "center",
-      color: "white",
       paddingTop: "10px",
+      color: "white",
       boxSizing: "border-box",
     },
     form: {
@@ -157,6 +199,7 @@ class App extends Component {
                   <Route exact path="/" component={home} />
                   <AuthRoute exact path="/login" component={login} />
                   <AuthRoute exact path="/signup" component={signup} />
+                  <Route exact path="/messaging" component={messaging} />
                   <Route
                     exact
                     path="/signup/profileImage"
