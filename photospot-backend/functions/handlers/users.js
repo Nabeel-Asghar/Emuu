@@ -348,6 +348,33 @@ exports.getYourUserProfile = (req, res) => {
     .catch((err) => console.error(err));
 };
 
+// get users current orders
+exports.getUsersOrders = (req, res) => {
+  let userid = req.user.uid;
+
+  db.collection("users")
+    .doc(userid)
+    .collection("orders")
+    .get()
+    .then((data) => {
+      let orders = [];
+
+      data.forEach((doc) => {
+        orders.push({
+          consumerID: doc.data().consumerID,
+          photographerID: doc.data().photographerID,
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          profileImage: doc.data().profileImage,
+          shootDate: doc.data().shootDate,
+          shootTime: doc.data().shootTime,
+        });
+      });
+      return res.json(orders);
+    })
+    .catch((err) => console.error(err));
+};
+
 // photographers can upload pictures for their page
 exports.uploadYourPhotographyImages = (req, res) => {
   let photographer = res.locals.photographer;

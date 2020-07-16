@@ -27,6 +27,7 @@ const {
   getYourPhotographerPage,
   getYourUserProfile,
   deleteImages,
+  getUsersOrders,
 } = require("./handlers/users");
 
 const { completedOrders } = require("./handlers/administrator");
@@ -40,6 +41,7 @@ app.post("/login", login);
 // get photographer page or user page
 app.get("/yourphotographerpage", FBAuth, getYourPhotographerPage);
 app.get("/youruserprofile", FBAuth, getYourUserProfile);
+app.get("/youruserprofile/orders", FBAuth, getUsersOrders);
 
 // upload profile image
 app.post("/user/profileimage", FBAuth, uploadProfilePicture);
