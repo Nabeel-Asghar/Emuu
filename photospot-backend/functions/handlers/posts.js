@@ -178,12 +178,18 @@ exports.bookPhotographer = (req, res) => {
   let photographerBooked = req.params.photographerId;
   let shootDate = req.body.date;
   let shootTime = req.body.time;
+  let firstName = req.body.firstName;
+  let lastName = req.body.lastName;
+  let profileImage = req.body.profileImage;
 
   let booking = {
     photographerID: photographerBooked,
     consumerID: userid,
     shootDate: shootDate,
     shootTime: shootTime,
+    firstName: firstName,
+    lastName: lastName,
+    profileImage: profileImage,
     paymentStatus: "pending",
     paymentToPhotographer: "pending",
     createdAt: new Date().toISOString(),
@@ -212,23 +218,17 @@ exports.bookPhotographer = (req, res) => {
     .doc(photographerBooked)
     .collection("orders")
     .doc(userid)
-    .set({
-      booking,
-    });
+    .set(booking);
 
   db.collection("users")
     .doc(userid)
     .collection("orders")
     .doc(photographerBooked)
-    .set({
-      booking,
-    });
+    .set(booking);
 
   db.collection("orders")
     .doc(userid)
-    .set({
-      booking,
-    })
+    .set(booking)
     .then(() => {
       return res.json({
         message:
