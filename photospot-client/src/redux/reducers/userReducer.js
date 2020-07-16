@@ -2,6 +2,7 @@ const intialState = {
   authenticated: false,
   credentials: {},
   yourPhotographyPageDetails: {},
+  userOrders: [],
 };
 
 export default function (state = intialState, action) {
@@ -25,6 +26,12 @@ export default function (state = intialState, action) {
       return {
         authenticated: true,
         yourPhotographyPageDetails: { ...action.payload },
+      };
+
+    case "SET_USERS_ORDERS":
+      return {
+        authenticated: true,
+        userOrders: { ...action.payload },
       };
     default:
       return state;

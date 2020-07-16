@@ -41,7 +41,7 @@ export const logoutUser = () => (dispatch) => {
 };
 
 export const getUserData = () => (dispatch) => {
-  API.get("/youruserprofile")
+  return API.get("/youruserprofile")
     .then((res) => {
       dispatch({
         type: "SET_USER",
@@ -130,6 +130,22 @@ export const uploadBackgroundImage = (image) => (dispatch) => {
         payload: err.response.data,
       })
     );
+};
+
+export const getUsersOrders = () => (dispatch) => {
+  return API.get("/youruserprofile/orders")
+    .then((res) => {
+      dispatch({
+        type: "SET_USERS_ORDERS",
+        payload: res.data,
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: "SET_USERS_ORDERS",
+        payload: null,
+      });
+    });
 };
 
 const setAuthorizationHeader = (token) => {

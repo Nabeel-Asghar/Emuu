@@ -126,6 +126,9 @@ const theme = createMuiTheme({
       maxHeight: "100%",
       objectFit: "cover",
     },
+    notFullWidth: {
+      margin: "15px",
+    },
   },
 });
 
