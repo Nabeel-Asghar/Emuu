@@ -148,6 +148,22 @@ export const getUsersOrders = () => (dispatch) => {
     });
 };
 
+export const getUsersPastOrders = () => (dispatch) => {
+  API.get("/youruserprofile/pastorders")
+    .then((res) => {
+      dispatch({
+        type: "SET_USERS_PAST_ORDERS",
+        payload: res.data,
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: "SET_USERS_PAST_ORDERS",
+        payload: null,
+      });
+    });
+};
+
 const setAuthorizationHeader = (token) => {
   const FirebaseIdToken = `Bearer ${token}`;
   localStorage.setItem("FirebaseIdToken", FirebaseIdToken);

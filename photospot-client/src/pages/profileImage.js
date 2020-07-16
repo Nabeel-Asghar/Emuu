@@ -6,6 +6,7 @@ import {
   getUserData,
   uploadProfileImage,
   getUsersOrders,
+  getUsersPastOrders,
 } from "../redux/actions/userActions";
 
 // Material UI
@@ -59,6 +60,7 @@ class profileImage extends Component {
 
   componentDidMount() {
     this.props.getUsersOrders();
+    this.props.getUsersPastOrders();
     this.props.getUserData().then(() => {
       this.assignValues(this.props.credentials);
     });
@@ -84,10 +86,16 @@ class profileImage extends Component {
   };
 
   render() {
-    const allThePhotographers = this.props.userOrders || {};
+    const userOrders = this.props.userOrders || {};
 
-    let recentPhotographers = Object.keys(allThePhotographers).map((key) => (
-      <OrderCard key={key} photographer={allThePhotographers[key]} />
+    let theUserOrders = Object.keys(userOrders).map((key) => (
+      <OrderCard key={key} photographer={userOrders[key]} />
+    ));
+
+    const userPastOrders = this.props.userPastOrders || {};
+
+    let theUserPastOrders = Object.keys(userPastOrders).map((key) => (
+      <OrderCard key={key} photographer={userPastOrders[key]} />
     ));
 
     const { classes } = this.props;
@@ -111,7 +119,9 @@ class profileImage extends Component {
 
         <Grid item xs={6}>
           <Typography variant="h4">Upcoming Shoot</Typography>
-          {recentPhotographers}
+          {theUserOrders}
+          <Typography variant="h4">Past Shoots</Typography>
+          {theUserPastOrders}
         </Grid>
 
         <Grid item xs />
@@ -123,12 +133,14 @@ class profileImage extends Component {
 const mapStateToProps = (state) => ({
   credentials: state.user.credentials,
   userOrders: state.user.userOrders,
+  userPastOrders: state.user.userPastOrders,
 });
 
 const mapActionsToProps = {
   getUserData,
   uploadProfileImage,
   getUsersOrders,
+  getUsersPastOrders,
 };
 
 export default connect(
