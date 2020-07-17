@@ -16,6 +16,9 @@ import { useSelector, useDispatch } from "react-redux";
 
 const Navbar = () => {
   const authenticated = useSelector((state) => state.user.authenticated);
+  const details = useSelector((state) => state.user.credentials[0]);
+  const { photographer } = details || false;
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const dispatch = useDispatch();
@@ -48,13 +51,13 @@ const Navbar = () => {
 
         {authenticated && (
           <div>
-            <Button
+            {/* <Button
               color="inherit"
               component={Link}
               to="/yourPhotographyProfile"
             >
               Your Photographer Profile
-            </Button>
+            </Button> */}
             <IconButton
               aria-label="account of current user"
               aria-controls="menu-appbar"
@@ -79,9 +82,14 @@ const Navbar = () => {
               open={open}
               onClose={handleClose}
             >
-              <MenuItem component={Link} to="/profileImage">
+              <MenuItem component={Link} to="/profile">
                 Profile
               </MenuItem>
+              {photographer && (
+                <MenuItem component={Link} to="/yourPhotographyProfile">
+                  Photographer Page
+                </MenuItem>
+              )}
               <MenuItem onClick={() => dispatch(logoutUser())}>Logout</MenuItem>
             </Menu>
           </div>
