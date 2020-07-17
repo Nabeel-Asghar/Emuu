@@ -18,7 +18,7 @@ import login from "./pages/login";
 import signup from "./pages/signup";
 import specificPhotographer from "./pages/specificPhotographer";
 import book from "./pages/book";
-import profileImage from "./pages/profileImage";
+import profile from "./pages/profile";
 import editPhotographyPage from "./pages/editPhotographyPage";
 import photographyPictures from "./pages/photographyPictures";
 
@@ -159,7 +159,7 @@ class App extends Component {
                   <Route exact path="/" component={home} />
                   <Route exact path="/login" component={login} />
                   <Route exact path="/signup" component={signup} />
-                  <Route exact path="/profileImage" component={profileImage} />
+                  <Route exact path="/profile" component={profile} />
                   <Route
                     exact
                     path="/photographers/:photographerID"
