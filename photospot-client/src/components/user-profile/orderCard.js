@@ -39,25 +39,29 @@ class orderCard extends Component {
     } = this.props;
 
     return (
-      <Card className={classes.card}>
-        <CardMedia
-          className={classes.image}
-          image={profileImage}
-          title="Profile Image"
-        />
-        <CardContent className={classes.content}>
-          <Typography
-            variant="h5"
-            component={Link}
-            to={`/photographers/${photographerID}`}
-          >
-            {firstName}&nbsp;{lastName}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            {shootDate},&nbsp;{shootTime}
-          </Typography>
-        </CardContent>
-      </Card>
+      <div>
+        {photographerID && (
+          <Card className={classes.card}>
+            <CardMedia
+              className={classes.image}
+              image={profileImage}
+              title="Profile Image"
+            />
+            <CardContent className={classes.content}>
+              <Typography
+                variant="h5"
+                component={Link}
+                to={`/photographers/${photographerID}`}
+              >
+                {firstName}&nbsp;{lastName}
+              </Typography>
+              <Typography variant="body2" color="textSecondary">
+                {shootDate},&nbsp;{shootTime}
+              </Typography>
+            </CardContent>
+          </Card>
+        )}
+      </div>
     );
   }
 }
