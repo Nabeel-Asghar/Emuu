@@ -1,5 +1,6 @@
 const intialState = {
   allPhotographers: [],
+  searchPhotographer: [],
   photographerPage: [],
   timings: [],
 };
@@ -7,6 +8,12 @@ const intialState = {
 export default function (state = intialState, action) {
   switch (action.type) {
     case "SET_PHOTOGRAPHERS":
+      return {
+        ...state,
+        allPhotographers: { ...action.payload },
+      };
+
+    case "SEARCH_PHOTOGRAPHERS":
       return {
         ...state,
         allPhotographers: { ...action.payload },
