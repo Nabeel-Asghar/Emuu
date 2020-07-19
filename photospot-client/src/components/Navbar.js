@@ -16,8 +16,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 const Navbar = () => {
   const authenticated = useSelector((state) => state.user.authenticated);
-  const details = useSelector((state) => state.user.credentials);
-  const { photographer } = authenticated ? details[0] : false;
+  // const details = useSelector((state) => state.user.credentials);
+  // const { photographer } = authenticated ? details[0] : false;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -85,11 +85,11 @@ const Navbar = () => {
               <MenuItem component={Link} to="/profile">
                 Profile
               </MenuItem>
-              {photographer && (
-                <MenuItem component={Link} to="/yourPhotographyProfile">
-                  Photographer Page
-                </MenuItem>
-              )}
+
+              <MenuItem component={Link} to="/yourPhotographyProfile">
+                Photographer Page
+              </MenuItem>
+
               <MenuItem onClick={() => dispatch(logoutUser())}>Logout</MenuItem>
             </Menu>
           </div>
