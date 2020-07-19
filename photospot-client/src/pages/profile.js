@@ -150,6 +150,18 @@ class profileImage extends Component {
       <OrderCard key={key} photographer={userPastOrders[key]} />
     ));
 
+    if (theUserPastOrders.length <= 1) {
+      theUserPastOrders = (
+        <Typography variant="subtitle2">You have no past shoots</Typography>
+      );
+    }
+
+    if (theUserOrders.length <= 1) {
+      theUserOrders = (
+        <Typography variant="subtitle2">You have no upcoming shoots</Typography>
+      );
+    }
+
     const { classes } = this.props;
     return (
       <Grid container spacing={5}>
