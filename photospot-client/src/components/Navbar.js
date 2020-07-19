@@ -16,8 +16,8 @@ import { useSelector, useDispatch } from "react-redux";
 
 const Navbar = () => {
   const authenticated = useSelector((state) => state.user.authenticated);
-  const details = useSelector((state) => state.user.credentials[0]);
-  const { photographer } = details || false;
+  const details = useSelector((state) => state.user.credentials);
+  const { photographer } = authenticated ? details[0] : false;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
