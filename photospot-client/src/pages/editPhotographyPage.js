@@ -66,13 +66,15 @@ class editPhotographyPage extends Component {
   };
 
   assignValues(details) {
-    const photoDetails = Object.values(details);
+    if (details) {
+      const photoDetails = Object.values(details);
 
-    photoDetails.forEach((task) =>
-      Object.entries(task).forEach(([key, value]) => {
-        this.assignStates(key, value);
-      })
-    );
+      photoDetails.forEach((task) =>
+        Object.entries(task).forEach(([key, value]) => {
+          this.assignStates(key, value);
+        })
+      );
+    }
   }
 
   componentDidMount() {
@@ -92,12 +94,6 @@ class editPhotographyPage extends Component {
       });
     }
   }
-
-  handleChange = (event) => {
-    this.setState({
-      fakeBio: event.target.value,
-    });
-  };
 
   handleBackgroundChange = (event) => {
     const image = event.target.files[0];
@@ -139,16 +135,16 @@ class editPhotographyPage extends Component {
     fileInput.click();
   };
 
-  handleEditBio = () => {
-    this.setState({
-      disableTextField: false,
-    });
-  };
-
   handleClickOpen = () => {
     this.setState({
       open: true,
       fakeBio: this.state.bio,
+    });
+  };
+
+  handleChange = (event) => {
+    this.setState({
+      fakeBio: event.target.value,
     });
   };
 
