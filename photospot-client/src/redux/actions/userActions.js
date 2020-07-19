@@ -6,8 +6,9 @@ export const loginUser = (userData, history) => (dispatch) => {
   API.post("/login", userData)
     .then((res) => {
       setAuthorizationHeader(res.data.token);
-      dispatch(getUserData());
-      dispatch({ type: "CLEAR_ERRORS" });
+      dispatch(getUserData()).then(() => {
+        dispatch({ type: "CLEAR_ERRORS" });
+      });
     })
     .catch((err) => {
       dispatch({
@@ -41,7 +42,7 @@ export const logoutUser = () => (dispatch) => {
 };
 
 export const getUserData = () => (dispatch) => {
-  API.get("/youruserprofile")
+  return API.get("/youruserprofile")
     .then((res) => {
       dispatch({
         type: "SET_USER",
@@ -130,6 +131,48 @@ export const uploadBackgroundImage = (image) => (dispatch) => {
         payload: err.response.data,
       })
     );
+};
+
+export const getUsersOrders = () => (dispatch) => {
+  return API.get("/youruserprofile/orders")
+    .then((res) => {
+      dispatch({
+        type: "SET_USERS_ORDERS",
+        payload: res.data,
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: "SET_USERS_ORDERS",
+        payload: null,
+      });
+    });
+};
+
+export const getUsersPastOrders = () => (dispatch) => {
+  API.get("/youruserprofile/pastorders")
+    .then((res) => {
+      dispatch({
+        type: "SET_USERS_PAST_ORDERS",
+        payload: res.data,
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: "SET_USERS_PAST_ORDERS",
+        payload: null,
+      });
+    });
+};
+
+export const updateUserProfile = (details) => (dispatch) => {
+  API.post("/youruserprofile/edit", details)
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
+    });
 };
 
 const setAuthorizationHeader = (token) => {

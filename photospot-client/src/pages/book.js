@@ -158,6 +158,9 @@ class book extends Component {
     let bookingDetails = {
       date: this.state.formattedDate,
       time: this.state.selectedTime,
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      profileImage: this.state.profileImage,
     };
     this.props.bookPhotographer(
       this.props.match.params.photographerID,
