@@ -282,6 +282,38 @@ exports.uploadBackgroundPicture = (req, res) => {
   busboy.end(req.rawBody);
 };
 
+// update users profile details
+exports.updateUserProfile = (req, res) => {
+  let photographer = res.locals.photographer;
+
+  const userDetails = {
+    firstName: req.body.firstName,
+    lastName: req.body.lastName,
+    location_city: req.body.location_city,
+    location_state: req.body.location_state,
+  };
+
+  db.doc(`/users/${req.user.uid}`)
+    .update(userDetails)
+    .then(() => {
+      if (photographer) {
+        db.doc(`/photographer/${req.user.uid}`)
+          .update(userDetails)
+          .then(() => {
+            return res.json({ message: "Your user profile has been updated." });
+          })
+          .catch((err) => {
+            return res.status(500).json({ error: err.code });
+          });
+      } else {
+        return res.json({ message: "Your user profile has been updated." });
+      }
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err.code });
+    });
+};
+
 // getting the current user photography page
 exports.getYourPhotographerPage = (req, res) => {
   let userid = req.user.uid;
@@ -383,7 +415,6 @@ exports.getUsersPastOrders = (req, res) => {
     .doc(userid)
     .get()
     .then((doc) => {
-      console.log(doc);
       let orders = [];
 
       orders.push({

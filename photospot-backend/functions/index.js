@@ -29,6 +29,7 @@ const {
   deleteImages,
   getUsersOrders,
   getUsersPastOrders,
+  updateUserProfile,
 } = require("./handlers/users");
 
 const { completedOrders } = require("./handlers/administrator");
@@ -44,6 +45,9 @@ app.get("/yourphotographerpage", FBAuth, getYourPhotographerPage);
 app.get("/youruserprofile", FBAuth, getYourUserProfile);
 app.get("/youruserprofile/orders", FBAuth, getUsersOrders);
 app.get("/youruserprofile/pastorders", FBAuth, getUsersPastOrders);
+
+// update user profile
+app.post("/youruserprofile/edit", FBAuth, updateUserProfile);
 
 // upload profile image
 app.post("/user/profileimage", FBAuth, uploadProfilePicture);
