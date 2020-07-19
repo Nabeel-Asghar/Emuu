@@ -9,6 +9,7 @@ app.use(cors({ origin: true }));
 const {
   getAllPhotographers,
   createPost,
+  searchPhotographer,
   getSpecificPhotographer,
   bookPhotographer,
   reviewPhotographer,
@@ -35,6 +36,7 @@ const {
 const { completedOrders } = require("./handlers/administrator");
 
 const FBAuth = require("./util/FBAuth");
+//const { searchPhotographer } = require("../../photospot-client/src/redux/actions/dataActions");
 
 //--------User Routes-----------------
 app.post("/signup", signup);
@@ -69,6 +71,7 @@ app.get(
   FBAuth,
   getPhotographerSchedule
 );
+app.get("/search/:searchQuery", FBAuth, searchPhotographer);
 app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);
 
 //Administrator

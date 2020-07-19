@@ -173,6 +173,35 @@ exports.getPhotographerSchedule = (req, res) => {
     });
 };
 
+exports.searchPhotographer = (req, res) => {
+  var query = req.params.searchQuery;
+
+  db.collection("photographer")
+    .orderBy("firstName")
+    .where("firstName", ">=", query.toUpperCase())
+    .where("firstName", "<=", query.toLowerCase() + "\uf8ff")
+    .get()
+    .then((data) => {
+      let posts = [];
+
+      data.forEach((doc) => {
+        posts.push({
+          photographerID: doc.id,
+          email: doc.data().email,
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          location_city: doc.data().location_city,
+          location_state: doc.data().location_state,
+          profileImage: doc.data().profileImage,
+          images: doc.data().images,
+          createdAt: doc.data().createdAt,
+        });
+      });
+      return res.json(posts);
+    })
+    .catch((err) => console.error(err));
+};
+
 exports.bookPhotographer = (req, res) => {
   let userid = req.user.uid;
   let photographerBooked = req.params.photographerId;
