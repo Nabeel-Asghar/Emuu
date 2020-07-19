@@ -6,8 +6,9 @@ export const loginUser = (userData, history) => (dispatch) => {
   API.post("/login", userData)
     .then((res) => {
       setAuthorizationHeader(res.data.token);
-      dispatch(getUserData());
-      dispatch({ type: "CLEAR_ERRORS" });
+      dispatch(getUserData()).then(() => {
+        dispatch({ type: "CLEAR_ERRORS" });
+      });
     })
     .catch((err) => {
       dispatch({
@@ -161,6 +162,16 @@ export const getUsersPastOrders = () => (dispatch) => {
         type: "SET_USERS_PAST_ORDERS",
         payload: null,
       });
+    });
+};
+
+export const updateUserProfile = (details) => (dispatch) => {
+  API.post("/youruserprofile/edit", details)
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => {
+      console.log(err);
     });
 };
 

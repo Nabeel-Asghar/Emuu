@@ -7,6 +7,7 @@ import {
   uploadProfileImage,
   getUsersOrders,
   getUsersPastOrders,
+  updateUserProfile,
 } from "../redux/actions/userActions";
 
 // Material UI
@@ -15,6 +16,7 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import { Paper, Typography } from "@material-ui/core";
 import TextField from "@material-ui/core/TextField";
+import EditIcon from "@material-ui/icons/Edit";
 
 import ImageUploader from "react-images-upload";
 import equal from "fast-deep-equal";
@@ -22,6 +24,7 @@ import equal from "fast-deep-equal";
 // components
 import EditProfileImage from "../components/user-profile/editProfileImage";
 import OrderCard from "../components/user-profile/orderCard";
+import UserDetails from "../components/user-profile/userDetails";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -37,6 +40,11 @@ class profileImage extends Component {
       location_city: "Troy",
       location_state: "MI",
       profileImage: "",
+      open: false,
+      fakeFirstName: "",
+      fakeLastName: "",
+      fakeCity: "",
+      fakeState: "",
     };
   }
 
@@ -85,6 +93,50 @@ class profileImage extends Component {
     fileInput.click();
   };
 
+  handleClickOpen = () => {
+    this.setState({
+      open: true,
+      fakeFirstName: this.state.firstName,
+      fakeLastName: this.state.lastName,
+      fakeCity: this.state.location_city,
+      fakeState: this.state.location_state,
+    });
+  };
+
+  handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  handleDisagree = () => {
+    this.setState({
+      open: false,
+    });
+  };
+
+  handleAgree = (event) => {
+    this.setState({
+      open: false,
+    });
+
+    this.setState({
+      firstName: this.state.fakeFirstName,
+      lastName: this.state.fakeLastName,
+      location_city: this.state.fakeCity,
+      location_state: this.state.fakeState,
+    });
+
+    const details = {
+      firstName: this.state.fakeFirstName,
+      lastName: this.state.fakeLastName,
+      location_city: this.state.fakeCity,
+      location_state: this.state.fakeState,
+    };
+
+    this.props.updateUserProfile(details);
+  };
+
   render() {
     const userOrders = this.props.userOrders || {};
 
@@ -114,8 +166,22 @@ class profileImage extends Component {
             <Typography variant="overline">
               {this.state.location_city}, {this.state.location_state}
             </Typography>
+            <Button onClick={this.handleClickOpen}>
+              <EditIcon color="primary" />
+            </Button>
           </Paper>
         </Grid>
+
+        <UserDetails
+          open={this.state.open}
+          handleAgree={this.handleAgree}
+          handleDisagree={this.handleDisagree}
+          handleChange={this.handleChange}
+          fname={this.state.fakeFirstName}
+          lname={this.state.fakeLastName}
+          city={this.state.fakeCity}
+          state={this.state.fakeState}
+        />
 
         <Grid item xs={6}>
           <Typography variant="h4">Upcoming Shoot</Typography>
@@ -141,6 +207,7 @@ const mapActionsToProps = {
   uploadProfileImage,
   getUsersOrders,
   getUsersPastOrders,
+  updateUserProfile,
 };
 
 export default connect(
