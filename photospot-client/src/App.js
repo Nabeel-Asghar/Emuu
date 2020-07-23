@@ -22,6 +22,7 @@ import profile from "./pages/profile";
 import search from "./pages/search";
 import editPhotographyPage from "./pages/editPhotographyPage";
 import photographyPictures from "./pages/photographyPictures";
+import homePage from "./pages/homePage";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -155,8 +156,10 @@ class App extends Component {
           <div className="App">
             <BrowserRouter>
               <Navbar />
-              <div className="container">
-                <Switch>
+
+              <Switch>
+                <Route exact path="/home" component={homePage} />
+                <div className="container">
                   <Route exact path="/" component={home} />
                   <Route exact path="/login" component={login} />
                   <Route exact path="/signup" component={signup} />
@@ -183,8 +186,8 @@ class App extends Component {
                     path="/photographers/:photographerID/book"
                     component={book}
                   />
-                </Switch>
-              </div>
+                </div>
+              </Switch>
             </BrowserRouter>
           </div>
         </Provider>
