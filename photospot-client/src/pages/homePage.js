@@ -88,7 +88,7 @@ class homePage extends Component {
     const state = this.state.state;
 
     this.props.history.push({
-      pathname: "/filter/" + type + "/" + city + "/" + state,
+      pathname: "/search/" + type + "/" + city + "/" + state,
     });
   };
 

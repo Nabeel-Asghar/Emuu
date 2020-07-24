@@ -23,7 +23,6 @@ import search from "./pages/search";
 import editPhotographyPage from "./pages/editPhotographyPage";
 import photographyPictures from "./pages/photographyPictures";
 import homePage from "./pages/homePage";
-import filter from "./pages/filter";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -168,8 +167,8 @@ class App extends Component {
                   <Route exact path="/search/:searchQuery" component={search} />
                   <Route
                     exact
-                    path="/filter/:type/:city/:state"
-                    component={filter}
+                    path="/search/:type/:city/:state"
+                    component={search}
                   />
 
                   <Route

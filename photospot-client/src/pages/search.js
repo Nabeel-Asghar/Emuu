@@ -10,6 +10,7 @@ import { connect } from "react-redux";
 import {
   getPhotographers,
   searchPhotographer,
+  applyFilters,
 } from "../redux/actions/dataActions";
 
 // Photographer
@@ -28,17 +29,35 @@ class search extends Component {
     };
   }
   componentDidMount() {
-    let searchQuery = this.props.match.params.searchQuery;
-    console.log(searchQuery);
-    this.props.searchPhotographer(searchQuery);
+    if (this.props.match.params.searchQuery) {
+      let searchQuery = this.props.match.params.searchQuery;
+
+      this.props.searchPhotographer(searchQuery);
+    } else {
+      const type = this.props.match.params.type;
+      const city = this.props.match.params.city;
+      const state = this.props.match.params.state;
+
+      this.props.applyFilters(type, city, state);
+    }
+
     this.setState({ allThePhotographers: this.props.allPhotographers });
   }
 
   componentDidUpdate(prevProps) {
     if (!equal(this.props.allPhotographers, prevProps.allPhotographers)) {
-      let searchQuery = this.props.match.params.searchQuery;
-      console.log(searchQuery);
-      this.props.searchPhotographer(searchQuery);
+      if (this.props.match.params.searchQuery) {
+        let searchQuery = this.props.match.params.searchQuery;
+
+        this.props.searchPhotographer(searchQuery);
+      } else {
+        const type = this.props.match.params.type;
+        const city = this.props.match.params.city;
+        const state = this.props.match.params.state;
+
+        this.props.applyFilters(type, city, state);
+      }
+
       this.setState({ allThePhotographers: this.props.allPhotographers });
     }
   }
@@ -51,8 +70,6 @@ class search extends Component {
       pathname: "/search/" + searchQuery,
       daSearch: searchQuery,
     });
-    this.props.searchPhotographer(searchQuery);
-    this.setState({ allThePhotographers: this.props.allPhotographers });
   };
 
   handleChange = (event) => {
@@ -107,6 +124,7 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = {
   getPhotographers,
   searchPhotographer,
+  applyFilters,
 };
 
 export default connect(
