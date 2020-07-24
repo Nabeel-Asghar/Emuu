@@ -166,6 +166,22 @@ exports.setPhotographerBio = (req, res) => {
     });
 };
 
+exports.setPhotographerCategories = (req, res) => {
+  const categories = req.body.categories;
+
+  db.doc(`/photographer/${req.user.uid}`)
+    .update({
+      ["categories"]: categories,
+    })
+    .then(() => {
+      return res.json({ message: "Your categories has been updated." });
+    })
+    .catch((err) => {
+      console.error(err);
+      return res.status(500).json({ error: err.code });
+    });
+};
+
 // upload profile image for user
 exports.uploadProfilePicture = (req, res) => {
   const BusBoy = require("busboy");

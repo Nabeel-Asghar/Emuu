@@ -7,10 +7,7 @@ import equal from "fast-deep-equal";
 
 // Redux
 import { connect } from "react-redux";
-import {
-  getPhotographers,
-  searchPhotographer,
-} from "../redux/actions/dataActions";
+import { applyFilters } from "../redux/actions/dataActions";
 
 // Photographer
 import Photographer from "../components/photographer";
@@ -19,7 +16,7 @@ const styles = (theme) => ({
   ...theme.spreadThis,
 });
 
-class search extends Component {
+class filter extends Component {
   constructor() {
     super();
     this.state = {
@@ -28,17 +25,21 @@ class search extends Component {
     };
   }
   componentDidMount() {
-    let searchQuery = this.props.match.params.searchQuery;
-    console.log(searchQuery);
-    this.props.searchPhotographer(searchQuery);
+    const type = this.props.match.params.type;
+    const city = this.props.match.params.city;
+    const state = this.props.match.params.state;
+
+    this.props.applyFilters(type, city, state);
     this.setState({ allThePhotographers: this.props.allPhotographers });
   }
 
   componentDidUpdate(prevProps) {
     if (!equal(this.props.allPhotographers, prevProps.allPhotographers)) {
-      let searchQuery = this.props.match.params.searchQuery;
-      console.log(searchQuery);
-      this.props.searchPhotographer(searchQuery);
+      const type = this.props.match.params.type;
+      const city = this.props.match.params.city;
+      const state = this.props.match.params.state;
+
+      this.props.applyFilters(type, city, state);
       this.setState({ allThePhotographers: this.props.allPhotographers });
     }
   }
@@ -105,11 +106,10 @@ const mapStateToProps = (state) => ({
 });
 
 const mapActionsToProps = {
-  getPhotographers,
-  searchPhotographer,
+  applyFilters,
 };
 
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(withStyles(styles)(search));
+)(withStyles(styles)(filter));

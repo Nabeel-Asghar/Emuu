@@ -40,6 +40,7 @@ class editPhotographyPage extends Component {
   constructor() {
     super();
     this.state = {
+      categories: [],
       disableTextField: true,
       firstName: "",
       lastName: "",
@@ -144,7 +145,7 @@ class editPhotographyPage extends Component {
 
   handleChange = (event) => {
     this.setState({
-      fakeBio: event.target.value,
+      [event.target.name]: event.target.value,
     });
   };
 
@@ -169,6 +170,10 @@ class editPhotographyPage extends Component {
     console.log("FAKE", this.state.fakeBio);
 
     this.props.editPhotographerBio(details);
+  };
+
+  changeCatergories = () => {
+    console.log(this.state.categories);
   };
 
   render() {
@@ -220,6 +225,23 @@ class editPhotographyPage extends Component {
           <Grid item xs={1}>
             <Button onClick={this.handleClickOpen}>
               <EditIcon color="primary" />
+            </Button>
+          </Grid>
+          <Grid item xs={12} className={classes.centerGrid}>
+            <TextField
+              id="filled-basic"
+              label="Filled"
+              variant="filled"
+              onChange={this.handleChange}
+              value={this.state.categories}
+              name="categories"
+            />
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={this.changeCatergories}
+            >
+              Submit
             </Button>
           </Grid>
           <Grid item xs={12} className={classes.centerGrid}>

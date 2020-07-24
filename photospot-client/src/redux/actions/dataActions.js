@@ -73,6 +73,23 @@ export const searchPhotographer = (searchQuery) => (dispatch) => {
     });
 };
 
+export const applyFilters = (type, city, state) => (dispatch) => {
+  dispatch({ type: "LOADING_DATA" });
+  API.get(`/filter/${type}/${city}/${state}`)
+    .then((res) => {
+      dispatch({
+        type: "FILTER_PHOTOGRAPHERS",
+        payload: res.data,
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: "FILTER_PHOTOGRAPHERS",
+        payload: null,
+      });
+    });
+};
+
 export const getBookingTimes = (photographerID) => (dispatch) => {
   dispatch({ type: "LOADING_DATA" });
   API.get(`/photographers/${photographerID}/bookingTimes`).then((res) => {

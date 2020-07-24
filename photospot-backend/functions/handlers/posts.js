@@ -202,6 +202,38 @@ exports.searchPhotographer = (req, res) => {
     .catch((err) => console.error(err));
 };
 
+exports.filterPhotographers = (req, res) => {
+  const type = req.params.type;
+  const city = req.params.city;
+  const state = req.params.state;
+
+  db.collection(`photographer/`)
+    .where("categories", "array-contains", type)
+    .where("location_city", "==", city)
+    .where("location_state", "==", state)
+    .get()
+    .then((data) => {
+      let photographers = [];
+
+      data.forEach((doc) => {
+        photographers.push({
+          photographerID: doc.id,
+          email: doc.data().email,
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          location_city: doc.data().location_city,
+          location_state: doc.data().location_state,
+          profileImage: doc.data().profileImage,
+          images: doc.data().images,
+          createdAt: doc.data().createdAt,
+        });
+      });
+      console.log(photographers);
+      return res.json(photographers);
+    })
+    .catch((err) => console.error(err));
+};
+
 exports.bookPhotographer = (req, res) => {
   let userid = req.user.uid;
   let photographerBooked = req.params.photographerId;
