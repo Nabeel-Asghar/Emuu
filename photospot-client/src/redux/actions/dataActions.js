@@ -19,7 +19,7 @@ import store from "../store";
 // };
 
 export const getPhotographers = () => (dispatch) => {
-  dispatch({ type: "LOADING_DATA" });
+  dispatch({ type: "LOADING_UI" });
   API.get("photographers")
     .then((res) => {
       // this.setState({
@@ -29,6 +29,7 @@ export const getPhotographers = () => (dispatch) => {
         type: "SET_PHOTOGRAPHERS",
         payload: res.data,
       });
+      dispatch({ type: "CLEAR_ERRORS" });
     })
     .catch(() =>
       dispatch({
@@ -47,6 +48,7 @@ export const getPhotographerPage = (photographerID) => (dispatch) => {
         type: "SET_PHOTOGRAHPER_PAGE",
         payload: res.data,
       });
+      dispatch({ type: "CLEAR_ERRORS" });
     })
     .catch(() => {
       dispatch({

@@ -172,7 +172,7 @@ class editPhotographyPage extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { loading, classes } = this.props;
 
     return (
       <Paper>
@@ -238,8 +238,12 @@ class editPhotographyPage extends Component {
             </Button>
           </Grid>
           <Grid item xs={1} />
-          <Grid item xs={10}>
-            <PhotoSamples key={this.state.images} images={this.state.images} />
+          <Grid item xs={10} direction="column">
+            <PhotoSamples
+              loading={loading}
+              key={this.state.images}
+              images={this.state.images}
+            />
           </Grid>
           <Grid item xs={1} />
         </Grid>
@@ -250,6 +254,7 @@ class editPhotographyPage extends Component {
 
 const mapStateToProps = (state) => ({
   yourPhotographerPage: state.user.yourPhotographyPageDetails,
+  loading: state.UI.loadingData,
 });
 
 const mapActionsToProps = {

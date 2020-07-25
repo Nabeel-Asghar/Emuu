@@ -67,9 +67,11 @@ export const uploadProfileImage = (formData) => (dispatch) => {
 };
 
 export const getYourPhotographyPage = () => (dispatch) => {
+  dispatch({ type: "LOADING_DATA" });
   return API.get("/yourphotographerpage")
     .then((res) => {
       dispatch({ type: "SET_YOUR_PHOTOGRAPHY_PAGE", payload: res.data });
+      dispatch({ type: "CLEAR_ERRORS" });
       return true;
     })
     .catch((err) => console.log(err));

@@ -3,6 +3,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import ImageGallery from "react-image-gallery";
 
 import "react-image-gallery/styles/css/image-gallery.css";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -10,7 +11,7 @@ const styles = (theme) => ({
 
 class photoSamples extends Component {
   render() {
-    const { classes, images } = this.props;
+    const { classes, images, loading } = this.props;
 
     var imageContainer = [];
 
@@ -24,7 +25,15 @@ class photoSamples extends Component {
       });
     }
 
-    return <ImageGallery items={imageContainer} showPlayButton={false} />;
+    return (
+      <div>
+        {loading ? (
+          <Skeleton variant="rect" height={500} width={500} />
+        ) : (
+          <ImageGallery items={imageContainer} showPlayButton={false} />
+        )}
+      </div>
+    );
   }
 }
 

@@ -7,6 +7,8 @@ import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
+import Typography from "@material-ui/core/Typography";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 // Redux
 import { connect } from "react-redux";
@@ -69,7 +71,10 @@ class specificPhotographer extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const {
+      classes,
+      UI: { loadingData },
+    } = this.props;
     return (
       <Paper>
         <Grid container direction="column" alignItems="center" justify="center">
@@ -79,35 +84,51 @@ class specificPhotographer extends Component {
               background={this.state.background}
               firstName={this.state.firstName}
               lastName={this.state.lastName}
+              loading={loadingData}
             />
           </Grid>
 
           <Grid item xs={12}>
-            <Rating />
+            <Rating loading={loadingData} />
           </Grid>
 
           <Grid item xs={12}>
-            <Button
-              className={classes.bookButton}
-              variant="contained"
-              color="primary"
-              onClick={() =>
-                this.props.history.push(
-                  `${this.props.history.location.pathname}/book`
-                )
-              }
-            >
-              Book
-            </Button>
+            {loadingData ? (
+              <Skeleton>
+                <Typography variant="h3">Book</Typography>
+              </Skeleton>
+            ) : (
+              <Button
+                className={classes.bookButton}
+                disabled={loadingData}
+                variant="contained"
+                color="primary"
+                onClick={() =>
+                  this.props.history.push(
+                    `${this.props.history.location.pathname}/book`
+                  )
+                }
+              >
+                Book
+              </Button>
+            )}
           </Grid>
 
           <Grid item />
           <Grid item xs={10}>
-            <PhotoSamples key={this.state.images} images={this.state.images} />
+            <PhotoSamples
+              key={this.state.images}
+              images={this.state.images}
+              loading={loadingData}
+            />
           </Grid>
           <Grid item />
           <Grid item sm={12}>
-            <Bio key={this.state.bio} bio={this.state.bio} />
+            <Bio
+              key={this.state.bio}
+              bio={this.state.bio}
+              loading={loadingData}
+            />
           </Grid>
         </Grid>
       </Paper>
@@ -117,6 +138,7 @@ class specificPhotographer extends Component {
 
 const mapStateToProps = (state) => ({
   photographerDetails: state.data.photographerPage,
+  UI: state.UI,
 });
 
 const mapActionsToProps = {

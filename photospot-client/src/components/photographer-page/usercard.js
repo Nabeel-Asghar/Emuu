@@ -2,6 +2,7 @@ import React, { Component } from "react";
 
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
+import Skeleton from "@material-ui/lab/Skeleton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -15,18 +16,38 @@ class usercard extends Component {
       lastName,
       profileImage,
       background,
+      loading = true,
     } = this.props;
     return (
       <div className={classes.container}>
-        <img className={classes.profilePic} src={background} />
+        {loading ? (
+          <Skeleton
+            variant="rect"
+            className={classes.profileImage}
+            width={850}
+            height={200}
+          />
+        ) : (
+          <img className={classes.profilePic} src={background} />
+        )}
 
         <div className={classes.centered}>
-          <img className={classes.avatar} src={profileImage} />
+          {loading ? (
+            <Skeleton variant="rect" className={classes.avatar} />
+          ) : (
+            <img className={classes.avatar} src={profileImage} />
+          )}
         </div>
 
         <div className={classes.text}>
           <Typography variant="h4">
-            {firstName} {lastName}
+            {loading ? (
+              <Skeleton width="100%" />
+            ) : (
+              <div>
+                {firstName} {lastName}
+              </div>
+            )}
           </Typography>
         </div>
       </div>

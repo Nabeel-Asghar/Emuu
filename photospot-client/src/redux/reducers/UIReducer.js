@@ -1,5 +1,6 @@
 const intialState = {
   loading: false,
+  loadingData: false,
   theResponse: "",
   theDeleteImagesResponse: "",
   theUploadImagesResponse: "",
@@ -17,6 +18,7 @@ export default function (state = intialState, action) {
       return {
         ...state,
         loading: false,
+        loadingData: false,
         errors: null,
       };
 
@@ -24,6 +26,12 @@ export default function (state = intialState, action) {
       return {
         ...state,
         loading: true,
+      };
+
+    case "LOADING_DATA":
+      return {
+        ...state,
+        loadingData: true,
       };
     case "SET_RESPONSE":
       return {
