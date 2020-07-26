@@ -78,8 +78,8 @@ app.get(
   FBAuth,
   getPhotographerSchedule
 );
-app.get("/search/:searchQuery", FBAuth, searchPhotographer);
-app.get("/filter/:type/:city/:state", FBAuth, filterPhotographers);
+app.get("/search/:searchQuery", searchPhotographer);
+app.get("/filter/:type/:city/:state", filterPhotographers);
 
 app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);
 
