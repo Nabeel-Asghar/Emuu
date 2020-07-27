@@ -343,6 +343,8 @@ exports.getYourPhotographerPage = (req, res) => {
         website: doc.data().website,
         instagram: doc.data().instagram,
         ratePerHour: doc.data().location_state,
+        camera: doc.data().camera,
+        headline: doc.data().headline,
       });
 
       return res.json(page);
@@ -373,6 +375,8 @@ exports.getYourUserProfile = (req, res) => {
         photographer: doc.data().photographer,
         profileImage: doc.data().profileImage,
         createdAt: doc.data().createdAt,
+        location_city: doc.data().location_city,
+        location_state: doc.data().location_state,
       });
 
       return res.json(page);
