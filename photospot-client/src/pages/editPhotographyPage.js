@@ -15,6 +15,12 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import EditIcon from "@material-ui/icons/Edit";
 import Paper from "@material-ui/core/Paper";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import IconButton from "@material-ui/core/IconButton";
 
 // Redux
 import { connect } from "react-redux";
@@ -56,6 +62,8 @@ class editPhotographyPage extends Component {
       ratePerHour: "",
       open: false,
       fakeBio: "",
+      headline: "",
+      camera: "",
     };
   }
 
@@ -175,79 +183,109 @@ class editPhotographyPage extends Component {
     const { loading, classes } = this.props;
 
     return (
-      <Paper>
-        <Grid container>
-          <Grid item xs={12}>
-            <EditableUsercard
-              profileImage={this.state.profileImage}
-              background={this.state.background}
-              firstName={this.state.firstName}
-              lastName={this.state.lastName}
-              handleBackgroundChange={this.handleBackgroundChange}
-              handleEditBackground={this.handleEditBackground}
-              handleProfileImageChange={this.handleProfileImageChange}
-              handleEditProfileImage={this.handleEditProfileImage}
+      <div>
+        <Paper elevation={3} className={classes.margin}>
+          <Grid container>
+            <Grid item xs={12}>
+              <EditableUsercard
+                profileImage={this.state.profileImage}
+                background={this.state.background}
+                firstName={this.state.firstName}
+                lastName={this.state.lastName}
+                location_city={this.state.location_city}
+                location_state={this.state.location_state}
+                instagram={this.state.instagram}
+                company={this.state.company}
+                headline={this.state.headline}
+                camera={this.state.camera}
+                loading={loading}
+                handleBackgroundChange={this.handleBackgroundChange}
+                handleEditBackground={this.handleEditBackground}
+                handleProfileImageChange={this.handleProfileImageChange}
+                handleEditProfileImage={this.handleEditProfileImage}
+              />
+            </Grid>
+          </Grid>
+        </Paper>
+        <Paper elevation={3} className={classes.margin}>
+          <Grid container>
+            <Grid item xs={10}>
+              <TextField
+                className={classes.textGrid}
+                disabled
+                id="standard-full-width"
+                name="bio"
+                type="text"
+                label="Biography"
+                value={this.state.bio}
+                helperText="Tell us about yourself"
+                fullWidth
+                multiline
+                rows={4}
+                margin="normal"
+                variant="outlined"
+                onChange={this.handleChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <EditBio
+              open={this.state.open}
+              handleAgree={this.handleAgree}
+              handleDisagree={this.handleDisagree}
+              handleChange={this.handleChange}
+              bio={this.state.fakeBio}
             />
+            <Grid item xs={2}>
+              <List style={{ marginTop: "10px" }}>
+                <ListItem>
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="icon">
+                      <EditIcon
+                        color="primary"
+                        onClick={this.handleClickOpen}
+                      />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              </List>
+            </Grid>
           </Grid>
-          <Grid item xs={1} />
-          <Grid item xs={10}>
-            <TextField
-              disabled
-              id="standard-full-width"
-              name="bio"
-              type="text"
-              label="Biography"
-              value={this.state.bio}
-              helperText="Tell us about yourself"
-              fullWidth
-              multiline
-              rows={4}
-              margin="normal"
-              variant="outlined"
-              onChange={this.handleChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
+        </Paper>
+        <Paper elevation={3} className={classes.margin}>
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="center"
+          >
+            <Grid item xs={12} className={classes.centerGrid}>
+              <Button
+                variant="contained"
+                color="primary"
+                component={Link}
+                style={{ margin: "10px" }}
+                to={{
+                  pathname: "/uploadPhotographyPictures",
+                  state: {
+                    images: this.state.images,
+                  },
+                }}
+              >
+                Edit Pictures
+              </Button>
+            </Grid>
+            <Grid item xs={12} className={classes.centerGrid}>
+              <PhotoSamples
+                key={this.state.images}
+                images={this.state.images}
+                loading={loading}
+              />
+            </Grid>
           </Grid>
-          <EditBio
-            open={this.state.open}
-            handleAgree={this.handleAgree}
-            handleDisagree={this.handleDisagree}
-            handleChange={this.handleChange}
-            bio={this.state.fakeBio}
-          />
-          <Grid item xs={1}>
-            <Button onClick={this.handleClickOpen}>
-              <EditIcon color="primary" />
-            </Button>
-          </Grid>
-          <Grid item xs={12} className={classes.centerGrid}>
-            <Button
-              variant="contained"
-              color="primary"
-              component={Link}
-              to={{
-                pathname: "/uploadPhotographyPictures",
-                state: {
-                  images: this.state.images,
-                },
-              }}
-            >
-              Change Pictures
-            </Button>
-          </Grid>
-          <Grid item xs={1} />
-          <Grid item xs={10} direction="column">
-            <PhotoSamples
-              loading={loading}
-              key={this.state.images}
-              images={this.state.images}
-            />
-          </Grid>
-          <Grid item xs={1} />
-        </Grid>
-      </Paper>
+        </Paper>
+      </div>
     );
   }
 }
