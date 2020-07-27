@@ -38,6 +38,13 @@ class specificPhotographer extends Component {
       images: [],
       ratePerHour: 0,
       background: "",
+      location_city: "",
+      location_state: "",
+      tags: "",
+      website: "",
+      instagram: "",
+      company: "",
+      headline: "Amatuer Photographer in Troy and Expert in Photo Editing ",
     };
   }
 
@@ -76,62 +83,69 @@ class specificPhotographer extends Component {
       UI: { loadingData },
     } = this.props;
     return (
-      <Paper>
-        <Grid container direction="column" alignItems="center" justify="center">
-          <Grid item xs={12}>
-            <Usercard
-              profileImage={this.state.profileImage}
-              background={this.state.background}
-              firstName={this.state.firstName}
-              lastName={this.state.lastName}
-              loading={loadingData}
-            />
+      <div>
+        <Paper elevation={3} className={classes.margin}>
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="center"
+          >
+            <Grid item xs={12}>
+              <Usercard
+                profileImage={this.state.profileImage}
+                background={this.state.background}
+                firstName={this.state.firstName}
+                lastName={this.state.lastName}
+                location_city={this.state.location_city}
+                location_state={this.state.location_state}
+                instagram={this.state.instagram}
+                company={this.state.company}
+                tags={this.state.tags}
+                loading={loadingData}
+                history={this.props.history}
+                headline={this.state.headline}
+              />
+            </Grid>
           </Grid>
+        </Paper>
+        <Paper elevation={3} className={classes.margin}>
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="center"
+          >
+            <Grid item xs={12}>
+              <Rating loading={loadingData} />
+            </Grid>
+          </Grid>
+        </Paper>
+        <Paper elevation={3}>
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="center"
+          >
+            <Grid item xs={12} className={classes.centerGrid}>
+              <PhotoSamples
+                key={this.state.images}
+                images={this.state.images}
+                loading={loadingData}
+              />
+            </Grid>
 
-          <Grid item xs={12}>
-            <Rating loading={loadingData} />
+            <Grid item sm={12}>
+              <Bio
+                key={this.state.bio}
+                bio={this.state.bio}
+                loading={loadingData}
+              />
+            </Grid>
           </Grid>
-
-          <Grid item xs={12}>
-            {loadingData ? (
-              <Skeleton>
-                <Typography variant="h3">Book</Typography>
-              </Skeleton>
-            ) : (
-              <Button
-                className={classes.bookButton}
-                disabled={loadingData}
-                variant="contained"
-                color="primary"
-                onClick={() =>
-                  this.props.history.push(
-                    `${this.props.history.location.pathname}/book`
-                  )
-                }
-              >
-                Book
-              </Button>
-            )}
-          </Grid>
-
-          <Grid item />
-          <Grid item xs={10}>
-            <PhotoSamples
-              key={this.state.images}
-              images={this.state.images}
-              loading={loadingData}
-            />
-          </Grid>
-          <Grid item />
-          <Grid item sm={12}>
-            <Bio
-              key={this.state.bio}
-              bio={this.state.bio}
-              loading={loadingData}
-            />
-          </Grid>
-        </Grid>
-      </Paper>
+        </Paper>
+      </div>
     );
   }
 }
