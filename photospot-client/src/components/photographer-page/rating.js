@@ -15,7 +15,7 @@ class rating extends Component {
             style={{ marginBottom: 6 }}
           />
         ) : (
-          <Typography>
+          <Typography style={{ marginTop: "15px", marginBottom: "15px" }}>
             &#9733;&#9733;&#9733;&#9733;&#9733; - 15 Reviews
           </Typography>
         )}
