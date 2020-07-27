@@ -37,8 +37,8 @@ class profileImage extends Component {
       email: "",
       firstName: "",
       lastName: "",
-      location_city: "Troy",
-      location_state: "MI",
+      location_city: "",
+      location_state: "",
       profileImage: "",
       open: false,
       fakeFirstName: "",
@@ -198,7 +198,9 @@ class profileImage extends Component {
         <Grid item xs={6}>
           <Typography variant="h4">Upcoming Shoot</Typography>
           {theUserOrders}
-          <Typography variant="h4">Past Shoots</Typography>
+          <Typography variant="h4" style={{ marginTop: "30px" }}>
+            Past Shoots
+          </Typography>
           {theUserPastOrders}
         </Grid>
 
