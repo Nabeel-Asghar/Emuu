@@ -1,9 +1,9 @@
 import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import ImageGallery from "react-image-gallery";
-
 import "react-image-gallery/styles/css/image-gallery.css";
 import Skeleton from "@material-ui/lab/Skeleton";
+import Gallery from "react-photo-gallery";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -19,9 +19,15 @@ class photoSamples extends Component {
       var img = new Image();
       img.src = images[i];
 
+      let width = Math.ceil(img.width / 100);
+      let height = Math.ceil(img.height / 100);
+
+      console.log(width, height);
+
       imageContainer.push({
-        original: img.src,
-        thumbnail: img.src,
+        src: img.src,
+        width: width,
+        height: height,
       });
     }
 
@@ -30,7 +36,7 @@ class photoSamples extends Component {
         {loading ? (
           <Skeleton variant="rect" height={500} width={500} />
         ) : (
-          <ImageGallery items={imageContainer} showPlayButton={false} />
+          <Gallery photos={imageContainer} />
         )}
       </div>
     );
