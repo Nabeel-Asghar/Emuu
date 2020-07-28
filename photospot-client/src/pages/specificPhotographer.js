@@ -44,7 +44,8 @@ class specificPhotographer extends Component {
       website: "",
       instagram: "",
       company: "",
-      headline: "Amatuer Photographer in Troy and Expert in Photo Editing ",
+      headline: "",
+      camera: "",
     };
   }
 
@@ -105,6 +106,7 @@ class specificPhotographer extends Component {
                 loading={loadingData}
                 history={this.props.history}
                 headline={this.state.headline}
+                camera={this.state.camera}
               />
             </Grid>
           </Grid>
