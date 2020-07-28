@@ -35,8 +35,9 @@ class usercard extends Component {
       instagram,
       company,
       tags,
-      loading = true,
+      loading,
       headline,
+      camera,
     } = this.props;
     return (
       <Grid container>
@@ -123,10 +124,7 @@ class usercard extends Component {
           <div style={{ width: "100%" }}>
             <List dense="true">
               <ListItem>
-                <ListItemText
-                  primary="Canon EOS Rebel T7"
-                  style={{ textAlign: "right" }}
-                />
+                <ListItemText primary={camera} style={{ textAlign: "right" }} />
                 <ListItemSecondaryAction>
                   <IconButton edge="end" aria-label="icon">
                     <PhotoCameraIcon color="primary" />
