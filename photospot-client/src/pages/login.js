@@ -10,6 +10,7 @@ import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Paper from "@material-ui/core/Paper";
 
 // Redux
 import { connect } from "react-redux";
@@ -63,57 +64,66 @@ class login extends Component {
     const { errors } = this.state;
     return (
       <Grid container className={classes.form}>
-        <Grid item sm />
-        <Grid item sm>
-          <img src={AppIcon} alt="Logo" className={classes.image} />
-          <Typography variant="h2" className={classes.pageTitle}>
-            Login
-          </Typography>
-          <form noValidate onSubmit={this.handleSubmit}>
-            <TextField
-              id="email"
-              name="email"
-              type="email"
-              label="Email"
-              className={classes.textField}
-              helperText={errors.email}
-              error={errors.email ? true : false}
-              value={this.state.email}
-              onChange={this.handleChange}
-              variant="outlined"
-              fullWidth
-            />
-            <TextField
-              id="password"
-              name="password"
-              type="password"
-              label="Password"
-              className={classes.textField}
-              helperText={errors.password}
-              error={errors.password ? true : false}
-              value={this.state.password}
-              onChange={this.handleChange}
-              fullWidth
-              variant="outlined"
-            />
-            {errors.general && (
-              <Typography variant="body2" className={classes.customError}>
-                {errors.general}
-              </Typography>
-            )}
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className={classes.button}
-              disabled={loading}
-            >
+        <Grid item xs />
+        <Paper
+          style={{
+            maxWidth: "600px",
+            margin: "auto",
+            paddingBottom: "75px",
+            marginTop: 100,
+          }}
+        >
+          <Grid item xs={7} style={{ margin: "auto" }}>
+            <img src={AppIcon} alt="Logo" className={classes.image} />
+            <Typography variant="h2" className={classes.pageTitle}>
               Login
-              {loading && <CircularProgress className={classes.progress} />}
-            </Button>
-          </form>
-        </Grid>
-        <Grid item sm />
+            </Typography>
+            <form noValidate onSubmit={this.handleSubmit}>
+              <TextField
+                id="email"
+                name="email"
+                type="email"
+                label="Email"
+                className={classes.textField}
+                helperText={errors.email}
+                error={errors.email ? true : false}
+                value={this.state.email}
+                onChange={this.handleChange}
+                variant="outlined"
+                fullWidth
+              />
+              <TextField
+                id="password"
+                name="password"
+                type="password"
+                label="Password"
+                className={classes.textField}
+                helperText={errors.password}
+                error={errors.password ? true : false}
+                value={this.state.password}
+                onChange={this.handleChange}
+                fullWidth
+                variant="outlined"
+              />
+              {errors.general && (
+                <Typography variant="body2" className={classes.customError}>
+                  {errors.general}
+                </Typography>
+              )}
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.button}
+                disabled={loading}
+              >
+                Login
+                {loading && <CircularProgress className={classes.progress} />}
+              </Button>
+            </form>
+          </Grid>
+        </Paper>
+        <Grid item xs />
       </Grid>
     );
   }
