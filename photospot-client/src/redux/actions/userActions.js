@@ -106,8 +106,8 @@ export const uploadImages = (images) => (dispatch) => {
     );
 };
 
-export const editPhotographerBio = (bio) => (dispatch) => {
-  API.post("/editphotographypage/bio", bio)
+export const updatePhotographerPage = (details) => (dispatch) => {
+  API.post("/editphotographypage/edit", details)
     .then((res) => {
       console.log(res.data);
       dispatch({ type: "CLEAR_ERRORS" });

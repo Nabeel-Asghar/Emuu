@@ -26,7 +26,7 @@ import IconButton from "@material-ui/core/IconButton";
 import { connect } from "react-redux";
 import {
   getYourPhotographyPage,
-  editPhotographerBio,
+  updatePhotographerPage,
   uploadProfileImage,
   uploadBackgroundImage,
 } from "../redux/actions/userActions";
@@ -37,6 +37,7 @@ import equal from "fast-deep-equal";
 import EditableUsercard from "../components/your-photography-page/editableUsercard";
 import PhotoSamples from "../components/photographer-page/photoSamples";
 import EditBio from "../components/your-photography-page/editBio";
+import EditUserDetails from "../components/your-photography-page/editUserDetails";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -61,9 +62,14 @@ class editPhotographyPage extends Component {
       website: "",
       ratePerHour: "",
       open: false,
+      openDetails: false,
       fakeBio: "",
       headline: "",
       camera: "",
+      fakeInstagram: "",
+      fakeCamera: "",
+      fakeCompany: "",
+      fakeHeadline: "",
     };
   }
 
@@ -143,26 +149,26 @@ class editPhotographyPage extends Component {
     fileInput.click();
   };
 
-  handleClickOpen = () => {
+  handleBioClickOpen = () => {
     this.setState({
       open: true,
       fakeBio: this.state.bio,
     });
   };
 
-  handleChange = (event) => {
+  handleBioChange = (event) => {
     this.setState({
       fakeBio: event.target.value,
     });
   };
 
-  handleDisagree = () => {
+  handleBioDisagree = () => {
     this.setState({
       open: false,
     });
   };
 
-  handleAgree = (event) => {
+  handleBioAgree = (event) => {
     this.setState({
       open: false,
     });
@@ -176,8 +182,56 @@ class editPhotographyPage extends Component {
     console.log("REAL ", this.state.bio);
     console.log("FAKE", this.state.fakeBio);
 
-    this.props.editPhotographerBio(details);
+    this.props.updatePhotographerPage(details);
   };
+
+  // Handle user card changes
+
+  handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  handleDisagree = () => {
+    this.setState({
+      openDetails: false,
+    });
+  };
+
+  handleAgree = (event) => {
+    this.setState({
+      openDetails: false,
+    });
+
+    this.setState({
+      instagram: this.state.fakeInstagram,
+      camera: this.state.fakeCamera,
+      company: this.state.fakeCompany,
+      headline: this.state.fakeHeadline,
+    });
+
+    const details = {
+      instagram: this.state.fakeInstagram,
+      camera: this.state.fakeCamera,
+      company: this.state.fakeCompany,
+      headline: this.state.fakeHeadline,
+    };
+
+    this.props.updatePhotographerPage(details);
+  };
+
+  handleClickOpen = () => {
+    this.setState({
+      openDetails: true,
+      fakeInstagram: this.state.instagram,
+      fakeCamera: this.state.camera,
+      fakeCompany: this.state.company,
+      fakeHeadline: this.state.headline,
+    });
+  };
+
+  //------
 
   render() {
     const { loading, classes } = this.props;
@@ -203,10 +257,23 @@ class editPhotographyPage extends Component {
                 handleEditBackground={this.handleEditBackground}
                 handleProfileImageChange={this.handleProfileImageChange}
                 handleEditProfileImage={this.handleEditProfileImage}
+                handleOpenEdit={this.handleClickOpen}
               />
             </Grid>
           </Grid>
         </Paper>
+
+        <EditUserDetails
+          open={this.state.openDetails}
+          handleAgree={this.handleAgree}
+          handleDisagree={this.handleDisagree}
+          handleChange={this.handleChange}
+          instagram={this.state.fakeInstagram}
+          camera={this.state.fakeCamera}
+          company={this.state.fakeCompany}
+          headline={this.state.fakeHeadline}
+        />
+
         <Paper elevation={3} className={classes.margin}>
           <Grid container>
             <Grid item xs={10}>
@@ -224,7 +291,7 @@ class editPhotographyPage extends Component {
                 rows={4}
                 margin="normal"
                 variant="outlined"
-                onChange={this.handleChange}
+                onChange={this.handleBioChange}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -232,9 +299,9 @@ class editPhotographyPage extends Component {
             </Grid>
             <EditBio
               open={this.state.open}
-              handleAgree={this.handleAgree}
-              handleDisagree={this.handleDisagree}
-              handleChange={this.handleChange}
+              handleAgree={this.handleBioAgree}
+              handleDisagree={this.handleBioDisagree}
+              handleChange={this.handleBioChange}
               bio={this.state.fakeBio}
             />
             <Grid item xs={2}>
@@ -244,7 +311,7 @@ class editPhotographyPage extends Component {
                     <IconButton edge="end" aria-label="icon">
                       <EditIcon
                         color="primary"
-                        onClick={this.handleClickOpen}
+                        onClick={this.handleBioClickOpen}
                       />
                     </IconButton>
                   </ListItemSecondaryAction>
@@ -297,7 +364,7 @@ const mapStateToProps = (state) => ({
 
 const mapActionsToProps = {
   getYourPhotographyPage,
-  editPhotographerBio,
+  updatePhotographerPage,
   uploadProfileImage,
   uploadBackgroundImage,
 };
