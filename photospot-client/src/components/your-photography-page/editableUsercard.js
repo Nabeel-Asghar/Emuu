@@ -16,6 +16,7 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
+import EditIcon from "@material-ui/icons/Edit";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -35,6 +36,7 @@ class editableUsercard extends Component {
       company,
       loading,
       headline,
+      camera,
     } = this.props;
     return (
       <Grid container>
@@ -87,7 +89,7 @@ class editableUsercard extends Component {
         <Grid item xs={6} className={classes.rightGrid}>
           {loading ? (
             <Skeleton>
-              <Typography variant="h3">Book</Typography>
+              <Typography variant="h3">OH MY GOD I MUST BE FAMOUS</Typography>
             </Skeleton>
           ) : (
             <div>
@@ -112,6 +114,10 @@ class editableUsercard extends Component {
               >
                 Contact
               </Button>
+              <br />
+              <IconButton style={{ marginTop: "5px", marginBottom: "-5px" }}>
+                <EditIcon color="primary" onClick={this.props.handleOpenEdit} />
+              </IconButton>
             </div>
           )}
         </Grid>
@@ -148,10 +154,7 @@ class editableUsercard extends Component {
           <div style={{ width: "100%" }}>
             <List dense="true">
               <ListItem>
-                <ListItemText
-                  primary="Canon EOS Rebel T7"
-                  style={{ textAlign: "right" }}
-                />
+                <ListItemText primary={camera} style={{ textAlign: "right" }} />
                 <ListItemSecondaryAction>
                   <IconButton edge="end" aria-label="icon">
                     <PhotoCameraIcon color="primary" />
