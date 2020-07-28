@@ -143,17 +143,15 @@ exports.setYourPhotographyPage = (req, res) => {
     });
 };
 
-// set your photographer bio
-exports.setPhotographerBio = (req, res) => {
-  const photographerPageDetails = {
-    bio: req.body.bio,
-  };
+// update your photographer page
+exports.updatePhotographerPage = (req, res) => {
+  const photographerPageDetails = req.body;
 
   console.log(photographerPageDetails);
 
-  const { valid, errors } = validateBio(photographerPageDetails);
+  // const { valid, errors } = validateBio(photographerPageDetails);
 
-  if (!valid) return res.status(400).json(errors);
+  // if (!valid) return res.status(400).json(errors);
 
   db.doc(`/photographer/${req.user.uid}`)
     .update(photographerPageDetails)
