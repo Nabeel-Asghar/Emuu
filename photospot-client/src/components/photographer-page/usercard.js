@@ -138,9 +138,14 @@ class usercard extends Component {
                   style={{ textAlign: "right" }}
                 />
                 <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="icon">
-                    <InstagramIcon color="primary" />
-                  </IconButton>
+                  <a
+                    target="_blank"
+                    href={`http://www.instagram.com/${instagram}`}
+                  >
+                    <IconButton edge="end" aria-label="icon">
+                      <InstagramIcon color="primary" />
+                    </IconButton>
+                  </a>
                 </ListItemSecondaryAction>
               </ListItem>
 
