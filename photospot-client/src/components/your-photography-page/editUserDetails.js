@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 
 //Material UI
+import withStyles from "@material-ui/core/styles/withStyles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -8,12 +9,29 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
+import Grid from "@material-ui/core/Grid";
+
+const styles = (theme) => ({
+  ...theme.spreadThis,
+  root: {
+    display: "flex",
+    flexWrap: "wrap",
+  },
+  textField: {
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    width: "25ch",
+  },
+});
 
 class editUserDetails extends Component {
   render() {
+    const { classes } = this.props;
+
     return (
       <Dialog
-        maxWidth="md"
+        fullWidth="true"
+        maxWidth="sm"
         open={this.props.open}
         onClose={this.props.handleDisagree}
         aria-labelledby="alert-dialog-title"
@@ -23,73 +41,86 @@ class editUserDetails extends Component {
           {"Edit Photographer Profile"}
         </DialogTitle>
         <DialogContent>
-          <DialogContentText id="headline">
-            <TextField
-              id="standard-headline"
-              name="fakeHeadline"
-              type="text"
-              label="Headline"
-              value={this.props.headline}
-              margin="normal"
-              variant="outlined"
-              onChange={this.props.handleChange}
-              required
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </DialogContentText>
+          <Grid container>
+            <Grid item xs={12}>
+              <DialogContentText id="headline">
+                <TextField
+                  id="standard-headline"
+                  multiline
+                  rows={2}
+                  name="fakeHeadline"
+                  type="text"
+                  label="Headline"
+                  value={this.props.headline}
+                  margin="normal"
+                  variant="outlined"
+                  onChange={this.props.handleChange}
+                  required
+                  fullWidth
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </DialogContentText>
+            </Grid>
 
-          <DialogContentText id="camera">
-            <TextField
-              id="standard-camera"
-              name="fakeCamera"
-              type="text"
-              label="Camera"
-              value={this.props.camera}
-              margin="normal"
-              variant="outlined"
-              onChange={this.props.handleChange}
-              required
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </DialogContentText>
+            <Grid item xs={6}>
+              <DialogContentText id="camera">
+                <TextField
+                  id="standard-camera"
+                  name="fakeCamera"
+                  type="text"
+                  label="Camera"
+                  value={this.props.camera}
+                  margin="normal"
+                  variant="outlined"
+                  onChange={this.props.handleChange}
+                  required
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </DialogContentText>
+            </Grid>
 
-          <DialogContentText id="instagram">
-            <TextField
-              id="standard-instagram"
-              name="fakeInstagram"
-              type="text"
-              label="Instagram Handle"
-              value={this.props.instagram}
-              margin="normal"
-              variant="outlined"
-              onChange={this.props.handleChange}
-              required
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </DialogContentText>
+            <Grid item xs={6}>
+              <DialogContentText id="instagram">
+                <TextField
+                  id="standard-instagram"
+                  name="fakeInstagram"
+                  type="text"
+                  label="Instagram Handle"
+                  value={this.props.instagram}
+                  margin="normal"
+                  variant="outlined"
+                  onChange={this.props.handleChange}
+                  required
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </DialogContentText>
+            </Grid>
 
-          <DialogContentText id="company">
-            <TextField
-              id="standard-company"
-              name="fakeCompany"
-              type="text"
-              label="Company"
-              value={this.props.company}
-              margin="normal"
-              variant="outlined"
-              onChange={this.props.handleChange}
-              required
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
-          </DialogContentText>
+            <Grid item xs={12}>
+              <DialogContentText id="company">
+                <TextField
+                  id="standard-company"
+                  name="fakeCompany"
+                  type="text"
+                  label="Company"
+                  value={this.props.company}
+                  margin="normal"
+                  variant="outlined"
+                  onChange={this.props.handleChange}
+                  required
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </DialogContentText>
+            </Grid>
+          </Grid>
         </DialogContent>
         <DialogActions>
           <Button
@@ -113,4 +144,4 @@ class editUserDetails extends Component {
   }
 }
 
-export default editUserDetails;
+export default withStyles(styles)(editUserDetails);
