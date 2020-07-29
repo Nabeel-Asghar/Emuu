@@ -118,6 +118,22 @@ class specificPhotographer extends Component {
             alignItems="center"
             justify="center"
           >
+            <Grid item sm={12}>
+              <Bio
+                key={this.state.bio}
+                bio={this.state.bio}
+                loading={loadingData}
+              />
+            </Grid>
+          </Grid>
+        </Paper>
+        <Paper elevation={3} className={classes.margin}>
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="center"
+          >
             <Grid item xs={12}>
               <Rating loading={loadingData} />
             </Grid>
@@ -134,14 +150,6 @@ class specificPhotographer extends Component {
               <PhotoSamples
                 key={this.state.images}
                 images={this.state.images}
-                loading={loadingData}
-              />
-            </Grid>
-
-            <Grid item sm={12}>
-              <Bio
-                key={this.state.bio}
-                bio={this.state.bio}
                 loading={loadingData}
               />
             </Grid>
