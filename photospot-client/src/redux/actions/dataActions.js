@@ -53,7 +53,7 @@ export const getPhotographerPage = (photographerID) => (dispatch) => {
     .catch(() => {
       dispatch({
         type: "SET_PHOTOGRAHPER_PAGE",
-        payload: null,
+        payload: [null],
       });
     });
 };
