@@ -8,8 +8,15 @@ class bio extends Component {
     const { bio, loading } = this.props;
 
     return (
-      <Typography variant="h6">
-        {loading ? <Skeleton width={500} /> : <div>{bio}</div>}
+      <Typography variant="body1">
+        {loading ? (
+          <Skeleton width={750} height={100} />
+        ) : (
+          <div style={{ margin: "20px 50px 20px 50px" }}>
+            <Typography variant="h6">A litte bit about me...</Typography>
+            {bio}
+          </div>
+        )}
       </Typography>
     );
   }
