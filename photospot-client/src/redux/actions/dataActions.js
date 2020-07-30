@@ -83,7 +83,7 @@ export const bookPhotographer = (photographerID, bookingDetails) => (
 
 export const getChatList = () => (dispatch) => {
   dispatch({ type: "LOADING_DATA" });
-  API.onSnapshot("messages")
+  API.get("messages")
     .then((res) => {
       dispatch({
         type: "GET_MESSAGES",

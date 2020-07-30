@@ -50,7 +50,7 @@ class ChatTextBoxComponent extends Component {
   };
 
   userClickedInput = () => {
-    console.log("Clicked input");
+    this.props.messageReadFn();
   };
 }
 

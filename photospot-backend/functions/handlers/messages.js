@@ -2,6 +2,7 @@ const { db, db2 } = require("../util/admin");
 const admin = require("../util/admin");
 
 exports.getMessages = (req, res) => {
+  console.log("getMessages");
   let userEmail = req.user.email;
   let chats = [];
   db.collection("chats")
@@ -17,7 +18,7 @@ exports.sendMessage = (req, res) => {
   let docKey = req.params.docKey;
   let message = req.body.message;
   let email = req.body.email;
-  console.log(email);
+  console.log("sendMessage");
 
   db.collection("chats")
     .doc(docKey)

@@ -103,6 +103,13 @@ const theme = createMuiTheme({
       width: "calc(100% - 300px - 50px)",
     },
 
+    unreadMessage: {
+      color: "red",
+      position: "absolute",
+      top: "0",
+      right: "5px",
+    },
+
     chatTextBox: {
       width: "calc(100% - 25px)",
     },

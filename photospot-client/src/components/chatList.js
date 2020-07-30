@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import NotificationImportant from "@material-ui/icons/NotificationImportant";
 
 // Redux
 import { connect } from "react-redux";
@@ -73,6 +75,14 @@ class ChatListComponent extends Component {
                         </React.Fragment>
                       }
                     ></ListItemText>
+                    {_chat.receiverHasRead === false &&
+                    !this.userIsSender(_chat) ? (
+                      <ListItemIcon>
+                        <NotificationImportant
+                          className={classes.unreadMessage}
+                        ></NotificationImportant>
+                      </ListItemIcon>
+                    ) : null}
                   </ListItem>
                   <Divider />
                 </div>
@@ -85,12 +95,15 @@ class ChatListComponent extends Component {
   }
 
   newChat = () => {
-    console.log("new chat button");
+    this.props.newChatBtnFunction();
   };
 
   selectChat = (index) => {
     this.props.selectChatFn(index);
   };
+
+  userIsSender = (chat) =>
+    chat.messages[chat.messages.length - 1].sender === this.props.userEmail;
 }
 
 export default connect()(withStyles(styles)(ChatListComponent));

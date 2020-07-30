@@ -17,11 +17,6 @@ export default function (state = intialState, action) {
         ...state,
         allMessages: { ...action.payload },
       };
-    case "UPDATE_MESSAGES":
-      return {
-        ...state,
-        allMessages: { ...action.payload },
-      };
     case "SET_PHOTOGRAHPER_PAGE":
       return {
         ...state,
