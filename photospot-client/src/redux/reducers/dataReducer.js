@@ -1,6 +1,6 @@
 const intialState = {
   allPhotographers: [],
-  allMessages: [],
+  searchPhotographer: [],
   photographerPage: [],
   timings: [],
 };

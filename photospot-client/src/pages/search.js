@@ -4,7 +4,6 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import withStyles from "@material-ui/core/styles/withStyles";
 import equal from "fast-deep-equal";
-import { Link } from "react-router-dom";
 
 // Redux
 import { connect } from "react-redux";
@@ -15,8 +14,6 @@ import {
 
 // Photographer
 import Photographer from "../components/photographer";
-
-import equal from "fast-deep-equal";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -31,12 +28,17 @@ class home extends Component {
     };
   }
   componentDidMount() {
-    this.props.getPhotographers();
+    let searchQuery = this.props.match.params.searchQuery;
+    console.log(searchQuery);
+    this.props.searchPhotographer(searchQuery);
     this.setState({ allThePhotographers: this.props.allPhotographers });
   }
 
   componentDidUpdate(prevProps) {
     if (!equal(this.props.allPhotographers, prevProps.allPhotographers)) {
+      let searchQuery = this.props.match.params.searchQuery;
+      console.log(searchQuery);
+      this.props.searchPhotographer(searchQuery);
       this.setState({ allThePhotographers: this.props.allPhotographers });
     }
   }
@@ -49,6 +51,8 @@ class home extends Component {
       pathname: "/search/" + searchQuery,
       daSearch: searchQuery,
     });
+    this.props.searchPhotographer(searchQuery);
+    this.setState({ allThePhotographers: this.props.allPhotographers });
   };
 
   handleChange = (event) => {
@@ -81,9 +85,8 @@ class home extends Component {
             <Button
               variant="contained"
               color="primary"
-              component={Link}
-              to={`/search/${this.state.searchQuery}`}
               name="submitSearch"
+              type="submit"
             >
               Submit
             </Button>
@@ -95,14 +98,6 @@ class home extends Component {
       </Grid>
     );
   }
-
-  selectChat = (chatIndex) => {
-    console.log("index", chatIndex);
-    this.setState({ selectedChat: chatIndex });
-  };
-
-  newChatBtnClicked = () =>
-    this.setState({ newChatFormVisible: true, selectChat: null });
 }
 const mapStateToProps = (state) => ({
   allPhotographers: state.data.allPhotographers,

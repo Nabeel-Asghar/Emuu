@@ -9,6 +9,7 @@ app.use(cors({ origin: true }));
 const {
   getAllPhotographers,
   createPost,
+  searchPhotographer,
   getSpecificPhotographer,
   bookPhotographer,
   reviewPhotographer,
@@ -22,16 +23,23 @@ const {
   signup,
   login,
   uploadProfilePicture,
+  uploadBackgroundPicture,
   uploadYourPhotographyImages,
   setYourPhotographyPage,
+  setPhotographerBio,
   getYourPhotographerPage,
   getYourUserProfile,
   chatMessaging,
+  deleteImages,
+  getUsersOrders,
+  getUsersPastOrders,
+  updateUserProfile,
 } = require("./handlers/users");
 
 const { completedOrders } = require("./handlers/administrator");
 
 const FBAuth = require("./util/FBAuth");
+//const { searchPhotographer } = require("../../photospot-client/src/redux/actions/dataActions");
 
 //--------User Routes-----------------
 app.post("/signup", signup);
@@ -40,15 +48,21 @@ app.post("/login", login);
 // get photographer page or user page
 app.get("/yourphotographerpage", FBAuth, getYourPhotographerPage);
 app.get("/youruserprofile", FBAuth, getYourUserProfile);
+app.get("/youruserprofile/orders", FBAuth, getUsersOrders);
+app.get("/youruserprofile/pastorders", FBAuth, getUsersPastOrders);
+
+// update user profile
+app.post("/youruserprofile/edit", FBAuth, updateUserProfile);
 
 // upload profile image
 app.post("/user/profileimage", FBAuth, uploadProfilePicture);
 
-// create photography page
+// photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
-
-// upload images for your page
+app.post("/editphotographypage/bio", FBAuth, setPhotographerBio);
+app.post("/editphotographypage/background", FBAuth, uploadBackgroundPicture);
 app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
+app.post("/photographyimages/delete", FBAuth, deleteImages);
 
 // messaging ==========================================
 app.get("/messages", FBAuth, getMessages);
@@ -65,6 +79,7 @@ app.get(
   FBAuth,
   getPhotographerSchedule
 );
+app.get("/search/:searchQuery", FBAuth, searchPhotographer);
 app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);
 
 //Administrator

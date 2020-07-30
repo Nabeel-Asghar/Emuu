@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
 import AppIcon from "../images/logo.png";
@@ -8,6 +9,7 @@ import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 // Redux
 import { connect } from "react-redux";
@@ -51,6 +53,9 @@ class login extends Component {
   };
 
   render() {
+    if (this.props.authenticated === true) {
+      return <Redirect to="/" />;
+    }
     const {
       classes,
       UI: { loading },
@@ -101,8 +106,10 @@ class login extends Component {
               variant="contained"
               color="primary"
               className={classes.button}
+              disabled={loading}
             >
               Login
+              {loading && <CircularProgress className={classes.progress} />}
             </Button>
           </form>
         </Grid>
@@ -122,6 +129,7 @@ login.propTypes = {
 const mapStateToProps = (state) => ({
   user: state.user,
   UI: state.UI,
+  authenticated: state.user.authenticated,
 });
 
 const mapActionsToProps = {

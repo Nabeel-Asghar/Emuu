@@ -124,6 +124,7 @@ exports.getSpecificPhotographer = (req, res) => {
         videography: doc.data().videography,
         willingnessToTravel: doc.data().willingnessToTravel,
         createdAt: doc.data().createdAt,
+        background: doc.data().background,
       });
       return res.json(photographer);
     })
@@ -172,17 +173,52 @@ exports.getPhotographerSchedule = (req, res) => {
     });
 };
 
+exports.searchPhotographer = (req, res) => {
+  var query = req.params.searchQuery;
+
+  db.collection("photographer")
+    .orderBy("firstName")
+    .where("firstName", ">=", query.toUpperCase())
+    .where("firstName", "<=", query.toLowerCase() + "\uf8ff")
+    .get()
+    .then((data) => {
+      let posts = [];
+
+      data.forEach((doc) => {
+        posts.push({
+          photographerID: doc.id,
+          email: doc.data().email,
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          location_city: doc.data().location_city,
+          location_state: doc.data().location_state,
+          profileImage: doc.data().profileImage,
+          images: doc.data().images,
+          createdAt: doc.data().createdAt,
+        });
+      });
+      return res.json(posts);
+    })
+    .catch((err) => console.error(err));
+};
+
 exports.bookPhotographer = (req, res) => {
   let userid = req.user.uid;
   let photographerBooked = req.params.photographerId;
   let shootDate = req.body.date;
   let shootTime = req.body.time;
+  let firstName = req.body.firstName;
+  let lastName = req.body.lastName;
+  let profileImage = req.body.profileImage;
 
   let booking = {
     photographerID: photographerBooked,
     consumerID: userid,
     shootDate: shootDate,
     shootTime: shootTime,
+    firstName: firstName,
+    lastName: lastName,
+    profileImage: profileImage,
     paymentStatus: "pending",
     paymentToPhotographer: "pending",
     createdAt: new Date().toISOString(),
@@ -211,23 +247,17 @@ exports.bookPhotographer = (req, res) => {
     .doc(photographerBooked)
     .collection("orders")
     .doc(userid)
-    .set({
-      booking,
-    });
+    .set(booking);
 
   db.collection("users")
     .doc(userid)
     .collection("orders")
     .doc(photographerBooked)
-    .set({
-      booking,
-    });
+    .set(booking);
 
   db.collection("orders")
     .doc(userid)
-    .set({
-      booking,
-    })
+    .set(booking)
     .then(() => {
       return res.json({
         message:
