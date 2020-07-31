@@ -47,47 +47,97 @@ exports.createPost = (req, res) => {
     });
 };
 
+exports.getReviews = (req, res) => {
+  let photographerID = req.params.photographerId;
+
+  db.collection("photographer")
+    .doc(photographerID)
+    .collection("reviews")
+    .get()
+    .then((data) => {
+      let reviews = [];
+
+      data.forEach((doc) => {
+        reviews.push({
+          title: doc.data().title,
+          description: doc.data().description,
+          rating: doc.data().rating,
+          userID: doc.data().userID,
+          photographerID: doc.data().photographerBeingReviewed,
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          createdAt: doc.data().createdAt,
+        });
+      });
+
+      return res.json(reviews);
+    })
+    .catch((err) => {
+      return res.json({ error: err });
+    });
+};
+
 exports.reviewPhotographer = (req, res) => {
+  let userid = req.user.uid;
   let reviewID = req.user.uid;
   let photographerBeingReviewed = req.params.photographerId;
+
+  if (reviewID === photographerBeingReviewed) {
+    return res.json({ message: "You cannot review yourself." });
+  }
 
   const newReview = {
     description: req.body.description,
     rating: req.body.rating,
-    userID: reviewID,
+    title: req.body.title,
+    userID: userid,
     photographerID: photographerBeingReviewed,
     firstName: res.locals.firstName,
     lastName: res.locals.lastName,
     createdAt: new Date().toISOString(),
   };
 
-  db.collection("users")
-    .doc(reviewID)
-    .collection("orders")
+  // Add review to that photographer document
+  db.collection("photographer")
     .doc(photographerBeingReviewed)
+    .collection("reviews")
+    .doc(userid)
     .get()
     .then((doc) => {
-      if (!doc.exists || doc.get("paymentToPhotographer") == "pending") {
-        return res.json({
-          message:
-            "You may only review if you completed a shoot with this photographer.",
-        });
-      } else {
-        db.collection("photographer")
-          .doc(photographerBeingReviewed)
-          .collection("reviews")
-          .doc(reviewID)
-          .set(newReview)
-          .then(() => {
-            return res.json({
-              message: "Review added successfully!",
-            });
-          })
-          .catch((err) => {
-            res.status(500).json({ error: `something went wrong` });
-            console.log(err);
-          });
+      if (doc.exists) {
+        return res.json({ message: "You cannot review someone twice." });
       }
+    });
+
+  db.collection("photographer")
+    .doc(photographerBeingReviewed)
+    .collection("reviews")
+    .doc(userid)
+    .set(newReview)
+    .then(() => {
+      console.log("added review to photographer");
+    })
+    .catch((err) => {
+      res.status(500).json({ error: `something went wrong` });
+      console.log(err);
+    });
+
+  // Also add that review to the users collection for future reference
+
+  db.collection("users")
+    .doc(userid)
+    .collection("reviews")
+    .doc(photographerBeingReviewed)
+    .set(newReview)
+    .then(() => {
+      console.log("added review to user");
+      return res.json({
+        message: "Review added successfully!",
+      });
+    })
+    .catch((err) => {
+      res.status(500).json({ error: `something went wrong` });
+      console.log(err);
     });
 };
 
