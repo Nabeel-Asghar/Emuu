@@ -126,9 +126,14 @@ class usercard extends Component {
               <ListItem>
                 <ListItemText primary={camera} style={{ textAlign: "right" }} />
                 <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="icon">
-                    <PhotoCameraIcon color="primary" />
-                  </IconButton>
+                  <a
+                    target="_blank"
+                    href={`https://www.google.com/search?q=${camera}`}
+                  >
+                    <IconButton edge="end" aria-label="icon">
+                      <PhotoCameraIcon color="primary" />
+                    </IconButton>
+                  </a>
                 </ListItemSecondaryAction>
               </ListItem>
 
