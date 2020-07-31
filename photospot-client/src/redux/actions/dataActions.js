@@ -102,3 +102,22 @@ export const bookPhotographer = (photographerID, bookingDetails) => (
       });
     });
 };
+
+export const getReviews = (photographerID) => (dispatch) => {
+  dispatch({
+    type: "LOADING_REVIEWS",
+  });
+  return API.get(`/photographers/${photographerID}/getReviews`)
+    .then((res) => {
+      dispatch({
+        type: "SET_REVIEWS",
+        payload: res.data,
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: "SET_REVIEWS",
+        payload: [null],
+      });
+    });
+};
