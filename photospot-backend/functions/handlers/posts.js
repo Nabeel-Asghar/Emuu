@@ -1,5 +1,7 @@
 const { db } = require("../util/admin");
 
+const { validateReview } = require("../util/validators");
+
 exports.getAllPhotographers = (req, res) => {
   db.collection("photographer")
     .orderBy("createdAt", "desc")
@@ -83,21 +85,9 @@ exports.reviewPhotographer = (req, res) => {
   let photographerBeingReviewed = req.params.photographerId;
 
   if (reviewID === photographerBeingReviewed) {
-    return res.json({ message: "You cannot review yourself." });
+    return res.status(400).json({ error: "You cannot review yourself." });
   }
 
-  const newReview = {
-    description: req.body.description,
-    rating: req.body.rating,
-    title: req.body.title,
-    userID: userid,
-    photographerID: photographerBeingReviewed,
-    firstName: res.locals.firstName,
-    lastName: res.locals.lastName,
-    createdAt: new Date().toISOString(),
-  };
-
-  // Add review to that photographer document
   db.collection("photographer")
     .doc(photographerBeingReviewed)
     .collection("reviews")
@@ -105,39 +95,56 @@ exports.reviewPhotographer = (req, res) => {
     .get()
     .then((doc) => {
       if (doc.exists) {
-        return res.json({ message: "You cannot review someone twice." });
+        console.log("cannot review twice");
+        return res
+          .status(400)
+          .json({ error: "You cannot review someone twice." });
+      } else {
+        const newReview = {
+          description: req.body.description,
+          rating: req.body.rating,
+          title: req.body.title,
+          userID: userid,
+          photographerID: photographerBeingReviewed,
+          firstName: res.locals.firstName,
+          lastName: res.locals.lastName,
+          createdAt: new Date().toISOString(),
+        };
+
+        const { valid, errors } = validateReview(newReview);
+        console.log("errors: ", errors);
+
+        if (!valid) return res.status(400).json(errors);
+
+        // Add review to that photographer document
+
+        db.collection("photographer")
+          .doc(photographerBeingReviewed)
+          .collection("reviews")
+          .doc(userid)
+          .set(newReview)
+          .then(() => {
+            db.collection("users")
+              .doc(userid)
+              .collection("reviews")
+              .doc(photographerBeingReviewed)
+              .set(newReview)
+              .then(() => {
+                console.log("added review to user");
+                return res.json({
+                  message: "Review added successfully!",
+                });
+              })
+              .catch((err) => {
+                res.status(500).json({ error: `something went wrong` });
+              });
+          })
+          .catch((err) => {
+            res.status(500).json({ error: `something went wrong` });
+          });
+
+        // Also add that review to the users collection for future reference
       }
-    });
-
-  db.collection("photographer")
-    .doc(photographerBeingReviewed)
-    .collection("reviews")
-    .doc(userid)
-    .set(newReview)
-    .then(() => {
-      console.log("added review to photographer");
-    })
-    .catch((err) => {
-      res.status(500).json({ error: `something went wrong` });
-      console.log(err);
-    });
-
-  // Also add that review to the users collection for future reference
-
-  db.collection("users")
-    .doc(userid)
-    .collection("reviews")
-    .doc(photographerBeingReviewed)
-    .set(newReview)
-    .then(() => {
-      console.log("added review to user");
-      return res.json({
-        message: "Review added successfully!",
-      });
-    })
-    .catch((err) => {
-      res.status(500).json({ error: `something went wrong` });
-      console.log(err);
     });
 };
 
