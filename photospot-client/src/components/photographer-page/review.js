@@ -24,6 +24,7 @@ import Button from "@material-ui/core/Button";
 // Redux
 import { connect } from "react-redux";
 import { getReviews } from "../../redux/actions/dataActions";
+import { reviewPhotographer } from "../../redux/actions/userActions";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -48,6 +49,9 @@ class review extends Component {
       title: "",
       rating: 0,
       description: "",
+      newReviewRating: 1,
+      errors: {},
+      response: "",
     };
   }
 
@@ -69,9 +73,33 @@ class review extends Component {
     }
   }
 
-  handleReviewDialog() {
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.UI.errors) {
+      this.setState({
+        errors: nextProps.UI.errors,
+      });
+    }
+  }
+
+  handleReviewDialogAgree() {
+    // this.setState({
+    //   openReview: !this.state.openReview,
+    // });
+
+    const details = {
+      description: this.state.description,
+      title: this.state.title,
+      rating: this.state.newReviewRating,
+    };
+
+    this.props.reviewPhotographer(this.props.id, details);
+  }
+
+  handleReviewOpenState() {
     this.setState({
       openReview: !this.state.openReview,
+      errors: {},
+      response: {},
     });
   }
 
@@ -80,10 +108,6 @@ class review extends Component {
       [event.target.name]: event.target.value,
     });
   };
-
-  onStarClick(nextValue, prevValue, name) {
-    this.setState({ rating: nextValue });
-  }
 
   handleCount(allReviews) {
     for (let i = 0; i < allReviews.length; i++) {
@@ -94,9 +118,18 @@ class review extends Component {
     }
   }
 
+  changeRating = (newRating, name) => {
+    this.setState({
+      newReviewRating: newRating,
+    });
+  };
+
   render() {
     dayjs.extend(relativeTime);
     const { classes, checked, overallRating, reviewCount } = this.props;
+    const { errors } = this.state;
+    console.log(errors);
+    console.log(errors.title);
     return (
       <Collapse in={checked}>
         <div>
@@ -136,7 +169,7 @@ class review extends Component {
               color="primary"
               aria-label="add"
               style={{ margin: "15px 0 20px 0" }}
-              onClick={() => this.handleReviewDialog()}
+              onClick={() => this.handleReviewOpenState()}
             >
               <AddIcon className={classes.extendedIcon} />
               ADD REVIEW
@@ -167,6 +200,8 @@ class review extends Component {
                       margin="normal"
                       variant="outlined"
                       onChange={this.handleChange}
+                      helperText={errors.title}
+                      error={errors.title ? true : false}
                       required
                       fullWidth
                       InputLabelProps={{
@@ -178,11 +213,14 @@ class review extends Component {
 
                 <Grid item xs={12}>
                   <StarRatings
-                    rating={this.state.rating}
+                    rating={this.state.newReviewRating}
                     starRatedColor="blue"
                     changeRating={this.changeRating}
                     numberOfStars={5}
-                    name="rating"
+                    name="newReviewRating"
+                    starDimension="20px"
+                    starRatedColor="gold"
+                    starHoverColor="gold"
                   />
                 </Grid>
 
@@ -194,6 +232,8 @@ class review extends Component {
                       type="text"
                       label="Description"
                       value={this.state.description}
+                      helperText={errors.description}
+                      error={errors.description ? true : false}
                       margin="normal"
                       variant="outlined"
                       onChange={this.handleChange}
@@ -209,21 +249,32 @@ class review extends Component {
                 </Grid>
               </Grid>
             </DialogContent>
+
+            {errors.error ? (
+              <Typography style={{ color: "red", textAlign: "center" }}>
+                {errors.error}
+              </Typography>
+            ) : (
+              <Typography
+                style={{ color: "green", textAlign: "center" }}
+              ></Typography>
+            )}
+
             <DialogActions>
               <Button
-                onClick={() => this.handleReviewDialog()}
+                onClick={() => this.handleReviewOpenState()}
                 variant="contained"
                 color="secondary"
               >
                 Close
               </Button>
               <Button
-                onClick={() => this.handleReviewDialog()}
+                onClick={() => this.handleReviewDialogAgree()}
                 variant="contained"
                 color="primary"
                 autoFocus
               >
-                Save Changes
+                Review
               </Button>
             </DialogActions>
           </Dialog>
@@ -235,10 +286,14 @@ class review extends Component {
 
 const mapStateToProps = (state) => ({
   reviews: state.data.reviews,
+  reviewResponse: state.UI.reviewResponse,
+  UI: state.UI,
+  errors: state.UI.errors,
 });
 
 const mapActionsToProps = {
   getReviews,
+  reviewPhotographer,
 };
 
 export default connect(
