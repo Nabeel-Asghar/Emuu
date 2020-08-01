@@ -177,6 +177,20 @@ export const updateUserProfile = (details) => (dispatch) => {
     });
 };
 
+export const reviewPhotographer = (photographerID, details) => (dispatch) => {
+  API.post(`/photographers/${photographerID}/review`, details)
+    .then((res) => {
+      console.log("Response from action:", res.data);
+    })
+    .catch((err) => {
+      console.log(err.response.data);
+      dispatch({
+        type: "SET_RESPONSE_NEW_REVIEW_ERROR",
+        payload: err.response.data,
+      });
+    });
+};
+
 const setAuthorizationHeader = (token) => {
   const FirebaseIdToken = `Bearer ${token}`;
   localStorage.setItem("FirebaseIdToken", FirebaseIdToken);
