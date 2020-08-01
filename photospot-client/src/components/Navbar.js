@@ -44,6 +44,7 @@ const Navbar = () => {
   const imageStyle = {
     width: "40px",
     height: "40px",
+    borderRadius: "50%",
   };
 
   const centerGrid = {

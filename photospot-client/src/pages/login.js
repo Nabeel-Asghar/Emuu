@@ -18,6 +18,10 @@ import { loginUser } from "../redux/actions/userActions";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
+  logoImage: {
+    borderRadius: "50%",
+    marginTop: "30px",
+  },
 });
 
 class login extends Component {
@@ -62,6 +66,8 @@ class login extends Component {
       UI: { loading },
     } = this.props;
     const { errors } = this.state;
+    console.log(errors);
+    console.log(errors.email);
     return (
       <Grid container className={classes.form}>
         <Grid item xs />
@@ -74,7 +80,7 @@ class login extends Component {
           }}
         >
           <Grid item xs={7} style={{ margin: "auto" }}>
-            <img src={AppIcon} alt="Logo" className={classes.image} />
+            <img src={AppIcon} alt="Logo" className={classes.logoImage} />
             <Typography variant="h2" className={classes.pageTitle}>
               Login
             </Typography>
