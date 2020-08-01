@@ -55,6 +55,13 @@ export default function (state = intialState, action) {
         ...state,
         theUploadImagesResponse: action.response,
       };
+
+    case "SET_RESPONSE_NEW_REVIEW_ERROR":
+      return {
+        ...state,
+        errors: { ...action.payload },
+      };
+
     default:
       return state;
   }
