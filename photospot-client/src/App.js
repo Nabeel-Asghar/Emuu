@@ -16,6 +16,7 @@ import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import home from "./pages/home";
 import login from "./pages/login";
 import signup from "./pages/signup";
+import messaging from "./pages/messaging";
 import specificPhotographer from "./pages/specificPhotographer";
 import book from "./pages/book";
 import profile from "./pages/profile";
@@ -49,105 +50,8 @@ const theme = createMuiTheme({
   typography: {
     useNextVariants: true,
   },
+
   spreadThis: {
-    userSent: {
-      float: "left",
-      clear: "both",
-      padding: "20px",
-      boxSizing: "border-box",
-      wordWrap: "break-word",
-      marginTop: "10px",
-      backgroundColor: "#707BC4",
-      color: "white",
-      width: "300px",
-      borderRadius: "10px",
-    },
-
-    friendSent: {
-      float: "right",
-      clear: "both",
-      padding: "20px",
-      boxSizing: "border-box",
-      wordWrap: "break-word",
-      marginTop: "10px",
-      backgroundColor: "#FF0000",
-      color: "white",
-      width: "300px",
-      borderRadius: "10px",
-    },
-
-    //Left Grid
-    UserList: {
-      marginTop: "13px",
-      backgroundColor: "#fffffff",
-      height: "calc(100% - 35px)",
-      boxShadow: "0px 0px 3px black",
-    },
-
-    //Right grid
-    ChatList: {
-      boxSizing: "border-box",
-      overflowY: "auto",
-    },
-
-    //Messages
-    chatViewContainer: {
-      height: "calc(100vh - 200px)",
-      overflow: "auto",
-    },
-
-    //Send Message
-    chatTextBoxContainer: {
-      position: "absolute",
-      bottom: "15px",
-      left: "315px",
-      boxSizing: "border-box",
-      overflow: "auto",
-      width: "calc(100% - 300px - 50px)",
-    },
-
-    unreadMessage: {
-      color: "red",
-      position: "absolute",
-      top: "0",
-      right: "5px",
-    },
-
-    chatTextBox: {
-      width: "calc(100% - 25px)",
-    },
-
-    sendBtn: {
-      color: "blue",
-      cursor: "pointer",
-      "&:hover": {
-        color: "gray",
-      },
-    },
-
-    listItem: {
-      cursor: "pointer",
-    },
-    newChatBtn: {
-      borderRadius: "0px",
-    },
-    unreadMessage: {
-      color: "red",
-      position: "absolute",
-      top: "0",
-      right: "5px",
-    },
-
-    chatHeader: {
-      position: "sticky",
-      height: "50px",
-      backgroundColor: "#344195",
-      fontSize: "18px",
-      textAlign: "center",
-      paddingTop: "10px",
-      color: "white",
-      boxSizing: "border-box",
-    },
     form: {
       textAlign: "center",
     },
