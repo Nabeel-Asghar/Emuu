@@ -18,9 +18,33 @@ import {
 
 const styles = (theme) => ({
   ...theme.spreadThis,
+  theList: {
+    paddingTop: "0px",
+    backgroundColor: "white",
+    height: " calc(60vh + 110px);",
+  },
+  newChatBtn: {
+    height: "50px",
+    borderRadius: "0px",
+  },
+
+  listItem: {
+    cursor: "pointer",
+  },
+
+  unreadMessage: {
+    color: "red",
+    position: "absolute",
+    top: "0",
+    right: "5px",
+  },
+
+  listItemText: {
+    fontWeight: "bold",
+  },
 });
 
-class ChatListComponent extends Component {
+class UserListComponent extends Component {
   render() {
     const { classes, selectChatFn, chat } = this.props;
 
@@ -31,14 +55,14 @@ class ChatListComponent extends Component {
         <main>
           <Button
             variant="contained"
-            fullWidth={false}
+            fullWidth={true}
             color="primary"
             className={classes.newChatBtn}
             onClick={this.newChat}
           >
             New Mesage
           </Button>
-          <List>
+          <List className={classes.theList}>
             {chat.map((_chat, _index) => {
               return (
                 <div key={_index}>
@@ -49,17 +73,19 @@ class ChatListComponent extends Component {
                     alignItems="flex-start"
                   >
                     <ListItemAvatar>
-                      <Avatar alt="remy Sharp">
-                        {
-                          _chat.users
-                            .filter(
+                      <Avatar
+                        alt="remy Sharp"
+                        src={
+                          _chat[
+                            _chat.users.filter(
                               (_user) => _user !== this.props.userEmail
                             )[0]
-                            .split("")[0]
+                          ].profileImage
                         }
-                      </Avatar>
+                      ></Avatar>
                     </ListItemAvatar>
                     <ListItemText
+                      classes={{ primary: classes.listItemText }}
                       primary={
                         _chat.users.filter(
                           (_user) => _user !== this.props.userEmail
@@ -106,4 +132,4 @@ class ChatListComponent extends Component {
     chat.messages[chat.messages.length - 1].sender === this.props.userEmail;
 }
 
-export default connect()(withStyles(styles)(ChatListComponent));
+export default connect()(withStyles(styles)(UserListComponent));
