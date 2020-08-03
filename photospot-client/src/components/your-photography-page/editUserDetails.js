@@ -57,6 +57,7 @@ class editUserDetails extends Component {
                   onChange={this.props.handleChange}
                   required
                   fullWidth
+                  color="secondary"
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -76,6 +77,7 @@ class editUserDetails extends Component {
                   variant="outlined"
                   onChange={this.props.handleChange}
                   required
+                  color="secondary"
                   InputLabelProps={{
                     shrink: true,
                   }}
@@ -93,6 +95,7 @@ class editUserDetails extends Component {
                   value={this.props.instagram}
                   margin="normal"
                   variant="outlined"
+                  color="secondary"
                   onChange={this.props.handleChange}
                   required
                   InputLabelProps={{
@@ -110,6 +113,7 @@ class editUserDetails extends Component {
                   type="text"
                   label="Company"
                   value={this.props.company}
+                  color="secondary"
                   margin="normal"
                   variant="outlined"
                   onChange={this.props.handleChange}
@@ -125,7 +129,7 @@ class editUserDetails extends Component {
         <DialogActions>
           <Button
             onClick={this.props.handleDisagree}
-            variant="contained"
+            variant="outlined"
             color="secondary"
           >
             Close
@@ -133,7 +137,7 @@ class editUserDetails extends Component {
           <Button
             onClick={this.props.handleAgree}
             variant="contained"
-            color="primary"
+            color="secondary"
             autoFocus
           >
             Save Changes
