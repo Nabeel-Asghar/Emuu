@@ -15,12 +15,18 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import EditIcon from "@material-ui/icons/Edit";
 import Paper from "@material-ui/core/Paper";
+import List from "@material-ui/core/List";
+import ListItem from "@material-ui/core/ListItem";
+import ListItemText from "@material-ui/core/ListItemText";
+import ListItemAvatar from "@material-ui/core/ListItemAvatar";
+import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import IconButton from "@material-ui/core/IconButton";
 
 // Redux
 import { connect } from "react-redux";
 import {
   getYourPhotographyPage,
-  editPhotographerBio,
+  updatePhotographerPage,
   uploadProfileImage,
   uploadBackgroundImage,
 } from "../redux/actions/userActions";
@@ -31,6 +37,7 @@ import equal from "fast-deep-equal";
 import EditableUsercard from "../components/your-photography-page/editableUsercard";
 import PhotoSamples from "../components/photographer-page/photoSamples";
 import EditBio from "../components/your-photography-page/editBio";
+import EditUserDetails from "../components/your-photography-page/editUserDetails";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -55,7 +62,14 @@ class editPhotographyPage extends Component {
       website: "",
       ratePerHour: "",
       open: false,
+      openDetails: false,
       fakeBio: "",
+      headline: "",
+      camera: "",
+      fakeInstagram: "",
+      fakeCamera: "",
+      fakeCompany: "",
+      fakeHeadline: "",
     };
   }
 
@@ -135,26 +149,26 @@ class editPhotographyPage extends Component {
     fileInput.click();
   };
 
-  handleClickOpen = () => {
+  handleBioClickOpen = () => {
     this.setState({
       open: true,
       fakeBio: this.state.bio,
     });
   };
 
-  handleChange = (event) => {
+  handleBioChange = (event) => {
     this.setState({
       fakeBio: event.target.value,
     });
   };
 
-  handleDisagree = () => {
+  handleBioDisagree = () => {
     this.setState({
       open: false,
     });
   };
 
-  handleAgree = (event) => {
+  handleBioAgree = (event) => {
     this.setState({
       open: false,
     });
@@ -168,93 +182,189 @@ class editPhotographyPage extends Component {
     console.log("REAL ", this.state.bio);
     console.log("FAKE", this.state.fakeBio);
 
-    this.props.editPhotographerBio(details);
+    this.props.updatePhotographerPage(details);
   };
 
+  // Handle user card changes
+
+  handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+  };
+
+  handleDisagree = () => {
+    this.setState({
+      openDetails: false,
+    });
+  };
+
+  handleAgree = (event) => {
+    this.setState({
+      openDetails: false,
+    });
+
+    this.setState({
+      instagram: this.state.fakeInstagram,
+      camera: this.state.fakeCamera,
+      company: this.state.fakeCompany,
+      headline: this.state.fakeHeadline,
+    });
+
+    const details = {
+      instagram: this.state.fakeInstagram,
+      camera: this.state.fakeCamera,
+      company: this.state.fakeCompany,
+      headline: this.state.fakeHeadline,
+    };
+
+    this.props.updatePhotographerPage(details);
+  };
+
+  handleClickOpen = () => {
+    this.setState({
+      openDetails: true,
+      fakeInstagram: this.state.instagram,
+      fakeCamera: this.state.camera,
+      fakeCompany: this.state.company,
+      fakeHeadline: this.state.headline,
+    });
+  };
+
+  //------
+
   render() {
-    const { classes } = this.props;
+    const { loading, classes } = this.props;
 
     return (
-      <Paper>
-        <Grid container>
-          <Grid item xs={12}>
-            <EditableUsercard
-              profileImage={this.state.profileImage}
-              background={this.state.background}
-              firstName={this.state.firstName}
-              lastName={this.state.lastName}
-              handleBackgroundChange={this.handleBackgroundChange}
-              handleEditBackground={this.handleEditBackground}
-              handleProfileImageChange={this.handleProfileImageChange}
-              handleEditProfileImage={this.handleEditProfileImage}
+      <div>
+        <Paper elevation={3} className={classes.margin}>
+          <Grid container>
+            <Grid item xs={12}>
+              <EditableUsercard
+                profileImage={this.state.profileImage}
+                background={this.state.background}
+                firstName={this.state.firstName}
+                lastName={this.state.lastName}
+                location_city={this.state.location_city}
+                location_state={this.state.location_state}
+                instagram={this.state.instagram}
+                company={this.state.company}
+                headline={this.state.headline}
+                camera={this.state.camera}
+                loading={loading}
+                handleBackgroundChange={this.handleBackgroundChange}
+                handleEditBackground={this.handleEditBackground}
+                handleProfileImageChange={this.handleProfileImageChange}
+                handleEditProfileImage={this.handleEditProfileImage}
+                handleOpenEdit={this.handleClickOpen}
+              />
+            </Grid>
+          </Grid>
+        </Paper>
+
+        <EditUserDetails
+          open={this.state.openDetails}
+          handleAgree={this.handleAgree}
+          handleDisagree={this.handleDisagree}
+          handleChange={this.handleChange}
+          instagram={this.state.fakeInstagram}
+          camera={this.state.fakeCamera}
+          company={this.state.fakeCompany}
+          headline={this.state.fakeHeadline}
+        />
+
+        <Paper elevation={3} className={classes.margin}>
+          <Grid container>
+            <Grid item xs={10}>
+              <TextField
+                className={classes.textGrid}
+                disabled
+                id="standard-full-width"
+                name="bio"
+                type="text"
+                label="Biography"
+                value={this.state.bio}
+                helperText="Tell us about yourself"
+                fullWidth
+                multiline
+                rows={4}
+                margin="normal"
+                variant="outlined"
+                onChange={this.handleBioChange}
+                InputLabelProps={{
+                  shrink: true,
+                }}
+              />
+            </Grid>
+            <EditBio
+              open={this.state.open}
+              handleAgree={this.handleBioAgree}
+              handleDisagree={this.handleBioDisagree}
+              handleChange={this.handleBioChange}
+              bio={this.state.fakeBio}
             />
+            <Grid item xs={2}>
+              <List style={{ marginTop: "10px" }}>
+                <ListItem>
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="icon">
+                      <EditIcon
+                        color="primary"
+                        onClick={this.handleBioClickOpen}
+                      />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              </List>
+            </Grid>
           </Grid>
-          <Grid item xs={1} />
-          <Grid item xs={10}>
-            <TextField
-              disabled
-              id="standard-full-width"
-              name="bio"
-              type="text"
-              label="Biography"
-              value={this.state.bio}
-              helperText="Tell us about yourself"
-              fullWidth
-              multiline
-              rows={4}
-              margin="normal"
-              variant="outlined"
-              onChange={this.handleChange}
-              InputLabelProps={{
-                shrink: true,
-              }}
-            />
+        </Paper>
+        <Paper elevation={3} className={classes.margin}>
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="center"
+          >
+            <Grid item xs={12} className={classes.centerGrid}>
+              <Button
+                variant="contained"
+                color="primary"
+                component={Link}
+                style={{ margin: "10px" }}
+                to={{
+                  pathname: "/uploadPhotographyPictures",
+                  state: {
+                    images: this.state.images,
+                  },
+                }}
+              >
+                Edit Pictures
+              </Button>
+            </Grid>
+            <Grid item xs={12} className={classes.centerGrid}>
+              <PhotoSamples
+                key={this.state.images}
+                images={this.state.images}
+                loading={loading}
+              />
+            </Grid>
           </Grid>
-          <EditBio
-            open={this.state.open}
-            handleAgree={this.handleAgree}
-            handleDisagree={this.handleDisagree}
-            handleChange={this.handleChange}
-            bio={this.state.fakeBio}
-          />
-          <Grid item xs={1}>
-            <Button onClick={this.handleClickOpen}>
-              <EditIcon color="primary" />
-            </Button>
-          </Grid>
-          <Grid item xs={12} className={classes.centerGrid}>
-            <Button
-              variant="contained"
-              color="primary"
-              component={Link}
-              to={{
-                pathname: "/uploadPhotographyPictures",
-                state: {
-                  images: this.state.images,
-                },
-              }}
-            >
-              Change Pictures
-            </Button>
-          </Grid>
-          <Grid item xs={1} />
-          <Grid item xs={10}>
-            <PhotoSamples key={this.state.images} images={this.state.images} />
-          </Grid>
-          <Grid item xs={1} />
-        </Grid>
-      </Paper>
+        </Paper>
+      </div>
     );
   }
 }
 
 const mapStateToProps = (state) => ({
   yourPhotographerPage: state.user.yourPhotographyPageDetails,
+  loading: state.UI.loadingData,
 });
 
 const mapActionsToProps = {
   getYourPhotographyPage,
-  editPhotographerBio,
+  updatePhotographerPage,
   uploadProfileImage,
   uploadBackgroundImage,
 };

@@ -67,9 +67,11 @@ export const uploadProfileImage = (formData) => (dispatch) => {
 };
 
 export const getYourPhotographyPage = () => (dispatch) => {
+  dispatch({ type: "LOADING_DATA" });
   return API.get("/yourphotographerpage")
     .then((res) => {
       dispatch({ type: "SET_YOUR_PHOTOGRAPHY_PAGE", payload: res.data });
+      dispatch({ type: "CLEAR_ERRORS" });
       return true;
     })
     .catch((err) => console.log(err));
@@ -104,8 +106,8 @@ export const uploadImages = (images) => (dispatch) => {
     );
 };
 
-export const editPhotographerBio = (bio) => (dispatch) => {
-  API.post("/editphotographypage/bio", bio)
+export const updatePhotographerPage = (details) => (dispatch) => {
+  API.post("/editphotographypage/edit", details)
     .then((res) => {
       console.log(res.data);
       dispatch({ type: "CLEAR_ERRORS" });
@@ -172,6 +174,23 @@ export const updateUserProfile = (details) => (dispatch) => {
     })
     .catch((err) => {
       console.log(err);
+    });
+};
+
+export const reviewPhotographer = (photographerID, details) => (dispatch) => {
+  dispatch({ type: "LOADING_REVIEW_ACTION" });
+  API.post(`/photographers/${photographerID}/review`, details)
+    .then((res) => {
+      dispatch({
+        type: "SET_RESPONSE_NEW_REVIEW_SUCCESS",
+      });
+    })
+    .catch((err) => {
+      console.log(err.response.data);
+      dispatch({
+        type: "SET_RESPONSE_NEW_REVIEW_ERROR",
+        payload: err.response.data,
+      });
     });
 };
 

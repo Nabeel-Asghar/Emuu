@@ -5,6 +5,13 @@ import Button from "@material-ui/core/Button";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
+  profileAvatar: {
+    width: "200px",
+    height: "200px",
+    borderRadius: "50%",
+    objectFit: "cover",
+    padding: "10px",
+  },
 });
 
 class editProfileImage extends Component {
@@ -14,7 +21,7 @@ class editProfileImage extends Component {
     return (
       <div>
         <Button onClick={this.props.handleEditProfileImage}>
-          <img className={classes.avatar} src={profileImage} />
+          <img className={classes.profileAvatar} src={profileImage} />
         </Button>
         <input
           type="file"

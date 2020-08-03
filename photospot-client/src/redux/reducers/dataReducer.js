@@ -3,6 +3,7 @@ const intialState = {
   searchPhotographer: [],
   photographerPage: [],
   timings: [],
+  reviews: [],
 };
 
 export default function (state = intialState, action) {
@@ -29,6 +30,12 @@ export default function (state = intialState, action) {
       return {
         ...state,
         timings: [...action.payload],
+      };
+
+    case "SET_REVIEWS":
+      return {
+        ...state,
+        reviews: [...action.payload],
       };
 
     case "BOOK_PHOTOGRAHPER":

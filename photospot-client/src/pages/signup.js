@@ -14,6 +14,7 @@ import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
+import Paper from "@material-ui/core/Paper";
 
 // Redux
 import { connect } from "react-redux";
@@ -91,109 +92,120 @@ class signup extends Component {
     const { errors } = this.state;
     return (
       <Grid container className={classes.form}>
-        <Grid item sm />
-        <Grid item sm>
-          <img src={AppIcon} alt="Logo" className={classes.image} />
-          <Typography variant="h2" className={classes.pageTitle}>
-            Signup
-          </Typography>
-          <form noValidate onSubmit={this.handleSubmit}>
-            <TextField
-              id="email"
-              name="email"
-              type="email"
-              label="Email"
-              className={classes.textField}
-              helperText={errors.email}
-              error={errors.email ? true : false}
-              value={this.state.email}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            <TextField
-              id="password"
-              name="password"
-              type="password"
-              label="Password"
-              className={classes.textField}
-              helperText={errors.password}
-              error={errors.password ? true : false}
-              value={this.state.password}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            <TextField
-              id="confirmPassword"
-              name="confirmPassword"
-              type="password"
-              label="Confirm Password"
-              className={classes.textField}
-              helperText={errors.confirmPassword}
-              error={errors.confirmPassword ? true : false}
-              value={this.state.confirmPassword}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            <TextField
-              id="firstName"
-              name="firstName"
-              label="First Name"
-              type="text"
-              className={classes.textField}
-              helperText={errors.firstName}
-              error={errors.firstName ? true : false}
-              value={this.state.firstName}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            <TextField
-              id="lastName"
-              name="lastName"
-              label="Last Name"
-              type="text"
-              className={classes.textField}
-              helperText={errors.lastName}
-              error={errors.lastName ? true : false}
-              value={this.state.lastName}
-              onChange={this.handleChange}
-              fullWidth
-            />
-            <br />
-            <br />
-            <FormControl component="fieldset">
-              <FormLabel component="legend">Are you a photographer?</FormLabel>
-              <RadioGroup onChange={this.handleChange} name="photographer">
-                <FormControlLabel
-                  value="true"
-                  control={<Radio />}
-                  label="Yes"
-                />
-                <FormControlLabel
-                  value="false"
-                  control={<Radio />}
-                  label="No"
-                />
-              </RadioGroup>
-            </FormControl>
-
-            {errors.general && (
-              <Typography variant="body2" className={classes.customError}>
-                {errors.general}
-              </Typography>
-            )}
-            <br />
-            <br />
-            <Button
-              type="submit"
-              variant="contained"
-              color="primary"
-              className={classes.button}
-            >
+        <Grid item xs />
+        <Paper
+          style={{
+            maxWidth: "600px",
+            margin: "auto",
+            paddingBottom: "75px",
+            marginTop: 100,
+          }}
+        >
+          <Grid item xs={8} style={{ margin: "auto" }}>
+            <img src={AppIcon} alt="Logo" className={classes.image} />
+            <Typography variant="h2" className={classes.pageTitle}>
               Signup
-            </Button>
-          </form>
-        </Grid>
-        <Grid item sm />
+            </Typography>
+            <form noValidate onSubmit={this.handleSubmit}>
+              <TextField
+                id="email"
+                name="email"
+                type="email"
+                label="Email"
+                className={classes.textField}
+                helperText={errors.email}
+                error={errors.email ? true : false}
+                value={this.state.email}
+                onChange={this.handleChange}
+                fullWidth
+              />
+              <TextField
+                id="password"
+                name="password"
+                type="password"
+                label="Password"
+                className={classes.textField}
+                helperText={errors.password}
+                error={errors.password ? true : false}
+                value={this.state.password}
+                onChange={this.handleChange}
+                fullWidth
+              />
+              <TextField
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                label="Confirm Password"
+                className={classes.textField}
+                helperText={errors.confirmPassword}
+                error={errors.confirmPassword ? true : false}
+                value={this.state.confirmPassword}
+                onChange={this.handleChange}
+                fullWidth
+              />
+              <TextField
+                id="firstName"
+                name="firstName"
+                label="First Name"
+                type="text"
+                className={classes.textField}
+                helperText={errors.firstName}
+                error={errors.firstName ? true : false}
+                value={this.state.firstName}
+                onChange={this.handleChange}
+                fullWidth
+              />
+              <TextField
+                id="lastName"
+                name="lastName"
+                label="Last Name"
+                type="text"
+                className={classes.textField}
+                helperText={errors.lastName}
+                error={errors.lastName ? true : false}
+                value={this.state.lastName}
+                onChange={this.handleChange}
+                fullWidth
+              />
+              <br />
+              <br />
+              <FormControl component="fieldset">
+                <FormLabel component="legend">
+                  Are you a photographer?
+                </FormLabel>
+                <RadioGroup onChange={this.handleChange} name="photographer">
+                  <FormControlLabel
+                    value="true"
+                    control={<Radio />}
+                    label="Yes"
+                  />
+                  <FormControlLabel
+                    value="false"
+                    control={<Radio />}
+                    label="No"
+                  />
+                </RadioGroup>
+              </FormControl>
+
+              {errors.general && (
+                <Typography variant="body2" className={classes.customError}>
+                  {errors.general}
+                </Typography>
+              )}
+              <br />
+              <br />
+              <Button
+                type="submit"
+                variant="contained"
+                color="primary"
+                className={classes.button}
+              >
+                Signup
+              </Button>
+            </form>
+          </Grid>
+        </Paper>
+        <Grid item xs />
       </Grid>
     );
   }

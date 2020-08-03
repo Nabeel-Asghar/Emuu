@@ -134,9 +134,7 @@ class time extends Component {
     return (
       <form onSubmit={this.props.handleSubmit}>
         <FormControl component="fieldset" className={classes.form}>
-          <FormLabel component="legend">
-            Please choose a time for your shoot
-          </FormLabel>
+          <FormLabel component="legend">Choose a time for your shoot</FormLabel>
           <RadioGroup
             aria-label="Shoot time"
             name="scheduletime"
