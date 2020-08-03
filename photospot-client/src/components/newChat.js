@@ -19,7 +19,7 @@ import {
   InputLabel,
 } from "@material-ui/core";
 
-import ChatListComponent from "../components/chatList";
+import ChatListComponent from "./userList";
 import ChatViewComponent from "../components/chatView";
 import ChatTextBoxComponent from "../components/chatTextBox";
 

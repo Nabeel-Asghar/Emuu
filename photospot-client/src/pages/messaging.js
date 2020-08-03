@@ -3,23 +3,43 @@ import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
 
-import ChatListComponent from "../components/chatList";
+import UserListComponent from "../components/userList";
 import ChatViewComponent from "../components/chatView";
 import ChatTextBoxComponent from "../components/chatTextBox";
 import NewChatComponent from "../components/newChat";
-
+import { sizing } from "@material-ui/system";
 // Redux
 import { connect } from "react-redux";
 import { getPhotographers } from "../redux/actions/dataActions";
 import { getChatList } from "../redux/actions/dataActions";
+import { getUserData } from "../redux/actions/userActions";
 import { sendMessage } from "../redux/actions/dataActions";
 import API from "../api";
 import equal from "fast-deep-equal";
 
 import firebase from "../firestore";
+import { Box } from "@material-ui/core";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
+
+  messaging: {
+    backgroundColor: "white",
+    justify: "center",
+    border: "1px",
+  },
+
+  //Left Grid
+  UserList: {
+    marginBottom: "10px",
+  },
+
+  //Right grid
+  ChatList: {
+    marginBottom: "10px",
+    boxSizing: "border-box",
+    overflowY: "hidden",
+  },
 });
 
 class messaging extends Component {
@@ -29,7 +49,7 @@ class messaging extends Component {
       selectedChat: null,
       newChatFormVisible: false,
       credentials: [],
-      email: "adeelasghar1001@gmail.com",
+      email: "",
       firstName: "",
       lastName: "",
       bio: "",
@@ -58,23 +78,25 @@ class messaging extends Component {
   }
 
   componentDidMount() {
-    const credentials = this.props.credentials;
-    this.assignValues(credentials);
-    let userEmail = this.state.email;
-    console.log(credentials);
-
-    firebase
-      .firestore()
-      .collection("chats")
-      .where("users", "array-contains", userEmail)
-      .onSnapshot((doc) => {
-        const chats = doc.docs.map((_doc) => _doc.data());
-        this.setState({ chats: chats });
-      });
-    console.log(this.state.chats);
+    this.props.getUserData().then(() => {
+      this.assignValues(this.props.credentials);
+      console.log(this.state.email);
+      firebase
+        .firestore()
+        .collection("chats")
+        .where("users", "array-contains", this.state.email)
+        .onSnapshot((doc) => {
+          const chats = doc.docs.map((_doc) => _doc.data());
+          chats.sort(function (a, b) {
+            return parseFloat(b.timestamp) - parseFloat(a.timestamp);
+          });
+          console.log("abc");
+          this.setState({ chats: chats, selectedChat: 0 });
+        });
+    });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (!equal(this.props.credentials, prevProps.credentials)) {
       this.assignValues(this.props.credentials);
     }
@@ -84,39 +106,45 @@ class messaging extends Component {
     const { classes } = this.props;
 
     return (
-      <Grid container spacing={3}>
-        <Grid item xs={3} className={classes.UserList}>
-          <ChatListComponent
-            history={this.props.history}
-            newChatBtnFunction={this.newChatBtnClicked}
-            selectChatFn={this.selectChat}
-            chat={this.state.chats}
-            userEmail={this.state.email}
-            selectedChatIndex={this.state.selectedChat}
-          ></ChatListComponent>
-        </Grid>
-        <Grid item xs={9} className={classes.ChatList}>
-          {this.state.newChatFormVisible ? null : (
-            <ChatViewComponent
+      <div
+        style={{
+          border: "2px solid #e6e6e6",
+        }}
+      >
+        <Grid container spacing={0} className={classes.messaging}>
+          <Grid item xs={3} className={classes.UserList}>
+            <UserListComponent
+              history={this.props.history}
+              newChatBtnFunction={this.newChatBtnClicked}
+              selectChatFn={this.selectChat}
+              chat={this.state.chats}
               userEmail={this.state.email}
-              chat={this.state.chats[this.state.selectedChat]}
-            ></ChatViewComponent>
-          )}
-          {this.state.selectedChat !== null &&
-          !this.state.newChatFormVisible ? (
-            <ChatTextBoxComponent
-              messageReadFn={this.messageRead}
-              submitMessageFn={this.submitMessage}
-            ></ChatTextBoxComponent>
-          ) : null}
-          {this.state.newChatFormVisible ? (
-            <NewChatComponent
-              goToChatFn={this.goToChat}
-              newChatSubmitFn={this.newChatSubmit}
-            ></NewChatComponent>
-          ) : null}
+              selectedChatIndex={this.state.selectedChat}
+            ></UserListComponent>
+          </Grid>
+          <Grid item xs={9} className={classes.ChatList}>
+            {this.state.newChatFormVisible ? null : (
+              <ChatViewComponent
+                userEmail={this.state.email}
+                chat={this.state.chats[this.state.selectedChat]}
+              ></ChatViewComponent>
+            )}
+            {this.state.selectedChat !== null &&
+            !this.state.newChatFormVisible ? (
+              <ChatTextBoxComponent
+                messageReadFn={this.messageRead}
+                submitMessageFn={this.submitMessage}
+              ></ChatTextBoxComponent>
+            ) : null}
+            {this.state.newChatFormVisible ? (
+              <NewChatComponent
+                goToChatFn={this.goToChat}
+                newChatSubmitFn={this.newChatSubmit}
+              ></NewChatComponent>
+            ) : null}
+          </Grid>
         </Grid>
-      </Grid>
+      </div>
     );
   }
 
@@ -138,8 +166,10 @@ class messaging extends Component {
           message: msg,
           timestamp: Date.now(),
         }),
+        timestamp: Date.now(),
         receiverHasRead: false,
       });
+    this.setState({ selectedChat: 0 });
   };
 
   buildDocKey = (friend) => [this.state.email, friend].sort().join(":");
@@ -156,8 +186,6 @@ class messaging extends Component {
         .collection("chats")
         .doc(docKey)
         .update({ receiverHasRead: true });
-    } else {
-      console.log("Cliked message where user was the sender");
     }
   };
 
@@ -173,6 +201,24 @@ class messaging extends Component {
 
   newChatSubmit = async (chatObject) => {
     const docKey = this.buildDocKey(chatObject.sendTo);
+    var names = docKey.split(":");
+    var friend = names[0];
+    let friendProfile;
+    if (names[0] == this.state.email) {
+      friend = names[1];
+    }
+    await firebase
+      .firestore()
+      .collection("users")
+      .where("email", "==", friend)
+      .get()
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          friendProfile = doc.data().profileImage;
+        });
+      });
+
+    console.log(docKey);
     await firebase
       .firestore()
       .collection("chats")
@@ -181,6 +227,8 @@ class messaging extends Component {
         receiverHasRead: false,
         users: [this.state.email, chatObject.sendTo],
         messages: [{ message: chatObject.message, sender: this.state.email }],
+        [this.state.email]: { profileImage: this.state.profileImage },
+        [friend]: { profileImage: friendProfile },
       });
     this.setState({ newChatFormVisible: false });
     this.selectChat(this.state.chats.length - 1);
@@ -192,6 +240,7 @@ class messaging extends Component {
     ].sender !== this.state.email;
 
   selectChat = async (chatIndex) => {
+    console.log(chatIndex);
     await this.setState({ selectedChat: chatIndex, newChatFormVisible: false });
     this.messageRead();
   };
@@ -199,16 +248,18 @@ class messaging extends Component {
   newChatBtnClicked = () =>
     this.setState({ newChatFormVisible: true, selectChat: null });
 }
+
 const mapStateToProps = (state) => ({
   allPhotographers: state.data.allPhotographers,
   credentials: state.user.credentials,
   allMessages: state.data.allMessages,
+  authenticated: state.user.authenticated,
 });
 
 const mapActionsToProps = {
-  getPhotographers,
   getChatList,
   sendMessage,
+  getUserData,
 };
 
 export default connect(
