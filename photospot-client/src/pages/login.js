@@ -11,6 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Paper from "@material-ui/core/Paper";
+import { outerTheme, ThemeProvider } from "./Styling/externalColors";
 
 // Redux
 import { connect } from "react-redux";
@@ -66,8 +67,7 @@ class login extends Component {
       UI: { loading },
     } = this.props;
     const { errors } = this.state;
-    console.log(errors);
-    console.log(errors.email);
+
     return (
       <Grid container className={classes.form}>
         <Grid item xs />
@@ -96,6 +96,7 @@ class login extends Component {
                 value={this.state.email}
                 onChange={this.handleChange}
                 variant="outlined"
+                color="secondary"
                 fullWidth
               />
               <TextField
@@ -110,7 +111,9 @@ class login extends Component {
                 onChange={this.handleChange}
                 fullWidth
                 variant="outlined"
+                color="secondary"
               />
+
               {errors.general && (
                 <Typography variant="body2" className={classes.customError}>
                   {errors.general}
@@ -119,7 +122,8 @@ class login extends Component {
               <Button
                 type="submit"
                 variant="contained"
-                color="primary"
+                color="secondary"
+                size="large"
                 className={classes.button}
                 disabled={loading}
               >

@@ -14,6 +14,7 @@ import { AccountCircle } from "@material-ui/icons";
 import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 import Box from "@material-ui/core/Box";
+import MenuIcon from "@material-ui/icons/Menu";
 
 // Redux
 import { logoutUser } from "../redux/actions/userActions";
@@ -64,6 +65,11 @@ const Navbar = () => {
                 to="/"
               >
                 <img src={AppIcon} alt="Logo" style={imageStyle} />
+                <Typography>
+                  <Box fontWeight="fontWeightBold" fontSize="h6.fontSize">
+                    &nbsp; Photospot
+                  </Box>
+                </Typography>
               </IconButton>
             </Box>
 
@@ -77,7 +83,8 @@ const Navbar = () => {
                 onClick={handleMenu}
                 color="inherit"
               >
-                <AccountCircle fontSize="large" />
+                <MenuIcon fontSize="large" />
+                <AccountCircle color="secondary" fontSize="large" />
               </IconButton>
             </Box>
 

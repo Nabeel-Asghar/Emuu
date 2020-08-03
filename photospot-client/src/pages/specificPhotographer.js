@@ -183,7 +183,7 @@ class specificPhotographer extends Component {
                             numberOfStars={5}
                             name="rating"
                             starDimension="20px"
-                            starRatedColor="gold"
+                            starRatedColor="#23ba8b"
                             starSpacing="3px"
                           />
                         </Typography>

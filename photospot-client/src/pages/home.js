@@ -87,7 +87,7 @@ class home extends Component {
             />
             <Button
               variant="contained"
-              color="primary"
+              color="secondary"
               component={Link}
               to={`/search/${this.state.searchQuery}`}
               name="submitSearch"

@@ -34,18 +34,19 @@ import API from "./api";
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: "#7986cb",
-      main: "#3f51b5",
-      dark: "#303f9f",
-      contrastText: "#fff",
+      light: "#ffffff",
+      main: "#ffffff",
+      dark: "#cccccc",
+      contrastText: "#000000",
     },
     secondary: {
-      light: "#ff4081",
-      main: "#f50057",
-      dark: "#c51162",
-      contrastText: "#fff",
+      light: "#65edbb",
+      main: "#23ba8b",
+      dark: "#00895e",
+      contrastText: "#ffffff",
     },
   },
+
   typography: {
     useNextVariants: true,
   },

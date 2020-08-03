@@ -71,22 +71,23 @@ class usercard extends Component {
               <Button
                 className={classes.bookButton}
                 disabled={loading}
-                variant="contained"
-                color="primary"
+                variant="outlined"
+                color="secondary"
                 onClick={() =>
                   this.props.history.push(
                     `${this.props.history.location.pathname}/book`
                   )
                 }
               >
-                Book
+                <Typography style={{ fontWeight: "bold" }}>Book</Typography>
               </Button>
               <Button
                 className={classes.bookButton}
                 variant="contained"
                 color="secondary"
+                disableElevation
               >
-                Contact
+                <Typography style={{ fontWeight: "bold" }}>Contact</Typography>
               </Button>
             </div>
           )}
@@ -131,7 +132,7 @@ class usercard extends Component {
                     href={`https://www.google.com/search?q=${camera}`}
                   >
                     <IconButton edge="end" aria-label="icon">
-                      <PhotoCameraIcon color="primary" />
+                      <PhotoCameraIcon color="secondary" />
                     </IconButton>
                   </a>
                 </ListItemSecondaryAction>
@@ -148,7 +149,7 @@ class usercard extends Component {
                     href={`http://www.instagram.com/${instagram}`}
                   >
                     <IconButton edge="end" aria-label="icon">
-                      <InstagramIcon color="primary" />
+                      <InstagramIcon color="secondary" />
                     </IconButton>
                   </a>
                 </ListItemSecondaryAction>
@@ -161,7 +162,7 @@ class usercard extends Component {
                 />
                 <ListItemSecondaryAction>
                   <IconButton edge="end" aria-label="icon">
-                    <BusinessIcon color="primary" />
+                    <BusinessIcon color="secondary" />
                   </IconButton>
                 </ListItemSecondaryAction>
               </ListItem>
