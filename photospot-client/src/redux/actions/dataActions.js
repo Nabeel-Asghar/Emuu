@@ -22,9 +22,6 @@ export const getPhotographers = () => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
   API.get("photographers")
     .then((res) => {
-      // this.setState({
-      //   allPhotographers: res.data,
-      // });
       dispatch({
         type: "SET_PHOTOGRAPHERS",
         payload: res.data,

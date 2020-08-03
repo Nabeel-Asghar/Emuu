@@ -109,6 +109,14 @@ class home extends Component {
       </Grid>
     );
   }
+
+  selectChat = (chatIndex) => {
+    console.log("index", chatIndex);
+    this.setState({ selectedChat: chatIndex });
+  };
+
+  newChatBtnClicked = () =>
+    this.setState({ newChatFormVisible: true, selectChat: null });
 }
 const mapStateToProps = (state) => ({
   allPhotographers: state.data.allPhotographers,
