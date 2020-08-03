@@ -12,6 +12,7 @@ const {
   searchPhotographer,
   getSpecificPhotographer,
   bookPhotographer,
+  getReviews,
   reviewPhotographer,
   getPhotographerSchedule,
   getPricing,
@@ -26,7 +27,7 @@ const {
   uploadBackgroundPicture,
   uploadYourPhotographyImages,
   setYourPhotographyPage,
-  setPhotographerBio,
+  updatePhotographerPage,
   getYourPhotographerPage,
   getYourUserProfile,
   chatMessaging,
@@ -59,7 +60,7 @@ app.post("/user/profileimage", FBAuth, uploadProfilePicture);
 
 // photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
-app.post("/editphotographypage/bio", FBAuth, setPhotographerBio);
+app.post("/editphotographypage/edit", FBAuth, updatePhotographerPage);
 app.post("/editphotographypage/background", FBAuth, uploadBackgroundPicture);
 app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
 app.post("/photographyimages/delete", FBAuth, deleteImages);
@@ -73,7 +74,7 @@ app.get("/photographers", getAllPhotographers);
 app.get("/photographers/:photographerId", getSpecificPhotographer);
 app.post("/photographers/:photographerId/book", FBAuth, bookPhotographer);
 app.post("/photographers/:photographerId/review", FBAuth, reviewPhotographer);
-
+app.get("/photographers/:photographerId/getReviews", getReviews);
 app.get(
   "/photographers/:photographerId/bookingTimes",
   FBAuth,

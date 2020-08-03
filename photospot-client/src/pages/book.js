@@ -190,13 +190,13 @@ class book extends Component {
         </Grid>
         <Grid item xs={2} />
         <Grid item xs={2} />
-        <Grid item xs={5}>
+        <Grid item xs={6}>
           <Date
             theDate={this.state.selectedDate}
             parentCallback={this.handleDateChange}
           />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <Time
             key={this.state.timeslots}
             timeslots={this.state.timeslots}

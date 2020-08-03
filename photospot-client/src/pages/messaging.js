@@ -11,9 +11,7 @@ import { sizing } from "@material-ui/system";
 // Redux
 import { connect } from "react-redux";
 import { getPhotographers } from "../redux/actions/dataActions";
-import { getChatList } from "../redux/actions/dataActions";
 import { getUserData } from "../redux/actions/userActions";
-import { sendMessage } from "../redux/actions/dataActions";
 import API from "../api";
 import equal from "fast-deep-equal";
 
@@ -257,8 +255,6 @@ const mapStateToProps = (state) => ({
 });
 
 const mapActionsToProps = {
-  getChatList,
-  sendMessage,
   getUserData,
 };
 

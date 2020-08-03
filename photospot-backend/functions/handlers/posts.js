@@ -1,5 +1,7 @@
 const { db } = require("../util/admin");
 
+const { validateReview } = require("../util/validators");
+
 exports.getAllPhotographers = (req, res) => {
   db.collection("photographer")
     .orderBy("createdAt", "desc")
@@ -47,46 +49,101 @@ exports.createPost = (req, res) => {
     });
 };
 
+exports.getReviews = (req, res) => {
+  let photographerID = req.params.photographerId;
+
+  db.collection("photographer")
+    .doc(photographerID)
+    .collection("reviews")
+    .get()
+    .then((data) => {
+      let reviews = [];
+
+      data.forEach((doc) => {
+        reviews.push({
+          title: doc.data().title,
+          description: doc.data().description,
+          rating: doc.data().rating,
+          userID: doc.data().userID,
+          photographerID: doc.data().photographerBeingReviewed,
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          createdAt: doc.data().createdAt,
+        });
+      });
+
+      return res.json(reviews);
+    })
+    .catch((err) => {
+      return res.json({ error: err });
+    });
+};
+
 exports.reviewPhotographer = (req, res) => {
+  let userid = req.user.uid;
   let reviewID = req.user.uid;
   let photographerBeingReviewed = req.params.photographerId;
 
-  const newReview = {
-    description: req.body.description,
-    rating: req.body.rating,
-    userID: reviewID,
-    photographerID: photographerBeingReviewed,
-    firstName: res.locals.firstName,
-    lastName: res.locals.lastName,
-    createdAt: new Date().toISOString(),
-  };
+  if (reviewID === photographerBeingReviewed) {
+    return res.status(400).json({ error: "You cannot review yourself." });
+  }
 
-  db.collection("users")
-    .doc(reviewID)
-    .collection("orders")
+  db.collection("photographer")
     .doc(photographerBeingReviewed)
+    .collection("reviews")
+    .doc(userid)
     .get()
     .then((doc) => {
-      if (!doc.exists || doc.get("paymentToPhotographer") == "pending") {
-        return res.json({
-          message:
-            "You may only review if you completed a shoot with this photographer.",
-        });
+      if (doc.exists) {
+        console.log("cannot review twice");
+        return res
+          .status(400)
+          .json({ error: "You cannot review someone twice." });
       } else {
+        const newReview = {
+          description: req.body.description,
+          rating: req.body.rating,
+          title: req.body.title,
+          userID: userid,
+          photographerID: photographerBeingReviewed,
+          firstName: res.locals.firstName,
+          lastName: res.locals.lastName,
+          createdAt: new Date().toISOString(),
+        };
+
+        const { valid, errors } = validateReview(newReview);
+        console.log("errors: ", errors);
+
+        if (!valid) return res.status(400).json(errors);
+
+        // Add review to that photographer document
+
         db.collection("photographer")
           .doc(photographerBeingReviewed)
           .collection("reviews")
-          .doc(reviewID)
+          .doc(userid)
           .set(newReview)
           .then(() => {
-            return res.json({
-              message: "Review added successfully!",
-            });
+            db.collection("users")
+              .doc(userid)
+              .collection("reviews")
+              .doc(photographerBeingReviewed)
+              .set(newReview)
+              .then(() => {
+                console.log("added review to user");
+                return res.json({
+                  message: "Review added successfully!",
+                });
+              })
+              .catch((err) => {
+                res.status(500).json({ error: `something went wrong` });
+              });
           })
           .catch((err) => {
             res.status(500).json({ error: `something went wrong` });
-            console.log(err);
           });
+
+        // Also add that review to the users collection for future reference
       }
     });
 };
@@ -125,6 +182,8 @@ exports.getSpecificPhotographer = (req, res) => {
         willingnessToTravel: doc.data().willingnessToTravel,
         createdAt: doc.data().createdAt,
         background: doc.data().background,
+        camera: doc.data().camera,
+        headline: doc.data().headline,
       });
       return res.json(photographer);
     })

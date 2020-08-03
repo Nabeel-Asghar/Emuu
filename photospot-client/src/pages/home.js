@@ -1,8 +1,4 @@
 import React, { Component } from "react";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import withStyles from "@material-ui/core/styles/withStyles";
 import equal from "fast-deep-equal";
 import { Link } from "react-router-dom";
 
@@ -13,10 +9,16 @@ import {
   searchPhotographer,
 } from "../redux/actions/dataActions";
 
-// Photographer
-import Photographer from "../components/photographer";
+// Material UI
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import withStyles from "@material-ui/core/styles/withStyles";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
-import equal from "fast-deep-equal";
+// Components
+import Photographer from "../components/photographer";
+import CardSkeleton from "../components/cardSkeleton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -58,6 +60,11 @@ class home extends Component {
   };
 
   render() {
+    const {
+      classes,
+      UI: { loading },
+    } = this.props;
+
     let recentPhotographers = Object.keys(
       this.state.allThePhotographers
     ).map((key) => (
@@ -80,7 +87,7 @@ class home extends Component {
             />
             <Button
               variant="contained"
-              color="primary"
+              color="secondary"
               component={Link}
               to={`/search/${this.state.searchQuery}`}
               name="submitSearch"
@@ -90,7 +97,7 @@ class home extends Component {
           </form>
         </Grid>
         <Grid item sm={9} xs={12}>
-          {recentPhotographers}
+          {loading ? <CardSkeleton /> : recentPhotographers}
         </Grid>
       </Grid>
     );
@@ -107,6 +114,7 @@ class home extends Component {
 const mapStateToProps = (state) => ({
   allPhotographers: state.data.allPhotographers,
   allSearchPhotographer: state.data.searchPhotographer,
+  UI: state.UI,
 });
 
 const mapActionsToProps = {
