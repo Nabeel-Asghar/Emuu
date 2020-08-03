@@ -20,6 +20,11 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import CloseIcon from "@material-ui/icons/Close";
+import IconButton from "@material-ui/core/IconButton";
+import Backdrop from "@material-ui/core/Backdrop";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 
 // Redux
 import { connect } from "react-redux";
@@ -38,6 +43,10 @@ const styles = (theme) => ({
   extendedIcon: {
     marginRight: theme.spacing(1),
   },
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
 });
 
 class review extends Component {
@@ -52,6 +61,7 @@ class review extends Component {
       newReviewRating: 1,
       errors: {},
       response: "",
+      openBackdrop: false,
     };
   }
 
@@ -78,6 +88,9 @@ class review extends Component {
       this.setState({
         errors: nextProps.UI.errors,
       });
+    }
+    if (nextProps.UI.newReviewSucess) {
+      this.handleBackdropOpen();
     }
   }
 
@@ -124,9 +137,30 @@ class review extends Component {
     });
   };
 
+  handleBackdropClose() {
+    this.setState({
+      openBackdrop: !this.state.openBackdrop,
+    });
+    this.setState({
+      openReview: false,
+    });
+  }
+
+  handleBackdropOpen() {
+    this.setState({
+      openBackdrop: true,
+    });
+  }
+
   render() {
     dayjs.extend(relativeTime);
-    const { classes, checked, overallRating, reviewCount } = this.props;
+    const {
+      classes,
+      checked,
+      overallRating,
+      reviewCount,
+      UI: { loadingReviewAction, newReviewSucess },
+    } = this.props;
     const { errors } = this.state;
     console.log(errors);
     console.log(errors.title);
@@ -143,7 +177,7 @@ class review extends Component {
                     numberOfStars={5}
                     name="rating"
                     starDimension="15px"
-                    starRatedColor="gold"
+                    starRatedColor="#23ba8b"
                     starSpacing="1px"
                   />
                 </Typography>
@@ -186,7 +220,15 @@ class review extends Component {
           >
             <DialogTitle id="alert-dialog-title">
               {"Review Photographer"}
+              <IconButton
+                edge="end"
+                onClick={() => this.handleReviewOpenState()}
+                style={{ paddingTop: 0, float: "right" }}
+              >
+                <CloseIcon />
+              </IconButton>
             </DialogTitle>
+
             <DialogContent>
               <Grid container>
                 <Grid item xs={12}>
@@ -219,8 +261,8 @@ class review extends Component {
                     numberOfStars={5}
                     name="newReviewRating"
                     starDimension="20px"
-                    starRatedColor="gold"
-                    starHoverColor="gold"
+                    starRatedColor="#23ba8b"
+                    starHoverColor="#23ba8b"
                   />
                 </Grid>
 
@@ -261,21 +303,39 @@ class review extends Component {
             )}
 
             <DialogActions>
-              <Button
-                onClick={() => this.handleReviewOpenState()}
-                variant="contained"
-                color="secondary"
-              >
-                Close
-              </Button>
-              <Button
-                onClick={() => this.handleReviewDialogAgree()}
-                variant="contained"
-                color="primary"
-                autoFocus
-              >
-                Review
-              </Button>
+              {newReviewSucess ? (
+                <Backdrop
+                  className={classes.backdrop}
+                  open={this.state.openBackdrop}
+                  onClick={() => this.handleBackdropClose()}
+                >
+                  <CheckCircleOutlineIcon />
+                  <Typography variant="h6">
+                    Your review has been submitted!
+                  </Typography>
+                </Backdrop>
+              ) : (
+                <div>
+                  <Button
+                    onClick={() => this.handleReviewOpenState()}
+                    variant="contained"
+                    color="secondary"
+                    disabled={loadingReviewAction}
+                    style={{ marginRight: "18px" }}
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    onClick={() => this.handleReviewDialogAgree()}
+                    variant="contained"
+                    color="primary"
+                    autoFocus
+                    disabled={loadingReviewAction}
+                  >
+                    Review
+                  </Button>
+                </div>
+              )}
             </DialogActions>
           </Dialog>
         </div>
