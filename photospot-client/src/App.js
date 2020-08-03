@@ -16,6 +16,7 @@ import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import home from "./pages/home";
 import login from "./pages/login";
 import signup from "./pages/signup";
+import messaging from "./pages/messaging";
 import specificPhotographer from "./pages/specificPhotographer";
 import book from "./pages/book";
 import profile from "./pages/profile";
@@ -50,6 +51,7 @@ const theme = createMuiTheme({
   typography: {
     useNextVariants: true,
   },
+
   spreadThis: {
     form: {
       textAlign: "center",
@@ -173,6 +175,7 @@ class App extends Component {
                   <Route exact path="/login" component={login} />
                   <Route exact path="/signup" component={signup} />
                   <Route exact path="/profile" component={profile} />
+                  <Route exact path="/messaging" component={messaging} />
                   <Route exact path="/search/:searchQuery" component={search} />
 
                   <Route

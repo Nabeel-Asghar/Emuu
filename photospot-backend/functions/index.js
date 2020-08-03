@@ -18,6 +18,8 @@ const {
   getPricing,
 } = require("./handlers/posts");
 
+const { getMessages, sendMessage } = require("./handlers/messages");
+
 const {
   signup,
   login,
@@ -28,6 +30,7 @@ const {
   updatePhotographerPage,
   getYourPhotographerPage,
   getYourUserProfile,
+  chatMessaging,
   deleteImages,
   getUsersOrders,
   getUsersPastOrders,
@@ -61,6 +64,10 @@ app.post("/editphotographypage/edit", FBAuth, updatePhotographerPage);
 app.post("/editphotographypage/background", FBAuth, uploadBackgroundPicture);
 app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
 app.post("/photographyimages/delete", FBAuth, deleteImages);
+
+// messaging ==========================================
+app.get("/messages", FBAuth, getMessages);
+app.post("/chats/:docKey", FBAuth, sendMessage);
 
 //----------Consumer Routes---------------
 app.get("/photographers", getAllPhotographers);

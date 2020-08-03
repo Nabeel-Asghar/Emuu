@@ -13,19 +13,16 @@ export default function (state = intialState, action) {
         ...state,
         allPhotographers: { ...action.payload },
       };
-
-    case "SEARCH_PHOTOGRAPHERS":
+    case "GET_MESSAGES":
       return {
         ...state,
-        allPhotographers: { ...action.payload },
+        allMessages: { ...action.payload },
       };
-
     case "SET_PHOTOGRAHPER_PAGE":
       return {
         ...state,
         photographerPage: [...action.payload],
       };
-
     case "GET_BOOKING_TIMINGS":
       return {
         ...state,
@@ -39,6 +36,10 @@ export default function (state = intialState, action) {
       };
 
     case "BOOK_PHOTOGRAHPER":
+      return {
+        ...state,
+      };
+    case "SEND_MESSAGE":
       return {
         ...state,
       };
