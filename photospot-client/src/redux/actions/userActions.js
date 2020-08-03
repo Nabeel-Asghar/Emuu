@@ -178,9 +178,12 @@ export const updateUserProfile = (details) => (dispatch) => {
 };
 
 export const reviewPhotographer = (photographerID, details) => (dispatch) => {
+  dispatch({ type: "LOADING_REVIEW_ACTION" });
   API.post(`/photographers/${photographerID}/review`, details)
     .then((res) => {
-      console.log("Response from action:", res.data);
+      dispatch({
+        type: "SET_RESPONSE_NEW_REVIEW_SUCCESS",
+      });
     })
     .catch((err) => {
       console.log(err.response.data);

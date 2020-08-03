@@ -2,6 +2,8 @@ const intialState = {
   loading: false,
   loadingData: false,
   loadingReviews: false,
+  loadingReviewAction: false,
+  newReviewSucess: "",
   theResponse: "",
   theDeleteImagesResponse: "",
   theUploadImagesResponse: "",
@@ -20,6 +22,8 @@ export default function (state = intialState, action) {
         ...state,
         loading: false,
         loadingData: false,
+        loadingReviews: false,
+        loadingReviewAction: false,
         errors: null,
       };
 
@@ -40,6 +44,13 @@ export default function (state = intialState, action) {
         ...state,
         loadingReviews: true,
       };
+
+    case "LOADING_REVIEW_ACTION":
+      return {
+        ...state,
+        loadingReviewAction: true,
+      };
+
     case "SET_RESPONSE":
       return {
         ...state,
@@ -60,6 +71,14 @@ export default function (state = intialState, action) {
       return {
         ...state,
         errors: { ...action.payload },
+        loadingReviewAction: false,
+      };
+
+    case "SET_RESPONSE_NEW_REVIEW_SUCCESS":
+      return {
+        ...state,
+        newReviewSucess: "Thank you for your feedback!",
+        loadingReviewAction: false,
       };
 
     default:
