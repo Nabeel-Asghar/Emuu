@@ -90,6 +90,10 @@ const Navbar = () => {
                   Photographer Page
                 </MenuItem>
 
+                <MenuItem component={Link} to="/messaging">
+                  Messaging
+                </MenuItem>
+
                 <MenuItem onClick={() => dispatch(logoutUser())}>
                   Logout
                 </MenuItem>
