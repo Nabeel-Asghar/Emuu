@@ -70,6 +70,8 @@ class search extends Component {
       pathname: "/search/" + searchQuery,
       daSearch: searchQuery,
     });
+    this.props.searchPhotographer(searchQuery);
+    this.setState({ allThePhotographers: this.props.allPhotographers });
   };
 
   handleChange = (event) => {
