@@ -44,7 +44,7 @@ class editBio extends Component {
         <DialogActions>
           <Button
             onClick={this.props.handleDisagree}
-            variant="contained"
+            variant="outlined"
             color="secondary"
           >
             Close
@@ -52,7 +52,7 @@ class editBio extends Component {
           <Button
             onClick={this.props.handleAgree}
             variant="contained"
-            color="primary"
+            color="secondary"
             autoFocus
           >
             Save Changes

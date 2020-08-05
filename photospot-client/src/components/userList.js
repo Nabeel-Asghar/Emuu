@@ -41,6 +41,9 @@ const styles = (theme) => ({
 
   listItemText: {
     fontWeight: "bold",
+    overflow: "hidden",
+    whiteSpace: "nowrap" /* Don't forget this one */,
+    textOverflow: "ellipsis",
   },
 });
 

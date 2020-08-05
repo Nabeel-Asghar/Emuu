@@ -78,7 +78,7 @@ class home extends Component {
     return (
       <Grid container spacing={3}>
         <Grid item sm={3} xs={12} style={{ textAlign: "center" }}>
-          <Paper style={{ padding: "0px 10px 50px 10px" }}>
+          <Paper style={{ padding: "10px 10px 50px 10px" }}>
             <form onSubmit={this.handleSubmit}>
               <TextField
                 id="standard-basic"

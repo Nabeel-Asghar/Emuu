@@ -60,7 +60,7 @@ const styles = (theme) => ({
     padding: "15px",
     boxSizing: "border-box",
     wordWrap: "break-word",
-    backgroundColor: "#3599db",
+    backgroundColor: "#23ba8b",
     color: "white",
     width: "300px",
     borderRadius: "30px",

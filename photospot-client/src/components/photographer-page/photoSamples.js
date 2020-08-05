@@ -49,9 +49,14 @@ class photoSamples extends Component {
           <Skeleton variant="rect" height={500} width={500} />
         ) : (
           <div>
-            <IconButton onClick={() => this.setState({ isOpen: true })}>
-              <OpenWithIcon color="secondary" />
-            </IconButton>
+            <Button
+              style={{ padding: "10px 0 10px 0" }}
+              fullWidth
+              onClick={() => this.setState({ isOpen: true })}
+            >
+              Open Images
+            </Button>
+
             {isOpen && (
               <Lightbox
                 mainSrc={lightboxImages[photoIndex]}
