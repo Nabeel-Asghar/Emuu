@@ -19,12 +19,15 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
 import InputLabel from "@material-ui/core/InputLabel";
+import GridList from "@material-ui/core/GridList";
+import GridListTile from "@material-ui/core/GridListTile";
+import GridListTileBar from "@material-ui/core/GridListTileBar";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
 
   homeContainer: {
-    margin: "60px -20px 0 -20px",
+    margin: "60px 12px 0 0px",
     backgroundColor: "white",
   },
 
@@ -65,6 +68,23 @@ const styles = (theme) => ({
     marginTop: "50px",
     backgroundColor: "rgb(245, 245, 245)",
     paddingTop: "25px",
+  },
+
+  root: {
+    display: "flex",
+    flexWrap: "wrap",
+    justifyContent: "space-around",
+    overflow: "hidden",
+    marginLeft: "5px",
+    marginRight: "5px",
+  },
+
+  gridList: {
+    width: 1000,
+    height: 1000,
+  },
+  icon: {
+    color: "rgba(255, 255, 255, 0.54)",
   },
 });
 
@@ -273,17 +293,40 @@ class homePage extends Component {
               Featured photos from photographers near you
             </Typography>
           </Grid>
-          <Grid item xs={3} />
-          <Grid item xs={2}>
-            <img src={photo1} />
+
+          <Grid item xs={12}>
+            <div className={classes.root}>
+              <GridList
+                cellHeight={475}
+                className={classes.gridList}
+                style={{ marginTop: "20px" }}
+              >
+                <GridListTile>
+                  <img src={photo1} alt={photo1} />
+                  <GridListTileBar
+                    title="photo1"
+                    subtitle={<span>by: Xile Studios</span>}
+                  />
+                </GridListTile>
+
+                <GridListTile>
+                  <img src={photo2} alt={photo2} />
+                  <GridListTileBar
+                    title="photo2"
+                    subtitle={<span>by: Xile Studios</span>}
+                  />
+                </GridListTile>
+
+                <GridListTile>
+                  <img src={photo3} alt={photo3} />
+                  <GridListTileBar
+                    title="photo3"
+                    subtitle={<span>by: Xile Studios</span>}
+                  />
+                </GridListTile>
+              </GridList>
+            </div>
           </Grid>
-          <Grid item xs={2}>
-            <img src={photo2} />
-          </Grid>
-          <Grid item xs={2}>
-            <img src={photo3} />
-          </Grid>
-          <Grid item xs={3} />
         </Grid>
       </div>
     );

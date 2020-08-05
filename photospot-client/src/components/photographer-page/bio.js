@@ -1,22 +1,25 @@
 import React, { Component } from "react";
 
-import withStyles from "@material-ui/core/styles/withStyles";
 import { Typography } from "@material-ui/core";
-
-const styles = {
-  img: {
-    maxWidth: "150px",
-    width: "100%",
-    height: "auto",
-    align: "right",
-  },
-};
+import Skeleton from "@material-ui/lab/Skeleton";
 
 class bio extends Component {
   render() {
-    const { bio } = this.props;
-    return <Typography variant="body2">{bio}</Typography>;
+    const { bio, loading } = this.props;
+
+    return (
+      <Typography variant="body1">
+        {loading ? (
+          <Skeleton width={750} height={100} />
+        ) : (
+          <div style={{ margin: "20px 50px 20px 50px" }}>
+            <Typography variant="h6">A litte bit about me...</Typography>
+            {bio}
+          </div>
+        )}
+      </Typography>
+    );
   }
 }
 
-export default withStyles(styles)(bio);
+export default bio;

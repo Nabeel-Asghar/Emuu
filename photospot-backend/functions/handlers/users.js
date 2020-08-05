@@ -143,17 +143,15 @@ exports.setYourPhotographyPage = (req, res) => {
     });
 };
 
-// set your photographer bio
-exports.setPhotographerBio = (req, res) => {
-  const photographerPageDetails = {
-    bio: req.body.bio,
-  };
+// update your photographer page
+exports.updatePhotographerPage = (req, res) => {
+  const photographerPageDetails = req.body;
 
   console.log(photographerPageDetails);
 
-  const { valid, errors } = validateBio(photographerPageDetails);
+  // const { valid, errors } = validateBio(photographerPageDetails);
 
-  if (!valid) return res.status(400).json(errors);
+  // if (!valid) return res.status(400).json(errors);
 
   db.doc(`/photographer/${req.user.uid}`)
     .update(photographerPageDetails)
@@ -359,6 +357,8 @@ exports.getYourPhotographerPage = (req, res) => {
         website: doc.data().website,
         instagram: doc.data().instagram,
         ratePerHour: doc.data().location_state,
+        camera: doc.data().camera,
+        headline: doc.data().headline,
       });
 
       return res.json(page);
@@ -389,6 +389,8 @@ exports.getYourUserProfile = (req, res) => {
         photographer: doc.data().photographer,
         profileImage: doc.data().profileImage,
         createdAt: doc.data().createdAt,
+        location_city: doc.data().location_city,
+        location_state: doc.data().location_state,
       });
 
       return res.json(page);

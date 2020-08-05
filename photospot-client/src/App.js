@@ -16,6 +16,7 @@ import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import home from "./pages/home";
 import login from "./pages/login";
 import signup from "./pages/signup";
+import messaging from "./pages/messaging";
 import specificPhotographer from "./pages/specificPhotographer";
 import book from "./pages/book";
 import profile from "./pages/profile";
@@ -34,24 +35,29 @@ import API from "./api";
 const theme = createMuiTheme({
   palette: {
     primary: {
-      light: "#7986cb",
-      main: "#3f51b5",
-      dark: "#303f9f",
-      contrastText: "#fff",
+      light: "#ffffff",
+      main: "#ffffff",
+      dark: "#cccccc",
+      contrastText: "#000000",
     },
     secondary: {
-      light: "#ff4081",
-      main: "#f50057",
-      dark: "#c51162",
-      contrastText: "#fff",
+      light: "#65edbb",
+      main: "#23ba8b",
+      dark: "#00895e",
+      contrastText: "#ffffff",
     },
   },
+
   typography: {
     useNextVariants: true,
   },
+
   spreadThis: {
     form: {
       textAlign: "center",
+    },
+    margin: {
+      marginBottom: "15px",
     },
     image: {
       margin: "20px auto 20px auto",
@@ -94,18 +100,12 @@ const theme = createMuiTheme({
       textAlign: "center",
     },
 
-    text: {
-      marginTop: "110px",
-    },
-
     centered: {
-      position: "absolute",
-      top: "100 %",
-      left: "50%",
-      transform: "translate(-50%, -50%)",
+      position: "sticky",
+      transform: "translate(4%, -40%)",
     },
 
-    profilePic: {
+    background: {
       height: "250px",
       width: "100%",
       objectFit: "cover",
@@ -116,13 +116,10 @@ const theme = createMuiTheme({
       height: "200px",
       borderRadius: "50%",
       objectFit: "cover",
+      marginTop: "-120px",
+      marginLeft: "50px",
     },
 
-    bookButton: {
-      marginTop: "15px",
-      marginBottom: "15px",
-      width: "110px",
-    },
     horseShit: {
       maxWidth: "100%",
       maxHeight: "100%",
@@ -130,6 +127,20 @@ const theme = createMuiTheme({
     },
     notFullWidth: {
       margin: "15px",
+    },
+
+    textGrid: {
+      marginLeft: "50px",
+    },
+
+    rightGrid: {
+      textAlign: "right",
+    },
+
+    bookButton: {
+      marginRight: "20px",
+      marginTop: "12px",
+      width: "110px",
     },
   },
 });
@@ -164,6 +175,7 @@ class App extends Component {
                   <Route exact path="/login" component={login} />
                   <Route exact path="/signup" component={signup} />
                   <Route exact path="/profile" component={profile} />
+                  <Route exact path="/messaging" component={messaging} />
                   <Route exact path="/search/:searchQuery" component={search} />
                   <Route
                     exact
