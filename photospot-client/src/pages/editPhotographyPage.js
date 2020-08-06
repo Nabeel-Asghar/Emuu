@@ -258,6 +258,7 @@ class editPhotographyPage extends Component {
                 handleProfileImageChange={this.handleProfileImageChange}
                 handleEditProfileImage={this.handleEditProfileImage}
                 handleOpenEdit={this.handleClickOpen}
+                history={this.props.history}
               />
             </Grid>
           </Grid>
