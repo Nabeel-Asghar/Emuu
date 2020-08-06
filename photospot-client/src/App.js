@@ -24,6 +24,7 @@ import search from "./pages/search";
 import editPhotographyPage from "./pages/editPhotographyPage";
 import photographyPictures from "./pages/photographyPictures";
 import homePage from "./pages/homePage";
+import setYourSchedule from "./pages/setYourSchedule";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -188,6 +189,12 @@ class App extends Component {
                     path="/yourPhotographyProfile"
                     component={editPhotographyPage}
                   />
+                  <Route
+                    exact
+                    path="/yourPhotographyProfile/setYourSchedule"
+                    component={setYourSchedule}
+                  />
+
                   <Route
                     exact
                     path="/uploadPhotographyPictures"
