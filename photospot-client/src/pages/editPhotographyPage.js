@@ -159,7 +159,7 @@ class editPhotographyPage extends Component {
 
   handleBioChange = (event) => {
     this.setState({
-      [event.target.name]: event.target.value,
+      fakeBio: event.target.value,
     });
   };
 
