@@ -283,8 +283,10 @@ exports.bookPhotographer = (req, res) => {
     createdAt: new Date().toISOString(),
   };
 
-  db.collection("orders")
+  // Make sure user only as one order at a time
+  db.collection("allOrders")
     .doc(userid)
+    .collection("currentOrders")
     .get()
     .then((doc) => {
       if (doc.exists) {
@@ -294,37 +296,60 @@ exports.bookPhotographer = (req, res) => {
       }
     });
 
+  // Update booking time to be filled on photographer schedule
   db.collection("photographer")
     .doc(photographerBooked)
     .collection("bookings")
     .doc(shootDate)
     .update({
       [shootTime]: true,
-    });
-
-  db.collection("photographer")
-    .doc(photographerBooked)
-    .collection("orders")
-    .doc(userid)
-    .set(booking);
-
-  db.collection("users")
-    .doc(userid)
-    .collection("orders")
-    .doc(photographerBooked)
-    .set(booking);
-
-  db.collection("orders")
-    .doc(userid)
-    .set(booking)
-    .then(() => {
-      return res.json({
-        message:
-          "Order complete, you will recieve an email with a confirmation.",
-      });
     })
-    .catch((err) => {
-      res.status(500).json({ error: `something went wrong` });
-      console.log(err);
+    .then(() => {
+      // Set order for photographer under allOrders/{photographerID}/currentOrders
+      db.collection("allOrders")
+        .doc(photographerBooked)
+        .collection("currentOrders")
+        .doc()
+        .set(booking)
+        .then(() => {
+          // Set order for user under allOrders/{userID}/currentOrders
+          db.collection("allOrders")
+            .doc(userid)
+            .collection("currentOrders")
+            .doc(photographerBooked)
+            .set(booking)
+            .then(() => {
+              return res
+                .json({
+                  message:
+                    "Order complete, you will recieve an email with a confirmation.",
+                })
+                .catch(() => {
+                  return res
+                    .status(500)
+                    .json({ error: `Something went wrong.` });
+                });
+            })
+            .catch((err) => {
+              return res.status(500).json({ error: `Something went wrong.` });
+            });
+        })
+        .catch((err) => {
+          return res.status(500).json({ error: `Something went wrong.` });
+        });
+
+      // db.collection("orders")
+      //   .doc(userid)
+      //   .set(booking)
+      //   .then(() => {
+      //     return res.json({
+      //       message:
+      //         "Order complete, you will recieve an email with a confirmation.",
+      //     });
+      //   })
+      //   .catch((err) => {
+      //     res.status(500).json({ error: `something went wrong` });
+      //     console.log(err);
+      //   });
     });
 };
