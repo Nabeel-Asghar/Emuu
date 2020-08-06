@@ -60,7 +60,11 @@ const Navbar = () => {
             <Box p={1} flexGrow={1}>
               <IconButton
                 edge="start"
-                style={{ padding: 0, marginTop: "-10px" }}
+                style={{
+                  padding: 0,
+                  marginTop: "-10px",
+                  backgroundColor: "transparent",
+                }}
                 component={Link}
                 to="/"
               >
@@ -106,8 +110,8 @@ const Navbar = () => {
                   </MenuItem>
 
                   <MenuItem component={Link} to="/messaging">
-                  Messaging
-                </MenuItem>
+                    Messaging
+                  </MenuItem>
 
                   <MenuItem onClick={() => dispatch(logoutUser())}>
                     Logout

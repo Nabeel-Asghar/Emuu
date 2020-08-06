@@ -15,6 +15,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import withStyles from "@material-ui/core/styles/withStyles";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Paper from "@material-ui/core/Paper";
 
 // Components
 import Photographer from "../components/photographer";
@@ -75,27 +76,32 @@ class home extends Component {
     ));
 
     return (
-      <Grid container spacing={10}>
-        <Grid item sm={3} xs={12}>
-          <form onSubmit={this.handleSubmit}>
-            <TextField
-              id="standard-basic"
-              name="searchQuery"
-              value={this.state.searchQuery}
-              onChange={this.handleChange}
-              label="Search photographers"
-            />
-            <Button
-              variant="contained"
-              color="secondary"
-              component={Link}
-              to={`/search/${this.state.searchQuery}`}
-              name="submitSearch"
-              type="submit"
-            >
-              Submit
-            </Button>
-          </form>
+      <Grid container spacing={3}>
+        <Grid item sm={3} xs={12} style={{ textAlign: "center" }}>
+          <Paper style={{ padding: "10px 10px 50px 10px" }}>
+            <form onSubmit={this.handleSubmit}>
+              <TextField
+                id="standard-basic"
+                name="searchQuery"
+                value={this.state.searchQuery}
+                onChange={this.handleChange}
+                label="Name"
+                color="secondary"
+                fullWidth
+              />
+              <Button
+                variant="contained"
+                color="secondary"
+                component={Link}
+                to={`/search/${this.state.searchQuery}`}
+                name="submitSearch"
+                fullWidth
+                style={{ borderRadius: "30px", marginTop: "10px" }}
+              >
+                Search
+              </Button>
+            </form>
+          </Paper>
         </Grid>
         <Grid item sm={9} xs={12}>
           {loading ? <CardSkeleton /> : recentPhotographers}

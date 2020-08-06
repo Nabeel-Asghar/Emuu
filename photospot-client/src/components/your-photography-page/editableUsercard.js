@@ -50,11 +50,13 @@ class editableUsercard extends Component {
             />
           ) : (
             <div>
-              <img
-                className={classes.background}
-                src={background}
-                onClick={this.props.handleEditBackground}
-              />
+              <Button style={{ padding: 0 }}>
+                <img
+                  className={classes.background}
+                  src={background}
+                  onClick={this.props.handleEditBackground}
+                />
+              </Button>
 
               <input
                 type="file"
@@ -94,29 +96,24 @@ class editableUsercard extends Component {
           ) : (
             <div>
               <Button
-                className={classes.bookButton}
-                disabled="true"
                 variant="contained"
-                color="primary"
+                style={{ marginRight: "20px", marginTop: "12px" }}
+                color="secondary"
                 onClick={() =>
                   this.props.history.push(
-                    `${this.props.history.location.pathname}/book`
+                    `${this.props.history.location.pathname}/setYourSchedule`
                   )
                 }
               >
-                Book
+                Set Your Timings
               </Button>
-              <Button
-                className={classes.bookButton}
-                variant="contained"
-                color="secondary"
-                disabled="true"
-              >
-                Contact
-              </Button>
+
               <br />
               <IconButton style={{ marginTop: "5px", marginBottom: "-5px" }}>
-                <EditIcon color="primary" onClick={this.props.handleOpenEdit} />
+                <EditIcon
+                  color="secondary"
+                  onClick={this.props.handleOpenEdit}
+                />
               </IconButton>
             </div>
           )}
@@ -157,7 +154,7 @@ class editableUsercard extends Component {
                 <ListItemText primary={camera} style={{ textAlign: "right" }} />
                 <ListItemSecondaryAction>
                   <IconButton edge="end" aria-label="icon">
-                    <PhotoCameraIcon color="primary" />
+                    <PhotoCameraIcon color="secondary" />
                   </IconButton>
                 </ListItemSecondaryAction>
               </ListItem>
@@ -169,7 +166,7 @@ class editableUsercard extends Component {
                 />
                 <ListItemSecondaryAction>
                   <IconButton edge="end" aria-label="icon">
-                    <InstagramIcon color="primary" />
+                    <InstagramIcon color="secondary" />
                   </IconButton>
                 </ListItemSecondaryAction>
               </ListItem>
@@ -181,7 +178,7 @@ class editableUsercard extends Component {
                 />
                 <ListItemSecondaryAction>
                   <IconButton edge="end" aria-label="icon">
-                    <BusinessIcon color="primary" />
+                    <BusinessIcon color="secondary" />
                   </IconButton>
                 </ListItemSecondaryAction>
               </ListItem>

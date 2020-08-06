@@ -6,6 +6,7 @@ import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
+import SaveIcon from "@material-ui/icons/Save";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
 //Redux
@@ -14,6 +15,12 @@ import { deleteImages, uploadImages } from "../redux/actions/userActions";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
+  root: {
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+    marginTop: "25px",
+  },
 });
 
 class photographyPictures extends Component {
@@ -70,6 +77,11 @@ class photographyPictures extends Component {
     this.props.uploadImages(formData);
   }
 
+  handleEditPicture = () => {
+    const fileInput = document.getElementById("addImage");
+    fileInput.click();
+  };
+
   render() {
     const {
       classes,
@@ -95,24 +107,35 @@ class photographyPictures extends Component {
         <Grid container spacing={2}>
           {imageContainer}
           <Grid item xs={12} className={classes.centerGrid}>
-            <input
-              type="file"
-              id="addImage"
-              accept="image/*"
-              onChange={this.handleImageAdd}
-            />
-          </Grid>
-          <Grid item xs={12} className={classes.centerGrid}>
-            <Button
-              variant="contained"
-              color="primary"
-              startIcon={<CloudUploadIcon />}
-              disabled={loading}
-              onClick={() => this.handleSubmit()}
-            >
-              UPLOAD
-              {loading && <CircularProgress className={classes.progress} />}
-            </Button>
+            <div className={classes.root}>
+              <Button
+                variant="outlined"
+                color="secondary"
+                disabled={loading}
+                startIcon={<CloudUploadIcon />}
+                onClick={this.handleEditPicture}
+              >
+                <input
+                  type="file"
+                  id="addImage"
+                  accept="image/*"
+                  onChange={this.handleImageAdd}
+                  hidden
+                />
+                Upload
+              </Button>
+
+              <Button
+                variant="contained"
+                color="secondary"
+                disabled={loading}
+                startIcon={<SaveIcon />}
+                onClick={() => this.handleSubmit()}
+              >
+                Save Changes
+                {loading && <CircularProgress className={classes.progress} />}
+              </Button>
+            </div>
           </Grid>
         </Grid>
       </Paper>

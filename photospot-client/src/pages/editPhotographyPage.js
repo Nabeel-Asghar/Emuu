@@ -159,7 +159,7 @@ class editPhotographyPage extends Component {
 
   handleBioChange = (event) => {
     this.setState({
-      [event.target.name]: event.target.value,
+      fakeBio: event.target.value,
     });
   };
 
@@ -263,6 +263,7 @@ class editPhotographyPage extends Component {
                 handleProfileImageChange={this.handleProfileImageChange}
                 handleEditProfileImage={this.handleEditProfileImage}
                 handleOpenEdit={this.handleClickOpen}
+                history={this.props.history}
               />
             </Grid>
           </Grid>
@@ -315,7 +316,7 @@ class editPhotographyPage extends Component {
                   <ListItemSecondaryAction>
                     <IconButton edge="end" aria-label="icon">
                       <EditIcon
-                        color="primary"
+                        color="secondary"
                         onClick={this.handleBioClickOpen}
                       />
                     </IconButton>
@@ -335,7 +336,7 @@ class editPhotographyPage extends Component {
             <Grid item xs={12} className={classes.centerGrid}>
               <Button
                 variant="contained"
-                color="primary"
+                color="secondary"
                 component={Link}
                 style={{ margin: "10px" }}
                 to={{

@@ -5,6 +5,8 @@ import Gallery from "react-photo-gallery";
 import Button from "@material-ui/core/Button";
 import Lightbox from "react-image-lightbox";
 import "react-image-lightbox/style.css";
+import OpenWithIcon from "@material-ui/icons/OpenWith";
+import IconButton from "@material-ui/core/IconButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -48,11 +50,13 @@ class photoSamples extends Component {
         ) : (
           <div>
             <Button
-              type="Button"
+              style={{ padding: "10px 0 10px 0" }}
+              fullWidth
               onClick={() => this.setState({ isOpen: true })}
             >
               Open Images
             </Button>
+
             {isOpen && (
               <Lightbox
                 mainSrc={lightboxImages[photoIndex]}

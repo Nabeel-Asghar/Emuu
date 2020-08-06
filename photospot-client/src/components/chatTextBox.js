@@ -15,11 +15,10 @@ import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import Paper from "@material-ui/core/Paper";
 import Send from "@material-ui/icons/Send";
 import InputBase from "@material-ui/core/InputBase";
-import Divider from "@material-ui/core/Divider";
-import MenuIcon from "@material-ui/icons/Menu";
-import SearchIcon from "@material-ui/icons/Search";
-import DirectionsIcon from "@material-ui/icons/Directions";
+import Grid from "@material-ui/core/Grid";
 import SendIcon from "@material-ui/icons/Send";
+import Fab from "@material-ui/core/Fab";
+
 // Redux
 import { connect } from "react-redux";
 
@@ -32,6 +31,7 @@ const styles = (theme) => ({
     padding: "10px",
     display: "flex",
     alignItems: "center",
+    borderRadius: "30px",
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -59,30 +59,41 @@ class ChatTextBoxComponent extends Component {
     const { classes, submitMessageFn } = this.props;
 
     return (
-      <div>
-        <Paper
-          component="form"
-          className={classes.root}
-          fullWidth
-          square={false}
-        >
-          <InputBase
-            className={classes.input}
-            placeholder="Type a message"
-            onKeyUp={(e) => this.userTyping(e)}
-            id="chattextbox"
-            onFocus={this.userClickedInput}
-            inputProps={{ "aria-label": "send a message" }}
-          />
-          <Divider className={classes.divider} orientation="vertical" />
-
-          <SendIcon
-            type="submit"
-            onClick={this.submitMessage}
-            className={classes.iconButton}
-            aria-label="search"
-          />
-        </Paper>
+      <Grid container alignItems="center">
+        <Grid item xs={11}>
+          <Paper className={classes.root}>
+            <InputBase
+              className={classes.input}
+              placeholder="Type a message"
+              onKeyUp={(e) => this.userTyping(e)}
+              id="chattextbox"
+              onFocus={this.userClickedInput}
+              inputProps={{ "aria-label": "send a message" }}
+            />
+          </Paper>
+        </Grid>
+        <Grid item xs={1}>
+          <Fab
+            variant="extended"
+            color="secondary"
+            size="small"
+            style={{
+              width: "50px",
+              height: "50px",
+              borderRadius: "50%",
+              margin: "5px 0 0 7px",
+            }}
+          >
+            <SendIcon
+              type="submit"
+              onClick={this.submitMessage}
+              className={classes.iconButton}
+              aria-label="search"
+              color="primary"
+              fontSize="small"
+            />
+          </Fab>
+        </Grid>
 
         {/*       <IconButton
             type="submit"
@@ -92,7 +103,7 @@ class ChatTextBoxComponent extends Component {
           >
             <SendIcon />
           </IconButton> */}
-      </div>
+      </Grid>
     );
   }
 

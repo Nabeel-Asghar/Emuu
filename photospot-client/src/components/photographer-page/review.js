@@ -200,13 +200,13 @@ class review extends Component {
           >
             <Fab
               variant="extended"
-              color="primary"
+              color="secondary"
               aria-label="add"
               style={{ margin: "15px 0 20px 0" }}
               onClick={() => this.handleReviewOpenState()}
             >
               <AddIcon className={classes.extendedIcon} />
-              ADD REVIEW
+              <Typography style={{ fontWeight: "bold" }}>ADD REVIEW</Typography>
             </Fab>
           </Grid>
 
@@ -235,6 +235,7 @@ class review extends Component {
                   <DialogContentText id="title">
                     <TextField
                       id="standard-title"
+                      color="secondary"
                       name="title"
                       type="text"
                       label="Title"
@@ -271,6 +272,7 @@ class review extends Component {
                     <TextField
                       id="standard-description"
                       name="description"
+                      color="secondary"
                       type="text"
                       label="Description"
                       value={this.state.description}
@@ -318,21 +320,25 @@ class review extends Component {
                 <div>
                   <Button
                     onClick={() => this.handleReviewOpenState()}
-                    variant="contained"
+                    variant="outlined"
                     color="secondary"
                     disabled={loadingReviewAction}
                     style={{ marginRight: "18px" }}
                   >
-                    Close
+                    <Typography style={{ fontWeight: "bold" }}>
+                      Close
+                    </Typography>
                   </Button>
                   <Button
                     onClick={() => this.handleReviewDialogAgree()}
                     variant="contained"
-                    color="primary"
+                    color="secondary"
                     autoFocus
                     disabled={loadingReviewAction}
                   >
-                    Review
+                    <Typography style={{ fontWeight: "bold" }}>
+                      Review
+                    </Typography>
                   </Button>
                 </div>
               )}
