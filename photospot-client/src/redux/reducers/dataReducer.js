@@ -18,6 +18,19 @@ export default function (state = intialState, action) {
         ...state,
         allMessages: { ...action.payload },
       };
+
+    case "FILTER_PHOTOGRAPHERS":
+      return {
+        ...state,
+        allPhotographers: { ...action.payload },
+      };
+
+    case "SEARCH_PHOTOGRAPHERS":
+      return {
+        ...state,
+        allPhotographers: { ...action.payload },
+      };
+
     case "SET_PHOTOGRAHPER_PAGE":
       return {
         ...state,

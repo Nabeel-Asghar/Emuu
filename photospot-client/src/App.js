@@ -178,6 +178,11 @@ class App extends Component {
                   <Route exact path="/profile" component={profile} />
                   <Route exact path="/messaging" component={messaging} />
                   <Route exact path="/search/:searchQuery" component={search} />
+                  <Route
+                    exact
+                    path="/search/:type/:city/:state"
+                    component={search}
+                  />
 
                   <Route
                     exact

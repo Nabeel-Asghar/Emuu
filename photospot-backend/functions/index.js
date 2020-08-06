@@ -10,6 +10,7 @@ const {
   getAllPhotographers,
   createPost,
   searchPhotographer,
+  filterPhotographers,
   getSpecificPhotographer,
   bookPhotographer,
   getReviews,
@@ -27,6 +28,7 @@ const {
   uploadBackgroundPicture,
   uploadYourPhotographyImages,
   setYourPhotographyPage,
+  setPhotographerCategories,
   updatePhotographerPage,
   getYourPhotographerPage,
   getYourUserProfile,
@@ -60,6 +62,11 @@ app.post("/user/profileimage", FBAuth, uploadProfilePicture);
 
 // photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
+app.post(
+  "/editphotographypage/editCategories",
+  FBAuth,
+  setPhotographerCategories
+);
 app.post("/editphotographypage/edit", FBAuth, updatePhotographerPage);
 app.post("/editphotographypage/background", FBAuth, uploadBackgroundPicture);
 app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
@@ -80,7 +87,9 @@ app.get(
   FBAuth,
   getPhotographerSchedule
 );
-app.get("/search/:searchQuery", FBAuth, searchPhotographer);
+app.get("/search/:searchQuery", searchPhotographer);
+app.get("/filter/:type/:city/:state", filterPhotographers);
+
 app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);
 
 //Administrator
