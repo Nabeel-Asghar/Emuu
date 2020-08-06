@@ -88,6 +88,7 @@ class book extends Component {
     this.props.getBookingTimes(photographerID);
     const photoDetails = this.props.photographerDetails;
     const bookTimings = this.props.timings;
+    console.log(bookTimings);
     this.assignTimes(bookTimings);
     this.assignValues(photoDetails);
   }
@@ -115,7 +116,7 @@ class book extends Component {
 
     arrayOfTimeSlots.forEach((task) =>
       Object.entries(task).forEach(([key, value]) => {
-        if (key === moment(date).format("MM-D-YYYY")) {
+        if (key === moment(date).format("MM-DD-YYYY")) {
           this.setState({
             timeslots: [value],
           });
