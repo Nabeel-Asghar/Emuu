@@ -77,6 +77,11 @@ class photographyPictures extends Component {
     this.props.uploadImages(formData);
   }
 
+  handleEditPicture = () => {
+    const fileInput = document.getElementById("addImage");
+    fileInput.click();
+  };
+
   render() {
     const {
       classes,
@@ -108,6 +113,7 @@ class photographyPictures extends Component {
                 color="secondary"
                 disabled={loading}
                 startIcon={<CloudUploadIcon />}
+                onClick={this.handleEditPicture}
               >
                 <input
                   type="file"
