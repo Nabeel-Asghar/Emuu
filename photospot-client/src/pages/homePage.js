@@ -7,6 +7,9 @@ import photo2 from "../images/photo2.png";
 import photo3 from "../images/photo3.png";
 import { withRouter, Link } from "react-router-dom";
 
+import { connect } from "react-redux";
+import { applyFilters } from "../redux/actions/dataActions";
+
 // Material UI
 import Typography from "@material-ui/core/Typography";
 import Paper from "@material-ui/core/Paper";
@@ -86,6 +89,45 @@ const styles = (theme) => ({
 });
 
 class homePage extends Component {
+  constructor() {
+    super();
+    this.state = {
+      allThePhotographers: {},
+      searchQuery: "",
+      type: "",
+      city: "",
+      state: "",
+    };
+  }
+
+  handleFilterSubmit = (event) => {
+    event.preventDefault();
+
+    const type = this.state.type;
+    const city = this.state.city;
+    const state = this.state.state;
+
+    this.props.history.push({
+      pathname: "/search/" + type + "/" + city + "/" + state,
+    });
+  };
+
+  handleSubmit = (event) => {
+    event.preventDefault();
+
+    const searchQuery = this.state.searchQuery;
+    this.props.history.push({
+      pathname: "/search/" + searchQuery,
+      daSearch: searchQuery,
+    });
+  };
+
+  handleChange = (event) => {
+    this.setState({
+      [event.target.name]: event.target.value,
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
@@ -137,42 +179,77 @@ class homePage extends Component {
           <Grid item xs={3} />
           <Grid item xs={3} />
           <Grid item xs={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">
-                Shoot Type
-              </InputLabel>
-              <Select
-                labelId="demo-simple-select-outlined-label"
-                id="demo-simple-select-outlined"
-                label="Shoot Type"
+            <form
+              onSubmit={this.handleFilterSubmit}
+              className={classes.formControl1}
+              noValidate
+              autoComplete="off"
+            >
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="demo-simple-select-outlined-label">
+                  Shoot Type
+                </InputLabel>
+                <Select
+                  labelId="demo-simple-select-outlined-label"
+                  id="demo-simple-select-outlined"
+                  label="Shoot Type"
+                  name="type"
+                  value={this.state.type}
+                  onChange={this.handleChange}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={"Instagram"}>Instagram</MenuItem>
+                  <MenuItem value={"LinkedIn Portrait"}>
+                    LinkedIn Portrait
+                  </MenuItem>
+                  <MenuItem value={"Personal Shoot"}>Personal Shoot</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="city">City</InputLabel>
+                <Select
+                  labelId="city"
+                  id="city"
+                  name="city"
+                  label="City"
+                  value={this.state.city}
+                  onChange={this.handleChange}
+                >
+                  <MenuItem value="">
+                    <em>None</em>
+                  </MenuItem>
+                  <MenuItem value={"Troy"}>Troy</MenuItem>
+                  <MenuItem value={"Rochester Hills"}>Rochester Hills</MenuItem>
+                  <MenuItem value={"Auburn Hills"}>Auburn Hills</MenuItem>
+                </Select>
+              </FormControl>
+
+              <FormControl variant="outlined" className={classes.formControl}>
+                <InputLabel id="state">State</InputLabel>
+                <Select
+                  labelId="state"
+                  id="state"
+                  label="state"
+                  name="state"
+                  value={this.state.state}
+                  onChange={this.handleChange}
+                >
+                  <MenuItem value={"MI"}>Michigan</MenuItem>
+                </Select>
+              </FormControl>
+
+              <Button
+                variant="contained"
+                color="primary"
+                name="submitSearch"
+                type="submit"
               >
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={10}>Instagram</MenuItem>
-                <MenuItem value={20}>LinkedIn Portrait</MenuItem>
-                <MenuItem value={30}>Personal Shoot</MenuItem>
-              </Select>
-            </FormControl>
-
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="city">City</InputLabel>
-              <Select labelId="city" id="city" label="City">
-                <MenuItem value="">
-                  <em>None</em>
-                </MenuItem>
-                <MenuItem value={10}>Troy</MenuItem>
-                <MenuItem value={20}>Rochester Hills</MenuItem>
-                <MenuItem value={30}>Auburn Hills</MenuItem>
-              </Select>
-            </FormControl>
-
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="state">State</InputLabel>
-              <Select labelId="state" id="state" label="state">
-                <MenuItem value={10}>Michigan</MenuItem>
-              </Select>
-            </FormControl>
+                Submit
+              </Button>
+            </form>
           </Grid>
           <Grid item xs={3} />
           <Grid item xs={3} />
@@ -185,11 +262,27 @@ class homePage extends Component {
           <Grid item xs={3} />
           <Grid item xs={6}>
             <form
+              onSubmit={this.handleSubmit}
               className={classes.formControl1}
               noValidate
               autoComplete="off"
             >
-              <TextField id="outlined-basic" label="Name" variant="outlined" />
+              <TextField
+                id="outlined-basic"
+                label="Name"
+                variant="outlined"
+                name="searchQuery"
+                value={this.state.searchQuery}
+                onChange={this.handleChange}
+              />
+              <Button
+                variant="contained"
+                color="primary"
+                name="submitSearch"
+                type="submit"
+              >
+                Submit
+              </Button>
             </form>
           </Grid>
           <Grid item xs={3} />
@@ -239,5 +332,15 @@ class homePage extends Component {
     );
   }
 }
+const mapStateToProps = (state) => ({
+  allPhotographers: state.data.allPhotographers,
+});
 
-export default withStyles(styles)(homePage);
+const mapActionsToProps = {
+  applyFilters,
+};
+
+export default connect(
+  mapStateToProps,
+  mapActionsToProps
+)(withStyles(styles)(homePage));

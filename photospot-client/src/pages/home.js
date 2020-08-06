@@ -91,6 +91,7 @@ class home extends Component {
               component={Link}
               to={`/search/${this.state.searchQuery}`}
               name="submitSearch"
+              type="submit"
             >
               Submit
             </Button>

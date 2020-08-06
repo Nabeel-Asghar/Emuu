@@ -10,6 +10,7 @@ import { connect } from "react-redux";
 import {
   getPhotographers,
   searchPhotographer,
+  applyFilters,
 } from "../redux/actions/dataActions";
 
 // Photographer
@@ -19,7 +20,7 @@ const styles = (theme) => ({
   ...theme.spreadThis,
 });
 
-class home extends Component {
+class search extends Component {
   constructor() {
     super();
     this.state = {
@@ -28,17 +29,35 @@ class home extends Component {
     };
   }
   componentDidMount() {
-    let searchQuery = this.props.match.params.searchQuery;
-    console.log(searchQuery);
-    this.props.searchPhotographer(searchQuery);
+    if (this.props.match.params.searchQuery) {
+      let searchQuery = this.props.match.params.searchQuery;
+
+      this.props.searchPhotographer(searchQuery);
+    } else {
+      const type = this.props.match.params.type;
+      const city = this.props.match.params.city;
+      const state = this.props.match.params.state;
+
+      this.props.applyFilters(type, city, state);
+    }
+
     this.setState({ allThePhotographers: this.props.allPhotographers });
   }
 
   componentDidUpdate(prevProps) {
     if (!equal(this.props.allPhotographers, prevProps.allPhotographers)) {
-      let searchQuery = this.props.match.params.searchQuery;
-      console.log(searchQuery);
-      this.props.searchPhotographer(searchQuery);
+      if (this.props.match.params.searchQuery) {
+        let searchQuery = this.props.match.params.searchQuery;
+
+        this.props.searchPhotographer(searchQuery);
+      } else {
+        const type = this.props.match.params.type;
+        const city = this.props.match.params.city;
+        const state = this.props.match.params.state;
+
+        this.props.applyFilters(type, city, state);
+      }
+
       this.setState({ allThePhotographers: this.props.allPhotographers });
     }
   }
@@ -107,9 +126,10 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = {
   getPhotographers,
   searchPhotographer,
+  applyFilters,
 };
 
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(withStyles(styles)(home));
+)(withStyles(styles)(search));

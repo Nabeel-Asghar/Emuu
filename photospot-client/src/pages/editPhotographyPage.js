@@ -47,6 +47,7 @@ class editPhotographyPage extends Component {
   constructor() {
     super();
     this.state = {
+      categories: [],
       disableTextField: true,
       firstName: "",
       lastName: "",
@@ -158,7 +159,7 @@ class editPhotographyPage extends Component {
 
   handleBioChange = (event) => {
     this.setState({
-      fakeBio: event.target.value,
+      [event.target.name]: event.target.value,
     });
   };
 
@@ -219,6 +220,10 @@ class editPhotographyPage extends Component {
     };
 
     this.props.updatePhotographerPage(details);
+  };
+
+  changeCatergories = () => {
+    console.log(this.state.categories);
   };
 
   handleClickOpen = () => {
