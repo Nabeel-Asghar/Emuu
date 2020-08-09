@@ -359,6 +359,7 @@ exports.getYourPhotographerPage = (req, res) => {
         ratePerHour: doc.data().location_state,
         camera: doc.data().camera,
         headline: doc.data().headline,
+        categories: doc.data().categories,
       });
 
       return res.json(page);

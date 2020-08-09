@@ -47,6 +47,7 @@ class editPhotographyPage extends Component {
   constructor() {
     super();
     this.state = {
+      tempCategories: [],
       categories: [],
       disableTextField: true,
       firstName: "",
@@ -164,8 +165,11 @@ class editPhotographyPage extends Component {
   };
 
   handleBioDisagree = () => {
+    console.log("Real", this.state.categories);
+    console.log("Temp", this.state.tempCategories);
     this.setState({
       open: false,
+      tempCategories: this.state.categories,
     });
   };
 
@@ -178,6 +182,7 @@ class editPhotographyPage extends Component {
     });
     const details = {
       bio: this.state.fakeBio,
+      categories: this.state.tempCategories,
     };
 
     console.log("REAL ", this.state.bio);
@@ -191,6 +196,23 @@ class editPhotographyPage extends Component {
   handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
+    });
+  };
+
+  handleCategoryChange = (event) => {
+    let categoryArray = this.state.categories;
+    if (categoryArray.includes(event.target.name)) {
+      const index = categoryArray.indexOf(event.target.name);
+      if (index > -1) {
+        categoryArray.splice(index, 1);
+      }
+    } else {
+      categoryArray.push(event.target.name);
+    }
+    console.log(categoryArray);
+
+    this.setState({
+      tempCategories: categoryArray,
     });
   };
 
@@ -308,7 +330,9 @@ class editPhotographyPage extends Component {
               handleAgree={this.handleBioAgree}
               handleDisagree={this.handleBioDisagree}
               handleChange={this.handleBioChange}
+              handleCatChange={this.handleCategoryChange}
               bio={this.state.fakeBio}
+              categories={this.state.categories}
             />
             <Grid item xs={2}>
               <List style={{ marginTop: "10px" }}>
