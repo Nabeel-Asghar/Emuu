@@ -47,6 +47,7 @@ class editPhotographyPage extends Component {
   constructor() {
     super();
     this.state = {
+      tempCategories: [],
       categories: [],
       disableTextField: true,
       firstName: "",
@@ -151,9 +152,11 @@ class editPhotographyPage extends Component {
   };
 
   handleBioClickOpen = () => {
+    let x = Object.assign([], this.state.categories);
     this.setState({
       open: true,
       fakeBio: this.state.bio,
+      tempCategories: x,
     });
   };
 
@@ -166,6 +169,7 @@ class editPhotographyPage extends Component {
   handleBioDisagree = () => {
     this.setState({
       open: false,
+      tempCategories: this.state.categories,
     });
   };
 
@@ -175,13 +179,12 @@ class editPhotographyPage extends Component {
     });
     this.setState({
       bio: this.state.fakeBio,
+      categories: this.state.tempCategories,
     });
     const details = {
       bio: this.state.fakeBio,
+      categories: this.state.tempCategories,
     };
-
-    console.log("REAL ", this.state.bio);
-    console.log("FAKE", this.state.fakeBio);
 
     this.props.updatePhotographerPage(details);
   };
@@ -191,6 +194,22 @@ class editPhotographyPage extends Component {
   handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
+    });
+  };
+
+  handleCategoryChange = (event) => {
+    let categoryArray = this.state.tempCategories;
+    if (categoryArray.includes(event.target.name)) {
+      const index = categoryArray.indexOf(event.target.name);
+      if (index > -1) {
+        categoryArray.splice(index, 1);
+      }
+    } else {
+      categoryArray.push(event.target.name);
+    }
+
+    this.setState({
+      tempCategories: categoryArray,
     });
   };
 
@@ -308,7 +327,9 @@ class editPhotographyPage extends Component {
               handleAgree={this.handleBioAgree}
               handleDisagree={this.handleBioDisagree}
               handleChange={this.handleBioChange}
+              handleCatChange={this.handleCategoryChange}
               bio={this.state.fakeBio}
+              categories={this.state.tempCategories}
             />
             <Grid item xs={2}>
               <List style={{ marginTop: "10px" }}>

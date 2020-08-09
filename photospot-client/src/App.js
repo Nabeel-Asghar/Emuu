@@ -170,9 +170,9 @@ class App extends Component {
               <Navbar />
 
               <Switch>
-                <Route exact path="/home" component={homePage} />
+                <Route exact path="/" component={homePage} />
                 <div className="container">
-                  <Route exact path="/" component={home} />
+                  <Route exact path="/search" component={home} />
                   <Route exact path="/login" component={login} />
                   <Route exact path="/signup" component={signup} />
                   <Route exact path="/profile" component={profile} />
