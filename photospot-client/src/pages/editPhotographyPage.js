@@ -152,9 +152,11 @@ class editPhotographyPage extends Component {
   };
 
   handleBioClickOpen = () => {
+    let x = Object.assign([], this.state.categories);
     this.setState({
       open: true,
       fakeBio: this.state.bio,
+      tempCategories: x,
     });
   };
 
@@ -165,8 +167,6 @@ class editPhotographyPage extends Component {
   };
 
   handleBioDisagree = () => {
-    console.log("Real", this.state.categories);
-    console.log("Temp", this.state.tempCategories);
     this.setState({
       open: false,
       tempCategories: this.state.categories,
@@ -179,14 +179,12 @@ class editPhotographyPage extends Component {
     });
     this.setState({
       bio: this.state.fakeBio,
+      categories: this.state.tempCategories,
     });
     const details = {
       bio: this.state.fakeBio,
       categories: this.state.tempCategories,
     };
-
-    console.log("REAL ", this.state.bio);
-    console.log("FAKE", this.state.fakeBio);
 
     this.props.updatePhotographerPage(details);
   };
@@ -200,7 +198,7 @@ class editPhotographyPage extends Component {
   };
 
   handleCategoryChange = (event) => {
-    let categoryArray = this.state.categories;
+    let categoryArray = this.state.tempCategories;
     if (categoryArray.includes(event.target.name)) {
       const index = categoryArray.indexOf(event.target.name);
       if (index > -1) {
@@ -209,7 +207,6 @@ class editPhotographyPage extends Component {
     } else {
       categoryArray.push(event.target.name);
     }
-    console.log(categoryArray);
 
     this.setState({
       tempCategories: categoryArray,
@@ -332,7 +329,7 @@ class editPhotographyPage extends Component {
               handleChange={this.handleBioChange}
               handleCatChange={this.handleCategoryChange}
               bio={this.state.fakeBio}
-              categories={this.state.categories}
+              categories={this.state.tempCategories}
             />
             <Grid item xs={2}>
               <List style={{ marginTop: "10px" }}>
