@@ -208,6 +208,17 @@ export const reviewPhotographer = (photographerID, details) => (dispatch) => {
     });
 };
 
+export const editBookingTimes = (dateAndTime) => (dispatch) => {
+  dispatch({ type: "LOADING_POST_ACTION" });
+  return API.post(`/editphotographypage/bookingTimes`, dateAndTime)
+    .then(() => {
+      dispatch({ type: "SET_SUCCESS_RESPONSE" });
+    })
+    .catch((err) => {
+      dispatch({ type: "GENERAL_ERROR" });
+    });
+};
+
 const setAuthorizationHeader = (token) => {
   const FirebaseIdToken = `Bearer ${token}`;
   localStorage.setItem("FirebaseIdToken", FirebaseIdToken);

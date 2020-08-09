@@ -91,14 +91,17 @@ export const applyFilters = (type, city, state) => (dispatch) => {
 
 export const getBookingTimes = (photographerID) => (dispatch) => {
   dispatch({ type: "LOADING_DATA" });
-  API.get(`/photographers/${photographerID}/bookingTimes`).then((res) => {
-    console.log("Getting bookings for that photographer on that date");
-
-    dispatch({
-      type: "GET_BOOKING_TIMINGS",
-      payload: res.data,
+  return API.get(`/photographers/${photographerID}/bookingTimes`)
+    .then((res) => {
+      dispatch({
+        type: "GET_BOOKING_TIMINGS",
+        payload: res.data,
+      });
+      dispatch({ type: "FINISH_LOADING_DATA" });
+    })
+    .catch((err) => {
+      dispatch({ type: "GENERAL_ERROR" });
     });
-  });
 };
 
 export const bookPhotographer = (photographerID, bookingDetails) => (
