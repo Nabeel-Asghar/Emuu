@@ -37,6 +37,7 @@ const {
   getUsersOrders,
   getUsersPastOrders,
   updateUserProfile,
+  editBookingTimes,
 } = require("./handlers/users");
 
 const { completedOrders } = require("./handlers/administrator");
@@ -71,6 +72,7 @@ app.post("/editphotographypage/edit", FBAuth, updatePhotographerPage);
 app.post("/editphotographypage/background", FBAuth, uploadBackgroundPicture);
 app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
 app.post("/photographyimages/delete", FBAuth, deleteImages);
+app.post("/editphotographypage/bookingTimes", FBAuth, editBookingTimes);
 
 // messaging ==========================================
 app.get("/messages", FBAuth, getMessages);

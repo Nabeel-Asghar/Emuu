@@ -546,3 +546,25 @@ exports.deleteImages = (req, res) => {
 
   return res.json({ message: "Pictures deleted" });
 };
+
+exports.editBookingTimes = (req, res) => {
+  let date = req.body.date;
+  let timeslots = req.body.time;
+  let userid = req.user.uid;
+
+  console.log("Date: ", date);
+  console.log("Timeslots: ", timeslots);
+
+  db.collection("photographer")
+    .doc(userid)
+    .collection("bookings")
+    .doc(date)
+    .set(timeslots)
+    .then((doc) => {
+      return res.json({ message: "success" });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.json({ error: err });
+    });
+};
