@@ -133,7 +133,12 @@ class photographyPictures extends Component {
                 onClick={() => this.handleSubmit()}
               >
                 Save Changes
-                {loading && <CircularProgress className={classes.progress} />}
+                {loading && (
+                  <CircularProgress
+                    className={classes.progress}
+                    color="secondary"
+                  />
+                )}
               </Button>
             </div>
           </Grid>

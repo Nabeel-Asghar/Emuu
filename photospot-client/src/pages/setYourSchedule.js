@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
+import CircularProgress from "@material-ui/core/CircularProgress";
 
 // Components
 import DateView from "../components/set-your-schedule/dateView";
@@ -12,7 +13,7 @@ import TimeView from "../components/set-your-schedule/timeView";
 // Redux
 import { connect } from "react-redux";
 import { getBookingTimes } from "../redux/actions/dataActions";
-import { getUserData } from "../redux/actions/userActions";
+import { getUserData, editBookingTimes } from "../redux/actions/userActions";
 
 // Date format
 import moment from "moment";
@@ -27,10 +28,15 @@ export class setYourSchedule extends Component {
     super();
     this.state = {
       selectedDate: new Date(),
-      formattedDate: "",
+      formattedDate: moment(new Date()).format("MM-DD-YYYY"),
       availability: [],
       timeslots: [],
+      checkedSlots: [],
+      disabledCheckSlots: [],
+      open: false,
     };
+    this.baseChecks = this.state.checkedSlots;
+    this.baseDisabled = this.state.disabledCheckSlots;
   }
 
   componentDidMount() {
@@ -42,9 +48,13 @@ export class setYourSchedule extends Component {
     });
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
     if (!equal(this.props.timings, prevProps.timings)) {
       this.assignTimes(this.props.timings);
+    }
+    if (!equal(this.state.timeslots, prevState.timeslots)) {
+      this.resetState();
+      this.extractTimeSlots();
     }
   }
 
@@ -54,10 +64,103 @@ export class setYourSchedule extends Component {
     });
   }
 
+  resetState() {
+    this.setState({ checkedSlots: this.baseChecks });
+    this.setState({ disabledCheckSlots: this.baseDisabled });
+    return true;
+  }
+
+  resetChecked = () => {
+    this.setState({ checkedSlots: this.baseChecks });
+  };
+
+  handleChange = (event) => {
+    let value = parseInt(event.target.value.substring(0, 2), 10);
+
+    if (!this.state.checkedSlots.includes(value)) {
+      this.setState((prevState) => ({
+        checkedSlots: [...prevState.checkedSlots, value],
+      }));
+    } else {
+      var array = [...this.state.checkedSlots]; // make a separate copy of the array
+      var index = array.indexOf(value);
+      if (index !== -1) {
+        array.splice(index, 1);
+        this.setState({ checkedSlots: array });
+      }
+    }
+  };
+
+  convertTimeToString = (time) => {
+    var date = "";
+    if (time < 10) {
+      date = `0${time}:00`;
+    } else {
+      date = `${time}:00`;
+    }
+    return date;
+  };
+
+  handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    this.setState({ open: false });
+  };
+
+  handleSubmit = () => {
+    var formatedTimeslots = [];
+    var formatedDisabled = [];
+    var formattedDict = {};
+
+    for (var i = 0; i < this.state.checkedSlots.length; i++) {
+      var date = this.convertTimeToString(this.state.checkedSlots[i]);
+      var timeslot = { [date]: false };
+      formatedTimeslots.push(timeslot);
+      formattedDict[[date]] = false;
+    }
+
+    for (var i = 0; i < this.state.disabledCheckSlots.length; i++) {
+      var date = this.convertTimeToString(this.state.disabledCheckSlots[i]);
+      var timeslot = { [date]: true };
+      formatedDisabled.push(timeslot);
+      formattedDict[[date]] = true;
+    }
+
+    var combinedArray = formatedTimeslots.concat(formatedDisabled);
+
+    var dayAndTime = { date: this.state.formattedDate, time: formattedDict };
+
+    console.log(dayAndTime);
+
+    this.props.editBookingTimes(dayAndTime).then(() => {
+      this.setState({ open: true });
+    });
+  };
+
+  extractTimeSlots() {
+    if (this.state.timeslots && this.state.timeslots.length) {
+      Object.entries(this.state.timeslots[0]).map(async ([key, value]) => {
+        let time = parseInt(key.substring(0, 2), 10);
+
+        if (value) {
+          this.setState((prevState) => ({
+            disabledCheckSlots: [...prevState.disabledCheckSlots, time],
+          }));
+        } else {
+          this.setState((prevState) => ({
+            checkedSlots: [...prevState.checkedSlots, time],
+          }));
+        }
+      });
+    }
+  }
+
   handleDateChange = (date) => {
     this.setState({
       selectedDate: date,
-      formattedDate: moment(date).format("MM-D-YYYY"),
+      formattedDate: moment(date).format("MM-DD-YYYY"),
     });
 
     let found = false;
@@ -84,6 +187,11 @@ export class setYourSchedule extends Component {
   };
 
   render() {
+    const {
+      classes,
+      UI: { loadingAction, generalError, loadingData },
+    } = this.props;
+
     return (
       <Paper style={{ paddingTop: "20px" }}>
         <Grid container spacing={6}>
@@ -94,7 +202,25 @@ export class setYourSchedule extends Component {
             />
           </Grid>
           <Grid item xs={6}>
-            <TimeView timeslots={this.state.timeslots} />
+            {loadingData ? (
+              <CircularProgress
+                className={classes.progress}
+                color="secondary"
+              />
+            ) : (
+              <TimeView
+                date={this.state.formattedDate}
+                checked={this.state.checkedSlots}
+                disabled={this.state.disabledCheckSlots}
+                reset={this.resetChecked}
+                submit={this.handleSubmit}
+                handleChange={this.handleChange}
+                loading={loadingAction}
+                open={this.state.open}
+                error={generalError}
+                handleClose={this.handleClose}
+              />
+            )}
           </Grid>
         </Grid>
       </Paper>
@@ -105,11 +231,13 @@ export class setYourSchedule extends Component {
 const mapStateToProps = (state) => ({
   timings: state.data.timings,
   photographerID: state.user.credentials[0],
+  UI: state.UI,
 });
 
 const mapActionsToProps = {
   getBookingTimes,
   getUserData,
+  editBookingTimes,
 };
 
 export default connect(

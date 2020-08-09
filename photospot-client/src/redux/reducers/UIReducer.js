@@ -3,10 +3,13 @@ const intialState = {
   loadingData: false,
   loadingReviews: false,
   loadingReviewAction: false,
+  loadingAction: false,
   newReviewSucess: "",
   theResponse: "",
   theDeleteImagesResponse: "",
   theUploadImagesResponse: "",
+  editBookingTimesResponse: "",
+  generalError: false,
 };
 
 export default function (state = intialState, action) {
@@ -37,6 +40,12 @@ export default function (state = intialState, action) {
       return {
         ...state,
         loadingData: true,
+      };
+
+    case "FINISH_LOADING_DATA":
+      return {
+        ...state,
+        loadingData: false,
       };
 
     case "LOADING_REVIEWS":
@@ -79,6 +88,26 @@ export default function (state = intialState, action) {
         ...state,
         newReviewSucess: "Thank you for your feedback!",
         loadingReviewAction: false,
+      };
+
+    case "LOADING_POST_ACTION":
+      return {
+        ...state,
+        loadingAction: true,
+      };
+
+    case "SET_SUCCESS_RESPONSE":
+      return {
+        ...state,
+        generalError: false,
+        loadingAction: false,
+      };
+
+    case "GENERAL_ERROR":
+      return {
+        ...state,
+        generalError: true,
+        loadingAction: false,
       };
 
     default:
