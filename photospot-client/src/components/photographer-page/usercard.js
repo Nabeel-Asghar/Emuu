@@ -1,33 +1,53 @@
-import React, { Component } from "react";
-
-import withStyles from "@material-ui/core/styles/withStyles";
-import Typography from "@material-ui/core/Typography";
-import Skeleton from "@material-ui/lab/Skeleton";
-import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
-import InstagramIcon from "@material-ui/icons/Instagram";
-import BusinessIcon from "@material-ui/icons/Business";
-import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
-import Box from "@material-ui/core/Box";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-
-import Avatar from "@material-ui/core/Avatar";
-import IconButton from "@material-ui/core/IconButton";
+import ListItemText from "@material-ui/core/ListItemText";
+import withStyles from "@material-ui/core/styles/withStyles";
+import Typography from "@material-ui/core/Typography";
+import BusinessIcon from "@material-ui/icons/Business";
+import InstagramIcon from "@material-ui/icons/Instagram";
+import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
+import Skeleton from "@material-ui/lab/Skeleton";
+import React, { Component } from "react";
+import firebase from "../../firestore";
+import NewChatComponent from "../messaging/newChat";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
 });
 
 class usercard extends Component {
+  constructor() {
+    super();
+    this.state = {
+      open: false,
+      email: "",
+      userEmail: "",
+      userProfileImage: "",
+      profileImage: "",
+    };
+  }
+
+  componentWillReceiveProps(newProps) {
+    this.setState({
+      email: newProps.email,
+      userEmail: newProps.userEmail,
+      profileImage: newProps.profileImage,
+      userProfileImage: newProps.userProfileImage,
+    });
+    console.log(this.state);
+  }
+
   render() {
     const {
       classes,
       firstName,
       lastName,
+      email,
+      userEmail,
       profileImage,
       background,
       location_city,
@@ -38,7 +58,9 @@ class usercard extends Component {
       loading,
       headline,
       camera,
+      credentials,
     } = this.props;
+
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -60,7 +82,6 @@ class usercard extends Component {
             <img className={classes.avatar} src={profileImage} />
           )}
         </Grid>
-
         <Grid item xs={6} className={classes.rightGrid}>
           {loading ? (
             <Skeleton>
@@ -86,9 +107,16 @@ class usercard extends Component {
                 variant="contained"
                 color="secondary"
                 disableElevation
+                onClick={this.handleContactClickOpen}
               >
                 <Typography style={{ fontWeight: "bold" }}>Contact</Typography>
               </Button>
+              <NewChatComponent
+                email={email}
+                open={this.state.open}
+                goToChatFn={this.goToChat}
+                newChatSubmitFn={this.newChatSubmit}
+              ></NewChatComponent>
             </div>
           )}
         </Grid>
@@ -172,6 +200,78 @@ class usercard extends Component {
       </Grid>
     );
   }
+
+  handleContactClickOpen = () => {
+    this.setState({
+      open: true,
+    });
+  };
+
+  goToChat = () => {
+    this.props.history.push({
+      pathname: "/messaging/",
+    });
+  };
+
+  newChatSubmit = async (chatObject) => {
+    const docKey = this.buildDocKey();
+    console.log(docKey);
+    var names = docKey.split(":");
+    var friend = names[0];
+    let friendProfile;
+    if (names[0] == this.state.email) {
+      friend = names[1];
+    }
+
+    await firebase
+      .firestore()
+      .collection("chats")
+      .doc(docKey)
+      .set(
+        {
+          receiverHasRead: false,
+          users: [this.state.email, this.state.userEmail],
+          messages: firebase.firestore.FieldValue.arrayUnion({
+            message: chatObject.message,
+            sender: this.state.userEmail,
+            timestamp: Date.now(),
+          }),
+          timestamp: Date.now(),
+          [this.state.email]: { profileImage: this.state.profileImage },
+          [friend]: { profileImage: this.state.userProfileImage },
+        },
+        { merge: true }
+      );
+
+    this.setState({ open: false });
+
+    this.goToChat();
+  };
+
+  buildDocKey = () => {
+    return [this.state.email, this.state.userEmail].sort().join(":");
+  };
+
+  // chatExists = async () => {
+  //   const docKey = this.buildDocKey();
+  //   const chat = await firebase
+  //     .firestore()
+  //     .collection("chats")
+  //     .doc(docKey)
+  //     .get();
+
+  //   return chat.exists;
+  // };
+
+  //   goToChat = async (docKey, msg) => {
+  //   const usersInChat = docKey.split(":");
+  //   const chat = this.state.chats.find((_chat) =>
+  //     usersInChat.every((_user) => _chat.users.includes(_user))
+  //   );
+  //   this.setState({ newChatFormVisible: false });
+  //   await this.selectChat(this.state.chats.indexOf(chat));
+  //   this.submitMessage(msg);
+  // };
 }
 
 export default withStyles(styles)(usercard);

@@ -92,6 +92,7 @@ const styles = (theme) => ({
 
   chatHeader: {
     position: "sticky",
+    lineHeight: "50px",
     backgroundColor: "white",
     fontSize: "1.5rem",
     height: "50px",

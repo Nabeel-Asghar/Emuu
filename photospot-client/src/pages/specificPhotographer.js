@@ -43,6 +43,8 @@ class specificPhotographer extends Component {
   constructor() {
     super();
     this.state = {
+      userEmail: "",
+      userProfileImage: "",
       email: "",
       firstName: "",
       lastName: "",
@@ -87,11 +89,22 @@ class specificPhotographer extends Component {
     this.props.getPhotographerPage(photographerID);
     const photoDetails = this.props.photographerDetails;
     this.assignValues(photoDetails);
+    this.setState({
+      userEmail: this.props.credentials[0]?.email,
+      userProfileImage: this.props.credentials[0]?.profileImage,
+    });
   }
 
   componentDidUpdate(prevProps) {
     if (!equal(this.props.photographerDetails, prevProps.photographerDetails)) {
       this.assignValues(this.props.photographerDetails);
+    }
+
+    if (!equal(this.props.credentials, prevProps.credentials)) {
+      this.setState({
+        userEmail: this.props.credentials[0].email,
+        userProfileImage: this.props.credentials[0].profileImage,
+      });
     }
   }
 
@@ -110,7 +123,6 @@ class specificPhotographer extends Component {
 
   handleRatingChange = (rating) => {
     let overall = this.state.overallRating + rating;
-    console.log("overall: ", overall);
     this.setState({
       overallRating: overall,
     });
@@ -120,6 +132,7 @@ class specificPhotographer extends Component {
   };
 
   render() {
+    console.log(this.state.userEmail, this.state.email);
     const {
       classes,
       UI: { loadingData },
@@ -135,10 +148,14 @@ class specificPhotographer extends Component {
           >
             <Grid item xs={12}>
               <Usercard
-                profileImage={this.state.profileImage}
                 background={this.state.background}
                 firstName={this.state.firstName}
                 lastName={this.state.lastName}
+                email={this.state.email}
+                profileImage={this.state.profileImage}
+                userEmail={this.state.userEmail}
+                userProfileImage={this.state.userProfileImage}
+                credentials={this.props.credentials}
                 location_city={this.state.location_city}
                 location_state={this.state.location_state}
                 instagram={this.state.instagram}
@@ -244,6 +261,7 @@ class specificPhotographer extends Component {
 const mapStateToProps = (state) => ({
   photographerDetails: state.data.photographerPage,
   UI: state.UI,
+  credentials: state.user.credentials,
 });
 
 const mapActionsToProps = {
