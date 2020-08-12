@@ -162,8 +162,8 @@ class review extends Component {
       UI: { loadingReviewAction, newReviewSucess },
     } = this.props;
     const { errors } = this.state;
-    console.log(errors);
-    console.log(errors.title);
+    // console.log(errors);
+    // console.log(errors.title);
     return (
       <Collapse in={checked}>
         <div>
