@@ -154,7 +154,7 @@ const StyledInput = withStyles((theme) => ({
   },
 }))(Input);
 
-class homePage extends Component {
+class home extends Component {
   constructor() {
     super();
     this.state = {
@@ -556,4 +556,4 @@ const mapActionsToProps = {
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(withStyles(styles)(homePage));
+)(withStyles(styles)(home));

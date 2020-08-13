@@ -25,7 +25,7 @@ const styles = (theme) => ({
   ...theme.spreadThis,
 });
 
-class home extends Component {
+class searchPage extends Component {
   constructor() {
     super();
     this.state = {
@@ -129,4 +129,4 @@ const mapActionsToProps = {
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(withStyles(styles)(home));
+)(withStyles(styles)(searchPage));
