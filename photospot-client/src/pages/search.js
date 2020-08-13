@@ -4,6 +4,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import withStyles from "@material-ui/core/styles/withStyles";
 import equal from "fast-deep-equal";
+import Paper from "@material-ui/core/Paper";
 
 // Redux
 import { connect } from "react-redux";
@@ -13,8 +14,9 @@ import {
   applyFilters,
 } from "../redux/actions/dataActions";
 
-// Photographer
+// Components
 import Photographer from "../components/photographer";
+import CardSkeleton from "../components/cardSkeleton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -28,6 +30,7 @@ class search extends Component {
       searchQuery: "",
     };
   }
+
   componentDidMount() {
     if (this.props.match.params.searchQuery) {
       let searchQuery = this.props.match.params.searchQuery;
@@ -81,6 +84,11 @@ class search extends Component {
   };
 
   render() {
+    const {
+      classes,
+      UI: { loadingData },
+    } = this.props;
+
     let recentPhotographers = Object.keys(
       this.state.allThePhotographers
     ).map((key) => (
@@ -91,29 +99,32 @@ class search extends Component {
     ));
 
     return (
-      <Grid container spacing={10}>
-        <Grid item sm={3} xs={12}>
-          <form onSubmit={this.handleSubmit}>
-            <TextField
-              id="standard-basic"
-              name="searchQuery"
-              value={this.state.searchQuery}
-              onChange={this.handleChange}
-              label="Search photographers"
-            />
-            <Button
-              variant="contained"
-              color="primary"
-              name="submitSearch"
-              type="submit"
-            >
-              Submit
-            </Button>
-          </form>
+      <Grid container spacing={2}>
+        <Grid item xs={12} style={{ textAlign: "center" }}>
+          <Paper style={{ padding: "10px 0px 15px 0px" }}>
+            <form onSubmit={this.handleSubmit}>
+              <TextField
+                id="standard-basic"
+                name="searchQuery"
+                value={this.state.searchQuery}
+                onChange={this.handleChange}
+                label="Name"
+                color="secondary"
+              />
+              <Button
+                variant="contained"
+                color="secondary"
+                name="submitSearch"
+                type="submit"
+                style={{ borderRadius: "30px", marginTop: "10px" }}
+              >
+                Search
+              </Button>
+            </form>
+          </Paper>
         </Grid>
-        <Grid item sm={9} xs={12}>
-          {recentPhotographers}
-        </Grid>
+
+        {loadingData ? <CardSkeleton /> : recentPhotographers}
       </Grid>
     );
   }
@@ -121,6 +132,7 @@ class search extends Component {
 const mapStateToProps = (state) => ({
   allPhotographers: state.data.allPhotographers,
   allSearchPhotographer: state.data.searchPhotographer,
+  UI: state.UI,
 });
 
 const mapActionsToProps = {
