@@ -70,6 +70,7 @@ export const searchPhotographer = (searchQuery) => (dispatch) => {
         payload: null,
       });
     });
+  dispatch({ type: "FINISH_LOADING_DATA" });
 };
 
 export const applyFilters = (type, city, state) => (dispatch) => {
@@ -87,6 +88,7 @@ export const applyFilters = (type, city, state) => (dispatch) => {
         payload: null,
       });
     });
+  dispatch({ type: "FINISH_LOADING_DATA" });
 };
 
 export const getBookingTimes = (photographerID) => (dispatch) => {
