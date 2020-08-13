@@ -176,8 +176,8 @@ class App extends Component {
                   <Route exact path="/search" component={searchPage} />
                   <Route exact path="/login" component={login} />
                   <Route exact path="/signup" component={signup} />
-                  <Route exact path="/profile" component={profile} />
-                  <Route exact path="/messaging" component={messaging} />
+                  <AuthRoute exact path="/profile" component={profile} />
+                  <AuthRoute exact path="/messaging" component={messaging} />
                   <Route exact path="/search/:searchQuery" component={search} />
                   <Route
                     exact
@@ -190,18 +190,18 @@ class App extends Component {
                     path="/photographers/:photographerID"
                     component={specificPhotographer}
                   />
-                  <Route
+                  <AuthRoute
                     exact
                     path="/yourPhotographyProfile"
                     component={editPhotographyPage}
                   />
-                  <Route
+                  <AuthRoute
                     exact
                     path="/yourPhotographyProfile/setYourSchedule"
                     component={setYourSchedule}
                   />
 
-                  <Route
+                  <AuthRoute
                     exact
                     path="/uploadPhotographyPictures"
                     component={photographyPictures}
