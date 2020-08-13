@@ -1,5 +1,4 @@
 import API from "../../api";
-import history from "../../util/history";
 
 export const loginUser = (userData, history) => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
@@ -9,7 +8,7 @@ export const loginUser = (userData, history) => (dispatch) => {
       dispatch(getUserData()).then(() => {
         dispatch({ type: "CLEAR_ERRORS" });
       });
-      history.push("/");
+      history.push("/search");
     })
     .catch((err) => {
       dispatch({
@@ -19,7 +18,7 @@ export const loginUser = (userData, history) => (dispatch) => {
     });
 };
 
-export const signupUser = (newUserData) => (dispatch) => {
+export const signupUser = (newUserData, history) => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
   API.post("/signup", newUserData)
     .then((res) => {
@@ -40,7 +39,6 @@ export const logoutUser = () => (dispatch) => {
   localStorage.removeItem("FirebaseIdToken");
   delete API.defaults.headers.common["Authorization"];
   dispatch({ type: "SET_UNAUTHENTICATED" });
-  history.push("/login");
 };
 
 export const getUserData = () => (dispatch) => {
