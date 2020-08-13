@@ -9,6 +9,7 @@ export const loginUser = (userData, history) => (dispatch) => {
       dispatch(getUserData()).then(() => {
         dispatch({ type: "CLEAR_ERRORS" });
       });
+      history.push("/");
     })
     .catch((err) => {
       dispatch({
@@ -22,9 +23,10 @@ export const signupUser = (newUserData) => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
   API.post("/signup", newUserData)
     .then((res) => {
-      setAuthorizationHeader(res.data.token);
-      dispatch(getUserData());
-      dispatch(redirect("/profileImage"));
+      // setAuthorizationHeader(res.data.token);
+      // dispatch(getUserData());
+      dispatch({ type: "CLEAR_ERRORS" });
+      history.push("/login");
     })
     .catch((err) => {
       dispatch({
@@ -38,7 +40,7 @@ export const logoutUser = () => (dispatch) => {
   localStorage.removeItem("FirebaseIdToken");
   delete API.defaults.headers.common["Authorization"];
   dispatch({ type: "SET_UNAUTHENTICATED" });
-  dispatch(redirect("/login"));
+  history.push("/login");
 };
 
 export const getUserData = () => (dispatch) => {
@@ -50,10 +52,6 @@ export const getUserData = () => (dispatch) => {
       });
     })
     .catch((err) => console.log(err));
-};
-
-export const redirect = (location) => (dispatch) => {
-  history.push(location);
 };
 
 export const uploadProfileImage = (formData) => (dispatch) => {

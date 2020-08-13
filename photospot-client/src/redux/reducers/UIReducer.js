@@ -16,6 +16,7 @@ export default function (state = intialState, action) {
   switch (action.type) {
     case "SET_ERRORS":
       return {
+        ...state,
         errors: { ...action.payload },
         loading: false,
       };
