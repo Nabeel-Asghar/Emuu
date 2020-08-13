@@ -66,7 +66,6 @@ const styles = (theme) => ({
 
   introText: {
     color: "white",
-    textAlign: "left",
   },
 
   margin: {
@@ -205,33 +204,6 @@ class home extends Component {
               Welcome to <span style={{ color: "#23ba8b" }}>PhotoSpot</span>
             </Typography>
           </Grid>
-          {!this.props.authenticated && (
-            <Grid item xs={12} style={{ margin: "-10px 0 20px 0" }}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                className={classes.margin}
-                component={Link}
-                to="/signup"
-                style={{ width: "100px" }}
-              >
-                Signup
-              </Button>
-
-              <Button
-                variant="contained"
-                color="secondary"
-                size="large"
-                className={classes.margin}
-                component={Link}
-                to="/login"
-                style={{ width: "100px" }}
-              >
-                Login
-              </Button>
-            </Grid>
-          )}
 
           <Grid item xs={12}>
             <div className={classes.textContainer}>
@@ -361,17 +333,52 @@ class home extends Component {
             </div>
           </Grid>
 
+          {!this.props.authenticated && (
+            <Grid item xs={12} style={{ margin: "20px 0 -50px 0" }}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                className={classes.margin}
+                component={Link}
+                to="/signup"
+                style={{ width: "100px" }}
+              >
+                Signup
+              </Button>
+
+              <Button
+                variant="contained"
+                color="secondary"
+                size="large"
+                className={classes.margin}
+                component={Link}
+                to="/login"
+                style={{ width: "100px" }}
+              >
+                Login
+              </Button>
+            </Grid>
+          )}
+
           <Grid item xs={12}>
             <div
               style={{
                 maxWidth: 1000,
-                margin: "auto",
+                margin: "-50px auto -50px auto",
                 padding: "100px 50px 100px 50px",
+                textAlign: "center",
               }}
             >
-              <Box display="flex" p={1}>
+              <Box p={1}>
                 <Typography variant="h3" className={classes.introText}>
-                  Hire photographers and videographers at any price, at any time
+                  Hire photographers and videographers
+                </Typography>
+                <Typography variant="h3" className={classes.introText}>
+                  ...at any price
+                </Typography>
+                <Typography variant="h3" className={classes.introText}>
+                  ...at any time
                 </Typography>
               </Box>
             </div>
@@ -494,7 +501,7 @@ class home extends Component {
         <Grid container spacing={3} className={classes.photoGrid}>
           <Grid item xs={12} className={classes.centerGrid}>
             <Typography variant="h4">
-              Featured photos from photographers near you
+              Featured photos from photographers on PhotoSpot
             </Typography>
           </Grid>
 
