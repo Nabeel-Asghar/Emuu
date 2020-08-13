@@ -97,20 +97,20 @@ exports.login = (req, res) => {
     .then((token) => {
       var user = firebase.auth().currentUser;
       console.log(firebase.auth().currentUser.emailVerified);
-      if (!firebase.auth().currentUser.emailVerified) {
-        user
-          .sendEmailVerification()
-          .then(function () {
-            return res.status(400).json({
-              general: "You must verify your email to log in",
-            });
-          })
-          .catch(function (error) {
-            // An error happened.
-          });
-      } else {
-        return res.json({ token });
-      }
+      // if (!firebase.auth().currentUser.emailVerified) {
+      //   user
+      //     .sendEmailVerification()
+      //     .then(function () {
+      //       return res.status(400).json({
+      //         general: "You must verify your email to log in",
+      //       });
+      //     })
+      //     .catch(function (error) {
+      //       // An error happened.
+      //     });
+      // } else {
+      return res.json({ token });
+      // }
     })
     .catch((err) => {
       console.error(err);
