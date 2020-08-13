@@ -1,18 +1,21 @@
 import React, { Component } from "react";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import TextField from "@material-ui/core/TextField";
-import withStyles from "@material-ui/core/styles/withStyles";
 import equal from "fast-deep-equal";
-import Paper from "@material-ui/core/Paper";
+import { Link } from "react-router-dom";
 
 // Redux
 import { connect } from "react-redux";
 import {
   getPhotographers,
   searchPhotographer,
-  applyFilters,
 } from "../redux/actions/dataActions";
+
+// Material UI
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import withStyles from "@material-ui/core/styles/withStyles";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Paper from "@material-ui/core/Paper";
 
 // Components
 import Photographer from "../components/photographer";
@@ -22,7 +25,7 @@ const styles = (theme) => ({
   ...theme.spreadThis,
 });
 
-class search extends Component {
+class home extends Component {
   constructor() {
     super();
     this.state = {
@@ -30,37 +33,13 @@ class search extends Component {
       searchQuery: "",
     };
   }
-
   componentDidMount() {
-    if (this.props.match.params.searchQuery) {
-      let searchQuery = this.props.match.params.searchQuery;
-
-      this.props.searchPhotographer(searchQuery);
-    } else {
-      const type = this.props.match.params.type;
-      const city = this.props.match.params.city;
-      const state = this.props.match.params.state;
-
-      this.props.applyFilters(type, city, state);
-    }
-
+    this.props.getPhotographers();
     this.setState({ allThePhotographers: this.props.allPhotographers });
   }
 
   componentDidUpdate(prevProps) {
     if (!equal(this.props.allPhotographers, prevProps.allPhotographers)) {
-      if (this.props.match.params.searchQuery) {
-        let searchQuery = this.props.match.params.searchQuery;
-
-        this.props.searchPhotographer(searchQuery);
-      } else {
-        const type = this.props.match.params.type;
-        const city = this.props.match.params.city;
-        const state = this.props.match.params.state;
-
-        this.props.applyFilters(type, city, state);
-      }
-
       this.setState({ allThePhotographers: this.props.allPhotographers });
     }
   }
@@ -73,8 +52,6 @@ class search extends Component {
       pathname: "/search/" + searchQuery,
       daSearch: searchQuery,
     });
-    this.props.searchPhotographer(searchQuery);
-    this.setState({ allThePhotographers: this.props.allPhotographers });
   };
 
   handleChange = (event) => {
@@ -86,7 +63,7 @@ class search extends Component {
   render() {
     const {
       classes,
-      UI: { loadingData },
+      UI: { loading },
     } = this.props;
 
     let recentPhotographers = Object.keys(
@@ -101,7 +78,7 @@ class search extends Component {
     return (
       <Grid container spacing={2}>
         <Grid item xs={12} style={{ textAlign: "center" }}>
-          <Paper style={{ padding: "10px 0px 15px 0px" }}>
+          <Paper style={{ padding: "10px 10px 50px 10px" }}>
             <form onSubmit={this.handleSubmit}>
               <TextField
                 id="standard-basic"
@@ -114,8 +91,9 @@ class search extends Component {
               <Button
                 variant="contained"
                 color="secondary"
+                component={Link}
+                to={`/search/${this.state.searchQuery}`}
                 name="submitSearch"
-                type="submit"
                 style={{ borderRadius: "30px", marginTop: "10px" }}
               >
                 Search
@@ -124,10 +102,18 @@ class search extends Component {
           </Paper>
         </Grid>
 
-        {loadingData ? <CardSkeleton /> : recentPhotographers}
+        {loading ? <CardSkeleton /> : recentPhotographers}
       </Grid>
     );
   }
+
+  selectChat = (chatIndex) => {
+    console.log("index", chatIndex);
+    this.setState({ selectedChat: chatIndex });
+  };
+
+  newChatBtnClicked = () =>
+    this.setState({ newChatFormVisible: true, selectChat: null });
 }
 const mapStateToProps = (state) => ({
   allPhotographers: state.data.allPhotographers,
@@ -138,10 +124,9 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = {
   getPhotographers,
   searchPhotographer,
-  applyFilters,
 };
 
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(withStyles(styles)(search));
+)(withStyles(styles)(home));

@@ -13,7 +13,7 @@ import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 
 // Pages
-import home from "./pages/home";
+import home from "./pages/oldHome";
 import login from "./pages/login";
 import signup from "./pages/signup";
 import messaging from "./pages/messaging";
@@ -23,7 +23,7 @@ import profile from "./pages/profile";
 import search from "./pages/search";
 import editPhotographyPage from "./pages/editPhotographyPage";
 import photographyPictures from "./pages/photographyPictures";
-import homePage from "./pages/homePage";
+import homePage from "./pages/home";
 import setYourSchedule from "./pages/setYourSchedule";
 
 // Components
@@ -79,11 +79,12 @@ const theme = createMuiTheme({
     progress: {
       position: "absolute",
     },
+    logoImage: {
+      borderRadius: "50%",
+      marginTop: "30px",
+    },
     customError: {
       color: "red",
-      fontSize: "0.8rem",
-      marginTop: "10px",
-      marginBottom: "10px",
     },
     centerGrid: {
       textAlign: "center",

@@ -163,6 +163,8 @@ export class setYourSchedule extends Component {
       formattedDate: moment(date).format("MM-DD-YYYY"),
     });
 
+    console.log(moment(date).format("MM-DD-YYYY"));
+
     let found = false;
 
     // Iterate through all given timeslots on all dates to find the selected date slots
@@ -183,6 +185,7 @@ export class setYourSchedule extends Component {
       this.setState({
         timeslots: null,
       });
+      this.resetChecked();
     }
   };
 

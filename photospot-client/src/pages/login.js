@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
 import AppIcon from "../images/logo.png";
@@ -19,10 +19,6 @@ import { loginUser } from "../redux/actions/userActions";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
-  logoImage: {
-    borderRadius: "50%",
-    marginTop: "30px",
-  },
 });
 
 class login extends Component {
@@ -73,9 +69,9 @@ class login extends Component {
         <Grid item xs />
         <Paper
           style={{
-            maxWidth: "600px",
+            width: "480px",
             margin: "auto",
-            paddingBottom: "75px",
+            paddingBottom: "25px",
             marginTop: 100,
           }}
         >
@@ -140,6 +136,26 @@ class login extends Component {
           </Grid>
         </Paper>
         <Grid item xs />
+
+        <Grid item xs={12}>
+          <Paper
+            style={{
+              width: "480px",
+              margin: "auto",
+              padding: "15px 0 15px 0",
+              marginTop: 15,
+            }}
+          >
+            <Button
+              component={Link}
+              to="/signup"
+              style={{ textTransform: "none" }}
+            >
+              Don't have an account?{" "}
+              <span style={{ color: "#23ba8b" }}>&nbsp;Sign up</span>
+            </Button>
+          </Paper>
+        </Grid>
       </Grid>
     );
   }

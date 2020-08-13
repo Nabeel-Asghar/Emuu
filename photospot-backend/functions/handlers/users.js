@@ -24,6 +24,8 @@ exports.signup = (req, res) => {
     photographer: req.body.photographer,
   };
 
+  console.log("newuser: ", newUser);
+
   const { valid, errors } = validateSignUpData(newUser);
 
   if (!valid) return res.status(400).json(errors);
@@ -37,7 +39,7 @@ exports.signup = (req, res) => {
     .createUserWithEmailAndPassword(newUser.email, newUser.password)
     .then((data) => {
       userId = data.user.uid;
-      console.log(userId);
+
       return data.user.getIdToken();
     })
     .then((tokenID) => {
@@ -50,7 +52,6 @@ exports.signup = (req, res) => {
         createdAt: new Date().toISOString(),
         profileImage: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultProfilePicture}?alt=media`,
       };
-      console.log(userId);
 
       //  user details in photographer and users table when person is a photographer
       if (userCredentials.photographer === true) {
@@ -94,7 +95,22 @@ exports.login = (req, res) => {
       return data.user.getIdToken();
     })
     .then((token) => {
+      var user = firebase.auth().currentUser;
+      console.log(firebase.auth().currentUser.emailVerified);
+      // if (!firebase.auth().currentUser.emailVerified) {
+      //   user
+      //     .sendEmailVerification()
+      //     .then(function () {
+      //       return res.status(400).json({
+      //         general: "You must verify your email to log in",
+      //       });
+      //     })
+      //     .catch(function (error) {
+      //       // An error happened.
+      //     });
+      // } else {
       return res.json({ token });
+      // }
     })
     .catch((err) => {
       console.error(err);

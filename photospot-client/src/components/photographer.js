@@ -7,19 +7,37 @@ import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
+import Grid from "@material-ui/core/Grid";
+import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
+import IconButton from "@material-ui/core/IconButton";
 
 const styles = {
   card: {
-    display: "flex",
+    maxWidth: "100%",
     marginBottom: 20,
+    height: "300px",
   },
   image: {
     minWidth: 200,
   },
 
   content: {
-    padding: 25,
+    padding: "15px 10px 15px 10px",
     objectFit: "cover",
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+  },
+
+  allText: {
+    overflow: "hidden",
+    whiteSpace: "nowrap",
+    textOverflow: "ellipsis",
+  },
+
+  media: {
+    height: 0,
+    paddingTop: "56.25%", // 16:9
   },
 };
 
@@ -34,29 +52,56 @@ class photographer extends Component {
         profileImage,
         location_city,
         location_state,
+        camera,
+        instagram,
+        company,
+        headline,
       },
     } = this.props;
 
     return (
-      <Card className={classes.card}>
-        <CardMedia
-          className={classes.image}
-          image={profileImage}
-          title="Profile Image"
-        />
-        <CardContent className={classes.content}>
-          <Typography
-            variant="h5"
-            component={Link}
+      <Grid item sm={6} md={4} xs={12}>
+        <Card className={classes.card}>
+          <Link
             to={`/photographers/${photographerID}`}
+            style={{ textDecoration: "none" }}
           >
-            {firstName}&nbsp;{lastName}
-          </Typography>
-          <Typography variant="body2" color="textSecondary">
-            {location_city},&nbsp;{location_state}
-          </Typography>
-        </CardContent>
-      </Card>
+            <CardMedia
+              className={classes.media}
+              image={profileImage}
+              title="Profile Image"
+            />
+          </Link>
+          <CardContent className={classes.content}>
+            <Typography variant="h6" display="inline">
+              {firstName}&nbsp;{lastName}
+            </Typography>
+            <Typography
+              variant="subtitle1"
+              color="textSecondary"
+              display="inline"
+            >
+              &nbsp;-&nbsp;{location_city},&nbsp;{location_state}
+            </Typography>
+            <Typography variant="body1" className={classes.allText}>
+              {headline}
+            </Typography>
+            <a
+              target="_blank"
+              href={`https://www.google.com/search?q=${camera}`}
+            >
+              <IconButton
+                edge="end"
+                aria-label="icon"
+                style={{ padding: "10px", marginLeft: "-13px" }}
+              >
+                <PhotoCameraIcon color="secondary" />
+              </IconButton>
+            </a>
+            &nbsp;&nbsp;{camera}
+          </CardContent>
+        </Card>
+      </Grid>
     );
   }
 }
