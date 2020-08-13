@@ -111,6 +111,25 @@ exports.login = (req, res) => {
     });
 };
 
+exports.resetPassword = (req, res) => {
+  var emailAddress = req.body.email;
+  console.log(emailAddress);
+
+  firebase
+    .auth()
+    .sendPasswordResetEmail(emailAddress)
+    .then(() => {
+      console.log("not guh gay");
+      return res.json({
+        message: "Password reset email sent!",
+      });
+    })
+    .catch((err) => {
+      console.log("guh gay");
+      return res.status(500).json({ error: err.code });
+    });
+};
+
 // set details for your photography page
 exports.setYourPhotographyPage = (req, res) => {
   const photographerPageDetails = {
@@ -437,13 +456,13 @@ exports.getUsersPastOrders = (req, res) => {
       let orders = [];
 
       orders.push({
-        consumerID: doc.data().consumerID,
-        photographerID: doc.data().photographerID,
-        firstName: doc.data().firstName,
-        lastName: doc.data().lastName,
-        profileImage: doc.data().profileImage,
-        shootDate: doc.data().shootDate,
-        shootTime: doc.data().shootTime,
+        // consumerID: doc.data().consumerID,
+        // photographerID: doc.data().photographerID,
+        // firstName: doc.data().firstName,
+        // lastName: doc.data().lastName,
+        // profileImage: doc.data().profileImage,
+        // shootDate: doc.data().shootDate,
+        // shootTime: doc.data().shootTime,
       });
 
       return res.json(orders);

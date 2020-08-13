@@ -34,6 +34,15 @@ export const signupUser = (newUserData) => (dispatch) => {
     });
 };
 
+export const resetPassword = (data) => (dispatch) => {
+  dispatch({ type: "RESET_PASSWORD" });
+  API.post("/resetPassword", data)
+    .then((res) => {
+      console.log(res.data);
+    })
+    .catch((err) => console.log(err));
+};
+
 export const logoutUser = () => (dispatch) => {
   localStorage.removeItem("FirebaseIdToken");
   delete API.defaults.headers.common["Authorization"];

@@ -33,6 +33,7 @@ const {
   getYourPhotographerPage,
   getYourUserProfile,
   chatMessaging,
+  resetPassword,
   deleteImages,
   getUsersOrders,
   getUsersPastOrders,
@@ -48,6 +49,7 @@ const FBAuth = require("./util/FBAuth");
 //--------User Routes-----------------
 app.post("/signup", signup);
 app.post("/login", login);
+app.post("/resetPassword", resetPassword);
 
 // get photographer page or user page
 app.get("/yourphotographerpage", FBAuth, getYourPhotographerPage);

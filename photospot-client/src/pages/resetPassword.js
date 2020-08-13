@@ -15,7 +15,7 @@ import { outerTheme, ThemeProvider } from "./Styling/externalColors";
 
 // Redux
 import { connect } from "react-redux";
-import { loginUser } from "../redux/actions/userActions";
+import { resetPassword } from "../redux/actions/userActions";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -25,20 +25,13 @@ const styles = (theme) => ({
   },
 });
 
-class login extends Component {
+class resetPassword extends Component {
   constructor() {
     super();
     this.state = {
       email: "",
-      password: "",
       errors: {},
     };
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.UI.errors) {
-      this.setState({ errors: nextProps.UI.errors });
-    }
   }
 
   handleSubmit = (event) => {
@@ -46,10 +39,9 @@ class login extends Component {
 
     const userData = {
       email: this.state.email,
-      password: this.state.password,
     };
 
-    this.props.loginUser(userData, this.props.history);
+    this.props.resetPassword(userData, this.props.history);
   };
 
   handleChange = (event) => {
@@ -136,7 +128,6 @@ class login extends Component {
                 )}
               </Button>
             </form>
-            <Typography variant="h6">Reset Password</Typography>
           </Grid>
         </Paper>
         <Grid item xs />
@@ -145,24 +136,11 @@ class login extends Component {
   }
 }
 
-login.propTypes = {
-  classes: PropTypes.object.isRequired,
-  loginUser: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired,
-  UI: PropTypes.object.isRequired,
-};
-
-const mapStateToProps = (state) => ({
-  user: state.user,
-  UI: state.UI,
-  authenticated: state.user.authenticated,
-});
-
 const mapActionsToProps = {
-  loginUser,
+  resetPassword,
 };
 
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(withStyles(styles)(login));
+)(withStyles(styles)(resetPassword));
