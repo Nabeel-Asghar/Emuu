@@ -173,11 +173,7 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" component={homePage} />
                 <div className="container">
-<<<<<<< HEAD
-                  <Route exact path="/home" component={home} />
-=======
                   <Route exact path="/search" component={home} />
->>>>>>> d544a05236a789f18743d5d89aa63d4d6341cfb0
                   <Route exact path="/login" component={login} />
                   <Route exact path="/signup" component={signup} />
                   <Route exact path="/profile" component={profile} />
