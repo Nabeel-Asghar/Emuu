@@ -20,6 +20,10 @@ exports.getAllPhotographers = (req, res) => {
           profileImage: doc.data().profileImage,
           images: doc.data().images,
           createdAt: doc.data().createdAt,
+          headline: doc.data().headline,
+          camera: doc.data().camera,
+          instagram: doc.data().instagram,
+          company: doc.data().company,
         });
       });
       return res.json(posts);
