@@ -25,7 +25,9 @@ const styles = (theme) => ({
   },
   newChatBtn: {
     height: "50px",
+    fontWeight: "bold",
     borderRadius: "0px",
+    lineHeight: "50px",
   },
 
   listItem: {
@@ -56,15 +58,15 @@ class UserListComponent extends Component {
     } else {
       return (
         <main>
-          <Button
-            variant="contained"
-            fullWidth={true}
-            color="primary"
+          <Typography
+            component="h1"
+            variant="h5"
+            align="center"
             className={classes.newChatBtn}
-            onClick={this.newChat}
           >
-            New Mesage
-          </Button>
+            Chats
+          </Typography>
+
           <List className={classes.theList}>
             {chat.map((_chat, _index) => {
               return (

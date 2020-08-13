@@ -1,22 +1,15 @@
-import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
-import PropTypes from "prop-types";
-
-import UserListComponent from "../components/userList";
-import ChatViewComponent from "../components/chatView";
-import ChatTextBoxComponent from "../components/chatTextBox";
-import NewChatComponent from "../components/newChat";
-import { sizing } from "@material-ui/system";
+import equal from "fast-deep-equal";
+import React, { Component } from "react";
 // Redux
 import { connect } from "react-redux";
-import { getPhotographers } from "../redux/actions/dataActions";
-import { getUserData } from "../redux/actions/userActions";
-import API from "../api";
-import equal from "fast-deep-equal";
-
+import ChatTextBoxComponent from "../components/messaging/chatTextBox";
+import ChatViewComponent from "../components/messaging/chatView";
+import NewChatComponent from "../components/messaging/newChat";
+import UserListComponent from "../components/messaging/userList";
 import firebase from "../firestore";
-import { Box } from "@material-ui/core";
+import { getUserData } from "../redux/actions/userActions";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
