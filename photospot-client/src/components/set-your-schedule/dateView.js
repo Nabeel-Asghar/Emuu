@@ -18,10 +18,6 @@ const defaultMaterialTheme = createMuiTheme({
   },
 });
 
-const defaultProps = {
-  borderColor: "#23ba8b",
-};
-
 class dateView extends Component {
   render() {
     return (
