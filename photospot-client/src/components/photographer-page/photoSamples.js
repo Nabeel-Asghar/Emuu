@@ -8,6 +8,8 @@ import "react-image-lightbox/style.css";
 import OpenWithIcon from "@material-ui/icons/OpenWith";
 import IconButton from "@material-ui/core/IconButton";
 
+import equal from "fast-deep-equal";
+
 const styles = (theme) => ({
   ...theme.spreadThis,
 });
@@ -18,30 +20,51 @@ class photoSamples extends Component {
     this.state = {
       photoIndex: 0,
       isOpen: false,
+      imageContainer: [],
+      lightboxImages: [],
     };
   }
 
-  render() {
-    const { classes, images, loading } = this.props;
+  handleImage = () => {
+    let gridImages = [];
 
-    var imageContainer = [];
-    var lightboxImages = [];
+    this.setState({
+      lightboxImages: this.props.images,
+    });
 
-    for (var i = 0; i < images.length; i++) {
+    for (var i = 0; i < this.props.images.length; i++) {
       var img = new Image();
-      img.src = images[i];
+      img.src = this.props.images[i];
 
       let width = Math.ceil(img.width / 100);
       let height = Math.ceil(img.height / 100);
 
-      lightboxImages.push(img.src);
-
-      imageContainer.push({
+      gridImages.push({
         src: img.src,
         width: width,
         height: height,
       });
     }
+
+    this.setState({ imageContainer: gridImages });
+  };
+
+  render() {
+    const { classes, images, loading } = this.props;
+    let gridImages = [];
+    for (var i = 0; i < this.props.images.length; i++) {
+      gridImages.push(
+        <img
+          hidden
+          src={this.props.images[i]}
+          onLoad={() => this.handleImage()}
+        />
+      );
+    }
+
+    // var imageContainer = [];
+    // var lightboxImages = [];
+
     const { photoIndex, isOpen } = this.state;
     return (
       <div>
@@ -59,35 +82,39 @@ class photoSamples extends Component {
 
             {isOpen && (
               <Lightbox
-                mainSrc={lightboxImages[photoIndex]}
+                mainSrc={this.state.lightboxImages[photoIndex]}
                 nextSrc={
-                  lightboxImages[(photoIndex + 1) % lightboxImages.length]
+                  this.state.lightboxImages[
+                    (photoIndex + 1) % this.state.lightboxImages.length
+                  ]
                 }
                 prevSrc={
-                  lightboxImages[
-                    (photoIndex + lightboxImages.length - 1) %
-                      lightboxImages.length
+                  this.state.lightboxImages[
+                    (photoIndex + this.state.lightboxImages.length - 1) %
+                      this.state.lightboxImages.length
                   ]
                 }
                 onCloseRequest={() => this.setState({ isOpen: false })}
                 onMovePrevRequest={() =>
                   this.setState({
                     photoIndex:
-                      (photoIndex + lightboxImages.length - 1) %
-                      lightboxImages.length,
+                      (photoIndex + this.state.lightboxImages.length - 1) %
+                      this.state.lightboxImages.length,
                   })
                 }
                 onMoveNextRequest={() =>
                   this.setState({
-                    photoIndex: (photoIndex + 1) % lightboxImages.length,
+                    photoIndex:
+                      (photoIndex + 1) % this.state.lightboxImages.length,
                   })
                 }
               />
             )}
 
-            <Gallery photos={imageContainer} />
+            <Gallery photos={this.state.imageContainer} />
           </div>
         )}
+        {gridImages}
       </div>
     );
   }
