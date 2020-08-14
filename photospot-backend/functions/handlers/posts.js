@@ -306,6 +306,10 @@ exports.bookPhotographer = (req, res) => {
   let lastName = req.body.lastName;
   let profileImage = req.body.profileImage;
 
+  var myDate = shootDate.split("-");
+  var newDate = myDate[2] + "," + myDate[0] + "," + myDate[1];
+  var formattedDate = new Date(newDate);
+
   let booking = {
     photographerID: photographerBooked,
     consumerID: userid,
@@ -317,6 +321,7 @@ exports.bookPhotographer = (req, res) => {
     paymentStatus: "pending",
     paymentToPhotographer: "pending",
     createdAt: new Date().toISOString(),
+    formattedDate: formattedDate,
   };
 
   // Make sure user only as one order at a time

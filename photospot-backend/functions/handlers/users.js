@@ -436,6 +436,7 @@ exports.getUsersOrders = (req, res) => {
           profileImage: doc.data().profileImage,
           shootDate: doc.data().shootDate,
           shootTime: doc.data().shootTime,
+          formattedDate: doc.data().formattedDate,
         });
       });
       return res.json(orders);
@@ -450,6 +451,7 @@ exports.getUsersPastOrders = (req, res) => {
   db.collection("users")
     .doc(userid)
     .collection("completedOrders")
+    .orderBy("formattedDate", "desc")
     .get()
     .then((snapshot) => {
       let allPastOrders = [];
@@ -463,6 +465,7 @@ exports.getUsersPastOrders = (req, res) => {
           profileImage: doc.data().profileImage,
           shootDate: doc.data().shootDate,
           shootTime: doc.data().shootTime,
+          formattedDate: doc.data().formattedDate,
         });
       });
 
