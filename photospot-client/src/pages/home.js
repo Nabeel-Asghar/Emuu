@@ -36,6 +36,7 @@ import TimelineConnector from "@material-ui/lab/TimelineConnector";
 import TimelineContent from "@material-ui/lab/TimelineContent";
 import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
 import TimelineDot from "@material-ui/lab/TimelineDot";
+import Fab from "@material-ui/core/Fab";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -132,7 +133,7 @@ const styles = (theme) => ({
     borderRadius: "35px",
     height: "60px",
     textAlign: "left",
-    paddingTop: "5px",
+    paddingTop: "20px",
   },
 
   textLabel: {
@@ -317,7 +318,7 @@ class home extends Component {
                   </Select>
                 </FormControl>
 
-                <Button
+                {/* <Button
                   variant="contained"
                   color="secondary"
                   name="submitSearch"
@@ -326,9 +327,15 @@ class home extends Component {
                     borderRadius: "50%",
                     margin: "2px 0px 1px 0",
                   }}
+                > */}
+                <Fab
+                  color="secondary"
+                  onClick={() => this.handleSubmit()}
+                  style={{ margin: "2px 0px 2px 15px" }}
                 >
-                  <SearchIcon style={{ padding: "10px 0px 10px 0px" }} />
-                </Button>
+                  <SearchIcon />
+                </Fab>
+                {/* </Button> */}
               </form>
             </div>
           </Grid>
