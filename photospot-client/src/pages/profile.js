@@ -139,7 +139,7 @@ class profileImage extends Component {
 
   render() {
     const userOrders = this.props.userOrders || {};
-
+    console.log("userorders:", userOrders);
     let theUserOrders = Object.keys(userOrders).map((key) => (
       <OrderCard key={key} photographer={userOrders[key]} />
     ));
@@ -150,13 +150,13 @@ class profileImage extends Component {
       <OrderCard key={key} photographer={userPastOrders[key]} />
     ));
 
-    if (theUserPastOrders.length <= 1) {
+    if (theUserPastOrders.length < 1) {
       theUserPastOrders = (
         <Typography variant="subtitle2">You have no past shoots</Typography>
       );
     }
 
-    if (theUserOrders.length <= 1) {
+    if (theUserOrders.length < 1) {
       theUserOrders = (
         <Typography variant="subtitle2">You have no upcoming shoots</Typography>
       );
