@@ -36,13 +36,22 @@ export const signupUser = (newUserData) => (dispatch) => {
     });
 };
 
-export const resetPassword = (data) => (dispatch) => {
+export const resetPasswordAction = (data, history) => (dispatch) => {
   dispatch({ type: "RESET_PASSWORD" });
   API.post("/resetPassword", data)
     .then((res) => {
+      dispatch({ type: "CLEAR_ERRORS" });
       console.log(res.data);
+      history.push("/resetPasswordSent");
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log("super gay");
+      console.log(err);
+      dispatch({
+        type: "SET_ERRORS",
+        payload: err.response.data,
+      });
+    });
 };
 
 export const logoutUser = () => (dispatch) => {

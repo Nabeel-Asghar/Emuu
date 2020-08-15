@@ -132,7 +132,15 @@ class login extends Component {
                 )}
               </Button>
             </form>
-            <Typography variant="h6">Reset Password</Typography>
+            <Button
+              component={Link}
+              to="/resetPassword"
+              style={{ textTransform: "none" }}
+            >
+              <span style={{ color: "#23ba8b" }}>
+                &nbsp;Forgot your password?
+              </span>
+            </Button>
           </Grid>
         </Paper>
         <Grid item xs />

@@ -10,6 +10,7 @@ const {
   validateLoginData,
   validatePhotographerPageData,
   validateBio,
+  validateResetPasswordData,
   reduceUserDetails,
 } = require("../util/validators");
 
@@ -129,20 +130,28 @@ exports.login = (req, res) => {
 
 exports.resetPassword = (req, res) => {
   var emailAddress = req.body.email;
-  console.log(emailAddress);
 
+  const { valid, errors } = validateResetPasswordData(emailAddress);
+
+  if (!valid) return res.status(400).json(errors);
+
+  //
   firebase
     .auth()
     .sendPasswordResetEmail(emailAddress)
     .then(() => {
-      console.log("not guh gay");
       return res.json({
         message: "Password reset email sent!",
       });
     })
     .catch((err) => {
-      console.log("guh gay");
-      return res.status(500).json({ error: err.code });
+      if ((err.code = "auth/user-not-found")) {
+        return res.status(400).json({
+          general: "There is no user corresponding to the email address",
+        });
+      } else {
+        return res.status(500).json({ error: err.code });
+      }
     });
 };
 
