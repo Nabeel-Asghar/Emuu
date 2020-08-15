@@ -23,7 +23,6 @@ import equal from "fast-deep-equal";
 
 // components
 import EditProfileImage from "../components/user-profile/editProfileImage";
-import OrderCard from "../components/user-profile/orderCard";
 import UserDetails from "../components/user-profile/userDetails";
 
 const styles = (theme) => ({
@@ -138,34 +137,11 @@ class profileImage extends Component {
   };
 
   render() {
-    const userOrders = this.props.userOrders || {};
-    console.log("userorders:", userOrders);
-    let theUserOrders = Object.keys(userOrders).map((key) => (
-      <OrderCard key={key} photographer={userOrders[key]} />
-    ));
-
-    const userPastOrders = this.props.userPastOrders || {};
-
-    let theUserPastOrders = Object.keys(userPastOrders).map((key) => (
-      <OrderCard key={key} photographer={userPastOrders[key]} />
-    ));
-
-    if (theUserPastOrders.length < 1) {
-      theUserPastOrders = (
-        <Typography variant="subtitle2">You have no past shoots</Typography>
-      );
-    }
-
-    if (theUserOrders.length < 1) {
-      theUserOrders = (
-        <Typography variant="subtitle2">You have no upcoming shoots</Typography>
-      );
-    }
-
     const { classes } = this.props;
     return (
       <Grid container spacing={5}>
-        <Grid item xs={4} className={classes.centerGrid}>
+        <Grid item xs />
+        <Grid item xs={8} className={classes.centerGrid}>
           <Paper>
             <EditProfileImage
               profileImage={this.state.profileImage}
@@ -194,15 +170,6 @@ class profileImage extends Component {
           city={this.state.fakeCity}
           state={this.state.fakeState}
         />
-
-        <Grid item xs={6}>
-          <Typography variant="h4">Upcoming Shoot</Typography>
-          {theUserOrders}
-          <Typography variant="h4" style={{ marginTop: "30px" }}>
-            Past Shoots
-          </Typography>
-          {theUserPastOrders}
-        </Grid>
 
         <Grid item xs />
       </Grid>
