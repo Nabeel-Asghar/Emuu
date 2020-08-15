@@ -348,22 +348,21 @@ class home extends Component {
                 size="large"
                 className={classes.margin}
                 component={Link}
-                to="/signup"
+                to="/login"
                 style={{ width: "100px" }}
               >
-                Signup
+                Login
               </Button>
-
               <Button
                 variant="contained"
                 color="secondary"
                 size="large"
                 className={classes.margin}
                 component={Link}
-                to="/login"
+                to="/signup"
                 style={{ width: "100px" }}
               >
-                Login
+                Signup
               </Button>
             </Grid>
           )}

@@ -96,7 +96,7 @@ exports.login = (req, res) => {
     })
     .then((token) => {
       var user = firebase.auth().currentUser;
-      console.log(firebase.auth().currentUser.emailVerified);
+
       // if (!firebase.auth().currentUser.emailVerified) {
       //   user
       //     .sendEmailVerification()
