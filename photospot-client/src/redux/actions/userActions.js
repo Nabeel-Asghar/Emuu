@@ -145,6 +145,38 @@ export const uploadBackgroundImage = (image) => (dispatch) => {
     );
 };
 
+export const getPhotographerOrders = () => (dispatch) => {
+  return API.get("/yourorders")
+    .then((res) => {
+      dispatch({
+        type: "SET_USERS_ORDERS",
+        payload: res.data,
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: "SET_USERS_ORDERS",
+        payload: null,
+      });
+    });
+};
+
+export const getPhotographerPastOrders = () => (dispatch) => {
+  API.get("//yourpastorders")
+    .then((res) => {
+      dispatch({
+        type: "SET_USERS_PAST_ORDERS",
+        payload: res.data,
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: "SET_USERS_PAST_ORDERS",
+        payload: null,
+      });
+    });
+};
+
 export const getUsersOrders = () => (dispatch) => {
   return API.get("/youruserprofile/orders")
     .then((res) => {
