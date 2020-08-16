@@ -22,8 +22,14 @@ import { useSelector, useDispatch } from "react-redux";
 
 const Navbar = () => {
   const authenticated = useSelector((state) => state.user.authenticated);
-  // const details = useSelector((state) => state.user.credentials);
-  // const { photographer } = authenticated ? details[0] : false;
+  const details = useSelector((state) => state.user.credentials);
+
+  // Allow photographer options if user is a photographer
+  let photographerStatus = false;
+  if (authenticated && details[0]) {
+    const { photographer } = details[0];
+    photographerStatus = photographer;
+  }
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -101,13 +107,27 @@ const Navbar = () => {
                   open={open}
                   onClose={handleClose}
                 >
+                  {!photographerStatus && (
+                    <MenuItem component={Link} to="/userDashboard">
+                      Dashboard
+                    </MenuItem>
+                  )}
+
                   <MenuItem component={Link} to="/profile">
                     Profile
                   </MenuItem>
 
-                  <MenuItem component={Link} to="/yourPhotographyProfile">
-                    Photographer Page
-                  </MenuItem>
+                  {photographerStatus && (
+                    <div>
+                      <MenuItem component={Link} to="/yourPhotographyProfile">
+                        Photographer Page
+                      </MenuItem>
+
+                      <MenuItem component={Link} to="/photographerDashboard">
+                        Dashboard
+                      </MenuItem>
+                    </div>
+                  )}
 
                   <MenuItem component={Link} to="/messaging">
                     Messaging
