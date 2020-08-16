@@ -26,6 +26,7 @@ import photographyPictures from "./pages/photographyPictures";
 import home from "./pages/home";
 import setYourSchedule from "./pages/setYourSchedule";
 import userDashboard from "./pages/userDashboard";
+import photograhperDashboard from "./pages/photographerDashboard";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -173,15 +174,26 @@ class App extends Component {
 
               <Switch>
                 <Route exact path="/" component={home} />
+
                 <div className="container">
                   <Route exact path="/search" component={searchPage} />
+
                   <Route exact path="/login" component={login} />
+
                   <Route exact path="/signup" component={signup} />
+
                   <AuthRoute
                     exact
                     path="/userDashboard"
                     component={userDashboard}
                   />
+
+                  <AuthRoute
+                    exact
+                    path="/photographerDashboard"
+                    component={photograhperDashboard}
+                  />
+
                   <AuthRoute exact path="/profile" component={profile} />
                   <AuthRoute exact path="/messaging" component={messaging} />
                   <Route exact path="/search/:searchQuery" component={search} />
