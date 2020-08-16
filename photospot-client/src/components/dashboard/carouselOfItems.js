@@ -24,7 +24,7 @@ export class carouselOfItems extends Component {
         numberOfCards={2}
         slidesToScroll={2}
         outsideChevron={false}
-        showSlither={true}
+        showSlither={false}
         firstAndLastGutter={false}
         activeItemIndex={this.state.activeItemIndex}
         requestToChangeActive={(value) =>

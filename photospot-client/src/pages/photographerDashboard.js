@@ -6,8 +6,8 @@ import { connect } from "react-redux";
 import {
   getUserData,
   uploadProfileImage,
-  getUsersOrders,
-  getUsersPastOrders,
+  getPhotographerOrders,
+  getPhotographerPastOrders,
   updateUserProfile,
 } from "../redux/actions/userActions";
 
@@ -26,7 +26,7 @@ const styles = (theme) => ({
   ...theme.spreadThis,
 });
 
-class userDashboard extends Component {
+class photograhperDashboard extends Component {
   constructor() {
     super();
     this.state = {
@@ -60,8 +60,8 @@ class userDashboard extends Component {
   }
 
   componentDidMount() {
-    this.props.getUsersOrders();
-    this.props.getUsersPastOrders();
+    this.props.getPhotographerOrders();
+    this.props.getPhotographerPastOrders();
     this.props.getUserData().then(() => {
       this.assignValues(this.props.credentials);
     });
@@ -100,8 +100,9 @@ class userDashboard extends Component {
     return (
       <Grid container spacing={5}>
         <Grid item xs={12} style={{ paddingBottom: 0 }}>
-          <Typography variant="h3">Your Dashboard</Typography>
+          <Typography variant="h3">Your Photography Dashboard</Typography>
         </Grid>
+        {console.log(theUserOrders)}
         <Grid item xs={4}>
           <ProfileCard
             profileImage={this.state.profileImage}
@@ -119,7 +120,7 @@ class userDashboard extends Component {
 
         <Grid item xs={8}>
           <Typography variant="h4" style={{ marginTop: "-5px" }}>
-            Upcoming Shoot
+            Upcoming Shoots
           </Typography>
 
           <CarouselOfItems orders={theUserOrders} />
@@ -127,6 +128,7 @@ class userDashboard extends Component {
           <Typography variant="h4" style={{ marginTop: "20px" }}>
             Past Shoots
           </Typography>
+
           <CarouselOfItems orders={theUserPastOrders} />
         </Grid>
       </Grid>
@@ -143,12 +145,12 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = {
   getUserData,
   uploadProfileImage,
-  getUsersOrders,
-  getUsersPastOrders,
+  getPhotographerOrders,
+  getPhotographerPastOrders,
   updateUserProfile,
 };
 
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(withStyles(styles)(userDashboard));
+)(withStyles(styles)(photograhperDashboard));
