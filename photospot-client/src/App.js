@@ -17,6 +17,7 @@ import home from "./pages/oldHome";
 import login from "./pages/login";
 import signup from "./pages/signup";
 import resetPassword from "./pages/resetPassword";
+import changePassword from "./pages/changePassword";
 import resetPasswordSent from "./pages/resetPasswordSent";
 import messaging from "./pages/messaging";
 import specificPhotographer from "./pages/specificPhotographer";
@@ -187,6 +188,11 @@ class App extends Component {
                     exact
                     path="/resetPasswordSent"
                     component={resetPasswordSent}
+                  />
+                  <Route
+                    exact
+                    path="/changePassword"
+                    component={changePassword}
                   />
                   <Route exact path="/profile" component={profile} />
                   <Route exact path="/messaging" component={messaging} />

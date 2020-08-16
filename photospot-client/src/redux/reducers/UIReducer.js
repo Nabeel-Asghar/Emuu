@@ -60,6 +60,11 @@ export default function (state = intialState, action) {
         ...state,
       };
 
+    case "CHANGE_PASSWORD":
+      return {
+        ...state,
+      };
+
     case "LOADING_REVIEW_ACTION":
       return {
         ...state,

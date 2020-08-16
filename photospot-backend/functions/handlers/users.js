@@ -128,6 +128,61 @@ exports.login = (req, res) => {
     });
 };
 
+exports.reauthenticateUser = () => {
+  var user = firebase.auth().currentUser;
+  var credential = firebase.auth.EmailAuthProvider.credential(
+    "adeelasghgar1001@gmail.com",
+    "bigman123"
+  );
+
+  return user.reauthenticateWithCredential(credential);
+};
+
+exports.changePassword = (req, res) => {
+  var email = req.body.email;
+  var oldPassword = req.body.oldPassword;
+  var newPassword = req.body.newPassword;
+  var newPasswordConfirm = req.body.newPasswordConfirm;
+
+  if (newPassword === oldPassword) {
+    return res.status(400).json({
+      similar: "Your new password can't be the same as the old one.",
+    });
+  }
+
+  if (newPassword !== newPasswordConfirm) {
+    return res.status(400).json({
+      matching: "Passwords don't match.",
+    });
+  }
+
+  firebase
+    .auth()
+    .signInWithEmailAndPassword(email, oldPassword)
+    .then(() => {
+      var user = firebase.auth().currentUser;
+
+      user
+        .updatePassword(newPassword)
+        .then(function () {
+          return res.json({ message: "Password changed!" });
+        })
+        .catch(function (err) {
+          if ((err.code = "auth/weak-password")) {
+            return res.status(400).json({
+              general: "Password is not strong enough.",
+            });
+          } else if ((err.code = "auth/requires-recent-login")) {
+            return res.status(400).json({
+              general: "Must have recently logged in.",
+            });
+          } else {
+            return res.status(500).json({ error: err.code });
+          }
+        });
+    });
+};
+
 exports.resetPassword = (req, res) => {
   var emailAddress = req.body.email;
 
