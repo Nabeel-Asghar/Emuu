@@ -415,6 +415,67 @@ exports.getYourUserProfile = (req, res) => {
     .catch((err) => console.error(err));
 };
 
+exports.getYourPhotographerOrders = (req, res) => {
+  let photograhperID = req.user.uid;
+
+  db.collection("photographer")
+    .doc(photograhperID)
+    .collection("orders")
+    .get()
+    .then((snapshot) => {
+      let orders = [];
+
+      snapshot.forEach((doc) => {
+        console.log("photograhper orders:", doc.data());
+        orders.push({
+          consumerID: doc.data().consumerID,
+          photographerID: doc.data().photographerID,
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          profileImage: doc.data().profileImage,
+          shootDate: doc.data().shootDate,
+          shootTime: doc.data().shootTime,
+          formattedDate: doc.data().formattedDate,
+        });
+      });
+      return res.json(orders);
+    })
+    .catch((err) => {
+      return res.json({ error: err });
+    });
+};
+
+exports.getYourPhotographerPastOrders = (req, res) => {
+  let photograhperID = req.user.uid;
+
+  db.collection("photographer")
+    .doc(photograhperID)
+    .collection("completedOrders")
+    .orderBy("formattedDate", "desc")
+    .get()
+    .then((snapshot) => {
+      let allPastOrders = [];
+
+      snapshot.forEach((doc) => {
+        console.log(doc.data());
+        allPastOrders.push({
+          consumerID: doc.data().consumerID,
+          photographerID: doc.data().photographerID,
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          profileImage: doc.data().profileImage,
+          shootDate: doc.data().shootDate,
+          shootTime: doc.data().shootTime,
+          formattedDate: doc.data().formattedDate,
+        });
+      });
+      return res.json(allPastOrders);
+    })
+    .catch((err) => {
+      return res.json({ error: err });
+    });
+};
+
 // get users current orders
 exports.getUsersOrders = (req, res) => {
   let userid = req.user.uid;
