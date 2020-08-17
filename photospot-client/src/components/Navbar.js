@@ -106,6 +106,9 @@ const Navbar = () => {
                   keepMounted
                   open={open}
                   onClose={handleClose}
+                  getContentAnchorEl={null}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                  transformOrigin={{ vertical: "top", horizontal: "center" }}
                 >
                   {!photographerStatus && (
                     <MenuItem component={Link} to="/userDashboard">
@@ -113,18 +116,14 @@ const Navbar = () => {
                     </MenuItem>
                   )}
 
-                  <MenuItem component={Link} to="/profile">
-                    Profile
-                  </MenuItem>
-
                   {photographerStatus && (
                     <div>
-                      <MenuItem component={Link} to="/yourPhotographyProfile">
-                        Photographer Page
-                      </MenuItem>
-
                       <MenuItem component={Link} to="/photographerDashboard">
                         Dashboard
+                      </MenuItem>
+
+                      <MenuItem component={Link} to="/yourPhotographyProfile">
+                        Photographer Page
                       </MenuItem>
                     </div>
                   )}
