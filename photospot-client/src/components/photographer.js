@@ -1,6 +1,9 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
+// Components
+import Rating from "./rating";
+
 // Material UI
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
@@ -15,7 +18,7 @@ const styles = {
   card: {
     maxWidth: "100%",
     marginBottom: 20,
-    height: "300px",
+    height: "325px",
   },
 
   content: {
@@ -53,6 +56,8 @@ class photographer extends Component {
         instagram,
         company,
         headline,
+        reviewCount,
+        totalRating,
       },
     } = this.props;
 
@@ -70,6 +75,13 @@ class photographer extends Component {
             />
           </Link>
           <CardContent className={classes.content}>
+            <Typography variant="subtitle2">
+              {reviewCount ? (
+                <Rating reviewCount={reviewCount} totalRating={totalRating} />
+              ) : (
+                "No reviews yet"
+              )}
+            </Typography>
             <Typography variant="h6" display="inline">
               {firstName}&nbsp;{lastName}
             </Typography>
