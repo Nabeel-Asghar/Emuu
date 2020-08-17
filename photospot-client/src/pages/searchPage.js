@@ -78,7 +78,7 @@ class searchPage extends Component {
     return (
       <Grid container spacing={2}>
         <Grid item xs={12} style={{ textAlign: "center" }}>
-          <Paper style={{ padding: "10px 10px 50px 10px" }}>
+          <Paper style={{ padding: "5px 0px 15px 0px" }}>
             <form onSubmit={this.handleSubmit}>
               <TextField
                 id="standard-basic"
