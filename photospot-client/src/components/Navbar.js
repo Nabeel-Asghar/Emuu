@@ -22,8 +22,14 @@ import { useSelector, useDispatch } from "react-redux";
 
 const Navbar = () => {
   const authenticated = useSelector((state) => state.user.authenticated);
-  // const details = useSelector((state) => state.user.credentials);
-  // const { photographer } = authenticated ? details[0] : false;
+  const details = useSelector((state) => state.user.credentials);
+
+  // Allow photographer options if user is a photographer
+  let photographerStatus = false;
+  if (authenticated && details[0]) {
+    const { photographer } = details[0];
+    photographerStatus = photographer;
+  }
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -100,14 +106,27 @@ const Navbar = () => {
                   keepMounted
                   open={open}
                   onClose={handleClose}
+                  getContentAnchorEl={null}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                  transformOrigin={{ vertical: "top", horizontal: "center" }}
                 >
-                  <MenuItem component={Link} to="/profile">
-                    Profile
-                  </MenuItem>
+                  {!photographerStatus && (
+                    <MenuItem component={Link} to="/userDashboard">
+                      Dashboard
+                    </MenuItem>
+                  )}
 
-                  <MenuItem component={Link} to="/yourPhotographyProfile">
-                    Photographer Page
-                  </MenuItem>
+                  {photographerStatus && (
+                    <div>
+                      <MenuItem component={Link} to="/photographerDashboard">
+                        Dashboard
+                      </MenuItem>
+
+                      <MenuItem component={Link} to="/yourPhotographyProfile">
+                        Photographer Page
+                      </MenuItem>
+                    </div>
+                  )}
 
                   <MenuItem component={Link} to="/messaging">
                     Messaging

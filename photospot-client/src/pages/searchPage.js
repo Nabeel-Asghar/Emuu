@@ -25,7 +25,7 @@ const styles = (theme) => ({
   ...theme.spreadThis,
 });
 
-class home extends Component {
+class searchPage extends Component {
   constructor() {
     super();
     this.state = {
@@ -78,7 +78,7 @@ class home extends Component {
     return (
       <Grid container spacing={2}>
         <Grid item xs={12} style={{ textAlign: "center" }}>
-          <Paper style={{ padding: "10px 10px 50px 10px" }}>
+          <Paper style={{ padding: "5px 0px 15px 0px" }}>
             <form onSubmit={this.handleSubmit}>
               <TextField
                 id="standard-basic"
@@ -129,4 +129,4 @@ const mapActionsToProps = {
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(withStyles(styles)(home));
+)(withStyles(styles)(searchPage));

@@ -96,7 +96,7 @@ exports.login = (req, res) => {
     })
     .then((token) => {
       var user = firebase.auth().currentUser;
-      console.log(firebase.auth().currentUser.emailVerified);
+
       // if (!firebase.auth().currentUser.emailVerified) {
       //   user
       //     .sendEmailVerification()
@@ -415,6 +415,67 @@ exports.getYourUserProfile = (req, res) => {
     .catch((err) => console.error(err));
 };
 
+exports.getYourPhotographerOrders = (req, res) => {
+  let photograhperID = req.user.uid;
+
+  db.collection("photographer")
+    .doc(photograhperID)
+    .collection("orders")
+    .get()
+    .then((snapshot) => {
+      let orders = [];
+
+      snapshot.forEach((doc) => {
+        console.log("photograhper orders:", doc.data());
+        orders.push({
+          consumerID: doc.data().consumerID,
+          photographerID: doc.data().photographerID,
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          profileImage: doc.data().profileImage,
+          shootDate: doc.data().shootDate,
+          shootTime: doc.data().shootTime,
+          formattedDate: doc.data().formattedDate,
+        });
+      });
+      return res.json(orders);
+    })
+    .catch((err) => {
+      return res.json({ error: err });
+    });
+};
+
+exports.getYourPhotographerPastOrders = (req, res) => {
+  let photograhperID = req.user.uid;
+
+  db.collection("photographer")
+    .doc(photograhperID)
+    .collection("completedOrders")
+    .orderBy("formattedDate", "desc")
+    .get()
+    .then((snapshot) => {
+      let allPastOrders = [];
+
+      snapshot.forEach((doc) => {
+        console.log(doc.data());
+        allPastOrders.push({
+          consumerID: doc.data().consumerID,
+          photographerID: doc.data().photographerID,
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          profileImage: doc.data().profileImage,
+          shootDate: doc.data().shootDate,
+          shootTime: doc.data().shootTime,
+          formattedDate: doc.data().formattedDate,
+        });
+      });
+      return res.json(allPastOrders);
+    })
+    .catch((err) => {
+      return res.json({ error: err });
+    });
+};
+
 // get users current orders
 exports.getUsersOrders = (req, res) => {
   let userid = req.user.uid;
@@ -427,6 +488,7 @@ exports.getUsersOrders = (req, res) => {
       let orders = [];
 
       data.forEach((doc) => {
+        console.log(doc.data());
         orders.push({
           consumerID: doc.data().consumerID,
           photographerID: doc.data().photographerID,
@@ -435,6 +497,7 @@ exports.getUsersOrders = (req, res) => {
           profileImage: doc.data().profileImage,
           shootDate: doc.data().shootDate,
           shootTime: doc.data().shootTime,
+          formattedDate: doc.data().formattedDate,
         });
       });
       return res.json(orders);
@@ -446,23 +509,28 @@ exports.getUsersOrders = (req, res) => {
 exports.getUsersPastOrders = (req, res) => {
   let userid = req.user.uid;
 
-  db.collection("completedOrders")
+  db.collection("users")
     .doc(userid)
+    .collection("completedOrders")
+    .orderBy("formattedDate", "desc")
     .get()
-    .then((doc) => {
-      let orders = [];
+    .then((snapshot) => {
+      let allPastOrders = [];
 
-      orders.push({
-        consumerID: doc.data().consumerID,
-        photographerID: doc.data().photographerID,
-        firstName: doc.data().firstName,
-        lastName: doc.data().lastName,
-        profileImage: doc.data().profileImage,
-        shootDate: doc.data().shootDate,
-        shootTime: doc.data().shootTime,
+      snapshot.forEach((doc) => {
+        allPastOrders.push({
+          consumerID: doc.data().consumerID,
+          photographerID: doc.data().photographerID,
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          profileImage: doc.data().profileImage,
+          shootDate: doc.data().shootDate,
+          shootTime: doc.data().shootTime,
+          formattedDate: doc.data().formattedDate,
+        });
       });
 
-      return res.json(orders);
+      return res.json(allPastOrders);
     })
     .catch((err) => console.error(err));
 };

@@ -13,7 +13,7 @@ import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 
 // Pages
-import home from "./pages/oldHome";
+import searchPage from "./pages/searchPage";
 import login from "./pages/login";
 import signup from "./pages/signup";
 import messaging from "./pages/messaging";
@@ -23,8 +23,10 @@ import profile from "./pages/profile";
 import search from "./pages/search";
 import editPhotographyPage from "./pages/editPhotographyPage";
 import photographyPictures from "./pages/photographyPictures";
-import homePage from "./pages/home";
+import home from "./pages/home";
 import setYourSchedule from "./pages/setYourSchedule";
+import userDashboard from "./pages/userDashboard";
+import photograhperDashboard from "./pages/photographerDashboard";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -171,13 +173,29 @@ class App extends Component {
               <Navbar />
 
               <Switch>
-                <Route exact path="/" component={homePage} />
+                <Route exact path="/" component={home} />
+
                 <div className="container">
-                  <Route exact path="/search" component={home} />
+                  <Route exact path="/search" component={searchPage} />
+
                   <Route exact path="/login" component={login} />
+
                   <Route exact path="/signup" component={signup} />
-                  <Route exact path="/profile" component={profile} />
-                  <Route exact path="/messaging" component={messaging} />
+
+                  <AuthRoute
+                    exact
+                    path="/userDashboard"
+                    component={userDashboard}
+                  />
+
+                  <AuthRoute
+                    exact
+                    path="/photographerDashboard"
+                    component={photograhperDashboard}
+                  />
+
+                  <AuthRoute exact path="/profile" component={profile} />
+                  <AuthRoute exact path="/messaging" component={messaging} />
                   <Route exact path="/search/:searchQuery" component={search} />
                   <Route
                     exact
@@ -190,18 +208,18 @@ class App extends Component {
                     path="/photographers/:photographerID"
                     component={specificPhotographer}
                   />
-                  <Route
+                  <AuthRoute
                     exact
                     path="/yourPhotographyProfile"
                     component={editPhotographyPage}
                   />
-                  <Route
+                  <AuthRoute
                     exact
                     path="/yourPhotographyProfile/setYourSchedule"
                     component={setYourSchedule}
                   />
 
-                  <Route
+                  <AuthRoute
                     exact
                     path="/uploadPhotographyPictures"
                     component={photographyPictures}

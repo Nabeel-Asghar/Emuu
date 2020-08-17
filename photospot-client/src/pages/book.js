@@ -3,6 +3,10 @@ import withStyles from "@material-ui/core/styles/withStyles";
 
 // MUI
 import Grid from "@material-ui/core/Grid";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import Paper from "@material-ui/core/Paper";
+import Snackbar from "@material-ui/core/Snackbar";
+import Alert from "@material-ui/lab/Alert";
 
 // Redux
 import { connect } from "react-redux";
@@ -43,6 +47,7 @@ class book extends Component {
       timeslots: [],
       selectedTime: null,
       open: false,
+      openSnack: false,
     };
   }
 
@@ -88,7 +93,6 @@ class book extends Component {
     this.props.getBookingTimes(photographerID);
     const photoDetails = this.props.photographerDetails;
     const bookTimings = this.props.timings;
-    console.log(bookTimings);
     this.assignTimes(bookTimings);
     this.assignValues(photoDetails);
   }
@@ -106,7 +110,7 @@ class book extends Component {
   handleDateChange = (date) => {
     this.setState({
       selectedDate: date,
-      formattedDate: moment(date).format("MM-D-YYYY"),
+      formattedDate: moment(date).format("MM-DD-YYYY"),
     });
 
     let found = false;
@@ -163,24 +167,51 @@ class book extends Component {
       lastName: this.state.lastName,
       profileImage: this.state.profileImage,
     };
-    this.props.bookPhotographer(
-      this.props.match.params.photographerID,
-      bookingDetails
-    );
-
-    console.log("Booked!");
+    this.props
+      .bookPhotographer(this.props.match.params.photographerID, bookingDetails)
+      .then(() => {
+        this.setState({ openSnack: true });
+      });
 
     this.setState({
       open: false,
     });
   };
 
+  handleClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    this.setState({ openSnack: false });
+  };
+
   render() {
-    const { classes } = this.props;
+    const {
+      classes,
+      UI: { loadingAction, errors, loadingData },
+    } = this.props;
     return (
       <Grid container spacing={3}>
-        <Grid item xs={2} />
-        <Grid item xs={8}>
+        <Snackbar
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+          open={this.state.openSnack}
+          autoHideDuration={6000}
+          onClose={this.handleClose}
+        >
+          <Alert
+            onClose={this.props.handleClose}
+            severity={errors ? "warning" : "success"}
+          >
+            {errors ? errors.message : "You've been booked!"}
+          </Alert>
+        </Snackbar>
+
+        <Grid item xs={1} />
+        <Grid item xs={10}>
           <ProfileCard
             key={this.state.photographerID}
             photographerID={this.state.photographerID}
@@ -189,23 +220,34 @@ class book extends Component {
             profileImage={this.state.profileImage}
           />
         </Grid>
-        <Grid item xs={2} />
-        <Grid item xs={2} />
-        <Grid item xs={6}>
+        <Grid item xs={1} />
+        <Grid item xs={1} />
+        <Grid item xs={7}>
           <Date
             theDate={this.state.selectedDate}
             parentCallback={this.handleDateChange}
           />
         </Grid>
-        <Grid item xs={2}>
-          <Time
-            key={this.state.timeslots}
-            timeslots={this.state.timeslots}
-            handleSubmit={this.handleSubmit}
-            handleRadioChange={this.handleRadioChange}
-            time={this.state.selectedTime}
-          />
+
+        <Grid item xs={3}>
+          <Paper style={{ width: "100%", height: "100%" }}>
+            {loadingData ? (
+              <CircularProgress
+                className={classes.progress}
+                color="secondary"
+              />
+            ) : (
+              <Time
+                key={this.state.timeslots}
+                timeslots={this.state.timeslots}
+                handleSubmit={this.handleSubmit}
+                handleRadioChange={this.handleRadioChange}
+                time={this.state.selectedTime}
+              />
+            )}
+          </Paper>
         </Grid>
+
         <Confirmbook
           open={this.state.open}
           handleAgree={this.handleAgree}
@@ -216,7 +258,7 @@ class book extends Component {
           time={this.state.selectedTime}
         />
 
-        <Grid item xs={2}></Grid>
+        <Grid item xs={1}></Grid>
       </Grid>
     );
   }
@@ -225,6 +267,7 @@ class book extends Component {
 const mapStateToProps = (state) => ({
   photographerDetails: state.data.photographerPage,
   timings: state.data.timings,
+  UI: state.UI,
 });
 
 const mapActionsToProps = {

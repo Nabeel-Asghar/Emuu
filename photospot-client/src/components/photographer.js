@@ -17,9 +17,6 @@ const styles = {
     marginBottom: 20,
     height: "300px",
   },
-  image: {
-    minWidth: 200,
-  },
 
   content: {
     padding: "15px 10px 15px 10px",

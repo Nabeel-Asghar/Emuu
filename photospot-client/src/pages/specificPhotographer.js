@@ -132,7 +132,6 @@ class specificPhotographer extends Component {
   };
 
   render() {
-    console.log(this.state.userEmail, this.state.email);
     const {
       classes,
       UI: { loadingData },
