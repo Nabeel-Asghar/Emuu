@@ -147,6 +147,9 @@ const Navbar = () => {
                   keepMounted
                   open={open}
                   onClose={handleClose}
+                  getContentAnchorEl={null}
+                  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+                  transformOrigin={{ vertical: "top", horizontal: "center" }}
                 >
                   <MenuItem component={Link} to="/login">
                     Login
