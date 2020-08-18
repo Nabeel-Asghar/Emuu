@@ -75,7 +75,7 @@ class photographer extends Component {
             />
           </Link>
           <CardContent className={classes.content}>
-            <Typography variant="subtitle2">
+            <Typography variant="subtitle2" style={{ height: "25px" }}>
               {reviewCount ? (
                 <Rating reviewCount={reviewCount} totalRating={totalRating} />
               ) : (
