@@ -1,4 +1,4 @@
-const { db } = require("../util/admin");
+const { db, db2 } = require("../util/admin");
 
 const { validateReview } = require("../util/validators");
 
@@ -24,6 +24,8 @@ exports.getAllPhotographers = (req, res) => {
           camera: doc.data().camera,
           instagram: doc.data().instagram,
           company: doc.data().company,
+          reviewCount: doc.data().reviewCount,
+          totalRating: doc.data().totalRating,
         });
       });
       return res.json(posts);
@@ -134,22 +136,37 @@ exports.reviewPhotographer = (req, res) => {
               .doc(photographerBeingReviewed)
               .set(newReview)
               .then(() => {
+                const pRef = db
+                  .collection("photographer")
+                  .doc(photographerBeingReviewed);
+                const incrementReviewCount = db2.FieldValue.increment(1);
+                const incrementRating = db2.FieldValue.increment(
+                  req.body.rating
+                );
+
+                pRef.update({ reviewCount: incrementReviewCount });
+                pRef.update({ totalRating: incrementRating });
                 console.log("added review to user");
-                return res.json({
-                  message: "Review added successfully!",
-                });
+
+                return res.json({ message: "Review added successfully!" });
               })
               .catch((err) => {
-                res.status(500).json({ error: `something went wrong` });
+                console.log(err);
+                return res.status(500).json({ error: `something went wrong` });
               });
           })
           .catch((err) => {
-            res.status(500).json({ error: `something went wrong` });
+            console.log(err);
+            return res.status(500).json({ error: `something went wrong` });
           });
-
-        // Also add that review to the users collection for future reference
       }
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).json({ error: `something went wrong` });
     });
+
+  // Also add that review to the users collection for future reference
 };
 
 exports.getSpecificPhotographer = (req, res) => {
