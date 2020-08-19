@@ -10,6 +10,7 @@ const {
   validateLoginData,
   validatePhotographerPageData,
   validateBio,
+  validateResetPasswordData,
   reduceUserDetails,
 } = require("../util/validators");
 
@@ -120,6 +121,97 @@ exports.login = (req, res) => {
       ) {
         return res.status(400).json({
           general: "Your login or password was incorrect. Please try again",
+        });
+      } else {
+        return res.status(500).json({ error: err.code });
+      }
+    });
+};
+
+exports.reauthenticateUser = () => {
+  var user = firebase.auth().currentUser;
+  var credential = firebase.auth.EmailAuthProvider.credential(
+    "adeelasghgar1001@gmail.com",
+    "bigman123"
+  );
+
+  return user.reauthenticateWithCredential(credential);
+};
+
+exports.changePassword = (req, res) => {
+  var email = req.body.email;
+  var oldPassword = req.body.oldPassword;
+  var newPassword = req.body.newPassword;
+  var newPasswordConfirm = req.body.newPasswordConfirm;
+
+  if (newPassword === oldPassword) {
+    return res.status(400).json({
+      similar: "Your new password can't be the same as the old one.",
+    });
+  }
+
+  if (newPassword !== newPasswordConfirm) {
+    return res.status(400).json({
+      matching: "Passwords don't match.",
+    });
+  }
+
+  firebase
+    .auth()
+    .signInWithEmailAndPassword(email, oldPassword)
+    .then(() => {
+      var user = firebase.auth().currentUser;
+
+      user
+        .updatePassword(newPassword)
+        .then(function () {
+          return res.json({ message: "Password changed!" });
+        })
+        .catch(function (err) {
+          if ((err.code = "auth/weak-password")) {
+            return res.status(400).json({
+              matching: "Password is not strong enough.",
+            });
+          } else if ((err.code = "auth/requires-recent-login")) {
+            return res.status(400).json({
+              general: "Must have recently logged in.",
+            });
+          } else {
+            return res.status(500).json({ error: err.code });
+          }
+        });
+    })
+    .catch(function (err) {
+      if ((err.code = "auth/weak-password")) {
+        return res.status(400).json({
+          login: "Wrong password.",
+        });
+      } else {
+        return res.status(500).json({ error: err.code });
+      }
+    });
+};
+
+exports.resetPassword = (req, res) => {
+  var emailAddress = req.body.email;
+
+  const { valid, errors } = validateResetPasswordData(emailAddress);
+
+  if (!valid) return res.status(400).json(errors);
+
+  //
+  firebase
+    .auth()
+    .sendPasswordResetEmail(emailAddress)
+    .then(() => {
+      return res.json({
+        message: "Password reset email sent!",
+      });
+    })
+    .catch((err) => {
+      if ((err.code = "auth/user-not-found")) {
+        return res.status(400).json({
+          general: "There is no user corresponding to the email address",
         });
       } else {
         return res.status(500).json({ error: err.code });

@@ -16,6 +16,10 @@ import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import searchPage from "./pages/searchPage";
 import login from "./pages/login";
 import signup from "./pages/signup";
+import resetPassword from "./pages/resetPassword";
+import changePassword from "./pages/changePassword";
+import resetPasswordSent from "./pages/resetPasswordSent";
+import changePasswordSent from "./pages/changePasswordSent";
 import messaging from "./pages/messaging";
 import specificPhotographer from "./pages/specificPhotographer";
 import book from "./pages/book";
@@ -181,6 +185,31 @@ class App extends Component {
                   <Route exact path="/login" component={login} />
 
                   <Route exact path="/signup" component={signup} />
+
+                  <Route
+                    exact
+                    path="/resetPassword"
+                    component={resetPassword}
+                  />
+                  <Route
+                    exact
+                    path="/resetPasswordSent"
+                    component={resetPasswordSent}
+                  />
+                  <Route
+                    exact
+                    path="/changePassword"
+                    component={changePassword}
+                  />
+
+                  <Route
+                    exact
+                    path="/changePasswordSent"
+                    component={changePasswordSent}
+                  />
+                  <Route exact path="/profile" component={profile} />
+
+                  <Route exact path="/messaging" component={messaging} />
 
                   <AuthRoute
                     exact
