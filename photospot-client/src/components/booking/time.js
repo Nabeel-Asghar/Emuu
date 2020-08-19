@@ -31,14 +31,12 @@ class time extends Component {
 
       if (timesAvailable.includes("09:00")) {
         displayTimeslots.push(
-          displayTimeslots.push(
-            <FormControlLabel
-              value="09:00"
-              control={<Radio />}
-              label="9:00 AM"
-              key={9}
-            />
-          )
+          <FormControlLabel
+            value="09:00"
+            control={<Radio />}
+            label="9:00 AM"
+            key={9}
+          />
         );
       }
 
@@ -132,9 +130,21 @@ class time extends Component {
     }
 
     return (
-      <form onSubmit={this.props.handleSubmit}>
+      <form
+        onSubmit={this.props.handleSubmit}
+        style={{ paddingLeft: "10px", paddingTop: "15px" }}
+      >
         <FormControl component="fieldset" className={classes.form}>
-          <FormLabel component="legend">Choose a time for your shoot</FormLabel>
+          <FormLabel
+            color="secondary"
+            component="legend"
+            style={{
+              textAlign: "center",
+              paddingBottom: "10px",
+            }}
+          >
+            Choose a time for your shoot
+          </FormLabel>
           <RadioGroup
             aria-label="Shoot time"
             name="scheduletime"
@@ -146,8 +156,8 @@ class time extends Component {
           <Button
             type="submit"
             variant="outlined"
-            color="primary"
-            className={classes.button}
+            color="secondary"
+            style={{ marginTop: "15px" }}
           >
             Submit
           </Button>

@@ -48,7 +48,7 @@ class changePassword extends Component {
   componentDidUpdate(prevProps) {
     if (!equal(this.props.credentials, prevProps.credentials)) {
       this.setState({
-        email: this.props.credentials.email,
+        email: this.props.credentials[0]?.email,
       });
     }
   }
@@ -95,13 +95,10 @@ class changePassword extends Component {
             marginTop: 100,
           }}
         >
-          <Grid item xs={7} style={{ margin: "auto" }}>
+          <Grid item xs={8} style={{ margin: "auto" }}>
             <img src={AppIcon} alt="Logo" className={classes.logoImage} />
             <Typography variant="h4" className={classes.pageTitle}>
-              Password Reset
-            </Typography>
-            <Typography variant="h7" className={classes.pageTitle}>
-              Enter in your account email
+              Change Password
             </Typography>
             <form
               noValidate
@@ -112,7 +109,10 @@ class changePassword extends Component {
                 id="oldPassword"
                 name="oldPassword"
                 type="Password"
-                error={errors.similar ? true : false}
+                error={
+                  errors.similar ? true : false || errors.login ? true : false
+                }
+                helperText={errors.login}
                 label="Current Password"
                 className={classes.textField}
                 value={this.state.oldPassword}

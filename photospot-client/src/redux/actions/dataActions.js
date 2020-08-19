@@ -109,10 +109,11 @@ export const getBookingTimes = (photographerID) => (dispatch) => {
 export const bookPhotographer = (photographerID, bookingDetails) => (
   dispatch
 ) => {
-  API.post(`/photographers/${photographerID}/book`, bookingDetails)
+  return API.post(`/photographers/${photographerID}/book`, bookingDetails)
     .then((res) => {
       console.log(res.data);
       dispatch({ type: "BOOK_PHOTOGRAPHER", payload: res.data });
+      dispatch({ type: "SET_SUCCESS_RESPONSE" });
     })
     .catch((err) => {
       dispatch({

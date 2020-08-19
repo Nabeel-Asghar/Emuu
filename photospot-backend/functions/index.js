@@ -40,6 +40,8 @@ const {
   getUsersPastOrders,
   updateUserProfile,
   editBookingTimes,
+  getYourPhotographerOrders,
+  getYourPhotographerPastOrders,
 } = require("./handlers/users");
 
 const { completedOrders } = require("./handlers/administrator");
@@ -53,8 +55,12 @@ app.post("/login", login);
 app.post("/resetPassword", resetPassword);
 app.post("/changePassword", changePassword);
 
-// get photographer page or user page
+// get photographer details
 app.get("/yourphotographerpage", FBAuth, getYourPhotographerPage);
+app.get("/yourorders", FBAuth, getYourPhotographerOrders);
+app.get("/yourpastorders", FBAuth, getYourPhotographerPastOrders);
+
+// get user details
 app.get("/youruserprofile", FBAuth, getYourUserProfile);
 app.get("/youruserprofile/orders", FBAuth, getUsersOrders);
 app.get("/youruserprofile/pastorders", FBAuth, getUsersPastOrders);

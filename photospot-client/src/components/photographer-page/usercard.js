@@ -38,7 +38,6 @@ class usercard extends Component {
       profileImage: newProps.profileImage,
       userProfileImage: newProps.userProfileImage,
     });
-    console.log(this.state);
   }
 
   render() {

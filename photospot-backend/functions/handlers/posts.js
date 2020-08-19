@@ -1,4 +1,4 @@
-const { db } = require("../util/admin");
+const { db, db2 } = require("../util/admin");
 
 const { validateReview } = require("../util/validators");
 
@@ -24,6 +24,8 @@ exports.getAllPhotographers = (req, res) => {
           camera: doc.data().camera,
           instagram: doc.data().instagram,
           company: doc.data().company,
+          reviewCount: doc.data().reviewCount,
+          totalRating: doc.data().totalRating,
         });
       });
       return res.json(posts);
@@ -134,22 +136,37 @@ exports.reviewPhotographer = (req, res) => {
               .doc(photographerBeingReviewed)
               .set(newReview)
               .then(() => {
+                const pRef = db
+                  .collection("photographer")
+                  .doc(photographerBeingReviewed);
+                const incrementReviewCount = db2.FieldValue.increment(1);
+                const incrementRating = db2.FieldValue.increment(
+                  req.body.rating
+                );
+
+                pRef.update({ reviewCount: incrementReviewCount });
+                pRef.update({ totalRating: incrementRating });
                 console.log("added review to user");
-                return res.json({
-                  message: "Review added successfully!",
-                });
+
+                return res.json({ message: "Review added successfully!" });
               })
               .catch((err) => {
-                res.status(500).json({ error: `something went wrong` });
+                console.log(err);
+                return res.status(500).json({ error: `something went wrong` });
               });
           })
           .catch((err) => {
-            res.status(500).json({ error: `something went wrong` });
+            console.log(err);
+            return res.status(500).json({ error: `something went wrong` });
           });
-
-        // Also add that review to the users collection for future reference
       }
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).json({ error: `something went wrong` });
     });
+
+  // Also add that review to the users collection for future reference
 };
 
 exports.getSpecificPhotographer = (req, res) => {
@@ -306,6 +323,10 @@ exports.bookPhotographer = (req, res) => {
   let lastName = req.body.lastName;
   let profileImage = req.body.profileImage;
 
+  var myDate = shootDate.split("-");
+  var newDate = myDate[2] + "," + myDate[0] + "," + myDate[1];
+  var formattedDate = new Date(newDate);
+
   let booking = {
     photographerID: photographerBooked,
     consumerID: userid,
@@ -317,75 +338,89 @@ exports.bookPhotographer = (req, res) => {
     paymentStatus: "pending",
     paymentToPhotographer: "pending",
     createdAt: new Date().toISOString(),
+    formattedDate: formattedDate,
   };
 
   // Make sure user only as one order at a time
-  db.collection("allOrders")
+  db.collection("users")
     .doc(userid)
-    .collection("currentOrders")
+    .collection("orders")
     .get()
-    .then((doc) => {
-      if (doc.exists) {
-        return res.json({
+    .then((sub) => {
+      console.log("here");
+      if (sub.docs.length > 0) {
+        console.log("fucking exists");
+        return res.status(500).json({
           message: "You may only have one pending order at a time.",
         });
+      } else {
+        // update main collection of orders with this order
+        db.collection("allOrders")
+          .doc()
+          .set(booking)
+          .then(() => {
+            // Update booking time to be filled on photographer schedule
+            db.collection("photographer")
+              .doc(photographerBooked)
+              .collection("bookings")
+              .doc(shootDate)
+              .update({
+                [shootTime]: true,
+              })
+              .then(() => {
+                // Set order for photographer under photographer/{photograhper ID}/orders
+                db.collection("photographer")
+                  .doc(photographerBooked)
+                  .collection("orders")
+                  .doc()
+                  .set(booking)
+                  .then(() => {
+                    // Set order for user under users/{user ID}/orders
+                    db.collection("users")
+                      .doc(userid)
+                      .collection("orders")
+                      .doc(photographerBooked)
+                      .set(booking)
+                      .then(() => {
+                        return res.json({
+                          message:
+                            "Order complete, you will recieve an email with a confirmation.",
+                        });
+                      })
+                      .catch((err) => {
+                        return res
+                          .status(500)
+                          .json({ error: `Something went wrong.` });
+                      });
+                  })
+                  .catch((err) => {
+                    return res
+                      .status(500)
+                      .json({ error: `Something went wrong.` });
+                  });
+
+                // db.collection("orders")
+                //   .doc(userid)
+                //   .set(booking)
+                //   .then(() => {
+                //     return res.json({
+                //       message:
+                //         "Order complete, you will recieve an email with a confirmation.",
+                //     });
+                //   })
+                //   .catch((err) => {
+                //     res.status(500).json({ error: `something went wrong` });
+                //     console.log(err);
+                //   });
+              })
+              .catch((err) => {
+                return res.status(500).json({ error: `Something went wrong.` });
+              });
+          })
+          .catch((err) => {
+            console.log(err);
+            return res.json({ error: err });
+          });
       }
-    });
-
-  // Update booking time to be filled on photographer schedule
-  db.collection("photographer")
-    .doc(photographerBooked)
-    .collection("bookings")
-    .doc(shootDate)
-    .update({
-      [shootTime]: true,
-    })
-    .then(() => {
-      // Set order for photographer under allOrders/{photographerID}/currentOrders
-      db.collection("allOrders")
-        .doc(photographerBooked)
-        .collection("currentOrders")
-        .doc()
-        .set(booking)
-        .then(() => {
-          // Set order for user under allOrders/{userID}/currentOrders
-          db.collection("allOrders")
-            .doc(userid)
-            .collection("currentOrders")
-            .doc(photographerBooked)
-            .set(booking)
-            .then(() => {
-              return res
-                .json({
-                  message:
-                    "Order complete, you will recieve an email with a confirmation.",
-                })
-                .catch(() => {
-                  return res
-                    .status(500)
-                    .json({ error: `Something went wrong.` });
-                });
-            })
-            .catch((err) => {
-              return res.status(500).json({ error: `Something went wrong.` });
-            });
-        })
-        .catch((err) => {
-          return res.status(500).json({ error: `Something went wrong.` });
-        });
-
-      // db.collection("orders")
-      //   .doc(userid)
-      //   .set(booking)
-      //   .then(() => {
-      //     return res.json({
-      //       message:
-      //         "Order complete, you will recieve an email with a confirmation.",
-      //     });
-      //   })
-      //   .catch((err) => {
-      //     res.status(500).json({ error: `something went wrong` });
-      //     console.log(err);
-      //   });
     });
 };

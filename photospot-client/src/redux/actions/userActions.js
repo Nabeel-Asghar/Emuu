@@ -1,5 +1,4 @@
 import API from "../../api";
-import history from "../../util/history";
 
 export const loginUser = (userData, history) => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
@@ -9,7 +8,7 @@ export const loginUser = (userData, history) => (dispatch) => {
       dispatch(getUserData()).then(() => {
         dispatch({ type: "CLEAR_ERRORS" });
       });
-      history.push("/");
+      history.push("/search");
     })
     .catch((err) => {
       dispatch({
@@ -19,7 +18,7 @@ export const loginUser = (userData, history) => (dispatch) => {
     });
 };
 
-export const signupUser = (newUserData) => (dispatch) => {
+export const signupUser = (newUserData, history) => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
   API.post("/signup", newUserData)
     .then((res) => {
@@ -59,7 +58,7 @@ export const changePasswordAction = (data, history) => (dispatch) => {
     .then((res) => {
       dispatch({ type: "CLEAR_ERRORS" });
       console.log(res.data);
-      history.push("/resetPasswordSent");
+      history.push("/changePasswordSent");
     })
     .catch((err) => {
       console.log(err);
@@ -74,7 +73,6 @@ export const logoutUser = () => (dispatch) => {
   localStorage.removeItem("FirebaseIdToken");
   delete API.defaults.headers.common["Authorization"];
   dispatch({ type: "SET_UNAUTHENTICATED" });
-  history.push("/login");
 };
 
 export const getUserData = () => (dispatch) => {
@@ -179,6 +177,38 @@ export const uploadBackgroundImage = (image) => (dispatch) => {
         payload: err.response.data,
       })
     );
+};
+
+export const getPhotographerOrders = () => (dispatch) => {
+  return API.get("/yourorders")
+    .then((res) => {
+      dispatch({
+        type: "SET_USERS_ORDERS",
+        payload: res.data,
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: "SET_USERS_ORDERS",
+        payload: null,
+      });
+    });
+};
+
+export const getPhotographerPastOrders = () => (dispatch) => {
+  API.get("//yourpastorders")
+    .then((res) => {
+      dispatch({
+        type: "SET_USERS_PAST_ORDERS",
+        payload: res.data,
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: "SET_USERS_PAST_ORDERS",
+        payload: null,
+      });
+    });
 };
 
 export const getUsersOrders = () => (dispatch) => {

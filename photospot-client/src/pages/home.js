@@ -36,6 +36,7 @@ import TimelineConnector from "@material-ui/lab/TimelineConnector";
 import TimelineContent from "@material-ui/lab/TimelineContent";
 import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
 import TimelineDot from "@material-ui/lab/TimelineDot";
+import Fab from "@material-ui/core/Fab";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -66,7 +67,6 @@ const styles = (theme) => ({
 
   introText: {
     color: "white",
-    textAlign: "left",
   },
 
   margin: {
@@ -133,7 +133,7 @@ const styles = (theme) => ({
     borderRadius: "35px",
     height: "60px",
     textAlign: "left",
-    paddingTop: "5px",
+    paddingTop: "20px",
   },
 
   textLabel: {
@@ -154,7 +154,7 @@ const StyledInput = withStyles((theme) => ({
   },
 }))(Input);
 
-class homePage extends Component {
+class home extends Component {
   constructor() {
     super();
     this.state = {
@@ -205,33 +205,6 @@ class homePage extends Component {
               Welcome to <span style={{ color: "#23ba8b" }}>PhotoSpot</span>
             </Typography>
           </Grid>
-          {!this.props.authenticated && (
-            <Grid item xs={12} style={{ margin: "-10px 0 20px 0" }}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                className={classes.margin}
-                component={Link}
-                to="/signup"
-                style={{ width: "100px" }}
-              >
-                Signup
-              </Button>
-
-              <Button
-                variant="contained"
-                color="secondary"
-                size="large"
-                className={classes.margin}
-                component={Link}
-                to="/login"
-                style={{ width: "100px" }}
-              >
-                Login
-              </Button>
-            </Grid>
-          )}
 
           <Grid item xs={12}>
             <div className={classes.textContainer}>
@@ -345,7 +318,7 @@ class homePage extends Component {
                   </Select>
                 </FormControl>
 
-                <Button
+                {/* <Button
                   variant="contained"
                   color="secondary"
                   name="submitSearch"
@@ -354,24 +327,64 @@ class homePage extends Component {
                     borderRadius: "50%",
                     margin: "2px 0px 1px 0",
                   }}
+                > */}
+                <Fab
+                  color="secondary"
+                  onClick={() => this.handleSubmit()}
+                  style={{ margin: "2px 0px 2px 15px" }}
                 >
-                  <SearchIcon style={{ padding: "10px 0px 10px 0px" }} />
-                </Button>
+                  <SearchIcon />
+                </Fab>
+                {/* </Button> */}
               </form>
             </div>
           </Grid>
+
+          {!this.props.authenticated && (
+            <Grid item xs={12} style={{ margin: "20px 0 -50px 0" }}>
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                className={classes.margin}
+                component={Link}
+                to="/login"
+                style={{ width: "100px" }}
+              >
+                Login
+              </Button>
+              <Button
+                variant="contained"
+                color="secondary"
+                size="large"
+                className={classes.margin}
+                component={Link}
+                to="/signup"
+                style={{ width: "100px" }}
+              >
+                Signup
+              </Button>
+            </Grid>
+          )}
 
           <Grid item xs={12}>
             <div
               style={{
                 maxWidth: 1000,
-                margin: "auto",
+                margin: "-50px auto -50px auto",
                 padding: "100px 50px 100px 50px",
+                textAlign: "center",
               }}
             >
-              <Box display="flex" p={1}>
+              <Box p={1}>
                 <Typography variant="h3" className={classes.introText}>
-                  Hire photographers and videographers at any price, at any time
+                  Hire photographers and videographers
+                </Typography>
+                <Typography variant="h3" className={classes.introText}>
+                  ...at any price
+                </Typography>
+                <Typography variant="h3" className={classes.introText}>
+                  ...at any time
                 </Typography>
               </Box>
             </div>
@@ -494,7 +507,7 @@ class homePage extends Component {
         <Grid container spacing={3} className={classes.photoGrid}>
           <Grid item xs={12} className={classes.centerGrid}>
             <Typography variant="h4">
-              Featured photos from photographers near you
+              Featured photos from photographers on PhotoSpot
             </Typography>
           </Grid>
 
@@ -556,4 +569,4 @@ const mapActionsToProps = {
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(withStyles(styles)(homePage));
+)(withStyles(styles)(home));
