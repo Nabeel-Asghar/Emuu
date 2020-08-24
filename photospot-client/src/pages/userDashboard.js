@@ -99,9 +99,6 @@ class userDashboard extends Component {
     const { classes } = this.props;
     return (
       <Grid container spacing={5}>
-        <Grid item xs={12} style={{ paddingBottom: 0 }}>
-          <Typography variant="h3">Your Dashboard</Typography>
-        </Grid>
         <Grid item xs={4}>
           <ProfileCard
             profileImage={this.state.profileImage}

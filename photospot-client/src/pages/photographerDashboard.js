@@ -100,9 +100,6 @@ class photograhperDashboard extends Component {
     const { classes } = this.props;
     return (
       <Grid container spacing={5}>
-        <Grid item xs={12} style={{ paddingBottom: 0 }}>
-          <Typography variant="h3">Your Photography Dashboard</Typography>
-        </Grid>
         {console.log(theUserOrders)}
         <Grid item xs={4}>
           <ProfileCard
