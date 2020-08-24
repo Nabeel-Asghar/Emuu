@@ -421,18 +421,18 @@ exports.getYourPhotographerOrders = (req, res) => {
   db.collection("photographer")
     .doc(photograhperID)
     .collection("orders")
+    .orderBy("formattedDate", "desc")
     .get()
     .then((snapshot) => {
       let orders = [];
 
       snapshot.forEach((doc) => {
-        console.log("photograhper orders:", doc.data());
         orders.push({
           consumerID: doc.data().consumerID,
           photographerID: doc.data().photographerID,
-          firstName: doc.data().firstName,
-          lastName: doc.data().lastName,
-          profileImage: doc.data().profileImage,
+          firstName: doc.data().consumerFirstName,
+          lastName: doc.data().consumerLastName,
+          profileImage: doc.data().consumerProfileImage,
           shootDate: doc.data().shootDate,
           shootTime: doc.data().shootTime,
           formattedDate: doc.data().formattedDate,
@@ -457,13 +457,12 @@ exports.getYourPhotographerPastOrders = (req, res) => {
       let allPastOrders = [];
 
       snapshot.forEach((doc) => {
-        console.log(doc.data());
         allPastOrders.push({
           consumerID: doc.data().consumerID,
           photographerID: doc.data().photographerID,
-          firstName: doc.data().firstName,
-          lastName: doc.data().lastName,
-          profileImage: doc.data().profileImage,
+          firstName: doc.data().consumerFirstName,
+          lastName: doc.data().consumerLastName,
+          profileImage: doc.data().consumerProfileImage,
           shootDate: doc.data().shootDate,
           shootTime: doc.data().shootTime,
           formattedDate: doc.data().formattedDate,
@@ -488,13 +487,12 @@ exports.getUsersOrders = (req, res) => {
       let orders = [];
 
       data.forEach((doc) => {
-        console.log(doc.data());
         orders.push({
           consumerID: doc.data().consumerID,
           photographerID: doc.data().photographerID,
-          firstName: doc.data().firstName,
-          lastName: doc.data().lastName,
-          profileImage: doc.data().profileImage,
+          firstName: doc.data().photographerFirstName,
+          lastName: doc.data().photographerLastName,
+          profileImage: doc.data().photographerProfileImage,
           shootDate: doc.data().shootDate,
           shootTime: doc.data().shootTime,
           formattedDate: doc.data().formattedDate,
@@ -521,9 +519,9 @@ exports.getUsersPastOrders = (req, res) => {
         allPastOrders.push({
           consumerID: doc.data().consumerID,
           photographerID: doc.data().photographerID,
-          firstName: doc.data().firstName,
-          lastName: doc.data().lastName,
-          profileImage: doc.data().profileImage,
+          firstName: doc.data().photographerFirstName,
+          lastName: doc.data().photographerLastName,
+          profileImage: doc.data().photographerProfileImage,
           shootDate: doc.data().shootDate,
           shootTime: doc.data().shootTime,
           formattedDate: doc.data().formattedDate,
