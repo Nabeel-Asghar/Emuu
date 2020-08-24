@@ -1,10 +1,12 @@
 const functions = require("firebase-functions");
 const cors = require("cors");
-//const cron = require("node-cron");
+const helmet = require("helmet");
+
 const app = require("express")();
 
 // Automatically allow cross-origin requests
 app.use(cors({ origin: true }));
+app.use(helmet());
 
 const {
   getAllPhotographers,
