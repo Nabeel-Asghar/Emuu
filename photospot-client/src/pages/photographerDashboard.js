@@ -20,6 +20,7 @@ import Grid from "@material-ui/core/Grid";
 import OrderCard from "../components/dashboard/orderCard";
 import ProfileCard from "../components/dashboard/profileCard";
 import ContactCard from "../components/dashboard/contactCard";
+import SettingsCard from "../components/dashboard/settingsCard";
 import CarouselOfItems from "../components/dashboard/carouselOfItems";
 
 const styles = (theme) => ({
@@ -116,6 +117,8 @@ class photograhperDashboard extends Component {
             location_state={this.state.location_state}
             email={this.state.email}
           />
+
+          <SettingsCard />
         </Grid>
 
         <Grid item xs={8}>

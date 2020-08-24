@@ -35,6 +35,40 @@ export const signupUser = (newUserData, history) => (dispatch) => {
     });
 };
 
+export const resetPasswordAction = (data, history) => (dispatch) => {
+  dispatch({ type: "RESET_PASSWORD" });
+  API.post("/resetPassword", data)
+    .then((res) => {
+      dispatch({ type: "CLEAR_ERRORS" });
+      history.push("/resetPasswordSent");
+    })
+    .catch((err) => {
+      console.log("super gay");
+      console.log(err);
+      dispatch({
+        type: "SET_ERRORS",
+        payload: err.response.data,
+      });
+    });
+};
+
+export const changePasswordAction = (data, history) => (dispatch) => {
+  dispatch({ type: "CHANGE_PASSWORD" });
+  API.post("/changePassword", data)
+    .then((res) => {
+      dispatch({ type: "CLEAR_ERRORS" });
+      console.log(res.data);
+      history.push("/changePasswordSent");
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: "SET_ERRORS",
+        payload: err.response.data,
+      });
+    });
+};
+
 export const logoutUser = () => (dispatch) => {
   localStorage.removeItem("FirebaseIdToken");
   delete API.defaults.headers.common["Authorization"];

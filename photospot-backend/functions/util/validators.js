@@ -57,6 +57,19 @@ exports.validateLoginData = (data) => {
   };
 };
 
+exports.validateResetPasswordData = (data) => {
+  let errors = {};
+
+  if (!isEmail(data)) {
+    errors.email = "Must be valid email";
+  }
+
+  return {
+    errors,
+    valid: Object.keys(errors).length === 0 ? true : false,
+  };
+};
+
 exports.validateBio = (data) => {
   let errors = {};
 
