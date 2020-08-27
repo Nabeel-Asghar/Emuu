@@ -179,6 +179,8 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" component={home} />
 
+                {/* prettier-ignore */}
+
                 <div className="container">
                   <Route exact path="/search" component={searchPage} />
 
@@ -186,78 +188,36 @@ class App extends Component {
 
                   <Route exact path="/signup" component={signup} />
 
-                  <Route
-                    exact
-                    path="/resetPassword"
-                    component={resetPassword}
-                  />
-                  <Route
-                    exact
-                    path="/resetPasswordSent"
-                    component={resetPasswordSent}
-                  />
-                  <Route
-                    exact
-                    path="/changePassword"
-                    component={changePassword}
-                  />
+                  <AuthRoute exact path="/resetPassword" component={resetPassword} />
 
-                  <Route
-                    exact
-                    path="/changePasswordSent"
-                    component={changePasswordSent}
-                  />
-                  <Route exact path="/profile" component={profile} />
+                  <AuthRoute exact path="/resetPasswordSent" component={resetPasswordSent} />
 
-                  <Route exact path="/messaging" component={messaging} />
+                  <AuthRoute exact path="/changePassword" component={changePassword} />
 
-                  <AuthRoute
-                    exact
-                    path="/userDashboard"
-                    component={userDashboard}
-                  />
+                  <AuthRoute exact path="/changePasswordSent" component={changePasswordSent} />
 
-                  <AuthRoute
-                    exact
-                    path="/photographerDashboard"
-                    component={photograhperDashboard}
-                  />
+                  <AuthRoute exact path="/userDashboard" component={userDashboard} />
+
+                  <AuthRoute exact path="/photographerDashboard" component={photograhperDashboard} />
 
                   <AuthRoute exact path="/profile" component={profile} />
+
                   <AuthRoute exact path="/messaging" component={messaging} />
+
                   <Route exact path="/search/:searchQuery" component={search} />
-                  <Route
-                    exact
-                    path="/search/:type/:city/:state"
-                    component={search}
-                  />
 
-                  <Route
-                    exact
-                    path="/photographers/:photographerID"
-                    component={specificPhotographer}
-                  />
-                  <AuthRoute
-                    exact
-                    path="/yourPhotographyProfile"
-                    component={editPhotographyPage}
-                  />
-                  <AuthRoute
-                    exact
-                    path="/yourPhotographyProfile/setYourSchedule"
-                    component={setYourSchedule}
-                  />
+                  <Route exact path="/search/:type/:city/:state" component={search} />
 
-                  <AuthRoute
-                    exact
-                    path="/uploadPhotographyPictures"
-                    component={photographyPictures}
-                  />
-                  <AuthRoute
-                    exact
-                    path="/photographers/:photographerID/book"
-                    component={book}
-                  />
+                  <Route exact path="/photographers/:photographerID" component={specificPhotographer} />
+
+                  <AuthRoute exact path="/yourPhotographyProfile" component={editPhotographyPage} />
+
+                  <AuthRoute exact path="/yourPhotographyProfile/setYourSchedule" component={setYourSchedule} />
+
+                  <AuthRoute exact path="/uploadPhotographyPictures" component={photographyPictures} />
+
+                  <AuthRoute exact path="/photographers/:photographerID/book" component={book} />
+                  
                 </div>
               </Switch>
             </BrowserRouter>
