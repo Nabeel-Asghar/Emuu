@@ -19,6 +19,7 @@ export default function (state = intialState, action) {
         ...state,
         errors: { ...action.payload },
         loading: false,
+        loadingAction: false,
       };
 
     case "CLEAR_ERRORS":

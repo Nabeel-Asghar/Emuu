@@ -244,12 +244,16 @@ export const getUsersPastOrders = () => (dispatch) => {
 };
 
 export const updateUserProfile = (details) => (dispatch) => {
-  API.post("/youruserprofile/edit", details)
+  dispatch({ type: "LOADING_POST_ACTION" });
+  return API.post("/youruserprofile/edit", details)
     .then((res) => {
-      console.log(res.data);
+      dispatch({ type: "SET_SUCCESS_RESPONSE" });
     })
     .catch((err) => {
-      console.log(err);
+      dispatch({
+        type: "SET_ERRORS",
+        payload: err.response.data,
+      });
     });
 };
 
