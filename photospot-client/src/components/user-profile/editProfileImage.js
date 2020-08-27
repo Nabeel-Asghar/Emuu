@@ -21,7 +21,7 @@ class editProfileImage extends Component {
     const { classes, profileImage } = this.props;
 
     return (
-      <div style={{ padding: "20px 0 20px 0" }}>
+      <div style={{ padding: "25px 0 25px 0" }}>
         <img className={classes.profileAvatar} src={profileImage} />
         <input
           type="file"
