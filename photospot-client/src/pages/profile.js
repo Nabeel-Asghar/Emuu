@@ -5,25 +5,18 @@ import { connect } from "react-redux";
 import {
   getUserData,
   uploadProfileImage,
-  getUsersOrders,
-  getUsersPastOrders,
   updateUserProfile,
 } from "../redux/actions/userActions";
 
 // Material UI
 import withStyles from "@material-ui/core/styles/withStyles";
 import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
-import { Paper, Typography } from "@material-ui/core";
-import TextField from "@material-ui/core/TextField";
-import EditIcon from "@material-ui/icons/Edit";
-
-import ImageUploader from "react-images-upload";
-import equal from "fast-deep-equal";
+import Paper from "@material-ui/core/Paper";
 
 // components
 import EditProfileImage from "../components/user-profile/editProfileImage";
-import UserDetails from "../components/user-profile/userDetails";
+import EditUserDetails from "../components/user-profile/editUserDetails";
+import Feedback from "../components/feedback";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -39,11 +32,8 @@ class profileImage extends Component {
       location_city: "",
       location_state: "",
       profileImage: "",
-      open: false,
-      fakeFirstName: "",
-      fakeLastName: "",
-      fakeCity: "",
-      fakeState: "",
+      phoneNumber: "",
+      openSnack: false,
     };
   }
 
@@ -66,8 +56,6 @@ class profileImage extends Component {
   }
 
   componentDidMount() {
-    this.props.getUsersOrders();
-    this.props.getUsersPastOrders();
     this.props.getUserData().then(() => {
       this.assignValues(this.props.credentials);
     });
@@ -92,86 +80,77 @@ class profileImage extends Component {
     fileInput.click();
   };
 
-  handleClickOpen = () => {
-    this.setState({
-      open: true,
-      fakeFirstName: this.state.firstName,
-      fakeLastName: this.state.lastName,
-      fakeCity: this.state.location_city,
-      fakeState: this.state.location_state,
-    });
-  };
-
   handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
     });
   };
 
-  handleDisagree = () => {
-    this.setState({
-      open: false,
+  handleAgree = (event) => {
+    const details = {
+      firstName: this.state.firstName,
+      lastName: this.state.lastName,
+      location_city: this.state.location_city,
+      location_state: this.state.location_state,
+    };
+
+    this.props.updateUserProfile(details).then(() => {
+      this.setState({
+        openSnack: true,
+      });
     });
   };
 
-  handleAgree = (event) => {
-    this.setState({
-      open: false,
-    });
+  handleSnackbarClose = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
-    this.setState({
-      firstName: this.state.fakeFirstName,
-      lastName: this.state.fakeLastName,
-      location_city: this.state.fakeCity,
-      location_state: this.state.fakeState,
-    });
-
-    const details = {
-      firstName: this.state.fakeFirstName,
-      lastName: this.state.fakeLastName,
-      location_city: this.state.fakeCity,
-      location_state: this.state.fakeState,
-    };
-
-    this.props.updateUserProfile(details);
+    this.setState({ openSnack: false });
   };
 
   render() {
-    const { classes } = this.props;
+    const {
+      classes,
+      UI: { loadingAction, errors },
+    } = this.props;
     return (
-      <Grid container spacing={5}>
-        <Grid item xs />
-        <Grid item xs={8} className={classes.centerGrid}>
+      <Grid container spacing={1}>
+        <Feedback
+          errors={errors}
+          open={this.state.openSnack}
+          handleClose={this.handleSnackbarClose}
+        />
+
+        {console.log("somthing")}
+
+        <Grid item sm={1} xs={0} />
+        <Grid item md={4} sm={12} xs={12} className={classes.centerGrid}>
           <Paper>
             <EditProfileImage
               profileImage={this.state.profileImage}
               handleProfileImageChange={this.handleProfileImageChange}
               handleEditProfileImage={this.handleEditProfileImage}
             />
-            <Typography variant="h5">
-              {this.state.firstName} {this.state.lastName}
-            </Typography>
-            <Typography variant="overline">
-              {this.state.location_city}, {this.state.location_state}
-            </Typography>
-            <Button onClick={this.handleClickOpen}>
-              <EditIcon color="primary" />
-            </Button>
           </Paper>
         </Grid>
 
-        <UserDetails
-          open={this.state.open}
-          handleAgree={this.handleAgree}
-          handleDisagree={this.handleDisagree}
-          handleChange={this.handleChange}
-          fname={this.state.fakeFirstName}
-          lname={this.state.fakeLastName}
-          city={this.state.fakeCity}
-          state={this.state.fakeState}
-        />
+        <Grid item md={6} sm={12} xs={12}>
+          <Paper>
+            <EditUserDetails
+              firstName={this.state.firstName}
+              lastName={this.state.lastName}
+              location_city={this.state.location_city}
+              location_state={this.state.location_state}
+              phoneNumber={this.state.phoneNumber}
+              handleChange={this.handleChange}
+              handleAgree={this.handleAgree}
+              loading={loadingAction}
+            />
+          </Paper>
+        </Grid>
 
-        <Grid item xs />
+        <Grid item sm={1} xs={0} />
       </Grid>
     );
   }
@@ -179,15 +158,12 @@ class profileImage extends Component {
 
 const mapStateToProps = (state) => ({
   credentials: state.user.credentials,
-  userOrders: state.user.userOrders,
-  userPastOrders: state.user.userPastOrders,
+  UI: state.UI,
 });
 
 const mapActionsToProps = {
   getUserData,
   uploadProfileImage,
-  getUsersOrders,
-  getUsersPastOrders,
   updateUserProfile,
 };
 
