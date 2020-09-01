@@ -31,6 +31,8 @@ import home from "./pages/home";
 import setYourSchedule from "./pages/setYourSchedule";
 import userDashboard from "./pages/userDashboard";
 import photograhperDashboard from "./pages/photographerDashboard";
+import onboard from "./pages/onboard";
+import successPage from "./pages/successPage";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -189,6 +191,10 @@ class App extends Component {
                   <Route exact path="/signup" component={signup} />
 
                   <AuthRoute exact path="/resetPassword" component={resetPassword} />
+
+                  <AuthRoute exact path="/onboard" component={onboard} />
+
+                  <AuthRoute exact path="/onboard/success" component={successPage} />
 
                   <AuthRoute exact path="/resetPasswordSent" component={resetPasswordSent} />
 
