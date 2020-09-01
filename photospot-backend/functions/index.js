@@ -1,8 +1,8 @@
 const functions = require("firebase-functions");
+require("dotenv").config();
 const cors = require("cors");
 const helmet = require("helmet");
 const session = require("express-session");
-
 const app = require("express")();
 
 // Automatically allow cross-origin requests
