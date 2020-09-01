@@ -1,12 +1,20 @@
 const functions = require("firebase-functions");
 const cors = require("cors");
 const helmet = require("helmet");
+const session = require("express-session");
 
 const app = require("express")();
 
 // Automatically allow cross-origin requests
 app.use(cors({ origin: true }));
 app.use(helmet());
+app.use(
+  session({
+    secret: "Set this to a random string that is kept secure",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
 
 const {
   getAllPhotographers,
@@ -46,6 +54,8 @@ const {
   getYourPhotographerPastOrders,
 } = require("./handlers/users");
 
+const { onboardUser, onboardUserRefresh } = require("./handlers/payment");
+
 const { completedOrders } = require("./handlers/administrator");
 
 const FBAuth = require("./util/FBAuth");
@@ -72,6 +82,10 @@ app.post("/youruserprofile/edit", FBAuth, updateUserProfile);
 
 // upload profile image
 app.post("/user/profileimage", FBAuth, uploadProfilePicture);
+
+// stripe setup
+app.post("/onboard-user", FBAuth, onboardUser);
+app.get("/onboard-user/refresh", FBAuth, onboardUserRefresh);
 
 // photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
