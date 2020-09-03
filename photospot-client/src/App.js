@@ -33,6 +33,7 @@ import userDashboard from "./pages/userDashboard";
 import photograhperDashboard from "./pages/photographerDashboard";
 import onboard from "./pages/onboard";
 import successPage from "./pages/successPage";
+import checkout from "./pages/checkout";
 
 // Components
 import Navbar from "./components/Navbar";
@@ -40,6 +41,13 @@ import AuthRoute from "./util/AuthRoute";
 
 // API
 import API from "./api";
+
+// Stripe
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+const stripePromise = loadStripe(
+  "pk_test_51HEMVlLQ55OPNOhDWc6WmWpkBFB2u4jz4fIBnkc2BQ9ZufE2eGDj5LG3GUxUWDJKxh0WU964w2EafrUTXNO3E3P600sAgdBLPU"
+);
 
 const theme = createMuiTheme({
   palette: {
@@ -190,13 +198,15 @@ class App extends Component {
 
                   <Route exact path="/signup" component={signup} />
 
-                  <AuthRoute exact path="/resetPassword" component={resetPassword} />
+                  <Route exact path="/resetPassword" component={resetPassword} />
 
                   <AuthRoute exact path="/onboard" component={onboard} />
 
                   <AuthRoute exact path="/onboard/success" component={successPage} />
 
-                  <AuthRoute exact path="/resetPasswordSent" component={resetPasswordSent} />
+                  <AuthRoute exact path="/onboard/refresh" component={onboard} />
+
+                  <Route exact path="/resetPasswordSent" component={resetPasswordSent} />
 
                   <AuthRoute exact path="/changePassword" component={changePassword} />
 
@@ -224,6 +234,10 @@ class App extends Component {
 
                   <AuthRoute exact path="/photographers/:photographerID/book" component={book} />
                   
+                  <Elements stripe={stripePromise}>
+                  <AuthRoute exact path="/photographers/:photographerID/book/checkout" component={checkout} />
+                  </Elements>
+
                 </div>
               </Switch>
             </BrowserRouter>
