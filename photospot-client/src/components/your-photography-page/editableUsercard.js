@@ -50,14 +50,11 @@ class editableUsercard extends Component {
             />
           ) : (
             <div>
-              <Button style={{ padding: 0 }}>
-                <img
-                  className={classes.background}
-                  src={background}
-                  onClick={this.props.handleEditBackground}
-                />
-              </Button>
-
+              <img
+                className={classes.background}
+                src={background}
+                onClick={this.props.handleEditBackground}
+              />
               <input
                 type="file"
                 id="imageInput"
