@@ -16,6 +16,9 @@ app.use(
   })
 );
 
+// To dos
+// TODO: Why the fuck is rating getting messed up when making an account
+
 const {
   getAllPhotographers,
   createPost,
@@ -54,7 +57,11 @@ const {
   getYourPhotographerPastOrders,
 } = require("./handlers/users");
 
-const { onboardUser, onboardUserRefresh } = require("./handlers/payment");
+const {
+  onboardUser,
+  onboardUserRefresh,
+  createPayment,
+} = require("./handlers/payment");
 
 const { completedOrders } = require("./handlers/administrator");
 
@@ -83,9 +90,10 @@ app.post("/youruserprofile/edit", FBAuth, updateUserProfile);
 // upload profile image
 app.post("/user/profileimage", FBAuth, uploadProfilePicture);
 
-// stripe setup
+// Stripe payments and setup
 app.post("/onboard-user", FBAuth, onboardUser);
 app.get("/onboard-user/refresh", FBAuth, onboardUserRefresh);
+app.get("/photographers/:photographerId/book/checkout", FBAuth, createPayment);
 
 // photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
@@ -117,7 +125,6 @@ app.get(
 );
 app.get("/search/:searchQuery", searchPhotographer);
 app.get("/filter/:type/:city/:state", filterPhotographers);
-
 app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);
 
 //Administrator
