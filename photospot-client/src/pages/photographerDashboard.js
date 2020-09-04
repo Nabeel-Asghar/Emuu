@@ -129,6 +129,7 @@ class photograhperDashboard extends Component {
     const { classes } = this.props;
     return (
       <Grid container spacing={5}>
+        {console.log(theUserOrders)}
         <Grid item xs={4}>
           <ProfileCard
             profileImage={this.state.profileImage}

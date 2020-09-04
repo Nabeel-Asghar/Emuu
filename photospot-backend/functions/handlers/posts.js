@@ -440,9 +440,12 @@ exports.bookPhotographer = (req, res) => {
   let photographerBooked = req.params.photographerId;
   let shootDate = req.body.date;
   let shootTime = req.body.time;
-  let firstName = req.body.firstName;
-  let lastName = req.body.lastName;
-  let profileImage = req.body.profileImage;
+  let photographerFirstName = req.body.firstName;
+  let photographerLastName = req.body.lastName;
+  let photographerProfileImage = req.body.profileImage;
+  let consumerFirstName = res.locals.firstName;
+  let consumerLastName = res.locals.lastName;
+  let consumerProfileImage = res.locals.profileImage;
 
   var myDate = shootDate.split("-");
   var newDate = myDate[2] + "," + myDate[0] + "," + myDate[1];
@@ -453,9 +456,12 @@ exports.bookPhotographer = (req, res) => {
     consumerID: userid,
     shootDate: shootDate,
     shootTime: shootTime,
-    firstName: firstName,
-    lastName: lastName,
-    profileImage: profileImage,
+    photographerFirstName: photographerFirstName,
+    photographerLastName: photographerLastName,
+    photographerProfileImage: photographerProfileImage,
+    consumerFirstName: consumerFirstName,
+    consumerLastName: consumerLastName,
+    consumerProfileImage: consumerProfileImage,
     paymentStatus: "pending",
     paymentToPhotographer: "pending",
     createdAt: new Date().toISOString(),
@@ -470,7 +476,6 @@ exports.bookPhotographer = (req, res) => {
     .then((sub) => {
       console.log("here");
       if (sub.docs.length > 0) {
-        console.log("fucking exists");
         return res.status(500).json({
           message: "You may only have one pending order at a time.",
         });
