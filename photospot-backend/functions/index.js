@@ -17,6 +17,8 @@ const {
   reviewPhotographer,
   getPhotographerSchedule,
   getPricing,
+  editReview,
+  deleteReview,
 } = require("./handlers/posts");
 
 const { getMessages, sendMessage } = require("./handlers/messages");
@@ -31,13 +33,14 @@ const {
   setPhotographerCategories,
   updatePhotographerPage,
   getYourPhotographerPage,
+  getYourPhotographerReviews,
   getYourUserProfile,
-  chatMessaging,
   resetPassword,
   changePassword,
   deleteImages,
   getUsersOrders,
   getUsersPastOrders,
+  getUserReviews,
   updateUserProfile,
   editBookingTimes,
   getYourPhotographerOrders,
@@ -59,11 +62,13 @@ app.post("/changePassword", changePassword);
 app.get("/yourphotographerpage", FBAuth, getYourPhotographerPage);
 app.get("/yourorders", FBAuth, getYourPhotographerOrders);
 app.get("/yourpastorders", FBAuth, getYourPhotographerPastOrders);
+app.get("/yourreviews", FBAuth, getYourPhotographerReviews);
 
 // get user details
 app.get("/youruserprofile", FBAuth, getYourUserProfile);
 app.get("/youruserprofile/orders", FBAuth, getUsersOrders);
 app.get("/youruserprofile/pastorders", FBAuth, getUsersPastOrders);
+app.get("/youruserprofile/userReviews", FBAuth, getUserReviews);
 
 // update user profile
 app.post("/youruserprofile/edit", FBAuth, updateUserProfile);
@@ -94,6 +99,8 @@ app.get("/photographers/:photographerId", getSpecificPhotographer);
 app.post("/photographers/:photographerId/book", FBAuth, bookPhotographer);
 app.post("/photographers/:photographerId/review", FBAuth, reviewPhotographer);
 app.get("/photographers/:photographerId/getReviews", getReviews);
+app.post("/userDashboard/editReview", FBAuth, editReview);
+app.post("/userDashboard/deleteReview", FBAuth, deleteReview);
 app.get(
   "/photographers/:photographerId/bookingTimes",
   FBAuth,

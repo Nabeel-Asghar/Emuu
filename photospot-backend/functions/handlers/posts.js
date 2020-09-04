@@ -61,6 +61,7 @@ exports.getReviews = (req, res) => {
   db.collection("photographer")
     .doc(photographerID)
     .collection("reviews")
+    .orderBy("createdAt", "desc")
     .get()
     .then((data) => {
       let reviews = [];
@@ -86,12 +87,31 @@ exports.getReviews = (req, res) => {
 };
 
 exports.reviewPhotographer = (req, res) => {
+  let description = req.body.description || "";
+  let rating = req.body.rating || "";
+  let title = req.body.title || "";
   let userid = req.user.uid;
   let reviewID = req.user.uid;
   let photographerBeingReviewed = req.params.photographerId;
+  let photographerFirstName = req.body.photographerFirstName;
+  let photographerLastName = req.body.photographerLastName;
+  let photographerProfile = req.body.photographerProfile;
 
   if (reviewID === photographerBeingReviewed) {
     return res.status(400).json({ error: "You cannot review yourself." });
+  }
+
+  if (title.isEmpty || title.length < 5) {
+    return res.status(400).json({
+      title: "The title of your review must be longer than 5 characters.",
+    });
+  }
+
+  if (description.isEmpty || description.length < 10) {
+    return res.status(400).json({
+      description:
+        "The description of your review must be longer than 10 characters.",
+    });
   }
 
   db.collection("photographer")
@@ -114,6 +134,9 @@ exports.reviewPhotographer = (req, res) => {
           photographerID: photographerBeingReviewed,
           firstName: res.locals.firstName,
           lastName: res.locals.lastName,
+          photographerFirstName: photographerFirstName,
+          photographerLastName: photographerLastName,
+          photographerProfile: photographerProfile,
           createdAt: new Date().toISOString(),
         };
 
@@ -169,6 +192,107 @@ exports.reviewPhotographer = (req, res) => {
   // Also add that review to the users collection for future reference
 };
 
+exports.editReview = (req, res) => {
+  let description = req.body.description || "";
+  let rating = req.body.rating || "";
+  let title = req.body.title || "";
+  let userid = req.user.uid;
+  let photographerBeingReviewed = req.body.photographerID;
+  let oldRating = req.body.oldRating;
+
+  if (title.isEmpty || title.length < 5) {
+    return res.status(400).json({
+      title: "The title of your review must be longer than 5 characters.",
+    });
+  }
+
+  if (description.isEmpty || description.length < 10) {
+    return res.status(400).json({
+      description:
+        "The description of your review must be longer than 10 characters.",
+    });
+  }
+
+  const updateReview = {
+    description: description,
+    rating: rating,
+    title: title,
+  };
+
+  db.collection("photographer")
+    .doc(photographerBeingReviewed)
+    .collection("reviews")
+    .doc(userid)
+    .update(updateReview)
+    .then(() => {
+      db.collection("users")
+        .doc(userid)
+        .collection("reviews")
+        .doc(photographerBeingReviewed)
+        .update(updateReview)
+        .then(() => {
+          const pRef = db
+            .collection("photographer")
+            .doc(photographerBeingReviewed);
+          const decrementRating = db2.FieldValue.increment(-oldRating);
+          const incrementRating = db2.FieldValue.increment(req.body.rating);
+
+          pRef.update({ totalRating: decrementRating });
+          pRef.update({ totalRating: incrementRating });
+          console.log("added review to user");
+
+          return res.json({ message: "Review edited successfully!" });
+        })
+        .catch((err) => {
+          console.log(err);
+          return res.status(500).json({ error: `something went wrong` });
+        });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err });
+    });
+};
+
+exports.deleteReview = (req, res) => {
+  let userid = req.user.uid;
+  let photographerBeingReviewed = req.body.photographerID;
+  let oldRating = req.body.oldRating;
+
+  db.collection("photographer")
+    .doc(photographerBeingReviewed)
+    .collection("reviews")
+    .doc(userid)
+    .delete()
+    .then(() => {
+      db.collection("users")
+        .doc(userid)
+        .collection("reviews")
+        .doc(photographerBeingReviewed)
+        .delete()
+        .then(() => {
+          const pRef = db
+            .collection("photographer")
+            .doc(photographerBeingReviewed);
+
+          const decrementReviewCount = db2.FieldValue.increment(-1);
+          const decrementRating = db2.FieldValue.increment(-oldRating);
+
+          pRef.update({ reviewCount: decrementReviewCount });
+          pRef.update({ totalRating: decrementRating });
+          console.log("Deleted review");
+
+          return res.json({ message: "Review deleted successfully!" });
+        })
+        .catch((err) => {
+          console.log(err);
+          return res.status(500).json({ error: `something went wrong` });
+        });
+    })
+    .catch((err) => {
+      return res.status(500).json({ error: err });
+    });
+};
+
 exports.getSpecificPhotographer = (req, res) => {
   let photographerIdOfPageClicked = req.params.photographerId;
 
@@ -176,8 +300,6 @@ exports.getSpecificPhotographer = (req, res) => {
     .doc(photographerIdOfPageClicked)
     .get()
     .then((doc) => {
-      console.log(photographerIdOfPageClicked);
-
       if (!doc.exists) {
         return res.json({ message: "Page not found." });
       }
@@ -308,7 +430,6 @@ exports.filterPhotographers = (req, res) => {
           createdAt: doc.data().createdAt,
         });
       });
-      console.log(photographers);
       return res.json(photographers);
     })
     .catch((err) => console.error(err));

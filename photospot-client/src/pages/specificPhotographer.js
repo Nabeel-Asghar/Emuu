@@ -1,39 +1,31 @@
 // React
-import React, { Component } from "react";
-import equal from "fast-deep-equal";
-
+import Collapse from "@material-ui/core/Collapse";
+import Fab from "@material-ui/core/Fab";
 // Material UI
 import Grid from "@material-ui/core/Grid";
-import withStyles from "@material-ui/core/styles/withStyles";
-import Button from "@material-ui/core/Button";
-import Paper from "@material-ui/core/Paper";
-import Typography from "@material-ui/core/Typography";
-import Skeleton from "@material-ui/lab/Skeleton";
-import Switch from "@material-ui/core/Switch";
-import Collapse from "@material-ui/core/Collapse";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
 import IconButton from "@material-ui/core/IconButton";
-import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
-import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import StarRatings from "react-star-ratings";
-
+import ListItemText from "@material-ui/core/ListItemText";
+import Paper from "@material-ui/core/Paper";
+import withStyles from "@material-ui/core/styles/withStyles";
+import Typography from "@material-ui/core/Typography";
+import AddIcon from "@material-ui/icons/Add";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
+import equal from "fast-deep-equal";
+import React, { Component } from "react";
 // Redux
 import { connect } from "react-redux";
-import { getPhotographerPage } from "../redux/actions/dataActions";
-
-// Components
-import ProfileImage from "../components/photographer-page/profileImage";
-import ProfileDetails from "../components/photographer-page/profileDetails";
-import PhotoSamples from "../components/photographer-page/photoSamples";
+import StarRatings from "react-star-ratings";
 import Bio from "../components/photographer-page/bio";
+import PhotoSamples from "../components/photographer-page/photoSamples";
+import ReviewDialog from "../components/photographer-page/reviewDialog";
 import Usercard from "../components/photographer-page/usercard";
-import Rating from "../components/photographer-page/rating";
-import Review from "../components/photographer-page/review";
+import PhotographerReviews from "../components/photographerReviews";
+import { getPhotographerPage, getReviews } from "../redux/actions/dataActions";
+import { reviewPhotographer } from "../redux/actions/userActions";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -43,6 +35,7 @@ class specificPhotographer extends Component {
   constructor() {
     super();
     this.state = {
+      allReviews: [],
       userEmail: "",
       userProfileImage: "",
       email: "",
@@ -65,6 +58,12 @@ class specificPhotographer extends Component {
       overallRating: 0,
       reviewCount: 0,
       trueOverall: 0,
+      title: "",
+      newReviewRating: 1,
+      description: "",
+      errors: {},
+      openReview: false,
+      openBackdrop: false,
     };
   }
 
@@ -89,7 +88,14 @@ class specificPhotographer extends Component {
     this.props.getPhotographerPage(photographerID);
     const photoDetails = this.props.photographerDetails;
     this.assignValues(photoDetails);
+    this.props.getReviews(photographerID).then(() => {
+      this.setState({
+        allReviews: this.props.reviews,
+      });
+      this.handleCount(this.state.allReviews);
+    });
     this.setState({
+      openBackdrop: false,
       userEmail: this.props.credentials[0]?.email,
       userProfileImage: this.props.credentials[0]?.profileImage,
     });
@@ -102,16 +108,97 @@ class specificPhotographer extends Component {
 
     if (!equal(this.props.credentials, prevProps.credentials)) {
       this.setState({
-        userEmail: this.props.credentials[0].email,
-        userProfileImage: this.props.credentials[0].profileImage,
+        userEmail: this.props.credentials[0]?.email,
+        userProfileImage: this.props.credentials[0]?.profileImage,
       });
     }
+
+    if (!equal(this.props.reviews, prevProps.reviews)) {
+      this.setState({
+        allReviews: this.props.reviews,
+      });
+      this.handleCount(this.state.allReviews);
+    }
   }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.UI.errors) {
+      this.setState({
+        errors: nextProps.UI.errors,
+      });
+    }
+    if (nextProps.UI.newReviewSucess) {
+      this.handleBackdropOpen();
+      console.log("gayyy");
+    }
+  }
+
+  handleReviewDialogAgree = (title, description) => {
+    const details = {
+      description: description,
+      title: title,
+      rating: this.state.newReviewRating,
+      photographerFirstName: this.state.firstName,
+      photographerLastName: this.state.lastName,
+      photographerProfile: this.state.profileImage,
+    };
+
+    this.props.reviewPhotographer(
+      this.props.match.params.photographerID,
+      details
+    );
+  };
 
   handleCheck() {
     this.setState({
       checked: !this.state.checked,
     });
+  }
+
+  handleReviewOpenState = () => {
+    this.setState({
+      openReview: !this.state.openReview,
+      errors: {},
+      response: {},
+    });
+  };
+
+  handleDisagree = () => {
+    this.setState({
+      openReview: false,
+      errors: {},
+      response: {},
+    });
+  };
+
+  changeRating = (newRating, name) => {
+    this.setState({
+      newReviewRating: newRating,
+    });
+  };
+
+  handleBackdropClose = () => {
+    this.setState({
+      openBackdrop: !this.state.openBackdrop,
+      openReview: false,
+    });
+
+    window.location.reload();
+  };
+
+  handleBackdropOpen = () => {
+    this.setState({
+      openBackdrop: true,
+    });
+  };
+
+  handleCount(allReviews) {
+    for (let i = 0; i < allReviews.length; i++) {
+      let rating = allReviews[i].rating;
+
+      this.handleRatingCount();
+      this.handleRatingChange(rating);
+    }
   }
 
   handleRatingCount = () => {
@@ -134,8 +221,21 @@ class specificPhotographer extends Component {
   render() {
     const {
       classes,
-      UI: { loadingData },
+      UI: { loadingData, loadingReviewAction, newReviewSucess },
     } = this.props;
+
+    let gridImages = [];
+    for (var key = 0; key < this.state.allReviews.length; key++) {
+      gridImages.push(
+        <div>
+          <PhotographerReviews
+            review={this.state.allReviews[key]}
+            index={key}
+          />
+        </div>
+      );
+    }
+
     return (
       <div>
         <Paper elevation={3} className={classes.margin}>
@@ -227,14 +327,40 @@ class specificPhotographer extends Component {
           </Grid>
         </Paper>
 
-        <Review
-          checked={this.state.checked}
-          id={this.props.match.params.photographerID}
-          overallRating={this.state.overallRating}
-          reviewCount={this.state.reviewCount}
-          handleRatingChange={this.handleRatingChange}
-          handleRatingCount={this.handleRatingCount}
-        />
+        <Collapse in={this.state.checked}>
+          {gridImages}
+          <Fab
+            variant="extended"
+            color="secondary"
+            aria-label="add"
+            style={{ margin: "15px 0 20px 0" }}
+            onClick={() => this.handleReviewOpenState()}
+          >
+            <AddIcon className={classes.extendedIcon} />
+            <Typography style={{ fontWeight: "bold" }}>ADD REVIEW</Typography>
+          </Fab>
+          <ReviewDialog
+            openReview={this.state.openReview}
+            errors={this.state.errors}
+            loadingReviewAction={loadingReviewAction}
+            newReviewSucess={newReviewSucess}
+            handleDisagree={this.handleDisagree}
+            changeRating={this.changeRating}
+            handleBackdropClose={this.handleBackdropClose}
+            handleReviewOpenState={this.handleReviewOpenState}
+            handleReviewDialogAgree={this.handleReviewDialogAgree}
+            newReviewRating={this.state.newReviewRating}
+            description={this.state.description}
+            title={this.state.title}
+            rating={this.state.newReviewRating}
+            photographerProfile={this.state.profileImage}
+            photographerLastName={this.state.lastName}
+            photographerFirstName={this.state.firstName}
+            openBackdrop={this.state.openBackdrop}
+            type={"Review Photographer"}
+            typeReview="submitted"
+          />
+        </Collapse>
 
         <Paper elevation={3}>
           <Grid
@@ -261,10 +387,14 @@ const mapStateToProps = (state) => ({
   photographerDetails: state.data.photographerPage,
   UI: state.UI,
   credentials: state.user.credentials,
+  reviews: state.data.reviews,
+  errors: state.UI.errors,
 });
 
 const mapActionsToProps = {
   getPhotographerPage,
+  getReviews,
+  reviewPhotographer,
 };
 
 export default connect(

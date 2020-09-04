@@ -330,7 +330,11 @@ class home extends Component {
                 > */}
                 <Fab
                   color="secondary"
-                  onClick={() => this.handleSubmit()}
+                  onClick={
+                    this.state.type.length == 0
+                      ? this.handleSubmit
+                      : this.handleFilterSubmit
+                  }
                   style={{ margin: "2px 0px 2px 15px" }}
                 >
                   <SearchIcon />

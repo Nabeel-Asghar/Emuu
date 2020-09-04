@@ -22,6 +22,7 @@ class settingsCard extends Component {
           <Typography variant="subtitle2">Settings</Typography>
           <Typography
             variant="body1"
+            inline
             className={classes.textLabels}
             component={Link}
             to="/changePassword"
