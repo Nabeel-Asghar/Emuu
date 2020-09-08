@@ -102,6 +102,12 @@ export default function (state = intialState, action) {
         loadingReviewAction: false,
       };
 
+    case "RESET_REVIEW_STATE":
+      return {
+        ...state,
+        newReviewSucess: "",
+      };
+
     case "LOADING_POST_ACTION":
       return {
         ...state,

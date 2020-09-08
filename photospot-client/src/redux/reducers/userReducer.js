@@ -4,6 +4,7 @@ const intialState = {
   yourPhotographyPageDetails: {},
   userOrders: [],
   userPastOrders: [],
+  userReviews: [],
 };
 
 export default function (state = intialState, action) {
@@ -40,6 +41,12 @@ export default function (state = intialState, action) {
       return {
         ...state,
         userPastOrders: { ...action.payload },
+      };
+
+    case "SET_USERS_REVIEWS":
+      return {
+        ...state,
+        userReviews: { ...action.payload },
       };
 
     default:

@@ -537,6 +537,37 @@ exports.getYourPhotographerOrders = (req, res) => {
     });
 };
 
+exports.getYourPhotographerReviews = (req, res) => {
+  let photographerID = req.user.uid;
+
+  db.collection("photographer")
+    .doc(photographerID)
+    .collection("reviews")
+    .orderBy("createdAt", "desc")
+    .get()
+    .then((data) => {
+      let reviews = [];
+
+      data.forEach((doc) => {
+        reviews.push({
+          title: doc.data().title,
+          description: doc.data().description,
+          rating: doc.data().rating,
+          userID: doc.data().userID,
+          photographerID: doc.data().photographerBeingReviewed,
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          createdAt: doc.data().createdAt,
+        });
+      });
+
+      return res.json(reviews);
+    })
+    .catch((err) => {
+      return res.json({ error: err });
+    });
+};
+
 exports.getYourPhotographerPastOrders = (req, res) => {
   let photograhperID = req.user.uid;
 
@@ -623,6 +654,43 @@ exports.getUsersPastOrders = (req, res) => {
       return res.json(allPastOrders);
     })
     .catch((err) => console.error(err));
+};
+
+exports.getUserReviews = (req, res) => {
+  let userid = req.user.uid;
+
+  db.collection("users")
+    .doc(userid)
+    .collection("reviews")
+    .orderBy("createdAt", "desc")
+    .get()
+    .then((snapshot) => {
+      let reviews = [];
+
+      snapshot.forEach((doc) => {
+        reviews.push({
+          title: doc.data().title,
+          description: doc.data().description,
+          rating: doc.data().rating,
+          userID: doc.data().userID,
+          photographerID: doc.data().photographerBeingReviewed,
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          createdAt: doc.data().createdAt,
+          photographerLastName: doc.data().photographerLastName,
+          photographerFirstName: doc.data().photographerFirstName,
+          photographerProfile: doc.data().photographerProfile,
+          photographerID: doc.data().photographerID,
+        });
+      });
+
+      console.log(reviews);
+
+      return res.json(reviews);
+    })
+    .catch((err) => {
+      return res.json({ error: err });
+    });
 };
 
 // photographers can upload pictures for their page

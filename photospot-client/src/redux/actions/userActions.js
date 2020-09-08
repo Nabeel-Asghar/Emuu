@@ -195,6 +195,22 @@ export const getPhotographerOrders = () => (dispatch) => {
     });
 };
 
+export const getPhotographerReviews = () => (dispatch) => {
+  return API.get("/yourreviews")
+    .then((res) => {
+      dispatch({
+        type: "SET_USERS_REVIEWS",
+        payload: res.data,
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: "SET_USERS_REVIEWS",
+        payload: null,
+      });
+    });
+};
+
 export const getPhotographerPastOrders = () => (dispatch) => {
   API.get("//yourpastorders")
     .then((res) => {
@@ -241,6 +257,23 @@ export const getUsersPastOrders = () => (dispatch) => {
         payload: null,
       });
     });
+};
+
+export const getUsersReviews = () => (dispatch) => {
+  API.get("/youruserprofile/userReviews")
+    .then((res) => {
+      dispatch({
+        type: "SET_USERS_REVIEWS",
+        payload: res.data,
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: "SET_USERS_REVIEWS",
+        payload: null,
+      });
+    });
+  dispatch({ type: "RESET_REVIEW_STATE" });
 };
 
 export const updateUserProfile = (details) => (dispatch) => {
