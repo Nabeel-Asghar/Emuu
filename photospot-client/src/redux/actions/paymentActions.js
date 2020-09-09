@@ -11,8 +11,11 @@ export const onboardStripe = () => (dispatch) => {
     });
 };
 
-export const customerPayment = (photographerID) => (dispatch) => {
-  API.get(`/photographers/${photographerID}/book/checkout`)
+export const customerPayment = (photographerID, bookingDetails) => (
+  dispatch
+) => {
+  console.log(bookingDetails);
+  API.post(`/photographers/${photographerID}/book/checkout`, bookingDetails)
     .then((res) => {
       dispatch({
         type: "SET_STRIPE_CLIENT_SECRET",
