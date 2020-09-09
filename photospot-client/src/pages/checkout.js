@@ -44,10 +44,33 @@ const Checkout = (props) => {
   const client_secret = useSelector((state) => state.payment.client_secret);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const userDetails = useSelector((state) => state.user.credentials);
 
   useEffect(() => {
-    dispatch(customerPayment(params.photographerID));
-  }, [params.photographerID]); // Only re-run the effect if count changes
+    // Prevent user from checkout without date
+    if (!props.location.details || !userDetails[0]) {
+      setLoading(true);
+      props.history.goBack();
+    } else {
+      const { userID } = userDetails[0];
+      const { email } = userDetails[0];
+      const { firstName } = userDetails[0];
+      const { lastName } = userDetails[0];
+      const { profileImage } = userDetails[0];
+
+      let theDetails = {
+        consumerID: userID,
+        consumerEmail: email,
+        consumerFirstName: firstName,
+        consumerLastName: lastName,
+        consumerProfileImage: profileImage,
+      };
+
+      const orderDetails = { ...theDetails, ...props.location.details };
+
+      dispatch(customerPayment(params.photographerID, orderDetails));
+    }
+  }, [params.photographerID]);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -55,8 +78,6 @@ const Checkout = (props) => {
     setLoading(true);
 
     if (!stripe || !elements) {
-      // Stripe.js has not loaded yet. Make sure to disable
-      // form submission until Stripe.js has loaded.
       return;
     }
 
@@ -101,8 +122,7 @@ const Checkout = (props) => {
             variant="contained"
             color="secondary"
             type="submit"
-            disabled={loading}
-            disabled={!stripe}
+            disabled={!stripe || loading}
           >
             Pay
             {loading && (

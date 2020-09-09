@@ -106,6 +106,16 @@ export const getBookingTimes = (photographerID) => (dispatch) => {
     });
 };
 
+export const checkBookability = () => (dispatch) => {
+  return API.get(`/checkUserOrders`).then((res) => {
+    if (res.data.message) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+};
+
 export const bookPhotographer = (photographerID, bookingDetails) => (
   dispatch
 ) => {
