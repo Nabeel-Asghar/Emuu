@@ -1,11 +1,10 @@
 const functions = require("firebase-functions");
-require("dotenv").config();
 const cors = require("cors");
 const helmet = require("helmet");
 const session = require("express-session");
 const app = require("express")();
+require("dotenv").config();
 
-// Automatically allow cross-origin requests
 app.use(cors({ origin: true }));
 app.use(helmet());
 app.use(
@@ -16,8 +15,7 @@ app.use(
   })
 );
 
-// To dos
-// TODO: Why the fuck is rating getting messed up when making an account
+// TODO: alternate to request.session due to memory leak
 
 const {
   getAllPhotographers,
@@ -25,6 +23,7 @@ const {
   searchPhotographer,
   filterPhotographers,
   getSpecificPhotographer,
+  checkBookAbility,
   bookPhotographer,
   getReviews,
   reviewPhotographer,
@@ -65,6 +64,8 @@ const {
 
 const { completedOrders } = require("./handlers/administrator");
 
+const { paymentHook } = require("./handlers/webhooks");
+
 const FBAuth = require("./util/FBAuth");
 //const { searchPhotographer } = require("../../photospot-client/src/redux/actions/dataActions");
 
@@ -93,7 +94,7 @@ app.post("/user/profileimage", FBAuth, uploadProfilePicture);
 // Stripe payments and setup
 app.post("/onboard-user", FBAuth, onboardUser);
 app.get("/onboard-user/refresh", FBAuth, onboardUserRefresh);
-app.get("/photographers/:photographerId/book/checkout", FBAuth, createPayment);
+app.post("/photographers/:photographerId/book/checkout", FBAuth, createPayment);
 
 // photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
@@ -115,6 +116,7 @@ app.post("/chats/:docKey", FBAuth, sendMessage);
 //----------Consumer Routes---------------
 app.get("/photographers", getAllPhotographers);
 app.get("/photographers/:photographerId", getSpecificPhotographer);
+app.get("/checkUserOrders", FBAuth, checkBookAbility);
 app.post("/photographers/:photographerId/book", FBAuth, bookPhotographer);
 app.post("/photographers/:photographerId/review", FBAuth, reviewPhotographer);
 app.get("/photographers/:photographerId/getReviews", getReviews);
@@ -129,5 +131,8 @@ app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);
 
 //Administrator
 app.get("/admin/completedOrders", completedOrders);
+
+// Webhooks for Stripe
+app.post("/webhook/payment", paymentHook);
 
 exports.api = functions.https.onRequest(app);
