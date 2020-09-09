@@ -64,6 +64,7 @@ exports.createPayment = (req, res) => {
     .then((amount) => {
       getPhotographerStripeID(photographerBooked)
         .then((connectedStripeAccountID) => {
+          console.log(req.body);
           console.log("amount: ", amount);
           console.log("stripeid: ", connectedStripeAccountID);
           stripe.paymentIntents
@@ -74,6 +75,22 @@ exports.createPayment = (req, res) => {
               application_fee_amount: calculateFeeAmount(amount),
               transfer_data: {
                 destination: connectedStripeAccountID,
+              },
+              metadata: {
+                date: req.body.date,
+                time: req.body.time,
+
+                photographerFirstName: req.body.photographerFirstName,
+                photographerLastName: req.body.photographerLastName,
+                photographerProfileImage: req.body.photographerProfileImage,
+                photographerID: req.body.photographerID,
+                photographerEmail: req.body.photographerEmail,
+
+                consumerFirstName: req.body.consumerFirstName,
+                consumerLastName: req.body.consumerLastName,
+                consumerProfileImage: req.body.consumerProfileImage,
+                consumerID: req.body.consumerID,
+                consumerEmail: req.body.consumerEmail,
               },
             })
             .then((paymentIntent) => {
