@@ -14,6 +14,7 @@ import {
   getPhotographerPage,
   getBookingTimes,
   bookPhotographer,
+  checkBookability,
 } from "../redux/actions/dataActions";
 
 // Components
@@ -144,7 +145,15 @@ class book extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    this.handleClickOpen();
+    this.props.checkBookability().then((response) => {
+      if (response) {
+        this.handleClickOpen();
+      } else {
+        this.setState({
+          openSnack: true,
+        });
+      }
+    });
   };
 
   handleClickOpen = () => {
@@ -161,20 +170,18 @@ class book extends Component {
 
   handleAgree = () => {
     let bookingDetails = {
+      photographerID: this.props.match.params.photographerID,
+      photographerEmail: this.state.email,
       date: this.state.formattedDate,
       time: this.state.selectedTime,
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      profileImage: this.state.profileImage,
+      photographerFirstName: this.state.firstName,
+      photographerLastName: this.state.lastName,
+      photographerProfileImage: this.state.profileImage,
     };
-    this.props
-      .bookPhotographer(this.props.match.params.photographerID, bookingDetails)
-      .then(() => {
-        this.setState({ openSnack: true });
-      });
 
-    this.setState({
-      open: false,
+    this.props.history.push({
+      pathname: `${this.props.history.location.pathname}/checkout`,
+      details: bookingDetails,
     });
   };
 
@@ -199,14 +206,10 @@ class book extends Component {
             horizontal: "center",
           }}
           open={this.state.openSnack}
-          autoHideDuration={6000}
           onClose={this.handleClose}
         >
-          <Alert
-            onClose={this.props.handleClose}
-            severity={errors ? "warning" : "success"}
-          >
-            {errors ? errors.message : "You've been booked!"}
+          <Alert onClose={this.handleClose} severity={"warning"}>
+            You already have a pending order.
           </Alert>
         </Snackbar>
 
@@ -274,6 +277,7 @@ const mapActionsToProps = {
   getPhotographerPage,
   getBookingTimes,
   bookPhotographer,
+  checkBookability,
 };
 
 export default connect(
