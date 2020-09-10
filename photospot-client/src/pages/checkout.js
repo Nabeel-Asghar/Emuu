@@ -14,6 +14,12 @@ import Paper from "@material-ui/core/Paper";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
+// Components
+import Success from "../components/checkout/success";
+import ProfileCard from "../components/booking/card";
+import { timeConvert } from "../util/timeConvert";
+import { dateConvert } from "../util/dateConvert";
+
 const styles = (theme) => ({
   ...theme.spreadThis,
 });
@@ -43,6 +49,7 @@ const Checkout = (props) => {
   const params = useParams();
   const client_secret = useSelector((state) => state.payment.client_secret);
   const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
   const userDetails = useSelector((state) => state.user.credentials);
 
@@ -99,6 +106,7 @@ const Checkout = (props) => {
       // The payment has been processed!
       if (result.paymentIntent.status === "succeeded") {
         setLoading(false);
+        setSuccess(true);
         // Show a success message to your customer
         // There's a risk of the customer closing the window before callback
         // execution. Set up a webhook or plugin to listen for the
@@ -110,36 +118,52 @@ const Checkout = (props) => {
   };
 
   return (
-    <Container maxWidth="sm">
-      <Paper style={{ padding: 30 }}>
-        <form onSubmit={handleSubmit}>
-          <label>
-            <CardElement options={CARD_ELEMENT_OPTIONS} />
-          </label>
-          <Button
-            style={{ marginTop: 10 }}
-            fullWidth
-            variant="contained"
-            color="secondary"
-            type="submit"
-            disabled={!stripe || loading}
-          >
-            Pay
-            {loading && (
-              <CircularProgress
-                color="secondary"
-                style={{ position: "absolute" }}
-              />
+    <div>
+      {props.location.details && (
+        <Container maxWidth="sm" style={{ marginBottom: 20 }}>
+          {console.log(props.location.details)}
+          <ProfileCard
+            firstName={props.location.details.photographerFirstName}
+            lastName={props.location.details.photographerLastName}
+            profileImage={props.location.details.photographerProfileImage}
+            date={dateConvert(props.location.details.date)}
+            time={timeConvert(props.location.details.time)}
+          />
+        </Container>
+      )}
+
+      <Container maxWidth="sm">
+        <Paper style={{ padding: 30 }}>
+          <form onSubmit={handleSubmit}>
+            <label>
+              <CardElement options={CARD_ELEMENT_OPTIONS} />
+            </label>
+            <Button
+              style={{ marginTop: 10 }}
+              fullWidth
+              variant="contained"
+              color="secondary"
+              type="submit"
+              disabled={!stripe || loading}
+            >
+              Pay
+              {loading && (
+                <CircularProgress
+                  color="secondary"
+                  style={{ position: "absolute" }}
+                />
+              )}
+            </Button>
+            {error && (
+              <Typography style={{ paddingTop: 18, textAlign: "center" }}>
+                {error}
+              </Typography>
             )}
-          </Button>
-          {error && (
-            <Typography style={{ paddingTop: 18, textAlign: "center" }}>
-              {error}
-            </Typography>
-          )}
-        </form>
-      </Paper>
-    </Container>
+          </form>
+          <Success open={success} />
+        </Paper>
+      </Container>
+    </div>
   );
 };
 
