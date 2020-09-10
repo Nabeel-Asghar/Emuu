@@ -24,7 +24,6 @@ const {
   filterPhotographers,
   getSpecificPhotographer,
   checkBookAbility,
-  bookPhotographer,
   getReviews,
   reviewPhotographer,
   getPhotographerSchedule,
@@ -117,7 +116,6 @@ app.post("/chats/:docKey", FBAuth, sendMessage);
 app.get("/photographers", getAllPhotographers);
 app.get("/photographers/:photographerId", getSpecificPhotographer);
 app.get("/checkUserOrders", FBAuth, checkBookAbility);
-app.post("/photographers/:photographerId/book", FBAuth, bookPhotographer);
 app.post("/photographers/:photographerId/review", FBAuth, reviewPhotographer);
 app.get("/photographers/:photographerId/getReviews", getReviews);
 app.get(
