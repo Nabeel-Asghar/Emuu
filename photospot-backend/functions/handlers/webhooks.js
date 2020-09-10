@@ -4,6 +4,9 @@ const dotenv = require("dotenv");
 dotenv.config();
 const payment__webhook_secret = process.env.payment_signing_secret;
 
+// Email functions
+const email = require("./email");
+
 exports.paymentHook = (req, res) => {
   let event = req.body;
 
@@ -84,6 +87,7 @@ function handleSuccessfulPaymentIntent(orderDetails) {
                 .doc(photographerID)
                 .set(booking)
                 .then(() => {
+                  email.emailOrderDetails(booking);
                   return true;
                 })
                 .catch((err) => {
