@@ -7,21 +7,9 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
-class confirmbook extends Component {
-  tConvert(time) {
-    // Check correct time format and split into components
-    if (time) {
-      time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)?$/) || [time];
+import { timeConvert } from "../../util/timeConvert";
 
-      if (time.length > 1) {
-        // If time format correct
-        time = time.slice(1); // Remove full string match value
-        time[5] = +time[0] < 12 ? " AM" : " PM"; // Set AM/PM
-        time[0] = +time[0] % 12 || 12; // Adjust hours
-      }
-      return time.join(""); // return adjusted time or original string
-    }
-  }
+class confirmbook extends Component {
   render() {
     return (
       <Dialog
@@ -35,21 +23,21 @@ class confirmbook extends Component {
           <DialogContentText id="alert-dialog-description">
             Would you like to confirm booking with {this.props.firstName}{" "}
             {this.props.lastName} on {this.props.date} at{" "}
-            {this.tConvert(this.props.time)}?
+            {timeConvert(this.props.time)}?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button
             onClick={this.props.handleDisagree}
             variant="contained"
-            color="secondary"
+            color="primary"
           >
             Disagree
           </Button>
           <Button
             onClick={this.props.handleAgree}
             variant="contained"
-            color="primary"
+            color="secondary"
             autoFocus
           >
             Agree
