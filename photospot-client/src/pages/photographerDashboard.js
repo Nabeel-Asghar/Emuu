@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import moment from "moment";
+import { Redirect, Link } from "react-router-dom";
 
 // Redux
 import { connect } from "react-redux";
@@ -11,6 +12,8 @@ import {
   updateUserProfile,
 } from "../redux/actions/userActions";
 
+import { getStripeStatus } from "../redux/actions/paymentActions";
+
 // Material UI
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
@@ -21,6 +24,7 @@ import OrderCard from "../components/dashboard/orderCard";
 import ProfileCard from "../components/dashboard/profileCard";
 import ContactCard from "../components/dashboard/contactCard";
 import SettingsCard from "../components/dashboard/settingsCard";
+import StripeCard from "../components/dashboard/stripeCard";
 import CarouselOfItems from "../components/dashboard/carouselOfItems";
 
 const styles = (theme) => ({
@@ -32,6 +36,7 @@ class photograhperDashboard extends Component {
     super();
     this.state = {
       email: "",
+      photographer: true,
       firstName: "",
       lastName: "",
       location_city: "",
@@ -66,9 +71,13 @@ class photograhperDashboard extends Component {
     this.props.getUserData().then(() => {
       this.assignValues(this.props.credentials);
     });
+    this.props.getStripeStatus();
   }
 
   render() {
+    if (this.state.photographer === false) {
+      return <Redirect to="/" />;
+    }
     const userOrders = this.props.userOrders || {};
 
     let theUserOrders = Object.keys(userOrders).map((key) => (
@@ -100,7 +109,6 @@ class photograhperDashboard extends Component {
     const { classes } = this.props;
     return (
       <Grid container spacing={5}>
-        {console.log(theUserOrders)}
         <Grid item xs={4}>
           <ProfileCard
             profileImage={this.state.profileImage}
@@ -114,6 +122,8 @@ class photograhperDashboard extends Component {
             location_state={this.state.location_state}
             email={this.state.email}
           />
+
+          {!this.props.stripeStatus && <StripeCard />}
 
           <SettingsCard />
         </Grid>
@@ -140,6 +150,7 @@ const mapStateToProps = (state) => ({
   credentials: state.user.credentials,
   userOrders: state.user.userOrders,
   userPastOrders: state.user.userPastOrders,
+  stripeStatus: state.payment.stripeStatus,
 });
 
 const mapActionsToProps = {
@@ -148,6 +159,7 @@ const mapActionsToProps = {
   getPhotographerOrders,
   getPhotographerPastOrders,
   updateUserProfile,
+  getStripeStatus,
 };
 
 export default connect(
