@@ -15,6 +15,13 @@ exports.onboardUser = async (req, res) => {
   try {
     const account = await stripe.accounts.create({
       type: "express",
+      settings: {
+        payouts: {
+          schedule: {
+            interval: "manual",
+          },
+        },
+      },
     });
 
     req.session.accountID = account.id;
@@ -54,6 +61,22 @@ exports.onboardUserRefresh = async (req, res) => {
   }
 };
 
+exports.getStripeOnboardStatus = (req, res) => {
+  db.collection("photographer")
+    .doc(req.user.uid)
+    .get()
+    .then((doc) => {
+      if (doc.data().stripeID) {
+        return res.json({ status: true });
+      } else {
+        return res.json({ status: false });
+      }
+    })
+    .catch(() => {
+      return res.json({ status: false });
+    });
+};
+
 // Customer Routes
 //
 // Create charge when customer is booking photographer
@@ -70,6 +93,7 @@ exports.createPayment = (req, res) => {
           stripe.paymentIntents
             .create({
               payment_method_types: ["card"],
+              receipt_email: req.body.consumerEmail,
               amount: amount,
               currency: "usd",
               application_fee_amount: calculateFeeAmount(amount),
