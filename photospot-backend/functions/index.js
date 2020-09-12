@@ -59,6 +59,7 @@ const {
   onboardUser,
   onboardUserRefresh,
   createPayment,
+  getStripeOnboardStatus,
 } = require("./handlers/payment");
 
 const { completedOrders } = require("./handlers/administrator");
@@ -91,6 +92,7 @@ app.post("/youruserprofile/edit", FBAuth, updateUserProfile);
 app.post("/user/profileimage", FBAuth, uploadProfilePicture);
 
 // Stripe payments and setup
+app.get("/onboard-status", FBAuth, getStripeOnboardStatus);
 app.post("/onboard-user", FBAuth, onboardUser);
 app.get("/onboard-user/refresh", FBAuth, onboardUserRefresh);
 app.post("/photographers/:photographerId/book/checkout", FBAuth, createPayment);
