@@ -1,5 +1,6 @@
 const intialState = {
   client_secret: "",
+  stripeStatus: null,
 };
 
 export default function (state = intialState, action) {
@@ -8,6 +9,12 @@ export default function (state = intialState, action) {
       return {
         ...state,
         client_secret: action.payload,
+      };
+
+    case "SET_STRIPE_STATUS":
+      return {
+        ...state,
+        stripeStatus: action.payload,
       };
 
     default:

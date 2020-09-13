@@ -23,6 +23,23 @@ export const customerPayment = (photographerID, bookingDetails) => (
       });
     })
     .catch((err) => {
-      dispatch({ type: "SET_STRIPE_CLIENT_SECRET_ERROR" });
+      dispatch({ type: "SET_STRIPE_CLIENT_SECRET", payload: null });
+    });
+};
+
+export const getStripeStatus = () => (dispatch) => {
+  return API.get("/onboard-status")
+    .then((res) => {
+      console.log(res.data.status);
+      dispatch({
+        type: "SET_STRIPE_STATUS",
+        payload: res.data.status,
+      });
+    })
+    .catch(() => {
+      dispatch({
+        type: "SET_STRIPE_STATUS",
+        payload: null,
+      });
     });
 };
