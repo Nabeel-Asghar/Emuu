@@ -88,6 +88,9 @@ class search extends Component {
       classes,
       UI: { loadingData },
     } = this.props;
+    console.log("hello");
+
+    console.log(this.state.allThePhotographers);
 
     let recentPhotographers = Object.keys(
       this.state.allThePhotographers

@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import moment from "moment";
 import { Redirect, Link } from "react-router-dom";
+import equal from "fast-deep-equal";
 
 // Redux
 import { connect } from "react-redux";
@@ -10,6 +11,7 @@ import {
   getPhotographerOrders,
   getPhotographerPastOrders,
   updateUserProfile,
+  getPhotographerReviews,
 } from "../redux/actions/userActions";
 
 import { getStripeStatus } from "../redux/actions/paymentActions";
@@ -26,6 +28,7 @@ import ContactCard from "../components/dashboard/contactCard";
 import SettingsCard from "../components/dashboard/settingsCard";
 import StripeCard from "../components/dashboard/stripeCard";
 import CarouselOfItems from "../components/dashboard/carouselOfItems";
+import PhotographerReviews from "../components/photographerReviews";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -35,6 +38,7 @@ class photograhperDashboard extends Component {
   constructor() {
     super();
     this.state = {
+      allReviews: [],
       email: "",
       photographer: true,
       firstName: "",
@@ -72,6 +76,18 @@ class photograhperDashboard extends Component {
       this.assignValues(this.props.credentials);
     });
     this.props.getStripeStatus();
+    this.props.getPhotographerReviews();
+    this.setState({
+      allReviews: Object.values(this.props.userReviews || {}),
+    });
+  }
+
+  componentDidUpdate(prevProps) {
+    if (!equal(this.props.userReviews, prevProps.userReviews)) {
+      this.setState({
+        allReviews: Object.values(this.props.userReviews),
+      });
+    }
   }
 
   render() {
@@ -79,7 +95,6 @@ class photograhperDashboard extends Component {
       return <Redirect to="/" />;
     }
     const userOrders = this.props.userOrders || {};
-
     let theUserOrders = Object.keys(userOrders).map((key) => (
       <div>
         <OrderCard key={key} photographer={userOrders[key]} />
@@ -87,12 +102,24 @@ class photograhperDashboard extends Component {
     ));
 
     const userPastOrders = this.props.userPastOrders || {};
-
     let theUserPastOrders = Object.keys(userPastOrders).map((key) => (
       <div>
         <OrderCard key={key} photographer={userPastOrders[key]} />
       </div>
     ));
+
+    //const userReviews = this.props.userReviews || [];
+    let gridImages = [];
+    for (var key = 0; key < this.state.allReviews.length; key++) {
+      gridImages.push(
+        <div>
+          <PhotographerReviews
+            review={this.state.allReviews[key]}
+            index={key}
+          />
+        </div>
+      );
+    }
 
     if (theUserPastOrders.length < 1) {
       theUserPastOrders = (
@@ -105,6 +132,8 @@ class photograhperDashboard extends Component {
         <Typography variant="subtitle2">You have no upcoming shoots</Typography>
       );
     }
+
+    console.log(this.props.match.params.photographerID);
 
     const { classes } = this.props;
     return (
@@ -140,6 +169,7 @@ class photograhperDashboard extends Component {
           </Typography>
 
           <CarouselOfItems orders={theUserPastOrders} />
+          {gridImages}
         </Grid>
       </Grid>
     );
@@ -151,6 +181,7 @@ const mapStateToProps = (state) => ({
   userOrders: state.user.userOrders,
   userPastOrders: state.user.userPastOrders,
   stripeStatus: state.payment.stripeStatus,
+  userReviews: state.user.userReviews,
 });
 
 const mapActionsToProps = {
@@ -160,6 +191,7 @@ const mapActionsToProps = {
   getPhotographerPastOrders,
   updateUserProfile,
   getStripeStatus,
+  getPhotographerReviews,
 };
 
 export default connect(

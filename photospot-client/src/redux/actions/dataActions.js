@@ -137,6 +137,7 @@ export const getReviews = (photographerID) => (dispatch) => {
   dispatch({
     type: "LOADING_REVIEWS",
   });
+  dispatch({ type: "RESET_REVIEW_STATE" });
   return API.get(`/photographers/${photographerID}/getReviews`)
     .then((res) => {
       dispatch({
@@ -150,4 +151,48 @@ export const getReviews = (photographerID) => (dispatch) => {
         payload: [null],
       });
     });
+};
+
+export const editPhotographerCategories = (categories) => (dispatch) => {
+  API.post("/editphotographypage/editCategories", categories)
+    .then((res) => {
+      console.log(res.data);
+      dispatch({ type: "CLEAR_ERRORS" });
+    })
+    .catch((err) =>
+      dispatch({
+        type: "SET_ERRORS",
+        payload: err.response.data,
+      })
+    );
+};
+
+export const editReview = (data) => (dispatch) => {
+  API.post("/userDashboard/editReview", data)
+    .then((res) => {
+      console.log(res.data);
+      dispatch({
+        type: "SET_RESPONSE_NEW_REVIEW_SUCCESS",
+      });
+    })
+    .catch((err) =>
+      dispatch({
+        type: "SET_ERRORS",
+        payload: err.response.data,
+      })
+    );
+};
+
+export const deleteReview = (data) => (dispatch) => {
+  API.post("/userDashboard/deleteReview", data)
+    .then((res) => {
+      console.log(res.data);
+      dispatch({ type: "SET_RESPONSE_NEW_REVIEW_SUCCESS" });
+    })
+    .catch((err) =>
+      dispatch({
+        type: "SET_ERRORS",
+        payload: err.response.data,
+      })
+    );
 };
