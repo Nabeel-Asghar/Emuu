@@ -14,15 +14,18 @@ exports.paymentHook = (req, res) => {
     case "payment_intent.succeeded":
       const paymentIntent = event.data.object;
       console.log("Successful Payment");
-      handleSuccessfulPaymentIntent(event.data.object.metadata);
+      handleSuccessfulPaymentIntent(
+        event.data.object.metadata,
+        event.data.object.amount,
+        event.data.object.id
+      );
   }
 
   return res.status(200).end();
 };
 
-function handleSuccessfulPaymentIntent(orderDetails) {
-  console.log("order details: ", orderDetails);
-
+function handleSuccessfulPaymentIntent(orderDetails, chargeAmount, paymentID) {
+  let amount = chargeAmount / 100;
   let shootDate = orderDetails.date;
   let shootTime = orderDetails.time;
 
@@ -43,6 +46,8 @@ function handleSuccessfulPaymentIntent(orderDetails) {
   var formattedDate = new Date(newDate);
 
   let booking = {
+    id: paymentID,
+    amount: amount,
     shootDate: shootDate,
     shootTime: shootTime,
     photographerID: photographerID,
