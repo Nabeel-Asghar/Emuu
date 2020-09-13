@@ -1,12 +1,21 @@
 const functions = require("firebase-functions");
 const cors = require("cors");
-//const helmet = require("helmet");
-
+const helmet = require("helmet");
+const session = require("express-session");
 const app = require("express")();
+require("dotenv").config();
 
-// Automatically allow cross-origin requests
 app.use(cors({ origin: true }));
-//app.use(helmet());
+app.use(helmet());
+app.use(
+  session({
+    secret: "Set this to a random string that is kept secure",
+    resave: false,
+    saveUninitialized: true,
+  })
+);
+
+// TODO: alternate to request.session due to memory leak
 
 const {
   getAllPhotographers,
@@ -14,7 +23,7 @@ const {
   searchPhotographer,
   filterPhotographers,
   getSpecificPhotographer,
-  bookPhotographer,
+  checkBookAbility,
   getReviews,
   reviewPhotographer,
   getPhotographerSchedule,
@@ -49,7 +58,16 @@ const {
   getYourPhotographerPastOrders,
 } = require("./handlers/users");
 
+const {
+  onboardUser,
+  onboardUserRefresh,
+  createPayment,
+  getStripeOnboardStatus,
+} = require("./handlers/payment");
+
 const { completedOrders } = require("./handlers/administrator");
+
+const { paymentHook } = require("./handlers/webhooks");
 
 const FBAuth = require("./util/FBAuth");
 //const { searchPhotographer } = require("../../photospot-client/src/redux/actions/dataActions");
@@ -78,6 +96,12 @@ app.post("/youruserprofile/edit", FBAuth, updateUserProfile);
 // upload profile image
 app.post("/user/profileimage", FBAuth, uploadProfilePicture);
 
+// Stripe payments and setup
+app.get("/onboard-status", FBAuth, getStripeOnboardStatus);
+app.post("/onboard-user", FBAuth, onboardUser);
+app.get("/onboard-user/refresh", FBAuth, onboardUserRefresh);
+app.post("/photographers/:photographerId/book/checkout", FBAuth, createPayment);
+
 // photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
 app.post(
@@ -98,7 +122,7 @@ app.post("/chats/:docKey", FBAuth, sendMessage);
 //----------Consumer Routes---------------
 app.get("/photographers", getAllPhotographers);
 app.get("/photographers/:photographerId", getSpecificPhotographer);
-app.post("/photographers/:photographerId/book", FBAuth, bookPhotographer);
+app.get("/checkUserOrders", FBAuth, checkBookAbility);
 app.post("/photographers/:photographerId/review", FBAuth, reviewPhotographer);
 app.get("/photographers/:photographerId/getReviews", getReviews);
 app.post("/userDashboard/editReview", FBAuth, editReview);
@@ -110,10 +134,12 @@ app.get(
 );
 app.get("/search/:searchQuery", searchPhotographer);
 app.get("/filter/:type/:city/:state", filterPhotographers);
-
 app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);
 
 //Administrator
 app.get("/admin/completedOrders", completedOrders);
+
+// Webhooks for Stripe
+app.post("/webhook/payment", paymentHook);
 
 exports.api = functions.https.onRequest(app);

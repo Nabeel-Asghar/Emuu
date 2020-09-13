@@ -5,6 +5,7 @@ import thunk from "redux-thunk";
 import userReducer from "./reducers/userReducer";
 import dataReducer from "./reducers/dataReducer";
 import UIReducer from "./reducers/UIReducer";
+import paymentReducer from "./reducers/paymentReducer";
 
 const intialState = {};
 
@@ -14,6 +15,7 @@ const reducers = combineReducers({
   user: userReducer,
   data: dataReducer,
   UI: UIReducer,
+  payment: paymentReducer,
 });
 
 const store = createStore(

@@ -611,6 +611,7 @@ exports.getUsersOrders = (req, res) => {
 
       data.forEach((doc) => {
         orders.push({
+          id: doc.data().id,
           consumerID: doc.data().consumerID,
           photographerID: doc.data().photographerID,
           firstName: doc.data().photographerFirstName,
