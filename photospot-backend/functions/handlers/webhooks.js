@@ -7,24 +7,88 @@ const payment__webhook_secret = process.env.payment_signing_secret;
 // Email functions
 const email = require("./email");
 
-exports.paymentHook = (req, res) => {
+exports.webhooks = (req, res) => {
   let event = req.body;
 
   switch (event.type) {
     case "payment_intent.succeeded":
-      const paymentIntent = event.data.object;
       console.log("Successful Payment");
       handleSuccessfulPaymentIntent(
         event.data.object.metadata,
         event.data.object.amount,
         event.data.object.id
       );
+      break;
+
+    case "charge.refunded":
+      console.log("Refund Successful");
+      handleRefund(event.data.object.metadata);
+      break;
   }
 
   return res.status(200).end();
 };
 
+function handleRefund(orderDetails) {
+  let photographerID = orderDetails.photographerID;
+  let consumerID = orderDetails.consumerID;
+  let shootDate = orderDetails.date;
+  let shootTime = orderDetails.time;
+
+  // delete from main collection
+  db.collection("allOrders")
+    .doc(consumerID)
+    .delete()
+    .then(() => {
+      // delete from photographer
+      db.collection("photographer")
+        .doc(photographerID)
+        .collection("orders")
+        .doc(consumerID)
+        .delete()
+        .then(() => {
+          // delete from user
+          db.collection("users")
+            .doc(consumerID)
+            .collection("orders")
+            .doc(consumerID)
+            .delete()
+            .then(() => {
+              // update timeslot for photographer
+              db.collection("photographer")
+                .doc(photographerID)
+                .collection("bookings")
+                .doc(shootDate)
+                .update({
+                  [shootTime]: false,
+                })
+                .then(() => {
+                  console.log("done refunding this bitch");
+                  return true;
+                })
+                .catch((err) => {
+                  console.log("update timeslot for photographer", err);
+                  return false;
+                });
+            })
+            .catch((err) => {
+              console.log("delete from user", err);
+              return false;
+            });
+        })
+        .catch((err) => {
+          console.log("delete from photographer", err);
+          return false;
+        });
+    })
+    .catch((err) => {
+      console.log("delete from main collection", err);
+      return false;
+    });
+}
+
 function handleSuccessfulPaymentIntent(orderDetails, chargeAmount, paymentID) {
+  console.log("DUDE HOLY CRAP");
   let amount = chargeAmount / 100;
   let shootDate = orderDetails.date;
   let shootTime = orderDetails.time;
@@ -66,7 +130,7 @@ function handleSuccessfulPaymentIntent(orderDetails, chargeAmount, paymentID) {
 
   // update main collection of orders with this order
   db.collection("allOrders")
-    .doc()
+    .doc(consumerID)
     .set(booking)
     .then(() => {
       // Update booking time to be filled on photographer schedule
@@ -82,14 +146,14 @@ function handleSuccessfulPaymentIntent(orderDetails, chargeAmount, paymentID) {
           db.collection("photographer")
             .doc(photographerID)
             .collection("orders")
-            .doc()
+            .doc(consumerID)
             .set(booking)
             .then(() => {
               // Set order for user under users/{user ID}/orders
               db.collection("users")
                 .doc(consumerID)
                 .collection("orders")
-                .doc(photographerID)
+                .doc(consumerID)
                 .set(booking)
                 .then(() => {
                   email.emailOrderDetails(booking);
