@@ -5,10 +5,13 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
 import moment from "moment";
 
-// Card MUI
+// MUI
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
+import CardActionArea from "@material-ui/core/CardActionArea";
+
+import Button from "@material-ui/core/Button";
 
 const styles = {
   card: {
@@ -41,6 +44,8 @@ class orderCard extends Component {
     const {
       classes,
       photographer: {
+        docID,
+        paymentID,
         photographerID,
         firstName,
         lastName,
@@ -54,23 +59,29 @@ class orderCard extends Component {
       <div>
         {photographerID && (
           <Card className={classes.card}>
-            <CardMedia
-              className={classes.media}
-              image={profileImage}
-              title="Profile Image"
-              component={Link}
-              to={`/photographers/${photographerID}`}
-            />
-            <CardContent className={classes.content}>
-              <Typography variant="h5">
-                {firstName}&nbsp;{lastName}
-              </Typography>
-              <Typography variant="body2" color="textSecondary">
-                {moment(shootDate).format("LL")}
-                {" at "}
-                {moment(shootTime, "HH:mm").format("h:mm A")}
-              </Typography>
-            </CardContent>
+            <CardActionArea
+              onClick={() => {
+                this.props.history.push({
+                  pathname: `${this.props.history.location.pathname}/orders/${docID}`,
+                });
+              }}
+            >
+              <CardMedia
+                className={classes.media}
+                image={profileImage}
+                title="Click for more details"
+              />
+              <CardContent className={classes.content}>
+                <Typography variant="h5">
+                  {firstName}&nbsp;{lastName}
+                </Typography>
+                <Typography variant="body2" color="textSecondary">
+                  {moment(shootDate).format("LL")}
+                  {" at "}
+                  {moment(shootTime, "HH:mm").format("h:mm A")}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
           </Card>
         )}
       </div>
