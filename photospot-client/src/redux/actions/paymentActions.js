@@ -43,3 +43,9 @@ export const getStripeStatus = () => (dispatch) => {
       });
     });
 };
+
+export const refund = (paymentID) => (dispatch) => {
+  API.post("/user/refund", paymentID).then(() => {
+    console.log("you pierre you wanna get out here");
+  });
+};
