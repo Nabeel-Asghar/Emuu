@@ -87,7 +87,6 @@ exports.createPayment = (req, res) => {
     .then((amount) => {
       getPhotographerStripeID(photographerBooked)
         .then((connectedStripeAccountID) => {
-          console.log(req.body);
           console.log("amount: ", amount);
           console.log("stripeid: ", connectedStripeAccountID);
           stripe.paymentIntents
@@ -131,6 +130,21 @@ exports.createPayment = (req, res) => {
     .catch((err) => {
       console.log("Error getting rate per hour ", err);
     });
+};
+
+exports.refund = async (req, res) => {
+  //TODO: Grab payment id from server side
+
+  let userID = req.user.uid;
+  let paymentID = req.body.paymentID;
+
+  const refund = await stripe.refunds.create({
+    payment_intent: paymentID,
+    reverse_transfer: true,
+    refund_application_fee: false,
+  });
+
+  return res.json({ message: "Refund in progress" });
 };
 
 // Functions
@@ -179,4 +193,20 @@ function calculateOrderAmount(photographerId) {
 // Calculate how much we will take as a fee
 function calculateFeeAmount(amount) {
   return 0.05 * amount;
+}
+
+// Get payment ID from users current order to refund
+async function getPaymentID(userID) {
+  db.collection("users")
+    .doc(userID)
+    .collection("orders")
+    .get()
+    .then((data) => {
+      data.forEach((doc) => {
+        return doc.data().id;
+      });
+    })
+    .catch((err) => {
+      return null;
+    });
 }
