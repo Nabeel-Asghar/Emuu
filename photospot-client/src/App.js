@@ -30,6 +30,7 @@ import photographyPictures from "./pages/photographyPictures";
 import home from "./pages/home";
 import setYourSchedule from "./pages/setYourSchedule";
 import userDashboard from "./pages/userDashboard";
+import orderDetails from "./pages/orderDetails";
 import photograhperDashboard from "./pages/photographerDashboard";
 import onboard from "./pages/onboard";
 import successPage from "./pages/successPage";
@@ -219,6 +220,8 @@ class App extends Component {
                   <AuthRoute exact path="/changePasswordSent" component={changePasswordSent} />
 
                   <AuthRoute exact path="/userDashboard" component={userDashboard} />
+
+                  <AuthRoute exact path="/userDashboard/orders/:orderID" component={orderDetails} />
 
                   <AuthRoute exact path="/photographerDashboard" component={photograhperDashboard} />
 
