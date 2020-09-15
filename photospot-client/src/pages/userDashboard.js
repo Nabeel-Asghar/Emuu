@@ -183,7 +183,11 @@ class userDashboard extends Component {
 
     let theUserOrders = Object.keys(userOrders).map((key) => (
       <div>
-        <OrderCard key={key} photographer={userOrders[key]} />
+        <OrderCard
+          key={key}
+          photographer={userOrders[key]}
+          history={this.props.history}
+        />
       </div>
     ));
 
@@ -191,7 +195,11 @@ class userDashboard extends Component {
 
     let theUserPastOrders = Object.keys(userPastOrders).map((key) => (
       <div>
-        <OrderCard key={key} photographer={userPastOrders[key]} />
+        <OrderCard
+          key={key}
+          photographer={userPastOrders[key]}
+          history={this.props.history}
+        />
       </div>
     ));
 
