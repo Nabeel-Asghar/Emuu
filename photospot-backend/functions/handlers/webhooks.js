@@ -22,18 +22,24 @@ exports.webhooks = (req, res) => {
 
     case "charge.refunded":
       console.log("Refund Successful");
-      handleRefund(event.data.object.metadata);
+      handleRefund(
+        event.data.object.metadata,
+        event.data.object.amount,
+        event.data.object.id
+      );
       break;
   }
 
   return res.status(200).end();
 };
 
-function handleRefund(orderDetails) {
+function handleRefund(orderDetails, chargeAmount, paymentID) {
   let photographerID = orderDetails.photographerID;
   let consumerID = orderDetails.consumerID;
   let shootDate = orderDetails.date;
   let shootTime = orderDetails.time;
+
+  let booking = bookingObject(orderDetails, chargeAmount, paymentID);
 
   // delete from main collection
   db.collection("allOrders")
@@ -63,7 +69,7 @@ function handleRefund(orderDetails) {
                   [shootTime]: false,
                 })
                 .then(() => {
-                  console.log("done refunding this bitch");
+                  email.emailRefunds(booking);
                   return true;
                 })
                 .catch((err) => {
@@ -88,45 +94,12 @@ function handleRefund(orderDetails) {
 }
 
 function handleSuccessfulPaymentIntent(orderDetails, chargeAmount, paymentID) {
-  console.log("DUDE HOLY CRAP");
-  let amount = chargeAmount / 100;
   let shootDate = orderDetails.date;
   let shootTime = orderDetails.time;
-
-  let photographerFirstName = orderDetails.photographerFirstName;
-  let photographerLastName = orderDetails.photographerLastName;
-  let photographerProfileImage = orderDetails.photographerProfileImage;
   let photographerID = orderDetails.photographerID;
-  let photographerEmail = orderDetails.photographerEmail;
-
-  let consumerFirstName = orderDetails.consumerFirstName;
-  let consumerLastName = orderDetails.consumerLastName;
-  let consumerProfileImage = orderDetails.consumerProfileImage;
   let consumerID = orderDetails.consumerID;
-  let consumerEmail = orderDetails.consumerEmail;
 
-  var myDate = shootDate.split("-");
-  var newDate = myDate[2] + "," + myDate[0] + "," + myDate[1];
-  var formattedDate = new Date(newDate);
-
-  let booking = {
-    id: paymentID,
-    amount: amount,
-    shootDate: shootDate,
-    shootTime: shootTime,
-    photographerID: photographerID,
-    photographerEmail: photographerEmail,
-    photographerFirstName: photographerFirstName,
-    photographerLastName: photographerLastName,
-    photographerProfileImage: photographerProfileImage,
-    consumerID: consumerID,
-    consumerEmail: consumerEmail,
-    consumerFirstName: consumerFirstName,
-    consumerLastName: consumerLastName,
-    consumerProfileImage: consumerProfileImage,
-    createdAt: new Date().toISOString(),
-    formattedDate: formattedDate,
-  };
+  let booking = bookingObject(orderDetails, chargeAmount, paymentID);
 
   // update main collection of orders with this order
   db.collection("allOrders")
@@ -178,4 +151,47 @@ function handleSuccessfulPaymentIntent(orderDetails, chargeAmount, paymentID) {
       console.log(err);
       return false;
     });
+}
+
+function bookingObject(orderDetails, chargeAmount, paymentID) {
+  let amount = chargeAmount / 100;
+  let shootDate = orderDetails.date;
+  let shootTime = orderDetails.time;
+
+  let photographerFirstName = orderDetails.photographerFirstName;
+  let photographerLastName = orderDetails.photographerLastName;
+  let photographerProfileImage = orderDetails.photographerProfileImage;
+  let photographerID = orderDetails.photographerID;
+  let photographerEmail = orderDetails.photographerEmail;
+
+  let consumerFirstName = orderDetails.consumerFirstName;
+  let consumerLastName = orderDetails.consumerLastName;
+  let consumerProfileImage = orderDetails.consumerProfileImage;
+  let consumerID = orderDetails.consumerID;
+  let consumerEmail = orderDetails.consumerEmail;
+
+  var myDate = shootDate.split("-");
+  var newDate = myDate[2] + "," + myDate[0] + "," + myDate[1];
+  var formattedDate = new Date(newDate);
+
+  let booking = {
+    id: paymentID,
+    amount: amount,
+    shootDate: shootDate,
+    shootTime: shootTime,
+    photographerID: photographerID,
+    photographerEmail: photographerEmail,
+    photographerFirstName: photographerFirstName,
+    photographerLastName: photographerLastName,
+    photographerProfileImage: photographerProfileImage,
+    consumerID: consumerID,
+    consumerEmail: consumerEmail,
+    consumerFirstName: consumerFirstName,
+    consumerLastName: consumerLastName,
+    consumerProfileImage: consumerProfileImage,
+    createdAt: new Date().toISOString(),
+    formattedDate: formattedDate,
+  };
+
+  return booking;
 }
