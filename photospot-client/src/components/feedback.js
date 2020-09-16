@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import Snackbar from "@material-ui/core/Snackbar";
-import Alert from "@material-ui/lab/Alert";
+import MuiAlert from "@material-ui/lab/Alert";
+
+function Alert(props) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 export class feedback extends Component {
   render() {
@@ -17,7 +21,7 @@ export class feedback extends Component {
       >
         <Alert
           onClose={this.props.handleClose}
-          severity={errors ? "warning" : "success"}
+          severity={errors ? "error" : "success"}
         >
           {errors ? errors.message : "Your changes have been saved"}
         </Alert>
