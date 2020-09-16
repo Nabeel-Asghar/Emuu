@@ -5,6 +5,7 @@ import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
+import moment from "moment";
 
 const defaultMaterialTheme = createMuiTheme({
   palette: {
@@ -20,13 +21,15 @@ const defaultMaterialTheme = createMuiTheme({
 class date extends Component {
   render() {
     const { theDate } = this.props;
+    var tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
 
     return (
       <div>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <ThemeProvider theme={defaultMaterialTheme}>
             <DatePicker
-              disablePast
+              minDate={tomorrow}
               autoOk
               orientation="landscape"
               variant="static"
