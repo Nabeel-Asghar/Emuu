@@ -1,6 +1,7 @@
 const dotenv = require("dotenv");
 const { db } = require("../util/admin");
 dotenv.config();
+const moment = require("moment");
 
 // Test keys
 const stripePublicKey = process.env.STRIPE_PUBLIC_KEY;
@@ -138,13 +139,36 @@ exports.refund = async (req, res) => {
   let userID = req.user.uid;
   let paymentID = req.body.paymentID;
 
-  const refund = await stripe.refunds.create({
-    payment_intent: paymentID,
-    reverse_transfer: true,
-    refund_application_fee: false,
-  });
+  db.collection("users")
+    .doc(userID)
+    .collection("orders")
+    .doc(userID)
+    .get()
+    .then((doc) => {
+      var cutOff = moment().format();
 
-  return res.json({ message: "Refund in progress" });
+      var dates = doc.data().shootDate.split("-");
+      var times = doc.data().shootTime.split(":");
+
+      var stringFormat =
+        dates[2] + "-" + dates[0] + "-" + dates[1] + " " + times[0];
+
+      var shootDay = moment(stringFormat).subtract(1, "days").format();
+      console.log(cutOff);
+      console.log(shootDay);
+
+      if (shootDay < cutOff) {
+        return res
+          .status(500)
+          .json({ message: "You can only refund 24 hours before a shoot." });
+      } else {
+        const refund = await stripe.refunds.create({
+          payment_intent: paymentID,
+          reverse_transfer: true,
+          refund_application_fee: false,
+        });
+      }
+    });
 };
 
 // Functions
