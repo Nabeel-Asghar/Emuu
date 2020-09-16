@@ -1,5 +1,6 @@
 const intialState = {
   client_secret: "",
+  refundError: "",
   stripeStatus: null,
 };
 
@@ -15,6 +16,12 @@ export default function (state = intialState, action) {
       return {
         ...state,
         stripeStatus: action.payload,
+      };
+
+    case "SET_REFUND_ERROR":
+      return {
+        ...state,
+        refundError: action.payload,
       };
 
     default:
