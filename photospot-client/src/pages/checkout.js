@@ -121,7 +121,6 @@ const Checkout = (props) => {
     <div>
       {props.location.details && (
         <Container maxWidth="sm" style={{ marginBottom: 20 }}>
-          {console.log(props.location.details)}
           <ProfileCard
             firstName={props.location.details.photographerFirstName}
             lastName={props.location.details.photographerLastName}
