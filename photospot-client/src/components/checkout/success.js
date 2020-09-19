@@ -19,7 +19,7 @@ const styles = (theme) => ({
 
 class success extends Component {
   render() {
-    const { classes, open } = this.props;
+    const { classes, open, body } = this.props;
 
     return (
       <div>
@@ -37,16 +37,7 @@ class success extends Component {
                   />
                 </Grid>
                 <Grid item md={9}>
-                  <Typography variant="h3" gutterBottom>
-                    Thanks for your order!
-                  </Typography>
-                  <Typography variant="body1" gutterBottom>
-                    You will recieve an email with all your order details.
-                  </Typography>
-                  <Typography variant="body1" gutterBottom>
-                    Contact your photographer to setup a shoot location and have
-                    fun!
-                  </Typography>
+                  {body}
                 </Grid>
               </Grid>
             </Paper>
