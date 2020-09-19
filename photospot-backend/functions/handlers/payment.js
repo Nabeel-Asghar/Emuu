@@ -9,6 +9,8 @@ const stripePrivateKey = process.env.STRIPE_PRIVATE_KEY;
 
 const stripe = require("stripe")(stripePrivateKey);
 
+const { handleCancel } = require("./webhooks.js");
+
 // Photographer Routes
 //
 // Onboard new photographer to stripe
@@ -134,41 +136,36 @@ exports.createPayment = (req, res) => {
 };
 
 exports.refund = async (req, res) => {
-  //TODO: Grab payment id from server side
-
   let userID = req.user.uid;
-  let paymentID = req.body.paymentID;
+  const [paymentID, shootDate, shootTime, amount] = await getPaymentID(userID);
 
-  db.collection("users")
-    .doc(userID)
-    .collection("orders")
-    .doc(userID)
-    .get()
-    .then((doc) => {
-      var cutOff = moment().format();
+  console.log(paymentID, shootDate, shootTime, amount);
 
-      var dates = doc.data().shootDate.split("-");
-      var times = doc.data().shootTime.split(":");
+  // will only give refund if cancelled 24 hours before shoot
+  let refundability = validateRefund(shootDate, shootTime);
+  console.log(refundability);
 
-      var stringFormat =
-        dates[2] + "-" + dates[0] + "-" + dates[1] + " " + times[0];
-
-      var shootDay = moment(stringFormat).subtract(1, "days").format();
-      console.log(cutOff);
-      console.log(shootDay);
-
-      if (shootDay < cutOff) {
-        return res
-          .status(500)
-          .json({ message: "You can only refund 24 hours before a shoot." });
-      } else {
-        const refund = await stripe.refunds.create({
-          payment_intent: paymentID,
-          reverse_transfer: true,
-          refund_application_fee: false,
-        });
-      }
+  // if before 24 hours, give refund and cancel order
+  if (!refundability) {
+    const refund = await stripe.refunds.create({
+      payment_intent: paymentID,
+      reverse_transfer: true,
+      refund_application_fee: false,
     });
+  }
+  // otherwise 50% refund and cancel order
+  else {
+    const refund = await stripe.refunds.create({
+      payment_intent: paymentID,
+      reverse_transfer: true,
+      amount: (amount * 100) / 2,
+      refund_application_fee: false,
+    });
+  }
+
+  return res.json({
+    message: "Refund in progress. This may take a few moments.",
+  });
 };
 
 // Functions
@@ -219,16 +216,42 @@ function calculateFeeAmount(amount) {
   return 0.05 * amount;
 }
 
+function validateRefund(shootDate, shootTime) {
+  var today = moment().format();
+
+  var dates = shootDate.split("-");
+  var times = shootTime.split(":");
+
+  var stringFormat =
+    dates[2] + "-" + dates[0] + "-" + dates[1] + " " + times[0];
+
+  var shootDate = moment(stringFormat);
+
+  var duration = moment.duration(shootDate.diff(today));
+  var hours = duration.asHours();
+
+  if (hours < 24) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
 // Get payment ID from users current order to refund
-async function getPaymentID(userID) {
-  db.collection("users")
+function getPaymentID(userID) {
+  return db
+    .collection("users")
     .doc(userID)
     .collection("orders")
+    .doc(userID)
     .get()
-    .then((data) => {
-      data.forEach((doc) => {
-        return doc.data().id;
-      });
+    .then((doc) => {
+      return [
+        doc.data().id,
+        doc.data().shootDate,
+        doc.data().shootTime,
+        doc.data().amount,
+      ];
     })
     .catch((err) => {
       return null;
