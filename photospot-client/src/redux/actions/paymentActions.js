@@ -14,7 +14,6 @@ export const onboardStripe = () => (dispatch) => {
 export const customerPayment = (photographerID, bookingDetails) => (
   dispatch
 ) => {
-  console.log(bookingDetails);
   API.post(`/photographers/${photographerID}/book/checkout`, bookingDetails)
     .then((res) => {
       dispatch({
@@ -30,7 +29,6 @@ export const customerPayment = (photographerID, bookingDetails) => (
 export const getStripeStatus = () => (dispatch) => {
   return API.get("/onboard-status")
     .then((res) => {
-      console.log(res.data.status);
       dispatch({
         type: "SET_STRIPE_STATUS",
         payload: res.data.status,
@@ -45,14 +43,12 @@ export const getStripeStatus = () => (dispatch) => {
 };
 
 export const refund = (paymentID) => (dispatch) => {
+  dispatch({ type: "LOADING_UI" });
   API.post("/user/refund", paymentID)
-    .then(() => {
-      console.log("you pierre you wanna get out here");
+    .then((res) => {
+      return true;
     })
     .catch((err) => {
-      dispatch({
-        type: "SET_REFUND_ERROR",
-        payload: err.response.data,
-      });
+      return false;
     });
 };

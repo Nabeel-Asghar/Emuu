@@ -18,12 +18,6 @@ export default function (state = intialState, action) {
         stripeStatus: action.payload,
       };
 
-    case "SET_REFUND_ERROR":
-      return {
-        ...state,
-        refundError: action.payload,
-      };
-
     default:
       return state;
   }

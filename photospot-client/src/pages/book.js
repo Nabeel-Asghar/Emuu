@@ -22,11 +22,12 @@ import ProfileCard from "../components/booking/card";
 import Date from "../components/booking/date";
 import equal from "fast-deep-equal";
 import Time from "../components/booking/time";
-import Confirmbook from "../components/booking/confirmbook";
+import Confirmation from "../components/booking/confirmation";
 import { dateConvert } from "../util/dateConvert";
 
 // Date format
 import moment from "moment";
+import { timeConvert } from "../util/timeConvert";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -253,14 +254,15 @@ class book extends Component {
           </Paper>
         </Grid>
 
-        <Confirmbook
+        <Confirmation
           open={this.state.open}
+          secondaryConfirmation={false}
           handleAgree={this.handleAgree}
           handleDisagree={this.handleDisagree}
-          firstName={this.state.firstName}
-          lastName={this.state.lastName}
-          date={dateConvert(this.state.formattedDate)}
-          time={this.state.selectedTime}
+          title="Confirm Booking"
+          text={`Would you like to confirm booking with ${this.state.firstName}
+          ${this.state.lastName} on ${dateConvert(this.state.formattedDate)} at 
+          ${timeConvert(this.state.selectedTime)}?`}
         />
 
         <Grid item md={1} xs={0}></Grid>

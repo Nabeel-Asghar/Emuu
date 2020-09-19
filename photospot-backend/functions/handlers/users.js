@@ -687,8 +687,6 @@ exports.getUserReviews = (req, res) => {
         });
       });
 
-      console.log(reviews);
-
       return res.json(reviews);
     })
     .catch((err) => {

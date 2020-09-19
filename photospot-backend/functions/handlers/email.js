@@ -8,9 +8,14 @@ const emailOrderDetails = (orderDetails) => {
   emailOrderToPhotographer(orderDetails);
 };
 
-const emailRefund = (orderDetails) => {
+const emailRefunds = (orderDetails) => {
   emailRefundToCustomer(orderDetails);
   emailRefundToPhotographer(orderDetails);
+};
+
+const emailCancel = (orderDetails) => {
+  emailCancelToCustomer(orderDetails);
+  emailCancelToPhotographer(orderDetails);
 };
 
 function emailRefundToCustomer(orderDetails) {
@@ -92,4 +97,4 @@ function emailOrderToPhotographer(orderDetails) {
 }
 
 exports.emailOrderDetails = emailOrderDetails;
-exports.emailRefunds = emailRefund;
+exports.emailRefunds = emailRefunds;
