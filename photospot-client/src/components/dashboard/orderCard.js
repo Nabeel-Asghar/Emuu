@@ -25,6 +25,7 @@ class orderCard extends Component {
   render() {
     const {
       classes,
+      refundStatus,
       photographer: {
         docID,
         paymentID,
@@ -96,18 +97,19 @@ class orderCard extends Component {
                       </List>
                     </Paper>
                   </Grid>
-
-                  <Grid item xs={12} style={{ textAlign: "right" }}>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      onClick={() => this.props.handleRefund(paymentID)}
-                    >
-                      <Typography style={{ fontWeight: "bold" }}>
-                        Cancel Order
-                      </Typography>
-                    </Button>
-                  </Grid>
+                  {refundStatus && (
+                    <Grid item xs={12} style={{ textAlign: "right" }}>
+                      <Button
+                        variant="contained"
+                        color="secondary"
+                        onClick={() => this.props.handleRefund(paymentID)}
+                      >
+                        <Typography style={{ fontWeight: "bold" }}>
+                          Cancel Order
+                        </Typography>
+                      </Button>
+                    </Grid>
+                  )}
                 </Grid>
               </Grid>
             </Grid>

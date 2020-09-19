@@ -204,11 +204,12 @@ class userDashboard extends Component {
 
     // Get current order
     let theUserOrders = Object.keys(userOrders).map((key) => (
-      <div>
+      <div style={{ marginBottom: 10 }}>
         <OrderCard
           key={key}
           photographer={userOrders[key]}
           history={this.props.history}
+          refundStatus={true}
           handleRefund={this.handleRefundDialog.bind(this)}
         />
       </div>
@@ -218,11 +219,12 @@ class userDashboard extends Component {
 
     // Get user past orders
     let theUserPastOrders = Object.keys(userPastOrders).map((key) => (
-      <div>
+      <div style={{ marginBottom: 10 }}>
         <OrderCard
           key={key}
           photographer={userPastOrders[key]}
           history={this.props.history}
+          refundStatus={false}
         />
       </div>
     ));
