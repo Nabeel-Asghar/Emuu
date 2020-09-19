@@ -15,6 +15,8 @@ import {
 
 import { editReview, deleteReview } from "../redux/actions/dataActions";
 
+import { refund } from "../redux/actions/paymentActions";
+
 // Material UI
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
@@ -31,6 +33,8 @@ import ContactCard from "../components/dashboard/contactCard";
 import CarouselOfItems from "../components/dashboard/carouselOfItems";
 import ReviewDialog from "../components/photographer-page/reviewDialog";
 import ReviewList from "../components/dashboard/reviewList";
+import Confirmation from "../components/booking/confirmation";
+import Success from "../components/checkout/success";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -61,6 +65,9 @@ class userDashboard extends Component {
       selectedIndex: 0,
       newReviewSucess: "",
       type: "edited",
+      openRefundDialog: false,
+      paymentID: "",
+      openSuccess: false,
     };
   }
 
@@ -114,6 +121,7 @@ class userDashboard extends Component {
     }
   }
 
+  // Edit review functions
   handleReviewDialogAgree = (title, description, photographerID, oldRating) => {
     const details = {
       description: description,
@@ -171,28 +179,44 @@ class userDashboard extends Component {
     });
   };
 
+  handleRefundAgree() {
+    this.props.refund({ paymentID: this.state.paymentID });
+    this.setState({ openRefundDialog: false, openSuccess: true });
+  }
+
+  handleRefundDisagree() {
+    this.setState({ openRefundDialog: false });
+  }
+
+  handleRefundDialog(paymentID) {
+    this.setState({ paymentID: paymentID });
+    this.setState({ openRefundDialog: true });
+  }
+
   render() {
     dayjs.extend(relativeTime);
     const {
-      classes,
-      UI: { loadingData, loadingReviewAction, newReviewSucess },
+      UI: { loadingReviewAction, newReviewSucess, loading },
     } = this.props;
-    const { errors } = this.state;
 
+    const { errors } = this.state;
     const userOrders = this.props.userOrders || {};
 
+    // Get current order
     let theUserOrders = Object.keys(userOrders).map((key) => (
       <div>
         <OrderCard
           key={key}
           photographer={userOrders[key]}
           history={this.props.history}
+          handleRefund={this.handleRefundDialog.bind(this)}
         />
       </div>
     ));
 
     const userPastOrders = this.props.userPastOrders || {};
 
+    // Get user past orders
     let theUserPastOrders = Object.keys(userPastOrders).map((key) => (
       <div>
         <OrderCard
@@ -275,17 +299,48 @@ class userDashboard extends Component {
           />
         </Grid>
 
+        <Confirmation
+          open={this.state.openRefundDialog}
+          secondaryConfirmation={true}
+          handleAgree={this.handleRefundAgree.bind(this)}
+          handleDisagree={this.handleRefundDisagree.bind(this)}
+          loading={this.props.loading}
+          title="Confirm Cancellation of Order"
+          text={
+            <div>
+              <Typography gutterBottom style={{ paddingBottom: "10px" }}>
+                Are you sure you want to cancel your order?
+              </Typography>
+
+              <Typography gutterBottom style={{ paddingBottom: "10px" }}>
+                You will only get full refunds on orders cancelled{" "}
+                <b>12 hours</b> before the shoot otherwise you will be refunded
+                50%. This cannot be undone.
+              </Typography>
+            </div>
+          }
+        />
+
+        <Success
+          body={
+            <Typography gutterBottom>
+              You refund is being process. This may take a few moments.
+            </Typography>
+          }
+          open={this.state.openSuccess}
+        />
+
         <Grid item xs={8}>
           <Typography variant="h4" style={{ marginTop: "-5px" }}>
             Upcoming Shoot
           </Typography>
 
-          <CarouselOfItems orders={theUserOrders} />
+          {theUserOrders}
 
           <Typography variant="h4" style={{ marginTop: "20px" }}>
             Past Shoots
           </Typography>
-          <CarouselOfItems orders={theUserPastOrders} />
+          {theUserPastOrders}
 
           <Typography variant="h4" style={{ marginTop: "20px" }}>
             Your Reviews
@@ -306,6 +361,7 @@ const mapStateToProps = (state) => ({
   UI: state.UI,
   errors: state.UI.errors,
   userReviews: state.user.userReviews,
+  payment: state.payment,
 });
 
 const mapActionsToProps = {
@@ -318,6 +374,7 @@ const mapActionsToProps = {
   reviewPhotographer,
   editReview,
   deleteReview,
+  refund,
 };
 
 export default connect(
