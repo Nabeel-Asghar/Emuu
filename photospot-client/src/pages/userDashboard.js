@@ -12,29 +12,27 @@ import {
   getUsersReviews,
   reviewPhotographer,
 } from "../redux/actions/userActions";
-
 import { editReview, deleteReview } from "../redux/actions/dataActions";
-
 import { refund } from "../redux/actions/paymentActions";
 
 // Material UI
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
+import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import dayjs from "dayjs";
 import equal from "fast-deep-equal";
-
 import relativeTime from "dayjs/plugin/relativeTime";
 
 // components
 import OrderCard from "../components/dashboard/orderCard";
 import ProfileCard from "../components/dashboard/profileCard";
 import ContactCard from "../components/dashboard/contactCard";
-import CarouselOfItems from "../components/dashboard/carouselOfItems";
 import ReviewDialog from "../components/photographer-page/reviewDialog";
 import ReviewList from "../components/dashboard/reviewList";
 import Confirmation from "../components/booking/confirmation";
 import Success from "../components/checkout/success";
+import CollapseItems from "../components/collapse";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -116,7 +114,6 @@ class userDashboard extends Component {
       });
     }
     if (nextProps.UI.newReviewSucess) {
-      console.log("gay");
       this.handleBackdropOpen();
     }
   }
@@ -179,6 +176,7 @@ class userDashboard extends Component {
     });
   };
 
+  // handle refund
   handleRefundAgree() {
     this.props.refund({ paymentID: this.state.paymentID });
     this.setState({ openRefundDialog: false, openSuccess: true });
@@ -286,6 +284,7 @@ class userDashboard extends Component {
 
     return (
       <Grid container spacing={5}>
+        {/* Left sidebar */}
         <Grid item xs={4}>
           <ProfileCard
             profileImage={this.state.profileImage}
@@ -301,6 +300,7 @@ class userDashboard extends Component {
           />
         </Grid>
 
+        {/* Confirmation for refund */}
         <Confirmation
           open={this.state.openRefundDialog}
           secondaryConfirmation={true}
@@ -322,7 +322,7 @@ class userDashboard extends Component {
             </div>
           }
         />
-
+        {/* Success after refund */}
         <Success
           body={
             <Typography gutterBottom>
@@ -333,21 +333,12 @@ class userDashboard extends Component {
         />
 
         <Grid item xs={8}>
-          <Typography variant="h4" style={{ marginTop: "-5px" }}>
-            Upcoming Shoot
-          </Typography>
+          <CollapseItems text="Upcoming Shoot" items={theUserOrders} />
 
-          {theUserOrders}
+          <CollapseItems text="Past Shoots" items={theUserPastOrders} />
 
-          <Typography variant="h4" style={{ marginTop: "20px" }}>
-            Past Shoots
-          </Typography>
-          {theUserPastOrders}
+          <CollapseItems text="Your Reviews" items={gridImages} />
 
-          <Typography variant="h4" style={{ marginTop: "20px" }}>
-            Your Reviews
-          </Typography>
-          {gridImages}
           {camp}
         </Grid>
       </Grid>
