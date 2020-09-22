@@ -19,7 +19,9 @@ import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 
-const styles = {};
+const styles = {
+  root: { borderColor: "#23ba8b" },
+};
 
 class orderCard extends Component {
   render() {
@@ -42,7 +44,7 @@ class orderCard extends Component {
     return (
       <div>
         {photographerID && (
-          <Paper elevation={3}>
+          <Paper>
             <Grid container justify="center" alignItems="center">
               <Grid item xs={4} style={{ textAlign: "center" }}>
                 <img
@@ -63,7 +65,7 @@ class orderCard extends Component {
                   style={{ padding: 10 }}
                 >
                   <Grid item xs={12}>
-                    <Paper style={{ padding: 15 }} elevation={3}>
+                    <Paper style={{ padding: 15 }} variant="outlined">
                       <Typography variant="h6" gutterBottom>
                         Photo shoot with {firstName} {lastName}
                       </Typography>
@@ -78,7 +80,7 @@ class orderCard extends Component {
                     </Paper>
                   </Grid>
                   <Grid item xs={12}>
-                    <Paper elevation={3}>
+                    <Paper variant="outlined">
                       <List dense="true">
                         <ListItem>
                           <ListItemText
