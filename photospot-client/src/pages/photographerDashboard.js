@@ -29,6 +29,7 @@ import SettingsCard from "../components/dashboard/settingsCard";
 import StripeCard from "../components/dashboard/stripeCard";
 import CarouselOfItems from "../components/dashboard/carouselOfItems";
 import PhotographerReviews from "../components/photographerReviews";
+import CollapseItems from "../components/collapse";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -91,9 +92,12 @@ class photograhperDashboard extends Component {
   }
 
   render() {
+    // Redirect if not photographer
     if (this.state.photographer === false) {
       return <Redirect to="/" />;
     }
+
+    // Get photographers current orders
     const userOrders = this.props.userOrders || {};
     let theUserOrders = Object.keys(userOrders).map((key) => (
       <div>
@@ -101,6 +105,7 @@ class photograhperDashboard extends Component {
       </div>
     ));
 
+    // Get photographers past orders
     const userPastOrders = this.props.userPastOrders || {};
     let theUserPastOrders = Object.keys(userPastOrders).map((key) => (
       <div>
@@ -108,7 +113,7 @@ class photograhperDashboard extends Component {
       </div>
     ));
 
-    //const userReviews = this.props.userReviews || [];
+    // Get photographers reviews
     let gridImages = [];
     for (var key = 0; key < this.state.allReviews.length; key++) {
       gridImages.push(
@@ -121,19 +126,19 @@ class photograhperDashboard extends Component {
       );
     }
 
+    // If no current orders return this
     if (theUserPastOrders.length < 1) {
       theUserPastOrders = (
         <Typography variant="subtitle2">You have no past shoots</Typography>
       );
     }
 
+    // If no past orders return this
     if (theUserOrders.length < 1) {
       theUserOrders = (
         <Typography variant="subtitle2">You have no upcoming shoots</Typography>
       );
     }
-
-    console.log(this.props.match.params.photographerID);
 
     const { classes } = this.props;
     return (
@@ -158,18 +163,11 @@ class photograhperDashboard extends Component {
         </Grid>
 
         <Grid item xs={8}>
-          <Typography variant="h4" style={{ marginTop: "-5px" }}>
-            Upcoming Shoots
-          </Typography>
+          <CollapseItems items={theUserOrders} text="Upcoming Shoots" />
 
-          <CarouselOfItems orders={theUserOrders} />
+          <CollapseItems items={theUserPastOrders} text="Past Shoots" />
 
-          <Typography variant="h4" style={{ marginTop: "20px" }}>
-            Past Shoots
-          </Typography>
-
-          <CarouselOfItems orders={theUserPastOrders} />
-          {gridImages}
+          <CollapseItems items={gridImages} text="Your Reviews" />
         </Grid>
       </Grid>
     );
