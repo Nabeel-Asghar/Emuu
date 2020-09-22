@@ -135,18 +135,19 @@ exports.createPayment = (req, res) => {
     });
 };
 
+// Refund customer
 exports.refund = async (req, res) => {
   let userID = req.user.uid;
   const [paymentID, shootDate, shootTime, amount] = await getPaymentID(userID);
 
   console.log(paymentID, shootDate, shootTime, amount);
 
-  // will only give refund if cancelled 24 hours before shoot
+  // will only give refund if customer cancelled 24 hours before shoot
   let refundability = validateRefund(shootDate, shootTime);
   console.log(refundability);
 
-  // if before 24 hours, give refund and cancel order
-  if (!refundability) {
+  // if before 24 hours or photographer cancels, give full refund and cancel order
+  if (refundability) {
     const refund = await stripe.refunds.create({
       payment_intent: paymentID,
       reverse_transfer: true,
