@@ -1,5 +1,6 @@
 const intialState = {
   client_secret: "",
+  refundError: "",
   stripeStatus: null,
 };
 

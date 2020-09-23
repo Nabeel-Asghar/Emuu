@@ -1,12 +1,15 @@
 const dotenv = require("dotenv");
 const { db } = require("../util/admin");
 dotenv.config();
+const moment = require("moment");
 
 // Test keys
 const stripePublicKey = process.env.STRIPE_PUBLIC_KEY;
 const stripePrivateKey = process.env.STRIPE_PRIVATE_KEY;
 
 const stripe = require("stripe")(stripePrivateKey);
+
+const { handleCancel } = require("./webhooks.js");
 
 // Photographer Routes
 //
@@ -87,7 +90,6 @@ exports.createPayment = (req, res) => {
     .then((amount) => {
       getPhotographerStripeID(photographerBooked)
         .then((connectedStripeAccountID) => {
-          console.log(req.body);
           console.log("amount: ", amount);
           console.log("stripeid: ", connectedStripeAccountID);
           stripe.paymentIntents
@@ -131,6 +133,40 @@ exports.createPayment = (req, res) => {
     .catch((err) => {
       console.log("Error getting rate per hour ", err);
     });
+};
+
+// Refund customer
+exports.refund = async (req, res) => {
+  let userID = req.user.uid;
+  const [paymentID, shootDate, shootTime, amount] = await getPaymentID(userID);
+
+  console.log(paymentID, shootDate, shootTime, amount);
+
+  // will only give refund if customer cancelled 24 hours before shoot
+  let refundability = validateRefund(shootDate, shootTime);
+  console.log(refundability);
+
+  // if before 24 hours or photographer cancels, give full refund and cancel order
+  if (refundability) {
+    const refund = await stripe.refunds.create({
+      payment_intent: paymentID,
+      reverse_transfer: true,
+      refund_application_fee: false,
+    });
+  }
+  // otherwise 50% refund and cancel order
+  else {
+    const refund = await stripe.refunds.create({
+      payment_intent: paymentID,
+      reverse_transfer: true,
+      amount: (amount * 100) / 2,
+      refund_application_fee: false,
+    });
+  }
+
+  return res.json({
+    message: "Refund in progress. This may take a few moments.",
+  });
 };
 
 // Functions
@@ -179,4 +215,46 @@ function calculateOrderAmount(photographerId) {
 // Calculate how much we will take as a fee
 function calculateFeeAmount(amount) {
   return 0.05 * amount;
+}
+
+function validateRefund(shootDate, shootTime) {
+  var today = moment().format();
+
+  var dates = shootDate.split("-");
+  var times = shootTime.split(":");
+
+  var stringFormat =
+    dates[2] + "-" + dates[0] + "-" + dates[1] + " " + times[0];
+
+  var shootDate = moment(stringFormat);
+
+  var duration = moment.duration(shootDate.diff(today));
+  var hours = duration.asHours();
+
+  if (hours < 24) {
+    return false;
+  } else {
+    return true;
+  }
+}
+
+// Get payment ID from users current order to refund
+function getPaymentID(userID) {
+  return db
+    .collection("users")
+    .doc(userID)
+    .collection("orders")
+    .doc(userID)
+    .get()
+    .then((doc) => {
+      return [
+        doc.data().id,
+        doc.data().shootDate,
+        doc.data().shootTime,
+        doc.data().amount,
+      ];
+    })
+    .catch((err) => {
+      return null;
+    });
 }

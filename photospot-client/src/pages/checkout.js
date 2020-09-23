@@ -121,7 +121,6 @@ const Checkout = (props) => {
     <div>
       {props.location.details && (
         <Container maxWidth="sm" style={{ marginBottom: 20 }}>
-          {console.log(props.location.details)}
           <ProfileCard
             firstName={props.location.details.photographerFirstName}
             lastName={props.location.details.photographerLastName}
@@ -160,7 +159,23 @@ const Checkout = (props) => {
               </Typography>
             )}
           </form>
-          <Success open={success} />
+          <Success
+            body={
+              <div>
+                <Typography variant="h3" gutterBottom>
+                  Thanks for your order!
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  You will recieve an email with all your order details.
+                </Typography>
+                <Typography variant="body1" gutterBottom>
+                  Contact your photographer to setup a shoot location and have
+                  fun!
+                </Typography>
+              </div>
+            }
+            open={success}
+          />
         </Paper>
       </Container>
     </div>

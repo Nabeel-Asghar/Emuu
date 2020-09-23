@@ -63,11 +63,12 @@ const {
   onboardUserRefresh,
   createPayment,
   getStripeOnboardStatus,
+  refund,
 } = require("./handlers/payment");
 
 const { completedOrders } = require("./handlers/administrator");
 
-const { paymentHook } = require("./handlers/webhooks");
+const { webhooks } = require("./handlers/webhooks");
 
 const FBAuth = require("./util/FBAuth");
 //const { searchPhotographer } = require("../../photospot-client/src/redux/actions/dataActions");
@@ -101,6 +102,7 @@ app.get("/onboard-status", FBAuth, getStripeOnboardStatus);
 app.post("/onboard-user", FBAuth, onboardUser);
 app.get("/onboard-user/refresh", FBAuth, onboardUserRefresh);
 app.post("/photographers/:photographerId/book/checkout", FBAuth, createPayment);
+app.post("/user/refund", FBAuth, refund);
 
 // photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
@@ -140,6 +142,6 @@ app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);
 app.get("/admin/completedOrders", completedOrders);
 
 // Webhooks for Stripe
-app.post("/webhook/payment", paymentHook);
+app.post("/webhooks", webhooks);
 
 exports.api = functions.https.onRequest(app);

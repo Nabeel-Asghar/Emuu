@@ -4,27 +4,73 @@ const dotenv = require("dotenv");
 dotenv.config();
 const payment__webhook_secret = process.env.payment_signing_secret;
 
-// Email functions
+// Import email functions
 const email = require("./email");
 
-exports.paymentHook = (req, res) => {
+exports.webhooks = (req, res) => {
   let event = req.body;
 
   switch (event.type) {
+    // successful payment
     case "payment_intent.succeeded":
-      const paymentIntent = event.data.object;
       console.log("Successful Payment");
-      handleSuccessfulPaymentIntent(
+      handlePayment(
         event.data.object.metadata,
         event.data.object.amount,
         event.data.object.id
       );
+      break;
+
+    // successful refund
+    case "charge.refunded":
+      console.log("Refund Successful");
+      handleRefund(
+        event.data.object.metadata,
+        event.data.object.amount,
+        event.data.object.id
+      );
+      break;
   }
 
   return res.status(200).end();
 };
 
-function handleSuccessfulPaymentIntent(orderDetails, chargeAmount, paymentID) {
+// handle successful refunds
+async function handleRefund(orderDetails, chargeAmount, paymentID) {
+  let photographerID = orderDetails.photographerID;
+  let consumerID = orderDetails.consumerID;
+  let shootDate = orderDetails.date;
+  let shootTime = orderDetails.time;
+
+  let booking = await bookingObject(orderDetails, chargeAmount, paymentID);
+
+  await deleteFromOrders(consumerID);
+  await deleteFromPhotographers(photographerID, consumerID);
+  await deleteFromUser(consumerID);
+  await freePhotographerTimeslot(photographerID, shootDate, shootTime);
+  await emailRefund(booking);
+}
+
+// handle successful payments
+async function handlePayment(orderDetails, chargeAmount, paymentID) {
+  let shootDate = orderDetails.date;
+  let shootTime = orderDetails.time;
+  let photographerID = orderDetails.photographerID;
+  let consumerID = orderDetails.consumerID;
+
+  let booking = await bookingObject(orderDetails, chargeAmount, paymentID);
+
+  await updateMainOrders(consumerID, booking);
+  await updatePhotographerOrders(photographerID, consumerID, booking);
+  await updateUserOrders(consumerID, booking);
+  await fillPhotographerTimeslot(photographerID, shootDate, shootTime);
+  await emailOrderDetails(booking);
+}
+
+// helper functions
+//
+// create booking object
+function bookingObject(orderDetails, chargeAmount, paymentID) {
   let amount = chargeAmount / 100;
   let shootDate = orderDetails.date;
   let shootTime = orderDetails.time;
@@ -64,54 +110,150 @@ function handleSuccessfulPaymentIntent(orderDetails, chargeAmount, paymentID) {
     formattedDate: formattedDate,
   };
 
-  // update main collection of orders with this order
+  return booking;
+}
+
+// update main order collection
+function updateMainOrders(consumerID, booking) {
   db.collection("allOrders")
-    .doc()
+    .doc(consumerID)
     .set(booking)
     .then(() => {
-      // Update booking time to be filled on photographer schedule
-      db.collection("photographer")
-        .doc(photographerID)
-        .collection("bookings")
-        .doc(shootDate)
-        .update({
-          [shootTime]: true,
-        })
-        .then(() => {
-          // Set order for photographer under photographer/{photograhper ID}/orders
-          db.collection("photographer")
-            .doc(photographerID)
-            .collection("orders")
-            .doc()
-            .set(booking)
-            .then(() => {
-              // Set order for user under users/{user ID}/orders
-              db.collection("users")
-                .doc(consumerID)
-                .collection("orders")
-                .doc(photographerID)
-                .set(booking)
-                .then(() => {
-                  email.emailOrderDetails(booking);
-                  return true;
-                })
-                .catch((err) => {
-                  console.log(err);
-                  return false;
-                });
-            })
-            .catch((err) => {
-              console.log(err);
-              return false;
-            });
-        })
-        .catch((err) => {
-          console.log(err);
-          return false;
-        });
+      return true;
     })
     .catch((err) => {
       console.log(err);
       return false;
     });
+}
+
+// update photographer orders
+function updatePhotographerOrders(photographerID, consumerID, booking) {
+  db.collection("photographer")
+    .doc(photographerID)
+    .collection("orders")
+    .doc(consumerID)
+    .set(booking)
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+}
+
+// update user order
+function updateUserOrders(consumerID, booking) {
+  db.collection("users")
+    .doc(consumerID)
+    .collection("orders")
+    .doc(consumerID)
+    .set(booking)
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+}
+
+// fill timeslot for photographer
+function fillPhotographerTimeslot(photographerID, shootDate, shootTime) {
+  db.collection("photographer")
+    .doc(photographerID)
+    .collection("bookings")
+    .doc(shootDate)
+    .update({
+      [shootTime]: true,
+    })
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+}
+
+// delete from main orders collection
+function deleteFromOrders(consumerID) {
+  db.collection("allOrders")
+    .doc(consumerID)
+    .delete()
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+}
+
+// delete from photographer orders
+function deleteFromPhotographers(photographerID, consumerID) {
+  db.collection("photographer")
+    .doc(photographerID)
+    .collection("orders")
+    .doc(consumerID)
+    .delete()
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+}
+
+// delete from user order's table
+function deleteFromUser(consumerID) {
+  db.collection("users")
+    .doc(consumerID)
+    .collection("orders")
+    .doc(consumerID)
+    .delete()
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+}
+
+// update timeslot for photographer to be freed up
+function freePhotographerTimeslot(photographerID, shootDate, shootTime) {
+  db.collection("photographer")
+    .doc(photographerID)
+    .collection("bookings")
+    .doc(shootDate)
+    .update({
+      [shootTime]: false,
+    })
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.log("update timeslot for photographer", err);
+      return false;
+    });
+}
+
+// Email functions
+//
+// email refund details
+function emailRefund(booking) {
+  email.emailRefunds(booking);
+}
+
+// email order details
+function emailOrderDetails(booking) {
+  email.emailOrderDetails(booking);
+}
+
+// email cancel without refund details
+function emailCancel(booking) {
+  email.emailCancel(booking);
 }

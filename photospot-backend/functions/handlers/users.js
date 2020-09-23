@@ -611,7 +611,9 @@ exports.getUsersOrders = (req, res) => {
 
       data.forEach((doc) => {
         orders.push({
-          id: doc.data().id,
+          docID: doc.id,
+          amount: doc.data().amount,
+          paymentID: doc.data().id,
           consumerID: doc.data().consumerID,
           photographerID: doc.data().photographerID,
           firstName: doc.data().photographerFirstName,
@@ -684,8 +686,6 @@ exports.getUserReviews = (req, res) => {
           photographerID: doc.data().photographerID,
         });
       });
-
-      console.log(reviews);
 
       return res.json(reviews);
     })
