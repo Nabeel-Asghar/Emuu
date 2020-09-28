@@ -508,10 +508,10 @@ exports.getYourUserProfile = (req, res) => {
 };
 
 exports.getYourPhotographerOrders = (req, res) => {
-  let photograhperID = req.user.uid;
+  let photographerID = req.user.uid;
 
   db.collection("photographer")
-    .doc(photograhperID)
+    .doc(photographerID)
     .collection("orders")
     .orderBy("formattedDate", "desc")
     .get()
@@ -528,6 +528,7 @@ exports.getYourPhotographerOrders = (req, res) => {
           shootDate: doc.data().shootDate,
           shootTime: doc.data().shootTime,
           formattedDate: doc.data().formattedDate,
+          amount: doc.data().amount,
         });
       });
       return res.json(orders);
