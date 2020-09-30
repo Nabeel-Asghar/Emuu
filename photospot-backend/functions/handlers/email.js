@@ -3,22 +3,26 @@ const SendGridKey = process.env.SENDGRID_API_KEY;
 
 sgMail.setApiKey(SendGridKey);
 
+// Email orders details out
 const emailOrderDetails = (orderDetails) => {
   emailOrderToCustomer(orderDetails);
   emailOrderToPhotographer(orderDetails);
 };
 
-const emailRefunds = (orderDetails) => {
-  emailRefundToCustomer(orderDetails);
-  emailRefundToPhotographer(orderDetails);
+// If the refund is intiated by customers, send these emails
+const emailRefundsByCustomer = (orderDetails) => {
+  emailRefundToCustomerByCustomer(orderDetails);
+  emailRefundToPhotographerByCustomer(orderDetails);
 };
 
-const emailCancel = (orderDetails) => {
-  emailCancelToCustomer(orderDetails);
-  emailCancelToPhotographer(orderDetails);
+// If the refund is intiated by photographer, send these emails
+const emailRefundsByPhotographer = (orderDetails) => {
+  emailRefundToCustomerByPhotographer(orderDetails);
+  emailRefundToPhotographerByPhotographer(orderDetails);
 };
 
-function emailRefundToCustomer(orderDetails) {
+// Customer ordered refund
+function emailRefundToCustomerByCustomer(orderDetails) {
   const msg = {
     to: orderDetails.consumerEmail,
     from: "PhotoSpot@photospot.site",
@@ -33,10 +37,10 @@ function emailRefundToCustomer(orderDetails) {
     },
   };
   sgMail.send(msg);
-  console.log("Refund sent to customer");
+  console.log("Refund intiated by customer sent to customer");
 }
 
-function emailRefundToPhotographer(orderDetails) {
+function emailRefundToPhotographerByCustomer(orderDetails) {
   const msg = {
     to: orderDetails.photographerEmail,
     from: "PhotoSpot@photospot.site",
@@ -52,9 +56,10 @@ function emailRefundToPhotographer(orderDetails) {
     },
   };
   sgMail.send(msg);
-  console.log("Refund sent to photographer");
+  console.log("Refund intiated by customer sent to photographer");
 }
 
+// Order detials
 function emailOrderToCustomer(orderDetails) {
   let url =
     "http://localhost:3000/photographers/" + orderDetails.photographerID;
@@ -96,5 +101,44 @@ function emailOrderToPhotographer(orderDetails) {
   console.log("Email sent to photographer!");
 }
 
+// Photographer ordered refund
+function emailRefundToCustomerByPhotographer(orderDetails) {
+  const msg = {
+    to: orderDetails.consumerEmail,
+    from: "PhotoSpot@photospot.site",
+    templateId: "d-520081520a0f4d8fb24e4b3a4bed3cc1",
+    dynamic_template_data: {
+      consumerFirstName: orderDetails.consumerFirstName,
+      photographerFirstName: orderDetails.photographerFirstName,
+      photographerLastName: orderDetails.photographerLastName,
+      shootDate: orderDetails.shootDate,
+      shootTime: orderDetails.shootTime,
+      amount: orderDetails.amount,
+    },
+  };
+  sgMail.send(msg);
+  console.log("Refund intiated by photographer sent to customer");
+}
+
+function emailRefundToPhotographerByPhotographer(orderDetails) {
+  const msg = {
+    to: orderDetails.photographerEmail,
+    from: "PhotoSpot@photospot.site",
+    templateId: "d-03d20741d46b4b558839d55928872691",
+    dynamic_template_data: {
+      photographerFirstName: orderDetails.photographerFirstName,
+      consumerFirstName: orderDetails.consumerFirstName,
+      consumerLastName: orderDetails.consumerLastName,
+      consumerEmail: orderDetails.consumerEmail,
+      shootDate: orderDetails.shootDate,
+      shootTime: orderDetails.shootTime,
+      amount: orderDetails.amount,
+    },
+  };
+  sgMail.send(msg);
+  console.log("Refund intiated by photographer sent to photographer");
+}
+
 exports.emailOrderDetails = emailOrderDetails;
-exports.emailRefunds = emailRefunds;
+exports.emailRefundsByCustomer = emailRefundsByCustomer;
+exports.emailRefundsByPhotographer = emailRefundsByPhotographer;
