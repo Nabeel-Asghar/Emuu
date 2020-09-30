@@ -21,14 +21,27 @@ exports.webhooks = (req, res) => {
       );
       break;
 
-    // successful refund
+    // refund requested by photographer
+    // TODO: detect when photographer cancels verses customer
+
+    // refund requested by customer
     case "charge.refunded":
-      console.log("Refund Successful");
-      handleRefund(
-        event.data.object.metadata,
-        event.data.object.amount,
-        event.data.object.id
-      );
+      if (event.data.object.refunds.data[0].metadata.photographerCancel) {
+        console.log("Refund By Photographer Successful");
+        handleRefundByPhotographer(
+          event.data.object.metadata,
+          event.data.object.amount,
+          event.data.object.id
+        );
+      } else {
+        console.log("Refund By Customer Successful");
+        handleRefund(
+          event.data.object.metadata,
+          event.data.object.amount,
+          event.data.object.id
+        );
+      }
+
       break;
   }
 
@@ -48,7 +61,27 @@ async function handleRefund(orderDetails, chargeAmount, paymentID) {
   await deleteFromPhotographers(photographerID, consumerID);
   await deleteFromUser(consumerID);
   await freePhotographerTimeslot(photographerID, shootDate, shootTime);
-  await emailRefund(booking);
+  await emailRefundsByCustomer(booking);
+}
+
+// handle refund intiated by photographer
+async function handleRefundByPhotographer(
+  orderDetails,
+  chargeAmount,
+  paymentID
+) {
+  let photographerID = orderDetails.photographerID;
+  let consumerID = orderDetails.consumerID;
+  let shootDate = orderDetails.date;
+  let shootTime = orderDetails.time;
+
+  let booking = await bookingObject(orderDetails, chargeAmount, paymentID);
+
+  await deleteFromOrders(consumerID);
+  await deleteFromPhotographers(photographerID, consumerID);
+  await deleteFromUser(consumerID);
+  await freePhotographerTimeslot(photographerID, shootDate, shootTime);
+  await emailRefundsByPhotographer(booking);
 }
 
 // handle successful payments
@@ -244,8 +277,8 @@ function freePhotographerTimeslot(photographerID, shootDate, shootTime) {
 // Email functions
 //
 // email refund details
-function emailRefund(booking) {
-  email.emailRefunds(booking);
+function emailRefundsByCustomer(booking) {
+  email.emailRefundsByCustomer(booking);
 }
 
 // email order details
@@ -253,7 +286,7 @@ function emailOrderDetails(booking) {
   email.emailOrderDetails(booking);
 }
 
-// email cancel without refund details
-function emailCancel(booking) {
-  email.emailCancel(booking);
+// email refund details
+function emailRefundsByPhotographer(booking) {
+  email.emailRefundsByPhotographer(booking);
 }
