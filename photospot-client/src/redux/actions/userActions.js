@@ -212,7 +212,7 @@ export const getPhotographerReviews = () => (dispatch) => {
 };
 
 export const getPhotographerPastOrders = () => (dispatch) => {
-  API.get("//yourpastorders")
+  API.get("/yourpastorders")
     .then((res) => {
       dispatch({
         type: "SET_USERS_PAST_ORDERS",

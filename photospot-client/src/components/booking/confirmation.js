@@ -27,10 +27,10 @@ const Confirmation = (props) => {
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >
-      {console.log(selectedValue)}
       <DialogTitle>{props.title}</DialogTitle>
       <DialogContent>
         <DialogContentText>{props.text}</DialogContentText>
+        {/* Confirmation to cancel order */}
         {props.secondaryConfirmation === true && (
           <FormGroup>
             <FormControlLabel
@@ -41,11 +41,7 @@ const Confirmation = (props) => {
                   inputProps={{ "aria-label": "primary checkbox" }}
                 />
               }
-              label={
-                <Typography variant="subtitle2">
-                  I understand I want to cancel the order.
-                </Typography>
-              }
+              label={<Typography variant="subtitle2">{props.label}</Typography>}
             />
           </FormGroup>
         )}
