@@ -43,8 +43,20 @@ export const getStripeStatus = () => (dispatch) => {
 };
 
 export const refund = (paymentID) => (dispatch) => {
-  dispatch({ type: "LOADING_UI" });
+  //dispatch({ type: "LOADING_UI" });
   API.post("/user/refund", paymentID)
+    .then((res) => {
+      return true;
+    })
+    .catch((err) => {
+      return false;
+    });
+};
+
+export const refundFromPhotographer = (paymentID) => (dispatch) => {
+  console.log("HERE", paymentID);
+  //dispatch({ type: "LOADING_UI" });
+  API.post("/photographer/refund", paymentID)
     .then((res) => {
       return true;
     })
