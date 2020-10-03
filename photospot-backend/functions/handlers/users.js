@@ -591,6 +591,8 @@ exports.getYourPhotographerPastOrders = (req, res) => {
           shootDate: doc.data().shootDate,
           shootTime: doc.data().shootTime,
           formattedDate: doc.data().formattedDate,
+          status: doc.data().status,
+          amount: doc.data().amount,
         });
       });
       return res.json(allPastOrders);
@@ -653,6 +655,8 @@ exports.getUsersPastOrders = (req, res) => {
           shootDate: doc.data().shootDate,
           shootTime: doc.data().shootTime,
           formattedDate: doc.data().formattedDate,
+          status: doc.data().status,
+          amount: doc.data().amount,
         });
       });
 
