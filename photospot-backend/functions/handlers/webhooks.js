@@ -50,26 +50,28 @@ exports.webhooks = (req, res) => {
 
 // handle successful refunds intiated by customer
 async function handleRefund(orderDetails, chargeAmount, paymentID) {
+  let orderID = orderDetails.orderID;
   let photographerID = orderDetails.photographerID;
   let consumerID = orderDetails.consumerID;
   let shootDate = orderDetails.date;
   let shootTime = orderDetails.time;
 
   let booking = await bookingObject(
+    orderID,
     orderDetails,
     chargeAmount,
     paymentID,
     "Refunded"
   );
 
-  await deleteFromOrders(consumerID);
-  await deleteFromPhotographers(photographerID, consumerID);
-  await deleteFromUser(consumerID);
+  await deleteFromOrders(orderID);
+  await deleteFromPhotographers(photographerID, orderID);
+  await deleteFromUser(consumerID, orderID);
   await freePhotographerTimeslot(photographerID, shootDate, shootTime);
 
-  await addToOverallCompletedOrders(booking);
-  await addToUserCompletedOrders(consumerID, booking);
-  await addToPhotographersCompletedOrders(photographerID, booking);
+  await addToOverallCompletedOrders(booking, orderID);
+  await addToUserCompletedOrders(consumerID, orderID, booking);
+  await addToPhotographersCompletedOrders(photographerID, orderID, booking);
 
   await emailRefundsByCustomer(booking);
 }
@@ -80,47 +82,51 @@ async function handleRefundByPhotographer(
   chargeAmount,
   paymentID
 ) {
+  let orderID = orderDetails.orderID;
   let photographerID = orderDetails.photographerID;
   let consumerID = orderDetails.consumerID;
   let shootDate = orderDetails.date;
   let shootTime = orderDetails.time;
 
   let booking = await bookingObject(
+    orderID,
     orderDetails,
     chargeAmount,
     paymentID,
     "Refunded"
   );
 
-  await deleteFromOrders(consumerID);
-  await deleteFromPhotographers(photographerID, consumerID);
-  await deleteFromUser(consumerID);
+  await deleteFromOrders(orderID);
+  await deleteFromPhotographers(photographerID, orderID);
+  await deleteFromUser(consumerID, orderID);
   await freePhotographerTimeslot(photographerID, shootDate, shootTime);
 
-  await addToOverallCompletedOrders(booking);
-  await addToUserCompletedOrders(consumerID, booking);
-  await addToPhotographersCompletedOrders(photographerID, booking);
+  await addToOverallCompletedOrders(booking, orderID);
+  await addToUserCompletedOrders(consumerID, orderID, booking);
+  await addToPhotographersCompletedOrders(photographerID, orderID, booking);
 
   await emailRefundsByPhotographer(booking);
 }
 
 // handle successful payments
 async function handlePayment(orderDetails, chargeAmount, paymentID) {
+  let orderID = orderDetails.orderID;
   let shootDate = orderDetails.date;
   let shootTime = orderDetails.time;
   let photographerID = orderDetails.photographerID;
   let consumerID = orderDetails.consumerID;
 
   let booking = await bookingObject(
+    orderID,
     orderDetails,
     chargeAmount,
     paymentID,
     "In Progress"
   );
 
-  await updateMainOrders(consumerID, booking);
-  await updatePhotographerOrders(photographerID, consumerID, booking);
-  await updateUserOrders(consumerID, booking);
+  await updateMainOrders(orderID, booking);
+  await updatePhotographerOrders(photographerID, orderID, booking);
+  await updateUserOrders(consumerID, orderID, booking);
   await fillPhotographerTimeslot(photographerID, shootDate, shootTime);
   await emailOrderDetails(booking);
 }
@@ -128,7 +134,7 @@ async function handlePayment(orderDetails, chargeAmount, paymentID) {
 // helper functions
 //
 // create booking object
-function bookingObject(orderDetails, chargeAmount, paymentID, status) {
+function bookingObject(orderID, orderDetails, chargeAmount, paymentID, status) {
   let amount = chargeAmount / 100;
   let shootDate = orderDetails.date;
   let shootTime = orderDetails.time;
@@ -150,7 +156,8 @@ function bookingObject(orderDetails, chargeAmount, paymentID, status) {
   var formattedDate = new Date(newDate);
 
   let booking = {
-    id: paymentID,
+    id: orderID,
+    paymentID: paymentID,
     amount: amount,
     shootDate: shootDate,
     shootTime: shootTime,
@@ -173,9 +180,9 @@ function bookingObject(orderDetails, chargeAmount, paymentID, status) {
 }
 
 // update main order collection
-function updateMainOrders(consumerID, booking) {
+function updateMainOrders(orderID, booking) {
   db.collection("allOrders")
-    .doc(consumerID)
+    .doc(orderID)
     .set(booking)
     .then(() => {
       return true;
@@ -187,11 +194,11 @@ function updateMainOrders(consumerID, booking) {
 }
 
 // update photographer orders
-function updatePhotographerOrders(photographerID, consumerID, booking) {
+function updatePhotographerOrders(photographerID, orderID, booking) {
   db.collection("photographer")
     .doc(photographerID)
     .collection("orders")
-    .doc(consumerID)
+    .doc(orderID)
     .set(booking)
     .then(() => {
       return true;
@@ -203,11 +210,11 @@ function updatePhotographerOrders(photographerID, consumerID, booking) {
 }
 
 // update user order
-function updateUserOrders(consumerID, booking) {
+function updateUserOrders(consumerID, orderID, booking) {
   db.collection("users")
     .doc(consumerID)
     .collection("orders")
-    .doc(consumerID)
+    .doc(orderID)
     .set(booking)
     .then(() => {
       return true;
@@ -237,9 +244,9 @@ function fillPhotographerTimeslot(photographerID, shootDate, shootTime) {
 }
 
 // delete from main orders collection
-function deleteFromOrders(consumerID) {
+function deleteFromOrders(orderID) {
   db.collection("allOrders")
-    .doc(consumerID)
+    .doc(orderID)
     .delete()
     .then(() => {
       return true;
@@ -251,11 +258,11 @@ function deleteFromOrders(consumerID) {
 }
 
 // delete from photographer orders
-function deleteFromPhotographers(photographerID, consumerID) {
+function deleteFromPhotographers(photographerID, orderID) {
   db.collection("photographer")
     .doc(photographerID)
     .collection("orders")
-    .doc(consumerID)
+    .doc(orderID)
     .delete()
     .then(() => {
       return true;
@@ -267,11 +274,11 @@ function deleteFromPhotographers(photographerID, consumerID) {
 }
 
 // delete from user order's table
-function deleteFromUser(consumerID) {
+function deleteFromUser(consumerID, orderID) {
   db.collection("users")
     .doc(consumerID)
     .collection("orders")
-    .doc(consumerID)
+    .doc(orderID)
     .delete()
     .then(() => {
       return true;
@@ -301,9 +308,9 @@ function freePhotographerTimeslot(photographerID, shootDate, shootTime) {
 }
 
 // add to overall completed orders table
-function addToOverallCompletedOrders(booking) {
+function addToOverallCompletedOrders(booking, orderID) {
   db.collection("completedOrders")
-    .doc()
+    .doc(orderID)
     .set(booking)
     .then(() => {
       return true;
@@ -315,11 +322,11 @@ function addToOverallCompletedOrders(booking) {
 }
 
 // add to user's completed orders
-function addToUserCompletedOrders(consumerID, booking) {
+function addToUserCompletedOrders(consumerID, orderID, booking) {
   db.collection("users")
     .doc(consumerID)
     .collection("completedOrders")
-    .doc()
+    .doc(orderID)
     .set(booking)
     .then(() => {
       return true;
@@ -331,11 +338,11 @@ function addToUserCompletedOrders(consumerID, booking) {
 }
 
 // add to photographers's completed orders
-function addToPhotographersCompletedOrders(photographerID, booking) {
+function addToPhotographersCompletedOrders(photographerID, orderID, booking) {
   db.collection("photographer")
     .doc(photographerID)
     .collection("completedOrders")
-    .doc()
+    .doc(orderID)
     .set(booking)
     .then(() => {
       return true;
@@ -345,6 +352,8 @@ function addToPhotographersCompletedOrders(photographerID, booking) {
       return false;
     });
 }
+
+// Generate unique order id
 
 // Email functions
 //

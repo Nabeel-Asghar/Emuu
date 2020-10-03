@@ -520,6 +520,7 @@ exports.getYourPhotographerOrders = (req, res) => {
 
       snapshot.forEach((doc) => {
         orders.push({
+          orderID: doc.data().id,
           consumerID: doc.data().consumerID,
           photographerID: doc.data().photographerID,
           firstName: doc.data().consumerFirstName,
@@ -529,7 +530,7 @@ exports.getYourPhotographerOrders = (req, res) => {
           shootTime: doc.data().shootTime,
           formattedDate: doc.data().formattedDate,
           amount: doc.data().amount,
-          paymentID: doc.data().id,
+          paymentID: doc.data().paymentID,
         });
       });
       return res.json(orders);
@@ -583,6 +584,7 @@ exports.getYourPhotographerPastOrders = (req, res) => {
 
       snapshot.forEach((doc) => {
         allPastOrders.push({
+          orderID: doc.data().id,
           consumerID: doc.data().consumerID,
           photographerID: doc.data().photographerID,
           firstName: doc.data().consumerFirstName,
@@ -615,9 +617,9 @@ exports.getUsersOrders = (req, res) => {
 
       data.forEach((doc) => {
         orders.push({
-          docID: doc.id,
+          orderID: doc.data().id,
           amount: doc.data().amount,
-          paymentID: doc.data().id,
+          paymentID: doc.data().paymentID,
           consumerID: doc.data().consumerID,
           photographerID: doc.data().photographerID,
           firstName: doc.data().photographerFirstName,
@@ -647,6 +649,7 @@ exports.getUsersPastOrders = (req, res) => {
 
       snapshot.forEach((doc) => {
         allPastOrders.push({
+          orderID: doc.data().id,
           consumerID: doc.data().consumerID,
           photographerID: doc.data().photographerID,
           firstName: doc.data().photographerFirstName,
