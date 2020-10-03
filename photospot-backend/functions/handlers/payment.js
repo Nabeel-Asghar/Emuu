@@ -142,7 +142,12 @@ exports.createPayment = (req, res) => {
 // Refund customer when CUSTOMER cancels
 exports.refund = async (req, res) => {
   let userID = req.user.uid;
-  const [paymentID, shootDate, shootTime, amount] = await getPaymentID(userID);
+  let orderID = req.body.orderID;
+
+  const [paymentID, shootDate, shootTime, amount] = await getPaymentID(
+    userID,
+    orderID
+  );
 
   // will only give refund if customer cancelled 24 hours before shoot
   let refundability = await validateRefund(shootDate, shootTime);
@@ -164,7 +169,10 @@ exports.refund = async (req, res) => {
 
 // Refund customer when PHOTOGRAPHER cancels
 exports.refundFromPhotographer = async (req, res) => {
-  let paymentID = req.body.paymentID;
+  let userID = req.user.uid;
+  let orderID = req.body.orderID;
+
+  const paymentID = await getPaymentIDAsPhotographer(userID, orderID);
 
   await processRefundFromPhotographer(paymentID);
 
@@ -295,20 +303,36 @@ function validateRefund(shootDate, shootTime) {
 }
 
 // Get payment ID from users current order to refund
-function getPaymentID(userID) {
+function getPaymentID(userID, orderID) {
+  console.log("orderID: ", orderID);
   return db
     .collection("users")
     .doc(userID)
     .collection("orders")
-    .doc(userID)
+    .doc(orderID)
     .get()
     .then((doc) => {
       return [
-        doc.data().id,
+        doc.data().paymentID,
         doc.data().shootDate,
         doc.data().shootTime,
         doc.data().amount,
       ];
+    })
+    .catch((err) => {
+      return null;
+    });
+}
+
+function getPaymentIDAsPhotographer(photographerID, orderID) {
+  return db
+    .collection("photographer")
+    .doc(photographerID)
+    .collection("orders")
+    .doc(orderID)
+    .get()
+    .then((doc) => {
+      return doc.data().paymentID;
     })
     .catch((err) => {
       return null;

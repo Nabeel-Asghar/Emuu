@@ -64,7 +64,7 @@ class userDashboard extends Component {
       newReviewSucess: "",
       type: "edited",
       openRefundDialog: false,
-      paymentID: "",
+      orderID: "",
       openSuccess: false,
     };
   }
@@ -178,7 +178,7 @@ class userDashboard extends Component {
 
   // handle refund
   handleRefundAgree() {
-    this.props.refund({ paymentID: this.state.paymentID });
+    this.props.refund({ orderID: this.state.orderID });
     this.setState({ openRefundDialog: false, openSuccess: true });
   }
 
@@ -186,8 +186,8 @@ class userDashboard extends Component {
     this.setState({ openRefundDialog: false });
   }
 
-  handleRefundDialog(paymentID) {
-    this.setState({ paymentID: paymentID });
+  handleRefundDialog(orderID) {
+    this.setState({ orderID: orderID });
     this.setState({ openRefundDialog: true });
   }
 
@@ -204,6 +204,7 @@ class userDashboard extends Component {
     let theUserOrders = Object.keys(userOrders).map((key) => (
       <div style={{ marginBottom: 10 }}>
         <OrderCard
+          {...this.props}
           key={key}
           photographer={userOrders[key]}
           refundStatus={true}
@@ -218,6 +219,7 @@ class userDashboard extends Component {
     let theUserPastOrders = Object.keys(userPastOrders).map((key) => (
       <div style={{ marginBottom: 10 }}>
         <OrderCard
+          {...this.props}
           key={key}
           photographer={userPastOrders[key]}
           refundStatus={false}
