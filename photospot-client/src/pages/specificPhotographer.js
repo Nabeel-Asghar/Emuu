@@ -107,10 +107,12 @@ class specificPhotographer extends Component {
     }
 
     if (!equal(this.props.credentials, prevProps.credentials)) {
-      this.setState({
-        userEmail: this.props.credentials[0]?.email,
-        userProfileImage: this.props.credentials[0]?.profileImage,
-      });
+      if (this.props.credentials) {
+        this.setState({
+          userEmail: this.props.credentials[0]?.email,
+          userProfileImage: this.props.credentials[0]?.profileImage,
+        });
+      }
     }
 
     if (!equal(this.props.reviews, prevProps.reviews)) {
@@ -292,7 +294,7 @@ class specificPhotographer extends Component {
                 <ListItem>
                   <ListItemText
                     primary={
-                      <div>
+                      <div style={{ marginTop: "2px" }}>
                         <Typography variant="subtitle2" display="inline">
                           <StarRatings
                             rating={this.state.trueOverall}
@@ -304,7 +306,12 @@ class specificPhotographer extends Component {
                           />
                         </Typography>
                         <Typography variant="subtitle2" display="inline">
-                          &nbsp;&nbsp;{this.state.reviewCount} ratings
+                          &nbsp;&nbsp;{this.state.reviewCount}{" "}
+                          {this.state.reviewCount > 1 ? (
+                            <Typography display="inline">ratings</Typography>
+                          ) : (
+                            <Typography display="inline">rating</Typography>
+                          )}
                         </Typography>
                       </div>
                     }
@@ -333,7 +340,7 @@ class specificPhotographer extends Component {
             variant="extended"
             color="secondary"
             aria-label="add"
-            style={{ margin: "15px 0 20px 0" }}
+            style={{ margin: "10px 0 20px 0", float: "right" }}
             onClick={() => this.handleReviewOpenState()}
           >
             <AddIcon className={classes.extendedIcon} />

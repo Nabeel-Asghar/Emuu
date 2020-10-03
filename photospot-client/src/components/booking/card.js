@@ -31,6 +31,8 @@ class ProfileCard extends Component {
       firstName,
       lastName,
       profileImage,
+      date,
+      time,
     } = this.props;
 
     return (
@@ -41,9 +43,19 @@ class ProfileCard extends Component {
           title="Profile Image"
         />
         <CardContent className={classes.content}>
-          <Typography variant="h5">
+          <Typography variant="h5" gutterBottom>
             Book with&nbsp;{firstName}&nbsp;{lastName}
           </Typography>
+          {date && (
+            <div>
+              <Typography variant="body1" gutterBottom>
+                Date: {date}
+              </Typography>
+              <Typography variant="body1" gutterBottom>
+                Time: {time}
+              </Typography>
+            </div>
+          )}
         </CardContent>
       </Card>
     );

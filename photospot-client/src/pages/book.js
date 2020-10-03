@@ -14,6 +14,7 @@ import {
   getPhotographerPage,
   getBookingTimes,
   bookPhotographer,
+  checkBookability,
 } from "../redux/actions/dataActions";
 
 // Components
@@ -21,10 +22,12 @@ import ProfileCard from "../components/booking/card";
 import Date from "../components/booking/date";
 import equal from "fast-deep-equal";
 import Time from "../components/booking/time";
-import Confirmbook from "../components/booking/confirmbook";
+import Confirmation from "../components/booking/confirmation";
 
 // Date format
 import moment from "moment";
+import { timeConvert } from "../util/timeConvert";
+import { dateConvert } from "../util/dateConvert";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -111,6 +114,7 @@ class book extends Component {
     this.setState({
       selectedDate: date,
       formattedDate: moment(date).format("MM-DD-YYYY"),
+      selectedTime: null,
     });
 
     let found = false;
@@ -144,7 +148,15 @@ class book extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    this.handleClickOpen();
+    this.props.checkBookability().then((response) => {
+      if (response) {
+        this.handleClickOpen();
+      } else {
+        this.setState({
+          openSnack: true,
+        });
+      }
+    });
   };
 
   handleClickOpen = () => {
@@ -161,20 +173,18 @@ class book extends Component {
 
   handleAgree = () => {
     let bookingDetails = {
+      photographerID: this.props.match.params.photographerID,
+      photographerEmail: this.state.email,
       date: this.state.formattedDate,
       time: this.state.selectedTime,
-      firstName: this.state.firstName,
-      lastName: this.state.lastName,
-      profileImage: this.state.profileImage,
+      photographerFirstName: this.state.firstName,
+      photographerLastName: this.state.lastName,
+      photographerProfileImage: this.state.profileImage,
     };
-    this.props
-      .bookPhotographer(this.props.match.params.photographerID, bookingDetails)
-      .then(() => {
-        this.setState({ openSnack: true });
-      });
 
-    this.setState({
-      open: false,
+    this.props.history.push({
+      pathname: `${this.props.history.location.pathname}/checkout`,
+      details: bookingDetails,
     });
   };
 
@@ -199,19 +209,15 @@ class book extends Component {
             horizontal: "center",
           }}
           open={this.state.openSnack}
-          autoHideDuration={6000}
           onClose={this.handleClose}
         >
-          <Alert
-            onClose={this.props.handleClose}
-            severity={errors ? "warning" : "success"}
-          >
-            {errors ? errors.message : "You've been booked!"}
+          <Alert onClose={this.handleClose} severity={"warning"}>
+            You already have a pending order.
           </Alert>
         </Snackbar>
 
-        <Grid item xs={1} />
-        <Grid item xs={10}>
+        <Grid item md={1} xs={0} />
+        <Grid item md={10} xs={12}>
           <ProfileCard
             key={this.state.photographerID}
             photographerID={this.state.photographerID}
@@ -220,16 +226,16 @@ class book extends Component {
             profileImage={this.state.profileImage}
           />
         </Grid>
-        <Grid item xs={1} />
-        <Grid item xs={1} />
-        <Grid item xs={7}>
+        <Grid item md={1} xs={0} />
+        <Grid item md={1} xs={0} />
+        <Grid item md={7} xs={12}>
           <Date
             theDate={this.state.selectedDate}
             parentCallback={this.handleDateChange}
           />
         </Grid>
 
-        <Grid item xs={3}>
+        <Grid item md={3} xs={12}>
           <Paper style={{ width: "100%", height: "100%" }}>
             {loadingData ? (
               <CircularProgress
@@ -248,17 +254,18 @@ class book extends Component {
           </Paper>
         </Grid>
 
-        <Confirmbook
+        <Confirmation
           open={this.state.open}
+          secondaryConfirmation={false}
           handleAgree={this.handleAgree}
           handleDisagree={this.handleDisagree}
-          firstName={this.state.firstName}
-          lastName={this.state.lastName}
-          date={moment(this.state.formattedDate).format("dddd, MMMM Do")}
-          time={this.state.selectedTime}
+          title="Confirm Booking"
+          text={`Would you like to confirm booking with ${this.state.firstName}
+          ${this.state.lastName} on ${dateConvert(this.state.formattedDate)} at 
+          ${timeConvert(this.state.selectedTime)}?`}
         />
 
-        <Grid item xs={1}></Grid>
+        <Grid item md={1} xs={0}></Grid>
       </Grid>
     );
   }
@@ -274,6 +281,7 @@ const mapActionsToProps = {
   getPhotographerPage,
   getBookingTimes,
   bookPhotographer,
+  checkBookability,
 };
 
 export default connect(

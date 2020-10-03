@@ -534,10 +534,10 @@ exports.getYourUserProfile = (req, res) => {
 };
 
 exports.getYourPhotographerOrders = (req, res) => {
-  let photograhperID = req.user.uid;
+  let photographerID = req.user.uid;
 
   db.collection("photographer")
-    .doc(photograhperID)
+    .doc(photographerID)
     .collection("orders")
     .orderBy("formattedDate", "desc")
     .get()
@@ -554,6 +554,8 @@ exports.getYourPhotographerOrders = (req, res) => {
           shootDate: doc.data().shootDate,
           shootTime: doc.data().shootTime,
           formattedDate: doc.data().formattedDate,
+          amount: doc.data().amount,
+          paymentID: doc.data().id,
         });
       });
       return res.json(orders);
@@ -615,6 +617,8 @@ exports.getYourPhotographerPastOrders = (req, res) => {
           shootDate: doc.data().shootDate,
           shootTime: doc.data().shootTime,
           formattedDate: doc.data().formattedDate,
+          status: doc.data().status,
+          amount: doc.data().amount,
         });
       });
       return res.json(allPastOrders);
@@ -637,6 +641,9 @@ exports.getUsersOrders = (req, res) => {
 
       data.forEach((doc) => {
         orders.push({
+          docID: doc.id,
+          amount: doc.data().amount,
+          paymentID: doc.data().id,
           consumerID: doc.data().consumerID,
           photographerID: doc.data().photographerID,
           firstName: doc.data().photographerFirstName,
@@ -674,6 +681,8 @@ exports.getUsersPastOrders = (req, res) => {
           shootDate: doc.data().shootDate,
           shootTime: doc.data().shootTime,
           formattedDate: doc.data().formattedDate,
+          status: doc.data().status,
+          amount: doc.data().amount,
         });
       });
 
@@ -709,8 +718,6 @@ exports.getUserReviews = (req, res) => {
           photographerID: doc.data().photographerID,
         });
       });
-
-      console.log(reviews);
 
       return res.json(reviews);
     })

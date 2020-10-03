@@ -77,7 +77,7 @@ const Navbar = () => {
                 <img src={AppIcon} alt="Logo" style={imageStyle} />
                 <Typography>
                   <Box fontWeight="fontWeightBold" fontSize="h6.fontSize">
-                    &nbsp; Photospot
+                    &nbsp; PhotoSpot
                   </Box>
                 </Typography>
               </IconButton>

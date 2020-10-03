@@ -515,118 +515,16 @@ exports.filterPhotographers = (req, res) => {
     .catch((err) => console.error(err));
 };
 
-exports.bookPhotographer = (req, res) => {
-  let userid = req.user.uid;
-  let photographerBooked = req.params.photographerId;
-  let shootDate = req.body.date;
-  let shootTime = req.body.time;
-  let photographerFirstName = req.body.firstName;
-  let photographerLastName = req.body.lastName;
-  let photographerProfileImage = req.body.profileImage;
-  let consumerFirstName = res.locals.firstName;
-  let consumerLastName = res.locals.lastName;
-  let consumerProfileImage = res.locals.profileImage;
-
-  var myDate = shootDate.split("-");
-  var newDate = myDate[2] + "," + myDate[0] + "," + myDate[1];
-  var formattedDate = new Date(newDate);
-
-  let booking = {
-    photographerID: photographerBooked,
-    consumerID: userid,
-    shootDate: shootDate,
-    shootTime: shootTime,
-    photographerFirstName: photographerFirstName,
-    photographerLastName: photographerLastName,
-    photographerProfileImage: photographerProfileImage,
-    consumerFirstName: consumerFirstName,
-    consumerLastName: consumerLastName,
-    consumerProfileImage: consumerProfileImage,
-    paymentStatus: "pending",
-    paymentToPhotographer: "pending",
-    createdAt: new Date().toISOString(),
-    formattedDate: formattedDate,
-  };
-
-  // Make sure user only as one order at a time
+exports.checkBookAbility = (req, res) => {
   db.collection("users")
-    .doc(userid)
+    .doc(req.user.uid)
     .collection("orders")
     .get()
     .then((sub) => {
-      console.log("here");
       if (sub.docs.length > 0) {
-        return res.status(500).json({
-          message: "You may only have one pending order at a time.",
-        });
+        return res.json({ message: false });
       } else {
-        // update main collection of orders with this order
-        db.collection("allOrders")
-          .doc()
-          .set(booking)
-          .then(() => {
-            // Update booking time to be filled on photographer schedule
-            db.collection("photographer")
-              .doc(photographerBooked)
-              .collection("bookings")
-              .doc(shootDate)
-              .update({
-                [shootTime]: true,
-              })
-              .then(() => {
-                // Set order for photographer under photographer/{photograhper ID}/orders
-                db.collection("photographer")
-                  .doc(photographerBooked)
-                  .collection("orders")
-                  .doc()
-                  .set(booking)
-                  .then(() => {
-                    // Set order for user under users/{user ID}/orders
-                    db.collection("users")
-                      .doc(userid)
-                      .collection("orders")
-                      .doc(photographerBooked)
-                      .set(booking)
-                      .then(() => {
-                        return res.json({
-                          message:
-                            "Order complete, you will recieve an email with a confirmation.",
-                        });
-                      })
-                      .catch((err) => {
-                        return res
-                          .status(500)
-                          .json({ error: `Something went wrong.` });
-                      });
-                  })
-                  .catch((err) => {
-                    return res
-                      .status(500)
-                      .json({ error: `Something went wrong.` });
-                  });
-
-                // db.collection("orders")
-                //   .doc(userid)
-                //   .set(booking)
-                //   .then(() => {
-                //     return res.json({
-                //       message:
-                //         "Order complete, you will recieve an email with a confirmation.",
-                //     });
-                //   })
-                //   .catch((err) => {
-                //     res.status(500).json({ error: `something went wrong` });
-                //     console.log(err);
-                //   });
-              })
-              .catch((err) => {
-                return res.status(500).json({ error: `Something went wrong.` });
-              });
-          })
-          .catch((err) => {
-            console.log(err);
-            return res.json({ error: err });
-          });
+        return res.json({ message: true });
       }
     });
 };

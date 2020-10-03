@@ -8,6 +8,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
 import Button from "@material-ui/core/Button";
+import Typography from "@material-ui/core/Typography";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -132,36 +133,50 @@ class time extends Component {
     return (
       <form
         onSubmit={this.props.handleSubmit}
-        style={{ paddingLeft: "10px", paddingTop: "15px" }}
+        style={{ textAlign: "center", padding: "15px 15px 15px 15px" }}
       >
-        <FormControl component="fieldset" className={classes.form}>
-          <FormLabel
-            color="secondary"
-            component="legend"
+        {displayTimeslots.length > 0 ? (
+          <FormControl component="fieldset" className={classes.form}>
+            <FormLabel
+              color="secondary"
+              component="legend"
+              style={{
+                textAlign: "center",
+                paddingBottom: "10px",
+              }}
+            >
+              Pick a time for your shoot
+            </FormLabel>
+            <RadioGroup
+              aria-label="Shoot time"
+              name="scheduletime"
+              value={this.props.selectedTime}
+              onChange={this.props.handleRadioChange}
+            >
+              {displayTimeslots}
+            </RadioGroup>
+            {this.props.time && (
+              <Button
+                type="submit"
+                fullWidth
+                variant="outlined"
+                color="secondary"
+                style={{ marginTop: "15px" }}
+              >
+                Submit
+              </Button>
+            )}
+          </FormControl>
+        ) : (
+          <Typography
             style={{
               textAlign: "center",
               paddingBottom: "10px",
             }}
           >
-            Choose a time for your shoot
-          </FormLabel>
-          <RadioGroup
-            aria-label="Shoot time"
-            name="scheduletime"
-            value={this.props.selectedTime}
-            onChange={this.props.handleRadioChange}
-          >
-            {displayTimeslots}
-          </RadioGroup>
-          <Button
-            type="submit"
-            variant="outlined"
-            color="secondary"
-            style={{ marginTop: "15px" }}
-          >
-            Submit
-          </Button>
-        </FormControl>
+            No timeslots that day
+          </Typography>
+        )}
       </form>
     );
   }

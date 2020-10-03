@@ -119,43 +119,17 @@ app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);
 //Administrator
 app.get("/admin/completedOrders", completedOrders);
 
-exports.onReviewCreated = functions.firestore
-  .document("photographer/{photographerID}/reviews/{reviewID}")
-  .onCreate((snap, context) => {
-    // Get the note document
-    const note = snap.data();
+// exports.onReviewCreated = functions.firestore
+//   .document("photographer/{photographerID}/reviews/{reviewID}")
+//   .onCreate((snap, context) => {
+//     // Get the note document
+//     const note = snap.data();
 
-    // Add an 'objectID' field which Algolia requires
-    note.objectID = context.params.reviewID;
+//     // Add an 'objectID' field which Algolia requires
+//     note.objectID = context.params.reviewID;
 
-    // Write to the algolia index
-    return index.saveObject(note);
-  });
-
-exports.onReviewUpdate = functions.firestore
-  .document("photographer/{photographerID}/reviews/{reviewID}")
-  .onUpdate((snap, context) => {
-    // Get the note document
-    const note = snap.data();
-
-    // Add an 'objectID' field which Algolia requires
-    note.objectID = context.params.reviewID;
-
-    // Write to the algolia index
-    return index.saveObject(note);
-  });
-
-exports.onUserCreated = functions.firestore
-  .document("photographer/{photographerID}")
-  .onCreate((snap, context) => {
-    // Get the note document
-    const note = snap.data();
-
-    // Add an 'objectID' field which Algolia requires
-    note.objectID = context.params.photographerID;
-
-    // Write to the algolia index
-    return index.saveObject(note);
-  });
+//     // Write to the algolia index
+//     return index.saveObject(note);
+//   });
 
 exports.api = functions.https.onRequest(app);
