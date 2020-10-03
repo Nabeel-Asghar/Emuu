@@ -53,6 +53,8 @@ class UserListComponent extends Component {
   render() {
     const { classes, selectChatFn, chat } = this.props;
 
+    console.log(this.props);
+
     if (!chat || chat.length === 0) {
       return <div>Login in to chat.</div>;
     } else {
@@ -77,7 +79,7 @@ class UserListComponent extends Component {
                     selected={this.props.selectedChatIndex === _index}
                     alignItems="flex-start"
                   >
-                    <ListItemAvatar>
+                    {/* <ListItemAvatar>
                       <Avatar
                         alt="remy Sharp"
                         src={
@@ -88,7 +90,7 @@ class UserListComponent extends Component {
                           ].profileImage
                         }
                       ></Avatar>
-                    </ListItemAvatar>
+                    </ListItemAvatar> */}
                     <ListItemText
                       classes={{ primary: classes.listItemText }}
                       primary={

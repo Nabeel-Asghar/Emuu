@@ -23,11 +23,11 @@ import Date from "../components/booking/date";
 import equal from "fast-deep-equal";
 import Time from "../components/booking/time";
 import Confirmation from "../components/booking/confirmation";
-import { dateConvert } from "../util/dateConvert";
 
 // Date format
 import moment from "moment";
 import { timeConvert } from "../util/timeConvert";
+import { dateConvert } from "../util/dateConvert";
 
 const styles = (theme) => ({
   ...theme.spreadThis,

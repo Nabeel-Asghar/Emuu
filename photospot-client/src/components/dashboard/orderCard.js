@@ -1,10 +1,8 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
-import withStyles from "@material-ui/core/styles/withStyles";
-import moment from "moment";
-
 // MUI
+import withStyles from "@material-ui/core/styles/withStyles";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import CircularProgress from "@material-ui/core/CircularProgress";
@@ -18,6 +16,10 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+
+// util
+import { timeConvert } from "../../util/timeConvert";
+import { dateConvert } from "../../util/dateConvert";
 
 const styles = {
   root: { borderColor: "#23ba8b" },
@@ -38,6 +40,7 @@ class orderCard extends Component {
         shootDate,
         shootTime,
         amount,
+        status,
       },
     } = this.props;
 
@@ -74,8 +77,7 @@ class orderCard extends Component {
                         gutterBottom
                         style={{ fontWeight: "bold" }}
                       >
-                        {moment(shootTime, "HH:mm").format("h:mm A")} on{" "}
-                        {moment(shootDate).format("LL")}
+                        {timeConvert(shootTime)} on {dateConvert(shootDate)}
                       </Typography>
                     </Paper>
                   </Grid>
@@ -99,8 +101,8 @@ class orderCard extends Component {
                       </List>
                     </Paper>
                   </Grid>
-                  {refundStatus && (
-                    <Grid item xs={12} style={{ textAlign: "right" }}>
+                  <Grid item xs={12} style={{ textAlign: "right" }}>
+                    {refundStatus ? (
                       <Button
                         variant="contained"
                         color="secondary"
@@ -110,8 +112,12 @@ class orderCard extends Component {
                           Cancel Order
                         </Typography>
                       </Button>
-                    </Grid>
-                  )}
+                    ) : (
+                      <Typography>
+                        Status: <b>{status}</b>
+                      </Typography>
+                    )}
+                  </Grid>
                 </Grid>
               </Grid>
             </Grid>

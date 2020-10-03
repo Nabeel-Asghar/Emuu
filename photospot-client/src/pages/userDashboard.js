@@ -206,7 +206,6 @@ class userDashboard extends Component {
         <OrderCard
           key={key}
           photographer={userOrders[key]}
-          history={this.props.history}
           refundStatus={true}
           handleRefund={this.handleRefundDialog.bind(this)}
         />
@@ -221,7 +220,6 @@ class userDashboard extends Component {
         <OrderCard
           key={key}
           photographer={userPastOrders[key]}
-          history={this.props.history}
           refundStatus={false}
         />
       </div>
@@ -321,6 +319,7 @@ class userDashboard extends Component {
               </Typography>
             </div>
           }
+          label="I understand I want to cancel the order"
         />
         {/* Success after refund */}
         <Success

@@ -64,6 +64,7 @@ exports.onboardUserRefresh = async (req, res) => {
   }
 };
 
+// Get status of onboard
 exports.getStripeOnboardStatus = (req, res) => {
   db.collection("photographer")
     .doc(req.user.uid)
@@ -135,34 +136,34 @@ exports.createPayment = (req, res) => {
     });
 };
 
-// Refund customer
+// Refund customer when CUSTOMER cancels
 exports.refund = async (req, res) => {
   let userID = req.user.uid;
   const [paymentID, shootDate, shootTime, amount] = await getPaymentID(userID);
 
-  console.log(paymentID, shootDate, shootTime, amount);
-
   // will only give refund if customer cancelled 24 hours before shoot
-  let refundability = validateRefund(shootDate, shootTime);
-  console.log(refundability);
+  let refundability = await validateRefund(shootDate, shootTime);
 
   // if before 24 hours or photographer cancels, give full refund and cancel order
   if (refundability) {
-    const refund = await stripe.refunds.create({
-      payment_intent: paymentID,
-      reverse_transfer: true,
-      refund_application_fee: false,
-    });
+    await processRefund(paymentID, amount);
   }
+
   // otherwise 50% refund and cancel order
   else {
-    const refund = await stripe.refunds.create({
-      payment_intent: paymentID,
-      reverse_transfer: true,
-      amount: (amount * 100) / 2,
-      refund_application_fee: false,
-    });
+    await processRefund(paymentID, amount / 2);
   }
+
+  return res.json({
+    message: "Refund in progress. This may take a few moments.",
+  });
+};
+
+// Refund customer when PHOTOGRAPHER cancels
+exports.refundFromPhotographer = async (req, res) => {
+  let paymentID = req.body.paymentID;
+
+  await processRefundFromPhotographer(paymentID);
 
   return res.json({
     message: "Refund in progress. This may take a few moments.",
@@ -257,4 +258,22 @@ function getPaymentID(userID) {
     .catch((err) => {
       return null;
     });
+}
+
+function processRefund(paymentID, amount) {
+  const refund = stripe.refunds.create({
+    payment_intent: paymentID,
+    reverse_transfer: true,
+    amount: amount * 100,
+    refund_application_fee: false,
+  });
+}
+
+function processRefundFromPhotographer(paymentID) {
+  const refund = stripe.refunds.create({
+    payment_intent: paymentID,
+    reverse_transfer: true,
+    refund_application_fee: true,
+    metadata: { photographerCancel: "true" },
+  });
 }

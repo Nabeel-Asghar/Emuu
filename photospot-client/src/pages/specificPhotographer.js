@@ -107,10 +107,12 @@ class specificPhotographer extends Component {
     }
 
     if (!equal(this.props.credentials, prevProps.credentials)) {
-      this.setState({
-        userEmail: this.props.credentials[0]?.email,
-        userProfileImage: this.props.credentials[0]?.profileImage,
-      });
+      if (this.props.credentials) {
+        this.setState({
+          userEmail: this.props.credentials[0]?.email,
+          userProfileImage: this.props.credentials[0]?.profileImage,
+        });
+      }
     }
 
     if (!equal(this.props.reviews, prevProps.reviews)) {

@@ -21,34 +21,87 @@ exports.webhooks = (req, res) => {
       );
       break;
 
-    // successful refund
+    // refund requested by photographer
+    // TODO: detect when photographer cancels verses customer
+
+    // refund requested by customer
     case "charge.refunded":
-      console.log("Refund Successful");
-      handleRefund(
-        event.data.object.metadata,
-        event.data.object.amount,
-        event.data.object.id
-      );
+      if (event.data.object.refunds.data[0].metadata.photographerCancel) {
+        console.log("Refund By Photographer Successful");
+        handleRefundByPhotographer(
+          event.data.object.metadata,
+          event.data.object.amount,
+          event.data.object.id
+        );
+      } else {
+        console.log("Refund By Customer Successful");
+        handleRefund(
+          event.data.object.metadata,
+          event.data.object.amount,
+          event.data.object.id
+        );
+      }
+
       break;
   }
 
   return res.status(200).end();
 };
 
-// handle successful refunds
+// handle successful refunds intiated by customer
 async function handleRefund(orderDetails, chargeAmount, paymentID) {
   let photographerID = orderDetails.photographerID;
   let consumerID = orderDetails.consumerID;
   let shootDate = orderDetails.date;
   let shootTime = orderDetails.time;
 
-  let booking = await bookingObject(orderDetails, chargeAmount, paymentID);
+  let booking = await bookingObject(
+    orderDetails,
+    chargeAmount,
+    paymentID,
+    "Refunded"
+  );
 
   await deleteFromOrders(consumerID);
   await deleteFromPhotographers(photographerID, consumerID);
   await deleteFromUser(consumerID);
   await freePhotographerTimeslot(photographerID, shootDate, shootTime);
-  await emailRefund(booking);
+
+  await addToOverallCompletedOrders(booking);
+  await addToUserCompletedOrders(consumerID, booking);
+  await addToPhotographersCompletedOrders(photographerID, booking);
+
+  await emailRefundsByCustomer(booking);
+}
+
+// handle refund intiated by photographer
+async function handleRefundByPhotographer(
+  orderDetails,
+  chargeAmount,
+  paymentID
+) {
+  let photographerID = orderDetails.photographerID;
+  let consumerID = orderDetails.consumerID;
+  let shootDate = orderDetails.date;
+  let shootTime = orderDetails.time;
+
+  let booking = await bookingObject(
+    orderDetails,
+    chargeAmount,
+    paymentID,
+    "Refunded"
+  );
+
+  await deleteFromOrders(consumerID);
+  await deleteFromPhotographers(photographerID, consumerID);
+  await deleteFromUser(consumerID);
+  await freePhotographerTimeslot(photographerID, shootDate, shootTime);
+
+  await addToOverallCompletedOrders(booking);
+  await addToUserCompletedOrders(consumerID, booking);
+  await addToPhotographersCompletedOrders(photographerID, booking);
+
+  await emailRefundsByPhotographer(booking);
 }
 
 // handle successful payments
@@ -58,7 +111,12 @@ async function handlePayment(orderDetails, chargeAmount, paymentID) {
   let photographerID = orderDetails.photographerID;
   let consumerID = orderDetails.consumerID;
 
-  let booking = await bookingObject(orderDetails, chargeAmount, paymentID);
+  let booking = await bookingObject(
+    orderDetails,
+    chargeAmount,
+    paymentID,
+    "In Progress"
+  );
 
   await updateMainOrders(consumerID, booking);
   await updatePhotographerOrders(photographerID, consumerID, booking);
@@ -70,7 +128,7 @@ async function handlePayment(orderDetails, chargeAmount, paymentID) {
 // helper functions
 //
 // create booking object
-function bookingObject(orderDetails, chargeAmount, paymentID) {
+function bookingObject(orderDetails, chargeAmount, paymentID, status) {
   let amount = chargeAmount / 100;
   let shootDate = orderDetails.date;
   let shootTime = orderDetails.time;
@@ -108,6 +166,7 @@ function bookingObject(orderDetails, chargeAmount, paymentID) {
     consumerProfileImage: consumerProfileImage,
     createdAt: new Date().toISOString(),
     formattedDate: formattedDate,
+    status: status,
   };
 
   return booking;
@@ -241,11 +300,57 @@ function freePhotographerTimeslot(photographerID, shootDate, shootTime) {
     });
 }
 
+// add to overall completed orders table
+function addToOverallCompletedOrders(booking) {
+  db.collection("completedOrders")
+    .doc()
+    .set(booking)
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+}
+
+// add to user's completed orders
+function addToUserCompletedOrders(consumerID, booking) {
+  db.collection("users")
+    .doc(consumerID)
+    .collection("completedOrders")
+    .doc()
+    .set(booking)
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+}
+
+// add to photographers's completed orders
+function addToPhotographersCompletedOrders(photographerID, booking) {
+  db.collection("photographer")
+    .doc(photographerID)
+    .collection("completedOrders")
+    .doc()
+    .set(booking)
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+}
+
 // Email functions
 //
 // email refund details
-function emailRefund(booking) {
-  email.emailRefunds(booking);
+function emailRefundsByCustomer(booking) {
+  email.emailRefundsByCustomer(booking);
 }
 
 // email order details
@@ -253,7 +358,7 @@ function emailOrderDetails(booking) {
   email.emailOrderDetails(booking);
 }
 
-// email cancel without refund details
-function emailCancel(booking) {
-  email.emailCancel(booking);
+// email refund details
+function emailRefundsByPhotographer(booking) {
+  email.emailRefundsByPhotographer(booking);
 }
