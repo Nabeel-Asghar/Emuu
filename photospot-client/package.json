@@ -33,6 +33,7 @@
     "react-image-lightbox": "^5.1.1",
     "react-images": "^1.1.7",
     "react-images-upload": "^1.2.8",
+    "react-instantsearch": "^6.7.0",
     "react-items-carousel": "^2.8.0",
     "react-modal-image": "^2.5.0",
     "react-photo-gallery": "^8.0.0",

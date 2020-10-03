@@ -1,0 +1,68 @@
+body {
+}
+
+.ais-Pagination {
+}
+
+.left-panel {
+}
+
+.right-panel {
+}
+
+.ais-RefinementList-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 0;
+}
+
+input[type="search"]::-webkit-search-decoration,
+input[type="search"]::-webkit-search-cancel-button,
+input[type="search"]::-webkit-search-results-button,
+input[type="search"]::-webkit-search-results-decoration {
+  display: none;
+}
+
+/* .ais-SearchBox-form {
+  background-color: red;
+}
+
+.ais-SearchBox-input {
+  background-color: blue;
+}
+
+*/
+.ais-SearchBox-submit {
+  background-color: green;
+  width: 150px;
+  height: 150px;
+}
+
+.ais-SearchBox-reset {
+  display: none;
+}
+
+.ais-SearchBox-input:not(:placeholder-shown) {
+  border-radius: var(--rad) 0 0 var(--rad);
+  width: calc(100% - var(--btn-width));
+}
+
+a {
+  text-decoration: none;
+}
+
+.MuiFormControlLabel-label {
+  font-weight: "bold";
+}
+
+ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 0;
+}
+
+.ais-NumericMenu-list {
+  list-style-type: none;
+  padding-left: 0;
+  margin-top: 0;
+}

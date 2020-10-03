@@ -16,6 +16,7 @@ import TextField from "@material-ui/core/TextField";
 import withStyles from "@material-ui/core/styles/withStyles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Paper from "@material-ui/core/Paper";
+import * as algoliasearch from "algoliasearch";
 
 // Components
 import Photographer from "../components/photographer";
@@ -24,6 +25,12 @@ import CardSkeleton from "../components/cardSkeleton";
 const styles = (theme) => ({
   ...theme.spreadThis,
 });
+
+const APP_ID = "SYUBAMS440";
+const SEARCH_KEY = "587bf2e2211c20cdb452ed974fbd6b77";
+
+var client = algoliasearch(APP_ID, SEARCH_KEY);
+var index = client.initIndex("photographer");
 
 class searchPage extends Component {
   constructor() {
@@ -45,13 +52,19 @@ class searchPage extends Component {
   }
 
   handleSubmit = (event) => {
+    console.log("very gay");
     event.preventDefault();
 
     const searchQuery = this.state.searchQuery;
-    this.props.history.push({
-      pathname: "/search/" + searchQuery,
-      daSearch: searchQuery,
+
+    index.search(searchQuery).then(({ hits }) => {
+      console.log(hits);
     });
+
+    // this.props.history.push({
+    //   pathname: "/search/" + searchQuery,
+    //   daSearch: searchQuery,
+    // });
   };
 
   handleChange = (event) => {
@@ -66,8 +79,6 @@ class searchPage extends Component {
       UI: { loading },
     } = this.props;
 
-    console.log(this.state.allThePhotographers);
-
     let recentPhotographers = Object.keys(
       this.state.allThePhotographers
     ).map((key) => (
@@ -76,7 +87,9 @@ class searchPage extends Component {
         photographer={this.state.allThePhotographers[key]}
       />
     ));
-    console.log(recentPhotographers);
+
+    console.log(this.state.allThePhotographers);
+
     return (
       <Grid container spacing={2}>
         <Grid item xs={12} style={{ textAlign: "center" }}>

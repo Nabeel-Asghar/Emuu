@@ -96,6 +96,8 @@ exports.reviewPhotographer = (req, res) => {
   let photographerFirstName = req.body.photographerFirstName;
   let photographerLastName = req.body.photographerLastName;
   let photographerProfile = req.body.photographerProfile;
+  let reviewTotal = 1;
+  let reviewCount = 1;
 
   if (reviewID === photographerBeingReviewed) {
     return res.status(400).json({ error: "You cannot review yourself." });
@@ -162,16 +164,63 @@ exports.reviewPhotographer = (req, res) => {
                 const pRef = db
                   .collection("photographer")
                   .doc(photographerBeingReviewed);
-                const incrementReviewCount = db2.FieldValue.increment(1);
-                const incrementRating = db2.FieldValue.increment(
-                  req.body.rating
-                );
 
-                pRef.update({ reviewCount: incrementReviewCount });
-                pRef.update({ totalRating: incrementRating });
-                console.log("added review to user");
+                return db.runTransaction((transaction) => {
+                  return transaction.get(pRef).then((document) => {
+                    if (!document.exists) {
+                      throw "Document does not exist!";
+                    }
 
-                return res.json({ message: "Review added successfully!" });
+                    // Compute new number of ratings
+                    var newNumRatings = document.data().reviewCount + 1;
+
+                    // Compute new average rating
+                    var oldRatingTotal =
+                      document.data().totalRating + req.body.rating;
+                    var newAvgRating = oldRatingTotal / newNumRatings;
+
+                    // Commit to Firestore
+                    transaction.update(pRef, {
+                      reviewCount: newNumRatings,
+                      totalRating: oldRatingTotal,
+                      avgRating: newAvgRating,
+                    });
+                    console.log("added review to user");
+                    return res.json({ message: "Review added successfully!" });
+                  });
+                });
+
+                // const pRef = db
+                //   .collection("photographer")
+                //   .doc(photographerBeingReviewed);
+
+                // const incrementReviewCount = db2.FieldValue.increment(1);
+                // const incrementRating = db2.FieldValue.increment(
+                //   req.body.rating
+                // );
+
+                // pRef.get().then((doc) => {
+                //   const totalRating1 = doc.data().totalRating
+                //     ? doc.data().totalRating
+                //     : 0;
+                //   const reviewCount1 = doc.data().reviewCount
+                //     ? doc.data().reviewCount
+                //     : 0;
+
+                //   console.log("total:", totalRating1);
+                //   console.log("reviewCount:", reviewCount1);
+                //   pRef.update({
+                //     averageRating:
+                //       (totalRating1 + req.body.rating) / (reviewCount1 + 1),
+                //   });
+                // });
+
+                // pRef.update({ reviewCount: incrementReviewCount });
+                // pRef.update({ totalRating: incrementRating });
+
+                // console.log("added review to user");
+
+                // return res.json({ message: "Review added successfully!" });
               })
               .catch((err) => {
                 console.log(err);
@@ -234,14 +283,30 @@ exports.editReview = (req, res) => {
           const pRef = db
             .collection("photographer")
             .doc(photographerBeingReviewed);
-          const decrementRating = db2.FieldValue.increment(-oldRating);
-          const incrementRating = db2.FieldValue.increment(req.body.rating);
 
-          pRef.update({ totalRating: decrementRating });
-          pRef.update({ totalRating: incrementRating });
-          console.log("added review to user");
+          return db.runTransaction((transaction) => {
+            return transaction.get(pRef).then((document) => {
+              if (!document.exists) {
+                throw "Document does not exist!";
+              }
 
-          return res.json({ message: "Review edited successfully!" });
+              // Compute new number of ratings
+              var newNumRatings = document.data().reviewCount;
+
+              // Compute new average rating
+              var oldRatingTotal =
+                document.data().totalRating - oldRating + req.body.rating;
+              var newAvgRating = oldRatingTotal / newNumRatings;
+
+              // Commit to Firestore
+              transaction.update(pRef, {
+                reviewCount: newNumRatings,
+                totalRating: oldRatingTotal,
+                avgRating: newAvgRating,
+              });
+              return res.json({ message: "Review edited successfully!" });
+            });
+          });
         })
         .catch((err) => {
           console.log(err);
@@ -274,14 +339,29 @@ exports.deleteReview = (req, res) => {
             .collection("photographer")
             .doc(photographerBeingReviewed);
 
-          const decrementReviewCount = db2.FieldValue.increment(-1);
-          const decrementRating = db2.FieldValue.increment(-oldRating);
+          return db.runTransaction((transaction) => {
+            return transaction.get(pRef).then((document) => {
+              if (!document.exists) {
+                throw "Document does not exist!";
+              }
 
-          pRef.update({ reviewCount: decrementReviewCount });
-          pRef.update({ totalRating: decrementRating });
-          console.log("Deleted review");
+              // Compute new number of ratings
+              var newNumRatings = document.data().reviewCount - 1;
 
-          return res.json({ message: "Review deleted successfully!" });
+              // Compute new average rating
+              var oldRatingTotal = document.data().totalRating - oldRating;
+              var newAvgRating = oldRatingTotal / newNumRatings;
+
+              // Commit to Firestore
+              transaction.update(pRef, {
+                reviewCount: newNumRatings,
+                totalRating: oldRatingTotal,
+                avgRating: newAvgRating,
+              });
+              console.log("Deleted review");
+              return res.json({ message: "Review deleted successfully!" });
+            });
+          });
         })
         .catch((err) => {
           console.log(err);

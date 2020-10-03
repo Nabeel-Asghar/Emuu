@@ -1,4 +1,4 @@
-const { admin, db } = require("../util/admin");
+const { admin, db, index } = require("../util/admin");
 const config = require("../util/config");
 const storageBucketVar = config.storageBucket;
 
@@ -128,6 +128,30 @@ exports.login = (req, res) => {
     });
 };
 
+exports.addFirestoreDataToAlgolia = (req, res) => {
+  db.collection("photographer")
+    .get()
+    .then((docs) => {
+      let photographers = [];
+      docs.forEach((doc) => {
+        let user = doc.data();
+        user.objectID = doc.id;
+        photographers.push(user);
+      });
+
+      index
+        .saveObjects(photographers)
+        .then(() => {
+          return res.status(400).json({
+            message: "Contacts imported",
+          });
+        })
+        .catch((error) => {
+          console.error("Error when importing contact into Algolia", error);
+        });
+    });
+};
+
 exports.reauthenticateUser = () => {
   var user = firebase.auth().currentUser;
   var credential = firebase.auth.EmailAuthProvider.credential(
@@ -232,6 +256,8 @@ exports.setYourPhotographyPage = (req, res) => {
     website: req.body.website,
     instagram: req.body.instagram,
     ratePerHour: req.body.ratePerHour,
+    totalRating: 0,
+    reviewCount: 0,
   };
 
   const { valid, errors } = validatePhotographerPageData(

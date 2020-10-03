@@ -1,5 +1,6 @@
 const functions = require("firebase-functions");
 const cors = require("cors");
+const { index } = require("../util/admin");
 //const helmet = require("helmet");
 
 const app = require("express")();
@@ -47,6 +48,7 @@ const {
   editBookingTimes,
   getYourPhotographerOrders,
   getYourPhotographerPastOrders,
+  addFirestoreDataToAlgolia,
 } = require("./handlers/users");
 
 const { completedOrders } = require("./handlers/administrator");
@@ -65,6 +67,7 @@ app.get("/yourphotographerpage", FBAuth, getYourPhotographerPage);
 app.get("/yourorders", FBAuth, getYourPhotographerOrders);
 app.get("/yourpastorders", FBAuth, getYourPhotographerPastOrders);
 app.get("/yourreviews", FBAuth, getYourPhotographerReviews);
+app.get("/addFirestoreDataToAlgolia", FBAuth, addFirestoreDataToAlgolia);
 
 // get user details
 app.get("/youruserprofile", FBAuth, getYourUserProfile);
@@ -115,5 +118,44 @@ app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);
 
 //Administrator
 app.get("/admin/completedOrders", completedOrders);
+
+exports.onReviewCreated = functions.firestore
+  .document("photographer/{photographerID}/reviews/{reviewID}")
+  .onCreate((snap, context) => {
+    // Get the note document
+    const note = snap.data();
+
+    // Add an 'objectID' field which Algolia requires
+    note.objectID = context.params.reviewID;
+
+    // Write to the algolia index
+    return index.saveObject(note);
+  });
+
+exports.onReviewUpdate = functions.firestore
+  .document("photographer/{photographerID}/reviews/{reviewID}")
+  .onUpdate((snap, context) => {
+    // Get the note document
+    const note = snap.data();
+
+    // Add an 'objectID' field which Algolia requires
+    note.objectID = context.params.reviewID;
+
+    // Write to the algolia index
+    return index.saveObject(note);
+  });
+
+exports.onUserCreated = functions.firestore
+  .document("photographer/{photographerID}")
+  .onCreate((snap, context) => {
+    // Get the note document
+    const note = snap.data();
+
+    // Add an 'objectID' field which Algolia requires
+    note.objectID = context.params.photographerID;
+
+    // Write to the algolia index
+    return index.saveObject(note);
+  });
 
 exports.api = functions.https.onRequest(app);
