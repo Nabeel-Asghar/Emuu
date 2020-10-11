@@ -59,7 +59,22 @@ exports.signup = (req, res) => {
         db.doc(`/photographer/${userId}`)
           .set(userCredentials)
           .then(() => {
-            return db.doc(`/users/${userId}`).set(userCredentials);
+            db.doc(`/users/${userId}`)
+              .set(userCredentials)
+              .then(() => {
+                index
+                  .saveObjects(userCredentials)
+                  .then(() => {
+                    console.log("user added");
+                    return res.json({ message: "User added successfully!" });
+                  })
+                  .catch((err) => {
+                    return res.status(500).json({ error: err.code });
+                  });
+              })
+              .catch((err) => {
+                return res.status(500).json({ error: err.code });
+              });
           })
           .catch((err) => {
             console.error(err);
@@ -128,29 +143,29 @@ exports.login = (req, res) => {
     });
 };
 
-exports.addFirestoreDataToAlgolia = (req, res) => {
-  db.collection("photographer")
-    .get()
-    .then((docs) => {
-      let photographers = [];
-      docs.forEach((doc) => {
-        let user = doc.data();
-        user.objectID = doc.id;
-        photographers.push(user);
-      });
+// exports.addFirestoreDataToAlgolia = (req, res) => {
+//   db.collection("photographer")
+//     .get()
+//     .then((docs) => {
+//       let photographers = [];
+//       docs.forEach((doc) => {
+//         let user = doc.data();
+//         user.objectID = doc.id;
+//         photographers.push(user);
+//       });
 
-      index
-        .saveObjects(photographers)
-        .then(() => {
-          return res.status(400).json({
-            message: "Contacts imported",
-          });
-        })
-        .catch((error) => {
-          console.error("Error when importing contact into Algolia", error);
-        });
-    });
-};
+//       index
+//         .saveObjects(photographers)
+//         .then(() => {
+//           return res.status(400).json({
+//             message: "Contacts imported",
+//           });
+//         })
+//         .catch((error) => {
+//           console.error("Error when importing contact into Algolia", error);
+//         });
+//     });
+// };
 
 exports.reauthenticateUser = () => {
   var user = firebase.auth().currentUser;
@@ -269,7 +284,18 @@ exports.setYourPhotographyPage = (req, res) => {
   db.doc(`/photographer/${req.user.uid}`)
     .update(photographerPageDetails)
     .then(() => {
-      return res.json({ message: "Your photographer page has been updated." });
+      index
+        .saveObjects(photographerPageDetails, { objectID: req.user.uid })
+        .then(() => {
+          console.log("Photographer page added.");
+          return res.json({
+            message: "Your photographer page has been updated.",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+          return res.status(500).json({ error: `something went wrong` });
+        });
     })
     .catch((err) => {
       console.error(err);
@@ -278,10 +304,9 @@ exports.setYourPhotographyPage = (req, res) => {
 };
 
 // update your photographer page
-exports.updatePhotographerPage = (req, res) => {
+exports.updatePhotographerCategoriesAndBio = (req, res) => {
   const photographerPageDetails = req.body;
-
-  console.log(photographerPageDetails);
+  const categories = req.body.categories;
 
   // const { valid, errors } = validateBio(photographerPageDetails);
 
@@ -290,23 +315,18 @@ exports.updatePhotographerPage = (req, res) => {
   db.doc(`/photographer/${req.user.uid}`)
     .update(photographerPageDetails)
     .then(() => {
-      return res.json({ message: "Your bio has been updated." });
-    })
-    .catch((err) => {
-      console.error(err);
-      return res.status(500).json({ error: err.code });
-    });
-};
-
-exports.setPhotographerCategories = (req, res) => {
-  const categories = req.body.categories;
-
-  db.doc(`/photographer/${req.user.uid}`)
-    .update({
-      ["categories"]: categories,
+      index
+        .partialUpdateObject({
+          categories: categories,
+          objectID: req.user.uid,
+        })
+        .catch((err) => {
+          console.error(err);
+          return res.status(500).json({ error: err.code });
+        });
     })
     .then(() => {
-      return res.json({ message: "Your categories has been updated." });
+      return res.json({ message: "Your bio has been updated." });
     })
     .catch((err) => {
       console.error(err);
