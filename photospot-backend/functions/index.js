@@ -71,6 +71,8 @@ const { completedOrders } = require("./handlers/administrator");
 
 const { webhooks } = require("./handlers/webhooks");
 
+const { getVault, uploadToVault, downloadImages } = require("./handlers/vault");
+
 const FBAuth = require("./util/FBAuth");
 //const { searchPhotographer } = require("../../photospot-client/src/redux/actions/dataActions");
 
@@ -145,5 +147,10 @@ app.get("/admin/completedOrders", completedOrders);
 
 // Webhooks for Stripe
 app.post("/webhooks", webhooks);
+
+// Vault routes
+app.get("/vault/:vaultID", FBAuth, getVault);
+app.post("/vault/:vaultID/upload", FBAuth, uploadToVault);
+app.get("/vault/:vaultID/download", FBAuth, downloadImages);
 
 exports.api = functions.https.onRequest(app);

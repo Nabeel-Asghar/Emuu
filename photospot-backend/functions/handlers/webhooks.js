@@ -128,6 +128,7 @@ async function handlePayment(orderDetails, chargeAmount, paymentID) {
   await updatePhotographerOrders(photographerID, orderID, booking);
   await updateUserOrders(consumerID, orderID, booking);
   await fillPhotographerTimeslot(photographerID, shootDate, shootTime);
+  await createPhotoVault(orderID, photographerID, consumerID);
   await emailOrderDetails(booking);
 }
 
@@ -177,6 +178,25 @@ function bookingObject(orderID, orderDetails, chargeAmount, paymentID, status) {
   };
 
   return booking;
+}
+
+// create photo vault for this order
+function createPhotoVault(orderID, photographerID, consumerID) {
+  let intialObject = {
+    photographerID: photographerID,
+    consumerID: consumerID,
+  };
+
+  db.collection("photoVault")
+    .doc(orderID)
+    .set(intialObject)
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
 }
 
 // update main order collection
