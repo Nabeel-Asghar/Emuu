@@ -1,7 +1,7 @@
 import { Grid, Paper, Typography } from "@material-ui/core";
 import * as algoliasearch from "algoliasearch";
 import React, { Component } from "react";
-import { InstantSearch, SortBy } from "react-instantsearch-dom";
+import { InstantSearch, SortBy, RefinementList } from "react-instantsearch-dom";
 
 // Componenents
 import ConnectedClearRefinements from "./ConnectedClearRefinements";
@@ -9,6 +9,7 @@ import ConnectedHits from "./ConnectedHits";
 import ConnectedNumericMenu from "./ConnectedNumericMenu";
 import ConnectedRefinementList from "./ConnectedRefinementList";
 import ConnectedSearchBox from "./ConnnectedSearchBox";
+import ConnectedDate from "./ConnectedDate";
 import "./search.css";
 
 class Search extends Component {
@@ -36,7 +37,7 @@ class Search extends Component {
             </Paper>
           </Grid>
 
-          <Grid item xs={2}>
+          <Grid item xs={4}>
             <Typography style={{ fontWeight: "bold" }}>Category</Typography>
             <ConnectedRefinementList attribute="categories" />
             <Typography style={{ fontWeight: "bold" }}>
@@ -56,10 +57,14 @@ class Search extends Component {
             />
             <Typography style={{ fontWeight: "bold" }}>City</Typography>
             <ConnectedRefinementList attribute="location_city" />
+
+            <Typography style={{ fontWeight: "bold" }}>Date</Typography>
+            {/* <ConnectedDate /> */}
+
             <ConnectedClearRefinements />
           </Grid>
 
-          <Grid item xs={10}>
+          <Grid item xs={8}>
             <Grid spacing={2} container direction="row">
               <ConnectedHits />
             </Grid>

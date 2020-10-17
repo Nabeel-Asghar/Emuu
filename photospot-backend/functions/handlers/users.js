@@ -846,17 +846,29 @@ exports.deleteImages = (req, res) => {
 exports.editBookingTimes = (req, res) => {
   let date = req.body.date;
   let timeslots = req.body.time;
+  let algoliaDates = req.body.algoliaDates;
   let userid = req.user.uid;
 
   console.log("Date: ", date);
   console.log("Timeslots: ", timeslots);
+  console.log("Algoliatimeslot: ", algoliaDates);
 
   db.collection("photographer")
     .doc(userid)
     .collection("bookings")
     .doc(date)
     .set(timeslots)
-    .then((doc) => {
+    .then(()=>{
+      index
+      .partialUpdateObject({
+        bookings: algoliaDates,
+        objectID: userid,
+      }).catch((err) => {
+        console.log(err);
+        return res.status(500).json({ error: `something went wrong` });
+      });
+    })
+    .then(()=> {
       return res.json({ message: "success" });
     })
     .catch((err) => {

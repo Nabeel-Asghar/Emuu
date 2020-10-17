@@ -3,6 +3,7 @@ import React from "react";
 import { connectNumericMenu } from "react-instantsearch-dom";
 import StarRatings from "react-star-ratings";
 
+
 const NumericMenu = ({ items, refine, createURL }) => (
   <ul style={{ listStyleType: "none", paddingLeft: "0px", marginTop: "0px" }}>
     {items.map((item) => (

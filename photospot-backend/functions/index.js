@@ -71,7 +71,6 @@ const { completedOrders } = require("./handlers/administrator");
 const { webhooks } = require("./handlers/webhooks");
 
 const FBAuth = require("./util/FBAuth");
-//const { searchPhotographer } = require("../../photospot-client/src/redux/actions/dataActions");
 
 //--------User Routes-----------------
 app.post("/signup", signup);
