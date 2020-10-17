@@ -31,7 +31,7 @@ class orderCard extends Component {
       classes,
       refundStatus,
       photographer: {
-        docID,
+        orderID,
         paymentID,
         photographerID,
         firstName,
@@ -102,11 +102,20 @@ class orderCard extends Component {
                     </Paper>
                   </Grid>
                   <Grid item xs={12} style={{ textAlign: "right" }}>
+                    <Button
+                      variant="contained"
+                      color="secondary"
+                      onClick={() =>
+                        this.props.history.push(`vault/${orderID}`)
+                      }
+                    >
+                      Photo Vault
+                    </Button>
                     {refundStatus ? (
                       <Button
                         variant="contained"
                         color="secondary"
-                        onClick={() => this.props.handleRefund(paymentID)}
+                        onClick={() => this.props.handleRefund(orderID)}
                       >
                         <Typography style={{ fontWeight: "bold" }}>
                           Cancel Order

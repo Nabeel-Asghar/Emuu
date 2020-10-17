@@ -1,7 +1,16 @@
 import React, { Component } from "react";
+import withStyles from "@material-ui/core/styles/withStyles";
+import { Redirect } from "react-router-dom";
+
+// Redux
+import { connect } from "react-redux";
+import {
+  getVault,
+  getDownload,
+  uploadToVault,
+} from "../redux/actions/vaultActions";
 
 // Material UI
-import withStyles from "@material-ui/core/styles/withStyles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
@@ -9,13 +18,10 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import SaveIcon from "@material-ui/icons/Save";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-// Redux
-import { connect } from "react-redux";
-import { deleteImages, uploadImages } from "../redux/actions/userActions";
-
 // Components
 import ImageGrid from "../components/imageGrid";
 import GoBackButton from "../components/goBackButton";
+import ProgressBar from "../components/photo-vault/progressBar";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -27,19 +33,25 @@ const styles = (theme) => ({
   },
 });
 
-class photographyPictures extends Component {
+class photoVault extends Component {
   constructor() {
     super();
     this.state = {
+      access: "",
+      vaultData: [],
       images: [],
       imagesToUpload: [],
       imagesToDelete: [],
+      completed: 50,
     };
   }
 
   componentDidMount() {
-    this.setState({
-      images: this.props.location.state.images,
+    this.props.getVault(this.props.match.params.orderID).then(() => {
+      this.setState({
+        access: this.props.vault.access,
+        images: this.props.vault.vaultData.images,
+      });
     });
   }
 
@@ -55,14 +67,22 @@ class photographyPictures extends Component {
     });
   }
 
-  handleImageAdd = (event) => {
-    const image = event.target.files[0];
-    if (image) {
+  handleImageAdd = async (event) => {
+    const images = event.target.files;
+    let imageUrls = this.state.images;
+    let newImages = this.state.imagesToUpload;
+
+    if (images) {
+      for (let i = 0; i < images.length; i++) {
+        console.log(URL.createObjectURL(images[i]));
+        imageUrls.push(URL.createObjectURL(images[i]));
+        newImages.push(images[i]);
+        // console.log("GB: ", event.target.files[0].size / Math.pow(1024, 3));
+      }
+
       this.setState({
-        imagesToUpload: [...this.state.imagesToUpload, image],
-      });
-      this.setState({
-        images: [...this.state.images, URL.createObjectURL(image)],
+        images: imageUrls,
+        imagesToUpload: newImages,
       });
     }
   };
@@ -72,37 +92,45 @@ class photographyPictures extends Component {
     fileInput.click();
   };
 
-  handleSubmit() {
-    this.props.deleteImages(this.state.imagesToDelete);
+  downloadImages() {
+    this.props.getDownload(this.props.match.params.orderID);
+  }
 
+  handleSubmit() {
     const formData = new FormData();
+
     this.state.imagesToUpload.forEach((image) => {
       formData.append("image", image, image.name);
     });
 
-    this.props.uploadImages(formData);
+    this.props.uploadToVault(this.props.match.params.orderID, formData);
   }
 
   render() {
-    const {
-      classes,
-      UI: { loading },
-    } = this.props;
-
+    const { classes } = this.props;
     return (
       <Paper>
-        <ImageGrid
-          images={this.state.images}
-          deleteImage={this.deleteImage.bind(this)}
-        />
-        <Grid container spacing={2}>
-          <Grid item xs={12} className={classes.centerGrid}>
+        <Grid container>
+          <ProgressBar completed={this.state.completed} />
+          {this.state.images && (
+            <ImageGrid
+              images={this.state.images}
+              deleteImage={this.deleteImage.bind(this)}
+            />
+          )}
+          <Grid item xs={12}>
             <div className={classes.root}>
               <GoBackButton {...this.props} />
               <Button
+                color="secondary"
+                variant="contained"
+                onClick={() => this.downloadImages()}
+              >
+                Download
+              </Button>
+              <Button
                 variant="outlined"
                 color="secondary"
-                disabled={loading}
                 startIcon={<CloudUploadIcon />}
                 onClick={this.handleEditPicture}
               >
@@ -112,6 +140,7 @@ class photographyPictures extends Component {
                   accept="image/*"
                   onChange={this.handleImageAdd}
                   hidden
+                  multiple
                 />
                 Upload
               </Button>
@@ -119,17 +148,10 @@ class photographyPictures extends Component {
               <Button
                 variant="contained"
                 color="secondary"
-                disabled={loading}
                 startIcon={<SaveIcon />}
                 onClick={() => this.handleSubmit()}
               >
                 Save Changes
-                {loading && (
-                  <CircularProgress
-                    className={classes.progress}
-                    color="secondary"
-                  />
-                )}
               </Button>
             </div>
           </Grid>
@@ -140,15 +162,16 @@ class photographyPictures extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  UI: state.UI,
+  vault: state.vault,
 });
 
 const mapActionsToProps = {
-  uploadImages,
-  deleteImages,
+  getVault,
+  getDownload,
+  uploadToVault,
 };
 
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(withStyles(styles)(photographyPictures));
+)(withStyles(styles)(photoVault));
