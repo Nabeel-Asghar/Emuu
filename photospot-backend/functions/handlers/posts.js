@@ -1,4 +1,4 @@
-const { db, db2 } = require("../util/admin");
+const { db, db2, index } = require("../util/admin");
 
 const { validateReview } = require("../util/validators");
 
@@ -96,6 +96,22 @@ exports.reviewPhotographer = (req, res) => {
   let photographerFirstName = req.body.photographerFirstName;
   let photographerLastName = req.body.photographerLastName;
   let photographerProfile = req.body.photographerProfile;
+  let reviewTotal = 1;
+  let reviewCount = 1;
+
+  const newReview = {
+    description: req.body.description,
+    rating: req.body.rating,
+    title: req.body.title,
+    userID: userid,
+    photographerID: photographerBeingReviewed,
+    firstName: res.locals.firstName,
+    lastName: res.locals.lastName,
+    photographerFirstName: photographerFirstName,
+    photographerLastName: photographerLastName,
+    photographerProfile: photographerProfile,
+    createdAt: new Date().toISOString(),
+  };
 
   if (reviewID === photographerBeingReviewed) {
     return res.status(400).json({ error: "You cannot review yourself." });
@@ -125,71 +141,75 @@ exports.reviewPhotographer = (req, res) => {
         return res
           .status(400)
           .json({ error: "You cannot review someone twice." });
-      } else {
-        const newReview = {
-          description: req.body.description,
-          rating: req.body.rating,
-          title: req.body.title,
-          userID: userid,
-          photographerID: photographerBeingReviewed,
-          firstName: res.locals.firstName,
-          lastName: res.locals.lastName,
-          photographerFirstName: photographerFirstName,
-          photographerLastName: photographerLastName,
-          photographerProfile: photographerProfile,
-          createdAt: new Date().toISOString(),
-        };
-
-        const { valid, errors } = validateReview(newReview);
-        console.log("errors: ", errors);
-
-        if (!valid) return res.status(400).json(errors);
-
-        // Add review to that photographer document
-
-        db.collection("photographer")
-          .doc(photographerBeingReviewed)
-          .collection("reviews")
-          .doc(userid)
-          .set(newReview)
-          .then(() => {
-            db.collection("users")
-              .doc(userid)
-              .collection("reviews")
-              .doc(photographerBeingReviewed)
-              .set(newReview)
-              .then(() => {
-                const pRef = db
-                  .collection("photographer")
-                  .doc(photographerBeingReviewed);
-                const incrementReviewCount = db2.FieldValue.increment(1);
-                const incrementRating = db2.FieldValue.increment(
-                  req.body.rating
-                );
-
-                pRef.update({ reviewCount: incrementReviewCount });
-                pRef.update({ totalRating: incrementRating });
-                console.log("added review to user");
-
-                return res.json({ message: "Review added successfully!" });
-              })
-              .catch((err) => {
-                console.log(err);
-                return res.status(500).json({ error: `something went wrong` });
-              });
-          })
-          .catch((err) => {
-            console.log(err);
-            return res.status(500).json({ error: `something went wrong` });
-          });
       }
+    })
+    .then(() => {
+      const { valid, errors } = validateReview(newReview);
+      console.log("errors: ", errors);
+
+      if (!valid) return res.status(400).json(errors);
+
+      // Add review to that photographer document
+      db.collection("photographer")
+        .doc(photographerBeingReviewed)
+        .collection("reviews")
+        .doc(userid)
+        .set(newReview);
+    })
+    .then(() => {
+      db.collection("users")
+        .doc(userid)
+        .collection("reviews")
+        .doc(photographerBeingReviewed)
+        .set(newReview);
+    })
+    .then(() => {
+      const pRef = db.collection("photographer").doc(photographerBeingReviewed);
+
+      return db.runTransaction((transaction) => {
+        return transaction.get(pRef).then((document) => {
+          if (!document.exists) {
+            throw "Document does not exist!";
+          }
+
+          // Compute new number of ratings
+          var newNumRatings = document.data().reviewCount + 1;
+
+          // Compute new average rating
+          var oldRatingTotal = document.data().totalRating + req.body.rating;
+          var newAvgRating = oldRatingTotal / newNumRatings;
+
+          // Commit to Firestore
+          transaction.update(pRef, {
+            reviewCount: newNumRatings,
+            totalRating: oldRatingTotal,
+            avgRating: newAvgRating,
+          });
+
+          index
+            .partialUpdateObject({
+              reviewCount: newNumRatings,
+              totalRating: oldRatingTotal,
+              avgRating: newAvgRating,
+              objectID: photographerBeingReviewed,
+            })
+            .then(({ objectID }) => {
+              console.log("added review to user");
+              return res.json({
+                message: "Review added successfully!",
+              });
+            })
+            .catch((err) => {
+              console.log(err);
+              return res.status(500).json({ error: `something went wrong` });
+            });
+        });
+      });
     })
     .catch((err) => {
       console.log(err);
       return res.status(500).json({ error: `something went wrong` });
     });
-
-  // Also add that review to the users collection for future reference
 };
 
 exports.editReview = (req, res) => {
@@ -229,27 +249,53 @@ exports.editReview = (req, res) => {
         .doc(userid)
         .collection("reviews")
         .doc(photographerBeingReviewed)
-        .update(updateReview)
-        .then(() => {
-          const pRef = db
-            .collection("photographer")
-            .doc(photographerBeingReviewed);
-          const decrementRating = db2.FieldValue.increment(-oldRating);
-          const incrementRating = db2.FieldValue.increment(req.body.rating);
+        .update(updateReview);
+    })
+    .then(() => {
+      const pRef = db.collection("photographer").doc(photographerBeingReviewed);
 
-          pRef.update({ totalRating: decrementRating });
-          pRef.update({ totalRating: incrementRating });
-          console.log("added review to user");
+      return db.runTransaction((transaction) => {
+        return transaction.get(pRef).then((document) => {
+          if (!document.exists) {
+            throw "Document does not exist!";
+          }
 
-          return res.json({ message: "Review edited successfully!" });
-        })
-        .catch((err) => {
-          console.log(err);
-          return res.status(500).json({ error: `something went wrong` });
+          // Compute new number of ratings
+          var newNumRatings = document.data().reviewCount;
+
+          // Compute new average rating
+          var oldRatingTotal =
+            document.data().totalRating - oldRating + req.body.rating;
+          var newAvgRating = oldRatingTotal / newNumRatings;
+
+          // Commit to Firestore
+          transaction.update(pRef, {
+            reviewCount: newNumRatings,
+            totalRating: oldRatingTotal,
+            avgRating: newAvgRating,
+          });
+
+          index
+            .partialUpdateObject({
+              reviewCount: newNumRatings,
+              totalRating: oldRatingTotal,
+              avgRating: newAvgRating,
+              objectID: photographerBeingReviewed,
+            })
+            .then(({ objectID }) => {
+              console.log("reviewed edited");
+              return res.json({ message: "Review edited successfully!" });
+            })
+            .catch((err) => {
+              console.log(err);
+              return res.status(500).json({ error: `something went wrong` });
+            });
         });
+      });
     })
     .catch((err) => {
-      return res.status(500).json({ error: err });
+      console.log(err);
+      return res.status(500).json({ error: `something went wrong` });
     });
 };
 
@@ -268,28 +314,52 @@ exports.deleteReview = (req, res) => {
         .doc(userid)
         .collection("reviews")
         .doc(photographerBeingReviewed)
-        .delete()
-        .then(() => {
-          const pRef = db
-            .collection("photographer")
-            .doc(photographerBeingReviewed);
+        .delete();
+    })
+    .then(() => {
+      const pRef = db.collection("photographer").doc(photographerBeingReviewed);
 
-          const decrementReviewCount = db2.FieldValue.increment(-1);
-          const decrementRating = db2.FieldValue.increment(-oldRating);
+      return db.runTransaction((transaction) => {
+        return transaction.get(pRef).then((document) => {
+          if (!document.exists) {
+            throw "Document does not exist!";
+          }
 
-          pRef.update({ reviewCount: decrementReviewCount });
-          pRef.update({ totalRating: decrementRating });
-          console.log("Deleted review");
+          // Compute new number of ratings
+          var newNumRatings = document.data().reviewCount - 1;
 
-          return res.json({ message: "Review deleted successfully!" });
-        })
-        .catch((err) => {
-          console.log(err);
-          return res.status(500).json({ error: `something went wrong` });
+          // Compute new average rating
+          var oldRatingTotal = document.data().totalRating - oldRating;
+          var newAvgRating = oldRatingTotal / newNumRatings;
+
+          // Commit to Firestore
+          transaction.update(pRef, {
+            reviewCount: newNumRatings,
+            totalRating: oldRatingTotal,
+            avgRating: newAvgRating,
+          });
+
+          index
+            .partialUpdateObject({
+              reviewCount: newNumRatings,
+              totalRating: oldRatingTotal,
+              avgRating: newAvgRating,
+              objectID: photographerBeingReviewed,
+            })
+            .then(({ objectID }) => {
+              console.log("reviewed deleted");
+              return res.json({ message: "Review deleted successfully!" });
+            })
+            .catch((err) => {
+              console.log(err);
+              return res.status(500).json({ error: `something went wrong` });
+            });
         });
+      });
     })
     .catch((err) => {
-      return res.status(500).json({ error: err });
+      console.log(err);
+      return res.status(500).json({ error: `something went wrong` });
     });
 };
 

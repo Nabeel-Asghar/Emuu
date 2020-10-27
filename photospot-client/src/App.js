@@ -24,7 +24,7 @@ import messaging from "./pages/messaging";
 import specificPhotographer from "./pages/specificPhotographer";
 import book from "./pages/book";
 import profile from "./pages/profile";
-import search from "./pages/search";
+import search from "./pages/Search/search";
 import editPhotographyPage from "./pages/editPhotographyPage";
 import photographyPictures from "./pages/photographyPictures";
 import home from "./pages/home";
@@ -198,7 +198,7 @@ class App extends Component {
                 {/* prettier-ignore */}
 
                 <div className="container">
-                  <Route exact path="/search" component={searchPage} />
+                  <Route exact path="/search" component={search} />
 
                   <Route exact path="/login" component={login} />
 
@@ -228,7 +228,7 @@ class App extends Component {
 
                   <Route exact path="/search/:searchQuery" component={search} />
 
-                  <Route exact path="/search/:type/:city/:state" component={search} />
+                  {/* <Route exact path="/search/:type/:city/:state" component={search} /> */}
 
                   <Route exact path="/photographers/:photographerID" component={specificPhotographer} />
 

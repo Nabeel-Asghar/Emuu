@@ -25,9 +25,9 @@ const {
   getSpecificPhotographer,
   checkBookAbility,
   getReviews,
-  reviewPhotographer,
   getPhotographerSchedule,
   getPricing,
+  reviewPhotographer,
   editReview,
   deleteReview,
 } = require("./handlers/posts");
@@ -37,23 +37,22 @@ const { getMessages, sendMessage } = require("./handlers/messages");
 const {
   signup,
   login,
+  resetPassword,
+  changePassword,
   uploadProfilePicture,
   uploadBackgroundPicture,
   uploadYourPhotographyImages,
-  setYourPhotographyPage,
-  setPhotographerCategories,
-  updatePhotographerPage,
-  getYourPhotographerPage,
-  getYourPhotographerReviews,
-  getYourUserProfile,
-  resetPassword,
-  changePassword,
+  setYourPhotographyPage, //here
+  updatePhotographerCategoriesAndBio,
   deleteImages,
+  updateUserProfile,
+  editBookingTimes,
   getUsersOrders,
   getUsersPastOrders,
   getUserReviews,
-  updateUserProfile,
-  editBookingTimes,
+  getYourPhotographerPage,
+  getYourPhotographerReviews,
+  getYourUserProfile,
   getYourPhotographerOrders,
   getYourPhotographerPastOrders,
 } = require("./handlers/users");
@@ -72,7 +71,6 @@ const { completedOrders } = require("./handlers/administrator");
 const { webhooks } = require("./handlers/webhooks");
 
 const FBAuth = require("./util/FBAuth");
-//const { searchPhotographer } = require("../../photospot-client/src/redux/actions/dataActions");
 
 //--------User Routes-----------------
 app.post("/signup", signup);
@@ -109,11 +107,10 @@ app.post("/photographer/refund", FBAuth, refundFromPhotographer);
 // photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
 app.post(
-  "/editphotographypage/editCategories",
+  "/editphotographypage/edit",
   FBAuth,
-  setPhotographerCategories
+  updatePhotographerCategoriesAndBio
 );
-app.post("/editphotographypage/edit", FBAuth, updatePhotographerPage);
 app.post("/editphotographypage/background", FBAuth, uploadBackgroundPicture);
 app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
 app.post("/photographyimages/delete", FBAuth, deleteImages);
