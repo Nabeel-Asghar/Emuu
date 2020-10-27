@@ -37,7 +37,7 @@ class Search extends Component {
             </Paper>
           </Grid>
 
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <Typography style={{ fontWeight: "bold" }}>Category</Typography>
             <ConnectedRefinementList attribute="categories" />
             <Typography style={{ fontWeight: "bold" }}>
@@ -64,7 +64,7 @@ class Search extends Component {
             <ConnectedClearRefinements />
           </Grid>
 
-          <Grid item xs={8}>
+          <Grid item xs={9}>
             <Grid spacing={2} container direction="row">
               <ConnectedHits />
             </Grid>

@@ -2,26 +2,28 @@ import React, { useEffect, useState } from "react";
 import { connectSearchBox } from "react-instantsearch-dom";
 
 import { makeStyles } from "@material-ui/core/styles";
-import { Box, TextField, Button } from "@material-ui/core";
+import {
+  Box,
+  TextField,
+  Button,
+  Input,
+  IconButton,
+  InputAdornment,
+} from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles((theme) => ({
   textField: {
-    paddingTop: theme.spacing(1),
-    marginRight: theme.spacing(1),
+    marginLeft: "15px",
   },
+
   content: {
+    borderRadius: "35px",
     display: "flex",
-    [theme.breakpoints.down("xs")]: {
-      flexDirection: "column",
-    },
+    marginLeft: "16px",
+    marginRight: "16px",
   },
-  button: {
-    marginTop: 23,
-    marginBottom: 10,
-    [theme.breakpoints.down("xs")]: {
-      marginTop: 5,
-    },
-  },
+  button: {},
 }));
 
 const CustomSearchBox = React.forwardRef((props, myRef) => {
@@ -56,33 +58,29 @@ const CustomSearchBox = React.forwardRef((props, myRef) => {
   }
 
   return (
-    <Box className={classes.content}>
-      <TextField
+    <Box className={classes.content} border={1}>
+      <Input
         ref={myRef}
         id="name"
+        disableUnderline={true}
         name="name"
-        label="Feature"
         placeholder="Search for what you're like to build..."
         defaultValue={currentRefinement}
         onChange={handleChange}
         className={classes.textField}
-        variant="outlined"
         margin="normal"
         size="small"
         fullWidth
-        InputLabelProps={{
-          shrink: true,
-        }}
       />
 
-      <Button
+      <IconButton
         variant="contained"
         color="secondary"
         className={classes.button}
         onClick={() => handleSubmit(state)}
       >
-        Search
-      </Button>
+        <SearchIcon />
+      </IconButton>
     </Box>
   );
 });
