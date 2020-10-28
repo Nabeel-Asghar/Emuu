@@ -27,6 +27,7 @@ const styles = (theme) => ({
 
   root: {
     marginTop: "10px",
+    boxShadow: "none",
     backgroundColor: "#e6e6e6",
     padding: "10px",
     display: "flex",
@@ -78,6 +79,7 @@ class ChatTextBoxComponent extends Component {
             color="secondary"
             size="small"
             style={{
+              boxShadow: "none",
               width: "50px",
               height: "50px",
               borderRadius: "50%",
