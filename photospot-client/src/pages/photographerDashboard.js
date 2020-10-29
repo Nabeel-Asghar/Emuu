@@ -33,7 +33,7 @@ import StripeCard from "../components/dashboard/stripeCard";
 import PhotographerReviews from "../components/photographerReviews";
 import CollapseItems from "../components/collapse";
 import Confirmation from "../components/booking/confirmation";
-import Success from "../components/checkout/success";
+import Success from "../components/success";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -239,6 +239,7 @@ class photograhperDashboard extends Component {
               </Typography>
             }
             open={this.state.openSuccess}
+            reload={true}
           />
         </Grid>
       </Grid>

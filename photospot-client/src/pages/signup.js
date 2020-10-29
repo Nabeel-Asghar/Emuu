@@ -77,10 +77,11 @@ class signup extends Component {
   };
 
   handleToggleChange = (event, newValue) => {
-    console.log(this.state.photographer);
-    this.setState({
-      photographer: newValue,
-    });
+    if (newValue !== null) {
+      this.setState({
+        photographer: newValue,
+      });
+    }
   };
 
   render() {
@@ -176,38 +177,27 @@ class signup extends Component {
               />
               <br />
               <br />
-              {/* <FormControl
-                component="fieldset"
-                color="secondary"
-                style={{ textAlign: "left", float: "left" }}
-              >
-                <FormLabel component="legend">
-                  Are you a photographer?
-                </FormLabel>
-                <RadioGroup onChange={this.handleChange} name="photographer">
-                  <FormControlLabel
-                    value="true"
-                    control={<Radio />}
-                    label="Yes"
-                  />
-                  <FormControlLabel
-                    value="false"
-                    control={<Radio />}
-                    label="No"
-                  />
-                </RadioGroup>
-              </FormControl> */}
 
               <ToggleButtonGroup
                 size="small"
-                thumbSwitchedStyle={{ backgroundColor: "blue" }}
+                thumbSwitchedStyle={{ background: "green" }}
                 name="photographer"
                 value={this.state.photographer}
                 exclusive
                 onChange={this.handleToggleChange}
               >
-                <ToggleButton value={true}>Photographer</ToggleButton>
-                <ToggleButton value={false}>Customer</ToggleButton>
+                <ToggleButton
+                  thumbSwitchedStyle={{ background: "green" }}
+                  value={true}
+                >
+                  Photographer
+                </ToggleButton>
+                <ToggleButton
+                  thumbSwitchedStyle={{ background: "green" }}
+                  value={false}
+                >
+                  Customer
+                </ToggleButton>
               </ToggleButtonGroup>
 
               {errors.general && (

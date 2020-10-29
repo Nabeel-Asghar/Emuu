@@ -15,7 +15,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
 // Components
-import Success from "../components/checkout/success";
+import Success from "../components/success";
 import ProfileCard from "../components/booking/card";
 import { timeConvert } from "../util/timeConvert";
 import { dateConvert } from "../util/dateConvert";
@@ -175,6 +175,7 @@ const Checkout = (props) => {
               </div>
             }
             open={success}
+            redirect="/userDashboard"
           />
         </Paper>
       </Container>

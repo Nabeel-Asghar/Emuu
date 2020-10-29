@@ -31,7 +31,7 @@ import ContactCard from "../components/dashboard/contactCard";
 import ReviewDialog from "../components/photographer-page/reviewDialog";
 import ReviewList from "../components/dashboard/reviewList";
 import Confirmation from "../components/booking/confirmation";
-import Success from "../components/checkout/success";
+import Success from "../components/success";
 import CollapseItems from "../components/collapse";
 
 const styles = (theme) => ({
@@ -217,7 +217,7 @@ class userDashboard extends Component {
 
     // Get user past orders
     let theUserPastOrders = Object.keys(userPastOrders).map((key) => (
-      <div style={{ marginBottom: 10 }}>
+      <div>
         <OrderCard
           {...this.props}
           key={key}
@@ -331,6 +331,7 @@ class userDashboard extends Component {
             </Typography>
           }
           open={this.state.openSuccess}
+          reload={true}
         />
 
         <Grid item xs={8}>

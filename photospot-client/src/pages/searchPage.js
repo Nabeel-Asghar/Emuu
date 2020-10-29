@@ -66,8 +66,6 @@ class searchPage extends Component {
       UI: { loading },
     } = this.props;
 
-    console.log(this.state.allThePhotographers);
-
     let recentPhotographers = Object.keys(
       this.state.allThePhotographers
     ).map((key) => (
@@ -76,7 +74,6 @@ class searchPage extends Component {
         photographer={this.state.allThePhotographers[key]}
       />
     ));
-    console.log(recentPhotographers);
     return (
       <Grid container spacing={2}>
         <Grid item xs={12} style={{ textAlign: "center" }}>
