@@ -107,6 +107,35 @@ exports.uploadToVault = async (req, res) => {
   busboy.end(req.rawBody);
 };
 
+exports.deleteFromVault = async (req, res) => {
+  let vaultID = req.params.vaultID;
+  let images = req.body;
+
+  const promises = images.map(async (image) => {
+    let imageLocation = getImageLocation(image, vaultID);
+    await deleteFromStorage(imageLocation);
+    await deleteFromDatabase(image, vaultID);
+  });
+
+  await Promise.all(promises);
+
+  return res.json({ response: "Image(s) deleted" });
+};
+
+exports.getVaultSize = async (req, res) => {
+  let vaultID = req.params.vaultID;
+
+  let files = await getFiles(vaultID);
+  let allSizes = [];
+
+  files[0].forEach((file) => {
+    console.log(file.metadata.size);
+    allSizes.push(file.metadata.size);
+  });
+
+  return res.json({ size: allSizes });
+};
+
 function checkID(vaultID, id) {
   return db
     .collection("photoVault")
@@ -185,4 +214,38 @@ function getImage(url) {
   return imageToBase64(url).then((imageFile) => {
     return imageFile;
   });
+}
+
+function deleteFromStorage(imageLocation) {
+  storage
+    .bucket(storageBucketVar)
+    .deleteFiles({ prefix: imageLocation })
+    .then((res) => {
+      console.log("deleted from storage");
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+}
+
+function deleteFromDatabase(image, vaultID) {
+  const docs = db.collection("photoVault").doc(`vault_${vaultID}`);
+  docs
+    .update({ images: admin.firestore.FieldValue.arrayRemove(image) })
+    .then((res) => {
+      console.log("deleted from database");
+      return true;
+    })
+    .catch((err) => {
+      res.json({ error: err });
+    });
+}
+
+function getImageLocation(image, vaultID) {
+  let urlSplit = image.split("%2F");
+  let partWeWant = urlSplit[1];
+  let imageName = partWeWant.split("?");
+  let imageLocation = `vault_${vaultID}/${imageName[0]}`;
+  return imageLocation;
 }

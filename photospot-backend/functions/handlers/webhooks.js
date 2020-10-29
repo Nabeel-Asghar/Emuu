@@ -188,7 +188,7 @@ function createPhotoVault(orderID, photographerID, consumerID) {
   };
 
   db.collection("photoVault")
-    .doc(orderID)
+    .doc(`vault_${orderID}`)
     .set(intialObject)
     .then(() => {
       return true;

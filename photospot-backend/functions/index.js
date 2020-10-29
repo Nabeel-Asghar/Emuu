@@ -4,7 +4,8 @@ const helmet = require("helmet");
 const session = require("express-session");
 const app = require("express")();
 require("dotenv").config();
-
+const express = require("express");
+app.use(express.json());
 app.use(cors({ origin: true }));
 app.use(helmet());
 app.use(
@@ -16,7 +17,7 @@ app.use(
 );
 
 // TODO: alternate to request.session due to memory leak
-
+// TODO: find fix for raw-body limit, currently hard coded in C:\Users\nabee\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\raw-body\index.js
 const {
   getAllPhotographers,
   createPost,
@@ -71,7 +72,13 @@ const { completedOrders } = require("./handlers/administrator");
 
 const { webhooks } = require("./handlers/webhooks");
 
-const { getVault, uploadToVault, downloadImages } = require("./handlers/vault");
+const {
+  getVault,
+  uploadToVault,
+  deleteFromVault,
+  downloadImages,
+  getVaultSize,
+} = require("./handlers/vault");
 
 const FBAuth = require("./util/FBAuth");
 //const { searchPhotographer } = require("../../photospot-client/src/redux/actions/dataActions");
@@ -151,6 +158,8 @@ app.post("/webhooks", webhooks);
 // Vault routes
 app.get("/vault/:vaultID", FBAuth, getVault);
 app.post("/vault/:vaultID/upload", FBAuth, uploadToVault);
+app.post("/vault/:vaultID/delete", FBAuth, deleteFromVault);
 app.get("/vault/:vaultID/download", FBAuth, downloadImages);
+app.get("/vault/:vaultID/getSize", getVaultSize);
 
 exports.api = functions.https.onRequest(app);
