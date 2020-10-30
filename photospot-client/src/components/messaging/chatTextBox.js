@@ -69,7 +69,11 @@ class ChatTextBoxComponent extends Component {
               onKeyUp={(e) => this.userTyping(e)}
               id="chattextbox"
               onFocus={this.userClickedInput}
-              inputProps={{ "aria-label": "send a message" }}
+              inputProps={{
+                "aria-label": "send a message",
+                autoComplete: "off",
+                autoCapitalize: "sentences",
+              }}
             />
           </Paper>
         </Grid>

@@ -97,6 +97,8 @@ class specificPhotographer extends Component {
     this.setState({
       openBackdrop: false,
       userEmail: this.props.credentials[0]?.email,
+      userFirstName: this.props.credentials[0]?.firstName,
+      userLastName: this.props.credentials[0]?.lastName,
       userProfileImage: this.props.credentials[0]?.profileImage,
     });
   }
@@ -255,6 +257,8 @@ class specificPhotographer extends Component {
                 email={this.state.email}
                 profileImage={this.state.profileImage}
                 userEmail={this.state.userEmail}
+                userFirstName={this.state.userFirstName}
+                userLastName={this.state.userLastName}
                 userProfileImage={this.state.userProfileImage}
                 credentials={this.props.credentials}
                 location_city={this.state.location_city}

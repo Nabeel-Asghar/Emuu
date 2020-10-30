@@ -51,7 +51,7 @@ const styles = (theme) => ({
 
 class UserListComponent extends Component {
   render() {
-    const { classes, selectChatFn, chat } = this.props;
+    const { classes, selectChatFn, chat, userName } = this.props;
 
     console.log(this.props);
 
@@ -94,9 +94,7 @@ class UserListComponent extends Component {
                     <ListItemText
                       classes={{ primary: classes.listItemText }}
                       primary={
-                        _chat.users.filter(
-                          (_user) => _user !== this.props.userEmail
-                        )[0]
+                        _chat.names.filter((_user) => _user !== userName)[0]
                       }
                       secondary={
                         <React.Fragment>

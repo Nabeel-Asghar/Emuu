@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Button from "@material-ui/core/Button";
 import { sizing } from "@material-ui/system";
-import OnHoverScrollContainer from "./CustomScrollDiv";
 // Redux
 
 import { connect } from "react-redux";
@@ -24,7 +23,7 @@ const styles = (theme) => ({
     float: "left",
     textAlign: "left",
     clear: "both",
-    padding: "15px",
+    padding: "17px",
     marginBottom: "0px",
     boxSizing: "border-box",
     wordWrap: "break-word",
@@ -34,10 +33,11 @@ const styles = (theme) => ({
     borderRadius: "30px",
   },
 
-  friendSentUsername: {
+  friendSentTimestamp: {
     float: "left",
     textAlign: "left",
     paddingLeft: "24px",
+    paddingBottom: "8px",
   },
 
   friendSentProfileImage: {
@@ -57,7 +57,7 @@ const styles = (theme) => ({
   userSent: {
     float: "right",
     clear: "both",
-    padding: "15px",
+    padding: "17px",
     boxSizing: "border-box",
     wordWrap: "break-word",
     marginBottom: "0px",
@@ -67,10 +67,11 @@ const styles = (theme) => ({
     borderRadius: "30px",
   },
 
-  userSentUsername: {
+  userSentTimestamp: {
     float: "right",
     textAlign: "right",
     paddingRight: "24px",
+    paddingBottom: "8px",
   },
 
   avatar: {
@@ -108,6 +109,17 @@ const styles = (theme) => ({
     backgroundColor: "#e6e6e6",
     height: "65vh",
     overflow: "auto",
+    "&::-webkit-scrollbar": {
+      width: "0.4em",
+    },
+    "&::-webkit-scrollbar-track": {
+      boxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+      webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      backgroundColor: "rgba(0,0,0,.5)",
+      outline: "1px solid slategrey",
+    },
   },
 
   boxPadding: { paddingBottom: "60px", marginBottom: "0px" },
@@ -127,23 +139,22 @@ class ChatViewComponent extends Component {
   };
 
   render() {
-    const { classes, userEmail, chat } = this.props;
-
+    const { classes, userName, chat } = this.props;
+    console.log(chat);
     if (chat === undefined) {
       return <main id="chatview-container" className={classes.content} />;
     } else {
       return (
         <div>
           <div className={classes.chatHeader}>
-            {chat.users.filter((_usr) => _usr !== userEmail)[0]}
+            {chat.names.filter((_usr) => _usr !== userName)[0]}
           </div>
           <main id="chatview-container" className={classes.chatViewContainer}>
             {chat.messages.map((_msg, _index) => {
               return (
-                <OnHoverScrollContainer>
-                  <Box flexDirection="column" display="flex">
-                    <div>
-                      {/* <div
+                <Box flexDirection="column" display="flex">
+                  <div>
+                    {/* <div
                     key={_index}
                     className={
                       _msg.sender === this.props.userEmail
@@ -153,54 +164,53 @@ class ChatViewComponent extends Component {
                   >
                     {_msg.sender}
                   </div> */}
-                      <Box
-                        display="flex"
-                        p={1}
-                        m={1}
-                        bgcolor="background.paper"
-                        className={
-                          _msg.sender === this.props.userEmail
-                            ? classes.userSentBox
-                            : classes.friendSentBox
-                        }
-                      >
-                        <Box p={1} className={classes.avatar}>
-                          <Avatar
-                            className={classes.userSentProfileImage}
-                            alt="Remy Sharp"
-                            src={chat[_msg.sender].profileImage}
-                          />
-                        </Box>
-                        <Box p={1} padding="8px 8px 0px 8px">
-                          <div
-                            key={_index}
-                            className={
-                              _msg.sender === this.props.userEmail
-                                ? classes.userSent
-                                : classes.friendSent
-                            }
-                          >
-                            {_msg.message}
-                          </div>
-                        </Box>
-                      </Box>
-                    </div>
-
-                    <div
-                      key={_index}
+                    <Box
+                      display="flex"
+                      p={1}
+                      m={1}
+                      bgcolor="background.paper"
                       className={
                         _msg.sender === this.props.userEmail
-                          ? classes.userSentUsername
-                          : classes.friendSentUsername
+                          ? classes.userSentBox
+                          : classes.friendSentBox
                       }
                     >
-                      {this.formatDate(_msg.timestamp)}
-                    </div>
-                  </Box>
-                </OnHoverScrollContainer>
+                      <Box p={1} className={classes.avatar}>
+                        <Avatar
+                          className={classes.userSentProfileImage}
+                          alt="Remy Sharp"
+                          src={chat[_msg.sender].profileImage}
+                        />
+                      </Box>
+                      <Box p={1} padding="8px 8px 0px 8px">
+                        <div
+                          key={_index}
+                          className={
+                            _msg.sender === this.props.userEmail
+                              ? classes.userSent
+                              : classes.friendSent
+                          }
+                        >
+                          {_msg.message}
+                        </div>
+                      </Box>
+                    </Box>
+                  </div>
+
+                  <div
+                    key={_index}
+                    className={
+                      _msg.sender === this.props.userEmail
+                        ? classes.userSentTimestamp
+                        : classes.friendSentTimestamp
+                    }
+                  >
+                    {this.formatDate(_msg.timestamp)}
+                  </div>
+                </Box>
               );
             })}
-          </main>
+          </main>{" "}
         </div>
       );
     }
