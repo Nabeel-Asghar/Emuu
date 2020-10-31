@@ -3,6 +3,7 @@ import { Redirect, Link } from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
 import AppIcon from "../images/logo.png";
+import Background from "../images/background.png";
 
 // MUI
 import Grid from "@material-ui/core/Grid";
@@ -94,7 +95,10 @@ class signup extends Component {
     } = this.props;
     const { errors } = this.state;
     return (
-      <Grid container className={classes.form}>
+      <Grid
+        container
+        className={classes.form}
+      >
         <Grid item xs />
         <Paper
           style={{

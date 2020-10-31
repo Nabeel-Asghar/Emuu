@@ -15,7 +15,7 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
 // Components
-import Success from "../components/success";
+import Success from "../components/shared/success";
 import ProfileCard from "../components/booking/card";
 import { timeConvert } from "../util/timeConvert";
 import { dateConvert } from "../util/dateConvert";

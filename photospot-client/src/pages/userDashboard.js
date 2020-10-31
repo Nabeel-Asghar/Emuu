@@ -31,8 +31,8 @@ import ContactCard from "../components/dashboard/contactCard";
 import ReviewDialog from "../components/photographer-page/reviewDialog";
 import ReviewList from "../components/dashboard/reviewList";
 import Confirmation from "../components/booking/confirmation";
-import Success from "../components/success";
-import CollapseItems from "../components/collapse";
+import Success from "../components/shared/success";
+import CollapseItems from "../components/shared/collapse";
 
 const styles = (theme) => ({
   ...theme.spreadThis,

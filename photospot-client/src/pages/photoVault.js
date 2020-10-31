@@ -23,11 +23,11 @@ import Typography from "@material-ui/core/Typography";
 import GetAppIcon from "@material-ui/icons/GetApp";
 
 // Components
-import ImageGrid from "../components/imageGrid";
-import GoBackButton from "../components/goBackButton";
+import ImageGrid from "../components/shared/imageGrid";
+import GoBackButton from "../components/shared/goBackButton";
 import ProgressBar from "../components/photo-vault/progressBar";
-import Success from "../components/success";
-import Progress from "../components/progress";
+import Success from "../components/shared/success";
+import Progress from "../components/shared/progress";
 
 const styles = (theme) => ({
   ...theme.spreadThis,

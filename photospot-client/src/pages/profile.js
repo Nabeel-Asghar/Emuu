@@ -16,7 +16,7 @@ import Paper from "@material-ui/core/Paper";
 // components
 import EditProfileImage from "../components/user-profile/editProfileImage";
 import EditUserDetails from "../components/user-profile/editUserDetails";
-import Feedback from "../components/feedback";
+import Feedback from "../components/shared/feedback";
 
 const styles = (theme) => ({
   ...theme.spreadThis,

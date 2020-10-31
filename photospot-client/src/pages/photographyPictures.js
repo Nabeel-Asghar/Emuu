@@ -14,8 +14,8 @@ import { connect } from "react-redux";
 import { deleteImages, uploadImages } from "../redux/actions/userActions";
 
 // Components
-import ImageGrid from "../components/imageGrid";
-import GoBackButton from "../components/goBackButton";
+import ImageGrid from "../components/shared/imageGrid";
+import GoBackButton from "../components/shared/goBackButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,

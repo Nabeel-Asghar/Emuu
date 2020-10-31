@@ -30,10 +30,10 @@ import ProfileCard from "../components/dashboard/profileCard";
 import ContactCard from "../components/dashboard/contactCard";
 import SettingsCard from "../components/dashboard/settingsCard";
 import StripeCard from "../components/dashboard/stripeCard";
-import PhotographerReviews from "../components/photographerReviews";
-import CollapseItems from "../components/collapse";
+import PhotographerReviews from "../components/shared/photographerReviews";
+import CollapseItems from "../components/shared/collapse";
 import Confirmation from "../components/booking/confirmation";
-import Success from "../components/success";
+import Success from "../components/shared/success";
 
 const styles = (theme) => ({
   ...theme.spreadThis,

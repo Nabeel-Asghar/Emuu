@@ -37,7 +37,7 @@ import checkout from "./pages/checkout";
 import photoVault from "./pages/photoVault";
 
 // Components
-import Navbar from "./components/Navbar";
+import Navbar from "./components/shared/Navbar";
 import AuthRoute from "./util/AuthRoute";
 
 // API

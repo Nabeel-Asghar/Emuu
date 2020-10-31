@@ -15,8 +15,8 @@ import {
 } from "../redux/actions/dataActions";
 
 // Components
-import Photographer from "../components/photographer";
-import CardSkeleton from "../components/cardSkeleton";
+import Photographer from "../components/shared/photographer";
+import CardSkeleton from "../components/shared/cardSkeleton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
