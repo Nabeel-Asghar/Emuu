@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from "react";
 import { connectSearchBox } from "react-instantsearch-dom";
 
+// Material UI
 import { makeStyles } from "@material-ui/core/styles";
-import { Box, TextField, Button } from "@material-ui/core";
+import { Paper, TextField, Button } from "@material-ui/core";
+import InputBase from "@material-ui/core/InputBase";
+import IconButton from "@material-ui/core/IconButton";
+import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles((theme) => ({
-  textField: {
-    paddingTop: theme.spacing(1),
-    marginRight: theme.spacing(1),
-  },
-  content: {
+  searchBox: {
+    padding: "2px 4px",
     display: "flex",
-    [theme.breakpoints.down("xs")]: {
-      flexDirection: "column",
-    },
+    alignItems: "center",
+    width: 400,
+    margin: "0 auto",
   },
   button: {
     marginTop: 23,
@@ -21,6 +22,13 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("xs")]: {
       marginTop: 5,
     },
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
   },
 }));
 
@@ -56,8 +64,29 @@ const CustomSearchBox = React.forwardRef((props, myRef) => {
   }
 
   return (
-    <Box className={classes.content}>
-      <TextField
+    <Paper
+      component="form"
+      onSubmit={() => handleSubmit(state)}
+      className={classes.searchBox}
+    >
+      <InputBase
+        id="name"
+        name="name"
+        label="Feature"
+        className={classes.input}
+        placeholder="Search"
+        defaultValue={currentRefinement}
+        onChange={handleChange}
+        color="secondary"
+      />
+      <IconButton
+        type="submit"
+        className={classes.iconButton}
+        color="secondary"
+      >
+        <SearchIcon />
+      </IconButton>
+      {/* <TextField
         ref={myRef}
         id="name"
         name="name"
@@ -82,8 +111,8 @@ const CustomSearchBox = React.forwardRef((props, myRef) => {
         onClick={() => handleSubmit(state)}
       >
         Search
-      </Button>
-    </Box>
+      </Button> */}
+    </Paper>
   );
 });
 
