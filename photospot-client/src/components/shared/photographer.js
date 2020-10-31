@@ -16,8 +16,7 @@ import IconButton from "@material-ui/core/IconButton";
 
 const styles = {
   card: {
-    maxWidth: "100%",
-    marginBottom: 20,
+    maxWidth: "325px",
     height: "325px",
   },
 
@@ -37,7 +36,7 @@ const styles = {
 
   media: {
     height: 0,
-    paddingTop: "56.25%", // 16:9
+    paddingTop: "70%", // 16:9
   },
 };
 
@@ -46,7 +45,7 @@ class photographer extends Component {
     const {
       classes,
       photographer: {
-        photographerID,
+        objectID,
         firstName,
         lastName,
         profileImage,
@@ -65,7 +64,7 @@ class photographer extends Component {
       <Grid item sm={6} md={4} xs={12}>
         <Card className={classes.card}>
           <Link
-            to={`/photographers/${photographerID}`}
+            to={`/photographers/${objectID}`}
             style={{ textDecoration: "none" }}
           >
             <CardMedia

@@ -16,6 +16,10 @@ import TextField from "@material-ui/core/TextField";
 import withStyles from "@material-ui/core/styles/withStyles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Paper from "@material-ui/core/Paper";
+import * as algoliasearch from "algoliasearch";
+import InputBase from "@material-ui/core/InputBase";
+import IconButton from "@material-ui/core/IconButton";
+import SearchIcon from "@material-ui/icons/Search";
 
 // Components
 import Photographer from "../components/shared/photographer";
@@ -23,7 +27,20 @@ import CardSkeleton from "../components/shared/cardSkeleton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
 });
+
+const APP_ID = "SYUBAMS440";
+const SEARCH_KEY = "587bf2e2211c20cdb452ed974fbd6b77";
+
+var client = algoliasearch(APP_ID, SEARCH_KEY);
+var index = client.initIndex("photographer");
 
 class searchPage extends Component {
   constructor() {
@@ -45,13 +62,19 @@ class searchPage extends Component {
   }
 
   handleSubmit = (event) => {
+    console.log("very gay");
     event.preventDefault();
 
     const searchQuery = this.state.searchQuery;
-    this.props.history.push({
-      pathname: "/search/" + searchQuery,
-      daSearch: searchQuery,
+
+    index.search(searchQuery).then(({ hits }) => {
+      console.log(hits);
     });
+
+    // this.props.history.push({
+    //   pathname: "/search/" + searchQuery,
+    //   daSearch: searchQuery,
+    // });
   };
 
   handleChange = (event) => {
@@ -79,24 +102,34 @@ class searchPage extends Component {
         <Grid item xs={12} style={{ textAlign: "center" }}>
           <Paper style={{ padding: "5px 0px 15px 0px" }}>
             <form onSubmit={this.handleSubmit}>
-              <TextField
+              <InputBase
+                className={classes.input}
+                placeholder="Search"
+                inputProps={{ "aria-label": "search google maps" }}
+                value={this.state.searchQuery}
+              />
+              <IconButton
+                type="submit"
+                className={classes.iconButton}
+                aria-label="search"
+              >
+                <SearchIcon />
+              </IconButton>
+              {/* <TextField
                 id="standard-basic"
                 name="searchQuery"
                 value={this.state.searchQuery}
-                onChange={this.handleChange}
                 label="Name"
                 color="secondary"
               />
               <Button
                 variant="contained"
                 color="secondary"
-                component={Link}
-                to={`/search/${this.state.searchQuery}`}
                 name="submitSearch"
                 style={{ borderRadius: "30px", marginTop: "10px" }}
               >
                 Search
-              </Button>
+              </Button> */}
             </form>
           </Paper>
         </Grid>

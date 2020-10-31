@@ -153,20 +153,6 @@ export const getReviews = (photographerID) => (dispatch) => {
     });
 };
 
-export const editPhotographerCategories = (categories) => (dispatch) => {
-  API.post("/editphotographypage/editCategories", categories)
-    .then((res) => {
-      console.log(res.data);
-      dispatch({ type: "CLEAR_ERRORS" });
-    })
-    .catch((err) =>
-      dispatch({
-        type: "SET_ERRORS",
-        payload: err.response.data,
-      })
-    );
-};
-
 export const editReview = (data) => (dispatch) => {
   API.post("/userDashboard/editReview", data)
     .then((res) => {
