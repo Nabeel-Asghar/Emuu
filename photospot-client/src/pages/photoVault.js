@@ -54,6 +54,7 @@ class photoVault extends Component {
       open: false,
       disabled: true,
       openProgress: false,
+      downloadDisable: false,
     };
   }
 
@@ -154,13 +155,17 @@ class photoVault extends Component {
   };
 
   downloadImages() {
-    this.props.getDownload(this.props.match.params.orderID);
+    this.setState({ downloadDisable: true });
+    this.props
+      .getDownload(this.props.match.params.orderID)
+      .then(() => this.setState({ downloadDisable: false }));
   }
 
   async handleSubmit() {
     this.setState({
       disabled: true,
       openProgress: true,
+      downloadDisable: true,
     });
     const formData = new FormData();
 
@@ -202,10 +207,16 @@ class photoVault extends Component {
                   color="secondary"
                   variant="outlined"
                   onClick={() => this.downloadImages()}
-                  disabled={this.state.openProgress}
+                  disabled={this.state.downloadDisable}
                   startIcon={<GetAppIcon />}
                 >
                   Download
+                  {this.state.downloadDisable && (
+                    <CircularProgress
+                      color="secondary"
+                      className={classes.progress}
+                    />
+                  )}
                 </Button>
               </Grid>
               {this.state.images && (

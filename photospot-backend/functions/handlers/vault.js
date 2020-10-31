@@ -5,6 +5,7 @@ var JSZip = require("jszip");
 const imageToBase64 = require("image-to-base64");
 
 exports.getVault = async (req, res) => {
+  console.log(storageBucketVar);
   let vaultID = req.params.vaultID;
   let id = req.user.uid;
 

@@ -16,7 +16,7 @@ export const getVault = (vaultID) => (dispatch) => {
 };
 
 export const getDownload = (vaultID) => (dispatch) => {
-  API.get(`/vault/${vaultID}/download`, { responseType: "blob" })
+  return API.get(`/vault/${vaultID}/download`, { responseType: "blob" })
     .then((res) => {
       console.log(res);
       console.log(res.data);
