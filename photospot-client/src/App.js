@@ -34,9 +34,10 @@ import photographerDashboard from "./pages/photographerDashboard";
 import onboard from "./pages/onboard";
 import successPage from "./pages/successPage";
 import checkout from "./pages/checkout";
+import photoVault from "./pages/photoVault";
 
 // Components
-import Navbar from "./components/Navbar";
+import Navbar from "./components/shared/Navbar";
 import AuthRoute from "./util/AuthRoute";
 
 // API
@@ -144,11 +145,6 @@ const theme = createMuiTheme({
       marginLeft: "50px",
     },
 
-    horseShit: {
-      maxWidth: "100%",
-      maxHeight: "100%",
-      objectFit: "cover",
-    },
     notFullWidth: {
       margin: "15px",
     },
@@ -225,6 +221,8 @@ class App extends Component {
                   <AuthRoute exact path="/profile" component={profile} />
 
                   <AuthRoute exact path="/messaging" component={messaging} />
+
+                  <AuthRoute exact path="/vault/:orderID" component={photoVault} />
 
                   <Route exact path="/search/:searchQuery" component={search} />
 

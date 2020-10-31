@@ -20,7 +20,7 @@ const CollapseItems = (props) => {
   };
 
   return (
-    <div style={{ marginTop: 20 }}>
+    <div style={{ marginBottom: 20 }}>
       <Paper style={{ marginBottom: 15 }}>
         <List dense="true">
           <ListItem>

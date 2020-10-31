@@ -23,7 +23,7 @@ import Bio from "../components/photographer-page/bio";
 import PhotoSamples from "../components/photographer-page/photoSamples";
 import ReviewDialog from "../components/photographer-page/reviewDialog";
 import Usercard from "../components/photographer-page/usercard";
-import PhotographerReviews from "../components/photographerReviews";
+import PhotographerReviews from "../components/shared/photographerReviews";
 import { getPhotographerPage, getReviews } from "../redux/actions/dataActions";
 import { reviewPhotographer } from "../redux/actions/userActions";
 

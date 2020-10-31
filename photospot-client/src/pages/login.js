@@ -78,7 +78,7 @@ class login extends Component {
           <Grid item xs={7} style={{ margin: "auto" }}>
             <img src={AppIcon} alt="Logo" className={classes.logoImage} />
             <Typography variant="h2" className={classes.pageTitle}>
-              Login
+              <span style={{ color: "#00895e" }}>WELOME</span>
             </Typography>
             <form noValidate onSubmit={this.handleSubmit}>
               <TextField
@@ -119,9 +119,10 @@ class login extends Component {
                 type="submit"
                 variant="contained"
                 color="secondary"
-                size="large"
                 className={classes.button}
                 disabled={loading}
+                size="large"
+                fullWidth
               >
                 Login
                 {loading && (

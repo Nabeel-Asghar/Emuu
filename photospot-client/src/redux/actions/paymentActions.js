@@ -42,9 +42,9 @@ export const getStripeStatus = () => (dispatch) => {
     });
 };
 
-export const refund = (paymentID) => (dispatch) => {
+export const refund = (orderID) => (dispatch) => {
   //dispatch({ type: "LOADING_UI" });
-  API.post("/user/refund", paymentID)
+  API.post("/user/refund", orderID)
     .then((res) => {
       return true;
     })
@@ -53,10 +53,9 @@ export const refund = (paymentID) => (dispatch) => {
     });
 };
 
-export const refundFromPhotographer = (paymentID) => (dispatch) => {
-  console.log("HERE", paymentID);
+export const refundFromPhotographer = (orderID) => (dispatch) => {
   //dispatch({ type: "LOADING_UI" });
-  API.post("/photographer/refund", paymentID)
+  API.post("/photographer/refund", orderID)
     .then((res) => {
       return true;
     })

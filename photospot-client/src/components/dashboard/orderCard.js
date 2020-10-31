@@ -2,28 +2,42 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 
 // MUI
-import withStyles from "@material-ui/core/styles/withStyles";
+import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Paper from "@material-ui/core/Paper";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
-import Container from "@material-ui/core/Container";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
+import { red } from "@material-ui/core/colors";
 
 // util
 import { timeConvert } from "../../util/timeConvert";
 import { dateConvert } from "../../util/dateConvert";
 
-const styles = {
-  root: { borderColor: "#23ba8b" },
-};
+const styles = (theme) => ({
+  ...theme.spreadThis,
+  backdrop: {
+    zIndex: theme.zIndex.drawer + 1,
+    color: "#fff",
+  },
+  root: {
+    "& > *": {
+      margin: theme.spacing(1),
+    },
+  },
+});
+
+const ColorButton = withStyles((theme) => ({
+  root: {
+    color: theme.palette.getContrastText(red[500]),
+    backgroundColor: red[500],
+    "&:hover": {
+      backgroundColor: red[700],
+    },
+  },
+}))(Button);
 
 class orderCard extends Component {
   render() {
@@ -31,7 +45,7 @@ class orderCard extends Component {
       classes,
       refundStatus,
       photographer: {
-        docID,
+        orderID,
         paymentID,
         photographerID,
         firstName,
@@ -45,7 +59,7 @@ class orderCard extends Component {
     } = this.props;
 
     return (
-      <div>
+      <div style={{ marginBottom: 15 }}>
         {photographerID && (
           <Paper>
             <Grid container justify="center" alignItems="center">
@@ -103,15 +117,24 @@ class orderCard extends Component {
                   </Grid>
                   <Grid item xs={12} style={{ textAlign: "right" }}>
                     {refundStatus ? (
-                      <Button
-                        variant="contained"
-                        color="secondary"
-                        onClick={() => this.props.handleRefund(paymentID)}
-                      >
-                        <Typography style={{ fontWeight: "bold" }}>
-                          Cancel Order
-                        </Typography>
-                      </Button>
+                      <div className={classes.root}>
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          onClick={() =>
+                            this.props.history.push(`vault/${orderID}`)
+                          }
+                        >
+                          Photo Vault
+                        </Button>
+                        <ColorButton
+                          variant="contained"
+                          color="secondary"
+                          onClick={() => this.props.handleRefund(orderID)}
+                        >
+                          Cancel
+                        </ColorButton>
+                      </div>
                     ) : (
                       <Typography>
                         Status: <b>{status}</b>
