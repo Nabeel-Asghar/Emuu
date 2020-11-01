@@ -64,11 +64,7 @@ const CustomSearchBox = React.forwardRef((props, myRef) => {
   }
 
   return (
-    <Paper
-      component="form"
-      onSubmit={() => handleSubmit(state)}
-      className={classes.searchBox}
-    >
+    <Paper className={classes.searchBox}>
       <InputBase
         id="name"
         name="name"
@@ -78,10 +74,15 @@ const CustomSearchBox = React.forwardRef((props, myRef) => {
         defaultValue={currentRefinement}
         onChange={handleChange}
         color="secondary"
+        onKeyPress={(event) => {
+          if (event.key === "Enter") {
+            handleSubmit(state);
+          }
+        }}
       />
       <IconButton
-        type="submit"
         className={classes.iconButton}
+        onClick={() => handleSubmit(state)}
         color="secondary"
       >
         <SearchIcon />
