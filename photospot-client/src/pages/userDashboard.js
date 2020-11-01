@@ -31,8 +31,8 @@ import ContactCard from "../components/dashboard/contactCard";
 import ReviewDialog from "../components/photographer-page/reviewDialog";
 import ReviewList from "../components/dashboard/reviewList";
 import Confirmation from "../components/booking/confirmation";
-import Success from "../components/checkout/success";
-import CollapseItems from "../components/collapse";
+import Success from "../components/shared/success";
+import CollapseItems from "../components/shared/collapse";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -64,7 +64,7 @@ class userDashboard extends Component {
       newReviewSucess: "",
       type: "edited",
       openRefundDialog: false,
-      paymentID: "",
+      orderID: "",
       openSuccess: false,
     };
   }
@@ -178,7 +178,7 @@ class userDashboard extends Component {
 
   // handle refund
   handleRefundAgree() {
-    this.props.refund({ paymentID: this.state.paymentID });
+    this.props.refund({ orderID: this.state.orderID });
     this.setState({ openRefundDialog: false, openSuccess: true });
   }
 
@@ -186,8 +186,8 @@ class userDashboard extends Component {
     this.setState({ openRefundDialog: false });
   }
 
-  handleRefundDialog(paymentID) {
-    this.setState({ paymentID: paymentID });
+  handleRefundDialog(orderID) {
+    this.setState({ orderID: orderID });
     this.setState({ openRefundDialog: true });
   }
 
@@ -204,6 +204,7 @@ class userDashboard extends Component {
     let theUserOrders = Object.keys(userOrders).map((key) => (
       <div style={{ marginBottom: 10 }}>
         <OrderCard
+          {...this.props}
           key={key}
           photographer={userOrders[key]}
           refundStatus={true}
@@ -216,8 +217,9 @@ class userDashboard extends Component {
 
     // Get user past orders
     let theUserPastOrders = Object.keys(userPastOrders).map((key) => (
-      <div style={{ marginBottom: 10 }}>
+      <div>
         <OrderCard
+          {...this.props}
           key={key}
           photographer={userPastOrders[key]}
           refundStatus={false}
@@ -329,6 +331,7 @@ class userDashboard extends Component {
             </Typography>
           }
           open={this.state.openSuccess}
+          reload={true}
         />
 
         <Grid item xs={8}>

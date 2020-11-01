@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { withRouter, Link } from "react-router-dom";
 
-import AppIcon from "../images/logo.png";
+import AppIcon from "../../images/logo.png";
 
 //Material UI
 import AppBar from "@material-ui/core/AppBar";
@@ -17,7 +17,7 @@ import Box from "@material-ui/core/Box";
 import MenuIcon from "@material-ui/icons/Menu";
 
 // Redux
-import { logoutUser } from "../redux/actions/userActions";
+import { logoutUser } from "../../redux/actions/userActions";
 import { useSelector, useDispatch } from "react-redux";
 
 const Navbar = () => {

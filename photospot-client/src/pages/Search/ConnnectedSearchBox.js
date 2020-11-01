@@ -1,29 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { connectSearchBox } from "react-instantsearch-dom";
 
+// Material UI
 import { makeStyles } from "@material-ui/core/styles";
-import {
-  Box,
-  TextField,
-  Button,
-  Input,
-  IconButton,
-  InputAdornment,
-} from "@material-ui/core";
+import { Paper, TextField, Button } from "@material-ui/core";
+import InputBase from "@material-ui/core/InputBase";
+import IconButton from "@material-ui/core/IconButton";
 import SearchIcon from "@material-ui/icons/Search";
 
 const useStyles = makeStyles((theme) => ({
-  textField: {
-    marginLeft: "15px",
-  },
-
-  content: {
-    borderRadius: "35px",
+  searchBox: {
+    padding: "2px 4px",
     display: "flex",
-    marginLeft: "16px",
-    marginRight: "16px",
+    alignItems: "center",
+    width: 400,
+    margin: "0 auto",
   },
-  button: {},
+  button: {
+    marginTop: 23,
+    marginBottom: 10,
+    [theme.breakpoints.down("xs")]: {
+      marginTop: 5,
+    },
+  },
+  input: {
+    marginLeft: theme.spacing(1),
+    flex: 1,
+  },
+  iconButton: {
+    padding: 10,
+  },
 }));
 
 const CustomSearchBox = React.forwardRef((props, myRef) => {
@@ -58,8 +64,29 @@ const CustomSearchBox = React.forwardRef((props, myRef) => {
   }
 
   return (
-    <Box className={classes.content} border={1}>
-      <Input
+    <Paper
+      component="form"
+      onSubmit={() => handleSubmit(state)}
+      className={classes.searchBox}
+    >
+      <InputBase
+        id="name"
+        name="name"
+        label="Feature"
+        className={classes.input}
+        placeholder="Search"
+        defaultValue={currentRefinement}
+        onChange={handleChange}
+        color="secondary"
+      />
+      <IconButton
+        type="submit"
+        className={classes.iconButton}
+        color="secondary"
+      >
+        <SearchIcon />
+      </IconButton>
+      {/* <TextField
         ref={myRef}
         id="name"
         disableUnderline={true}
@@ -79,9 +106,9 @@ const CustomSearchBox = React.forwardRef((props, myRef) => {
         className={classes.button}
         onClick={() => handleSubmit(state)}
       >
-        <SearchIcon />
-      </IconButton>
-    </Box>
+        Search
+      </Button> */}
+    </Paper>
   );
 });
 

@@ -1,3 +1,4 @@
+// Material UI
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
@@ -6,17 +7,16 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import withStyles from "@material-ui/core/styles/withStyles";
-// Material UI
 import Typography from "@material-ui/core/Typography";
 import EditIcon from "@material-ui/icons/Edit";
+import { withTheme } from "@material-ui/core/styles";
+
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import StarRatings from "react-star-ratings";
-
 import React, { Component } from "react";
 
 const styles = (theme) => ({
-  ...theme.spreadThis,
   root: {
     marginTop: "8px",
     marginBottom: "8px",
@@ -40,7 +40,6 @@ class photographerReviews extends Component {
       classes,
       review: { title, rating, description, firstName, lastName, createdAt },
     } = this.props;
-
     return (
       <Card className={classes.root}>
         <CardContent>
@@ -51,7 +50,7 @@ class photographerReviews extends Component {
               numberOfStars={5}
               name="rating"
               starDimension="15px"
-              starRatedColor="#23ba8b"
+              starRatedColor={this.props.theme.palette.secondary.main}
               starSpacing="1px"
             />
           </Typography>
@@ -67,4 +66,4 @@ class photographerReviews extends Component {
   }
 }
 
-export default withStyles(styles)(photographerReviews);
+export default withStyles(styles)(withTheme(photographerReviews));

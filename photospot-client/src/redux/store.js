@@ -6,6 +6,7 @@ import userReducer from "./reducers/userReducer";
 import dataReducer from "./reducers/dataReducer";
 import UIReducer from "./reducers/UIReducer";
 import paymentReducer from "./reducers/paymentReducer";
+import vaultReducer from "./reducers/vaultReducer";
 
 const intialState = {};
 
@@ -16,6 +17,7 @@ const reducers = combineReducers({
   data: dataReducer,
   UI: UIReducer,
   payment: paymentReducer,
+  vault: vaultReducer,
 });
 
 const store = createStore(

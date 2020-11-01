@@ -30,10 +30,10 @@ import ProfileCard from "../components/dashboard/profileCard";
 import ContactCard from "../components/dashboard/contactCard";
 import SettingsCard from "../components/dashboard/settingsCard";
 import StripeCard from "../components/dashboard/stripeCard";
-import PhotographerReviews from "../components/photographerReviews";
-import CollapseItems from "../components/collapse";
+import PhotographerReviews from "../components/shared/photographerReviews";
+import CollapseItems from "../components/shared/collapse";
 import Confirmation from "../components/booking/confirmation";
-import Success from "../components/checkout/success";
+import Success from "../components/shared/success";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -59,7 +59,7 @@ class photograhperDashboard extends Component {
       newReviewSucess: "",
       type: "edited",
       openRefundDialog: false,
-      paymentID: "",
+      orderID: "",
       openSuccess: false,
     };
   }
@@ -105,8 +105,8 @@ class photograhperDashboard extends Component {
 
   // handle refund
   handleRefundAgree() {
-    console.log(this.state.paymentID);
-    this.props.refundFromPhotographer({ paymentID: this.state.paymentID });
+    console.log(this.state.orderID);
+    this.props.refundFromPhotographer({ orderID: this.state.orderID });
     this.setState({ openRefundDialog: false, openSuccess: true });
   }
 
@@ -114,9 +114,9 @@ class photograhperDashboard extends Component {
     this.setState({ openRefundDialog: false });
   }
 
-  handleRefundDialog(paymentID) {
-    console.log("dialog:", paymentID);
-    this.setState({ paymentID: paymentID });
+  handleRefundDialog(orderID) {
+    console.log("dialog:", orderID);
+    this.setState({ orderID: orderID });
     this.setState({ openRefundDialog: true });
   }
 
@@ -131,6 +131,7 @@ class photograhperDashboard extends Component {
     let theUserOrders = Object.keys(userOrders).map((key) => (
       <div>
         <OrderCard
+          {...this.props}
           key={key}
           photographer={userOrders[key]}
           refundStatus={true}
@@ -144,6 +145,7 @@ class photograhperDashboard extends Component {
     let theUserPastOrders = Object.keys(userPastOrders).map((key) => (
       <div>
         <OrderCard
+          {...this.props}
           key={key}
           photographer={userPastOrders[key]}
           refundStatus={false}
@@ -237,6 +239,7 @@ class photograhperDashboard extends Component {
               </Typography>
             }
             open={this.state.openSuccess}
+            reload={true}
           />
         </Grid>
       </Grid>

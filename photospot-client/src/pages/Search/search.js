@@ -20,21 +20,19 @@ class Search extends Component {
     var client = algoliasearch(APP_ID, SEARCH_KEY);
 
     return (
-      <Grid container spacing={2}>
+      <Grid container>
         <InstantSearch indexName="photographers" searchClient={client}>
           <Grid item xs={12} style={{ textAlign: "center" }}>
-            <Paper style={{ padding: "10px 0px 15px 0px" }}>
-              <ConnectedSearchBox />
-              <SortBy
-                defaultRefinement="photographers"
-                items={[
-                  { value: "photographers", label: "Featured" },
-                  { value: "rating_desc", label: "Average Rating" },
-                  { value: "price_desc", label: "Price: High to Low" },
-                  { value: "price_asc", label: "Price: Low to High" },
-                ]}
-              />
-            </Paper>
+            <ConnectedSearchBox />
+            <SortBy
+              defaultRefinement="photographers"
+              items={[
+                { value: "photographers", label: "Featured" },
+                { value: "rating_desc", label: "Average Rating" },
+                { value: "price_desc", label: "Price: High to Low" },
+                { value: "price_asc", label: "Price: Low to High" },
+              ]}
+            />
           </Grid>
 
           <Grid item xs={3}>

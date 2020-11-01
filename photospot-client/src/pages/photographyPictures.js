@@ -9,9 +9,13 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import SaveIcon from "@material-ui/icons/Save";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-//Redux
+// Redux
 import { connect } from "react-redux";
 import { deleteImages, uploadImages } from "../redux/actions/userActions";
+
+// Components
+import ImageGrid from "../components/shared/imageGrid";
+import GoBackButton from "../components/shared/goBackButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -53,15 +57,17 @@ class photographyPictures extends Component {
 
   handleImageAdd = (event) => {
     const image = event.target.files[0];
-    this.setState({
-      imagesToUpload: [...this.state.imagesToUpload, image],
-    });
-    this.setState({
-      images: [...this.state.images, URL.createObjectURL(image)],
-    });
+    if (image) {
+      this.setState({
+        imagesToUpload: [...this.state.imagesToUpload, image],
+      });
+      this.setState({
+        images: [...this.state.images, URL.createObjectURL(image)],
+      });
+    }
   };
 
-  handleImageEdit = () => {
+  handleEditPicture = () => {
     const fileInput = document.getElementById("addImage");
     fileInput.click();
   };
@@ -77,37 +83,22 @@ class photographyPictures extends Component {
     this.props.uploadImages(formData);
   }
 
-  handleEditPicture = () => {
-    const fileInput = document.getElementById("addImage");
-    fileInput.click();
-  };
-
   render() {
     const {
       classes,
       UI: { loading },
     } = this.props;
 
-    var imageContainer = [];
-
-    for (var i = 0; i < this.state.images.length; i++) {
-      var img = new Image();
-      img.src = this.state.images[i];
-      const id = i;
-      imageContainer.push(
-        <Grid item xs={4}>
-          <Button onClick={() => this.deleteImage(id)}>X</Button>
-          <img key={i} src={img.src} className={classes.horseShit} />
-        </Grid>
-      );
-    }
-
     return (
       <Paper>
+        <ImageGrid
+          images={this.state.images}
+          deleteImage={this.deleteImage.bind(this)}
+        />
         <Grid container spacing={2}>
-          {imageContainer}
           <Grid item xs={12} className={classes.centerGrid}>
             <div className={classes.root}>
+              <GoBackButton {...this.props} />
               <Button
                 variant="outlined"
                 color="secondary"
