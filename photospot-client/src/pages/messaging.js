@@ -95,50 +95,53 @@ class messaging extends Component {
 
   render() {
     const { classes } = this.props;
-
-    return (
-      <div
-        style={{
-          border: "2px solid #e6e6e6",
-        }}
-      >
-        <Grid container spacing={0} className={classes.messaging}>
-          <Grid item xs={3} className={classes.UserList}>
-            <UserListComponent
-              history={this.props.history}
-              newChatBtnFunction={this.newChatBtnClicked}
-              selectChatFn={this.selectChat}
-              chat={this.state.chats}
-              userName={this.state.firstName + " " + this.state.lastName}
-              userEmail={this.state.email}
-              selectedChatIndex={this.state.selectedChat}
-            ></UserListComponent>
-          </Grid>
-          <Grid item xs={9} className={classes.ChatList}>
-            {this.state.newChatFormVisible ? null : (
-              <ChatViewComponent
-                userEmail={this.state.email}
+    if (!this.state.chats || this.state.chats?.length === 0) {
+      return <div>Message someone to start a conversation!</div>;
+    } else {
+      return (
+        <div
+          style={{
+            border: "2px solid #e6e6e6",
+          }}
+        >
+          <Grid container spacing={0} className={classes.messaging}>
+            <Grid item xs={4} className={classes.UserList}>
+              <UserListComponent
+                history={this.props.history}
+                newChatBtnFunction={this.newChatBtnClicked}
+                selectChatFn={this.selectChat}
+                chat={this.state.chats}
                 userName={this.state.firstName + " " + this.state.lastName}
-                chat={this.state.chats[this.state.selectedChat]}
-              ></ChatViewComponent>
-            )}
-            {this.state.selectedChat !== null &&
-            !this.state.newChatFormVisible ? (
-              <ChatTextBoxComponent
-                messageReadFn={this.messageRead}
-                submitMessageFn={this.submitMessage}
-              ></ChatTextBoxComponent>
-            ) : null}
-            {this.state.newChatFormVisible ? (
-              <NewChatComponent
-                goToChatFn={this.goToChat}
-                newChatSubmitFn={this.newChatSubmit}
-              ></NewChatComponent>
-            ) : null}
+                userEmail={this.state.email}
+                selectedChatIndex={this.state.selectedChat}
+              ></UserListComponent>
+            </Grid>
+            <Grid item xs={8} className={classes.ChatList}>
+              {this.state.newChatFormVisible ? null : (
+                <ChatViewComponent
+                  userEmail={this.state.email}
+                  userName={this.state.firstName + " " + this.state.lastName}
+                  chat={this.state.chats[this.state.selectedChat]}
+                ></ChatViewComponent>
+              )}
+              {this.state.selectedChat !== null &&
+              !this.state.newChatFormVisible ? (
+                <ChatTextBoxComponent
+                  messageReadFn={this.messageRead}
+                  submitMessageFn={this.submitMessage}
+                ></ChatTextBoxComponent>
+              ) : null}
+              {this.state.newChatFormVisible ? (
+                <NewChatComponent
+                  goToChatFn={this.goToChat}
+                  newChatSubmitFn={this.newChatSubmit}
+                ></NewChatComponent>
+              ) : null}
+            </Grid>
           </Grid>
-        </Grid>
-      </div>
-    );
+        </div>
+      );
+    }
   }
 
   submitMessage = (msg) => {

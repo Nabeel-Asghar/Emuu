@@ -1,21 +1,8 @@
-import React, { Component } from "react";
+import { Avatar, Box } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
-import Button from "@material-ui/core/Button";
-import { sizing } from "@material-ui/system";
+import React, { Component } from "react";
 // Redux
-
 import { connect } from "react-redux";
-
-import {
-  ListItemAvatar,
-  Avatar,
-  Box,
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-  Divider,
-} from "@material-ui/core";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -113,12 +100,12 @@ const styles = (theme) => ({
       width: "0.4em",
     },
     "&::-webkit-scrollbar-track": {
-      boxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
-      webkitBoxShadow: "inset 0 0 6px rgba(0,0,0,0.00)",
+      boxShadow: "inset 0 0 6px rgba(78,184,141,0.00)",
+      webkitBoxShadow: "inset 0 0 6px rgba(78,184,141,0.00)",
     },
     "&::-webkit-scrollbar-thumb": {
-      backgroundColor: "rgba(0,0,0,.5)",
-      outline: "1px solid slategrey",
+      backgroundColor: "rgba(78,184,141,1)",
+      outline: "1px solid rgba(78,184,141,1)",
     },
   },
 
