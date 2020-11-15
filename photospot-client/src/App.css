@@ -15,6 +15,11 @@ body {
   max-width: 1000px;
 }
 
+.searchContainer {
+  margin: 80px auto 0 auto;
+  max-width: 1000px;
+}
+
 .nav-container {
   margin: auto;
 }

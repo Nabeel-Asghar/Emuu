@@ -179,6 +179,98 @@ if (token) {
   }
 }
 
+const SearchContainer = () => (
+  <div className="searchContainer">
+    <Route exact path="/search" component={search} />
+  </div>
+);
+
+const DefaultContainer = () => (
+  <div>
+    <Route exact path="/" component={home} />
+
+    <div className="container">
+      <Route exact path="/login" component={login} />
+
+      <Route exact path="/signup" component={signup} />
+
+      <Route exact path="/resetPassword" component={resetPassword} />
+
+      <AuthRoute exact path="/onboard" component={onboard} />
+
+      <AuthRoute exact path="/onboard/success" component={successPage} />
+
+      <AuthRoute exact path="/onboard/refresh" component={onboard} />
+
+      <Route exact path="/resetPasswordSent" component={resetPasswordSent} />
+
+      <AuthRoute exact path="/changePassword" component={changePassword} />
+
+      <AuthRoute
+        exact
+        path="/changePasswordSent"
+        component={changePasswordSent}
+      />
+
+      <AuthRoute exact path="/userDashboard" component={userDashboard} />
+
+      <AuthRoute
+        exact
+        path="/photographerDashboard"
+        component={photographerDashboard}
+      />
+
+      <AuthRoute exact path="/profile" component={profile} />
+
+      <AuthRoute exact path="/messaging" component={messaging} />
+
+      <AuthRoute exact path="/vault/:orderID" component={photoVault} />
+
+      {/* <Route exact path="/search/:searchQuery" component={search} /> */}
+
+      {/* <Route exact path="/search/:type/:city/:state" component={search} /> */}
+
+      <Route
+        exact
+        path="/photographers/:photographerID"
+        component={specificPhotographer}
+      />
+
+      <AuthRoute
+        exact
+        path="/yourPhotographyProfile"
+        component={editPhotographyPage}
+      />
+
+      <AuthRoute
+        exact
+        path="/yourPhotographyProfile/setYourSchedule"
+        component={setYourSchedule}
+      />
+
+      <AuthRoute
+        exact
+        path="/uploadPhotographyPictures"
+        component={photographyPictures}
+      />
+
+      <AuthRoute
+        exact
+        path="/photographers/:photographerID/book"
+        component={book}
+      />
+
+      <Elements stripe={stripePromise}>
+        <AuthRoute
+          exact
+          path="/photographers/:photographerID/book/checkout"
+          component={checkout}
+        />
+      </Elements>
+    </div>
+  </div>
+);
+
 class App extends Component {
   render() {
     return (
@@ -187,62 +279,11 @@ class App extends Component {
           <div className="App">
             <BrowserRouter>
               <Navbar />
-
               <Switch>
-                <Route exact path="/" component={home} />
+                <Route exact path="/search" component={SearchContainer} />
 
+                <Route component={DefaultContainer} />
                 {/* prettier-ignore */}
-
-                <div className="container">
-                  <Route exact path="/search" component={search} />
-
-                  <Route exact path="/login" component={login} />
-
-                  <Route exact path="/signup" component={signup} />
-
-                  <Route exact path="/resetPassword" component={resetPassword} />
-
-                  <AuthRoute exact path="/onboard" component={onboard} />
-
-                  <AuthRoute exact path="/onboard/success" component={successPage} />
-
-                  <AuthRoute exact path="/onboard/refresh" component={onboard} />
-
-                  <Route exact path="/resetPasswordSent" component={resetPasswordSent} />
-
-                  <AuthRoute exact path="/changePassword" component={changePassword} />
-
-                  <AuthRoute exact path="/changePasswordSent" component={changePasswordSent} />
-
-                  <AuthRoute exact path="/userDashboard" component={userDashboard} />
-
-                  <AuthRoute exact path="/photographerDashboard" component={photographerDashboard} />
-
-                  <AuthRoute exact path="/profile" component={profile} />
-
-                  <AuthRoute exact path="/messaging" component={messaging} />
-
-                  <AuthRoute exact path="/vault/:orderID" component={photoVault} />
-
-                  <Route exact path="/search/:searchQuery" component={search} />
-
-                  {/* <Route exact path="/search/:type/:city/:state" component={search} /> */}
-
-                  <Route exact path="/photographers/:photographerID" component={specificPhotographer} />
-
-                  <AuthRoute exact path="/yourPhotographyProfile" component={editPhotographyPage} />
-
-                  <AuthRoute exact path="/yourPhotographyProfile/setYourSchedule" component={setYourSchedule} />
-
-                  <AuthRoute exact path="/uploadPhotographyPictures" component={photographyPictures} />
-
-                  <AuthRoute exact path="/photographers/:photographerID/book" component={book} />
-                  
-                  <Elements stripe={stripePromise}>
-                  <AuthRoute exact path="/photographers/:photographerID/book/checkout" component={checkout} />
-                  </Elements>
-
-                </div>
               </Switch>
             </BrowserRouter>
           </div>
