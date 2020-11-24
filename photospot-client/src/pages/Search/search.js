@@ -12,6 +12,7 @@ import ConnectedRefinementList from "./ConnectedRefinementList";
 import ConnectedSearchBox from "./ConnnectedSearchBox";
 import ConnectedDate from "./ConnectedDate";
 import ConnectedSortBy from "./ConnectedSortBy";
+import ConnectedStats from "./ConnectedStats";
 import "./search.css";
 
 const DEBOUNCE_TIME = 0;
@@ -57,6 +58,12 @@ class Search extends Component {
   };
 
   render() {
+    console.log("searchState", this.state.searchState);
+    console.log("createURL", createURL(this.state.searchState));
+    console.log(
+      "serachQuery",
+      searchStateToUrl(this.props, this.state.searchState)
+    );
     return (
       <Grid container>
         <InstantSearch
@@ -71,28 +78,31 @@ class Search extends Component {
             xs={6}
             style={{
               textAlign: "center",
-              zIndex: 2000,
-              position: "fixed",
+
               right: 0,
               left: 0,
               marginRight: "auto",
               marginLeft: "auto",
-              marginTop: "-70px",
             }}
           >
             <ConnectedSearchBox />
           </Grid>
 
-          <Grid item xs={12} style={{ textAlign: "right" }}>
-            <ConnectedSortBy
-              defaultRefinement="photographers"
-              items={[
-                { value: "photographers", label: "Featured" },
-                { value: "rating_desc", label: "Average Rating" },
-                { value: "price_desc", label: "Price: High to Low" },
-                { value: "price_asc", label: "Price: Low to High" },
-              ]}
-            />
+          <Grid container style={{ backgroundColor: "blue" }}>
+            <Grid item xs={6} style={{ textAlign: "left" }}>
+              <ConnectedStats />
+            </Grid>
+            <Grid item xs={6} style={{ textAlign: "right" }}>
+              <ConnectedSortBy
+                defaultRefinement="photographers"
+                items={[
+                  { value: "photographers", label: "Featured" },
+                  { value: "rating_desc", label: "Average Rating" },
+                  { value: "price_desc", label: "Price: High to Low" },
+                  { value: "price_asc", label: "Price: Low to High" },
+                ]}
+              />
+            </Grid>
           </Grid>
 
           <Grid item xs={3}>

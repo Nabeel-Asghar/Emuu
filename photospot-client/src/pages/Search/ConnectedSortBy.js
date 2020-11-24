@@ -70,7 +70,10 @@ const CustomSortBy = ({ items, refine, createURL }) => {
         <MenuItem value={item.value}>
           <a
             href={createURL(item.value)}
-            style={{ fontWeight: item.isRefined ? "bold" : "" }}
+            style={{
+              fontWeight: item.isRefined ? "bold" : "",
+              color: "blue",
+            }}
             onClick={(event) => {
               event.preventDefault();
               refine(item.value);

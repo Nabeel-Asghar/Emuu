@@ -91,7 +91,7 @@ class UserListComponent extends Component {
                   <ListItemText
                     classes={{ primary: classes.listItemText }}
                     primary={
-                      _chat.names.filter((_user) => _user !== userName)[0]
+                      _chat.names?.filter((_user) => _user !== userName)[0]
                     }
                     secondary={
                       <React.Fragment>
