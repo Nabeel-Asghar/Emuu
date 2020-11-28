@@ -1,4 +1,4 @@
-const { db, db2, index } = require("../util/admin");
+const { db, db2, index, admin } = require("../util/admin");
 
 const { validateReview } = require("../util/validators");
 
@@ -366,8 +366,13 @@ exports.deleteReview = (req, res) => {
 exports.getSpecificPhotographer = (req, res) => {
   let photographerIdOfPageClicked = req.params.photographerId;
 
-  db.collection("photographer")
-    .doc(photographerIdOfPageClicked)
+  var dbRef = db.collection("photographer").doc(photographerIdOfPageClicked);
+
+  dbRef.update({
+    views: admin.firestore.FieldValue.increment(1),
+  });
+
+  dbRef
     .get()
     .then((doc) => {
       if (!doc.exists) {

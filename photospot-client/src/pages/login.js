@@ -11,6 +11,7 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Paper from "@material-ui/core/Paper";
+import Box from "@material-ui/core/Box";
 import { outerTheme, ThemeProvider } from "./Styling/externalColors";
 
 // Redux
@@ -66,20 +67,14 @@ class login extends Component {
 
     return (
       <Grid container className={classes.form}>
-        <Grid item xs />
-        <Paper
-          style={{
-            width: "480px",
-            margin: "auto",
-            paddingBottom: "25px",
-            marginTop: 100,
-          }}
-        >
-          <Grid item xs={7} style={{ margin: "auto" }}>
-            <img src={AppIcon} alt="Logo" className={classes.logoImage} />
-            <Typography variant="h2" className={classes.pageTitle}>
-              <span style={{ color: "#00895e" }}>WELOME</span>
+        <Paper className={classes.auth}>
+          <Grid item xs={9} style={{ margin: "auto" }}>
+            <img src={AppIcon} alt="Logo" className={classes.brand} />
+
+            <Typography variant="h5" className={classes.authHeader}>
+              Welcome to PhotoSpot
             </Typography>
+
             <form noValidate onSubmit={this.handleSubmit}>
               <TextField
                 id="email"
@@ -133,28 +128,11 @@ class login extends Component {
                 )}
               </Button>
             </form>
-            <Button
-              component={Link}
-              to="/resetPassword"
-              style={{ textTransform: "none" }}
-            >
-              <span style={{ color: "#23ba8b" }}>
-                &nbsp;Forgot your password?
-              </span>
-            </Button>
           </Grid>
         </Paper>
-        <Grid item xs />
 
         <Grid item xs={12}>
-          <Paper
-            style={{
-              width: "480px",
-              margin: "auto",
-              padding: "15px 0 15px 0",
-              marginTop: 15,
-            }}
-          >
+          <Paper className={classes.bottomAuth}>
             <Button
               component={Link}
               to="/signup"

@@ -77,11 +77,40 @@ const theme = createMuiTheme({
   },
 
   spreadThis: {
+    auth: {
+      maxWidth: "420px",
+      margin: "auto",
+      padding: "25px 0px",
+      marginTop: 100,
+    },
+    bottomAuth: {
+      maxWidth: "420px",
+      margin: "auto",
+      padding: "15px 0 15px 0",
+      marginTop: 15,
+    },
+    pageContainer: {
+      paddingBottom: "15px",
+    },
+    cardStyle: {
+      marginTop: "5px",
+      padding: "20px 0px 15px 0px",
+    },
+    textStyle: {
+      overflow: "hidden",
+      whiteSpace: "nowrap",
+      textOverflow: "ellipsis",
+      paddingBottom: "15px",
+      fontWeight: "bold",
+    },
+    interiorCard: {
+      padding: "0px 10px 0px 40px",
+    },
     form: {
       textAlign: "center",
     },
     margin: {
-      marginBottom: "15px",
+      margin: "10px 0px",
     },
     image: {
       margin: "20px auto 20px auto",
@@ -102,9 +131,15 @@ const theme = createMuiTheme({
     progress: {
       position: "absolute",
     },
-    logoImage: {
+    brand: {
+      width: "60px",
+      height: "60px",
       borderRadius: "50%",
-      marginTop: "30px",
+      padding: "10px 0px",
+    },
+    authHeader: {
+      paddingBottom: 20,
+      fontWeight: "bold",
     },
     customError: {
       color: "red",
@@ -131,18 +166,20 @@ const theme = createMuiTheme({
     },
 
     background: {
-      height: "250px",
+      height: "500px",
       width: "100%",
       objectFit: "cover",
+      clipPath: "polygon(0 0, 0 100%, 100% 75%, 100% 0)",
+      zIndex: "auto",
     },
 
     avatar: {
-      width: "200px",
-      height: "200px",
+      width: "350px",
+      height: "350px",
       borderRadius: "50%",
       objectFit: "cover",
-      marginTop: "-120px",
-      marginLeft: "50px",
+      zIndex: 1,
+      border: "5px solid #fff",
     },
 
     notFullWidth: {
@@ -160,7 +197,6 @@ const theme = createMuiTheme({
     bookButton: {
       marginRight: "20px",
       marginTop: "12px",
-      width: "110px",
     },
   },
 });
@@ -191,7 +227,11 @@ class App extends Component {
               <Switch>
                 <Route exact path="/" component={home} />
 
-                {/* prettier-ignore */}
+                <Route
+                  exact
+                  path="/photographers/:photographerID"
+                  component={specificPhotographer}
+                />
 
                 <div className="container">
                   <Route exact path="/search" component={search} />
@@ -200,48 +240,101 @@ class App extends Component {
 
                   <Route exact path="/signup" component={signup} />
 
-                  <Route exact path="/resetPassword" component={resetPassword} />
+                  <Route
+                    exact
+                    path="/resetPassword"
+                    component={resetPassword}
+                  />
 
                   <AuthRoute exact path="/onboard" component={onboard} />
 
-                  <AuthRoute exact path="/onboard/success" component={successPage} />
+                  <AuthRoute
+                    exact
+                    path="/onboard/success"
+                    component={successPage}
+                  />
 
-                  <AuthRoute exact path="/onboard/refresh" component={onboard} />
+                  <AuthRoute
+                    exact
+                    path="/onboard/refresh"
+                    component={onboard}
+                  />
 
-                  <Route exact path="/resetPasswordSent" component={resetPasswordSent} />
+                  <Route
+                    exact
+                    path="/resetPasswordSent"
+                    component={resetPasswordSent}
+                  />
 
-                  <AuthRoute exact path="/changePassword" component={changePassword} />
+                  <AuthRoute
+                    exact
+                    path="/changePassword"
+                    component={changePassword}
+                  />
 
-                  <AuthRoute exact path="/changePasswordSent" component={changePasswordSent} />
+                  <AuthRoute
+                    exact
+                    path="/changePasswordSent"
+                    component={changePasswordSent}
+                  />
 
-                  <AuthRoute exact path="/userDashboard" component={userDashboard} />
+                  <AuthRoute
+                    exact
+                    path="/userDashboard"
+                    component={userDashboard}
+                  />
 
-                  <AuthRoute exact path="/photographerDashboard" component={photographerDashboard} />
+                  <AuthRoute
+                    exact
+                    path="/photographerDashboard"
+                    component={photographerDashboard}
+                  />
 
                   <AuthRoute exact path="/profile" component={profile} />
 
                   <AuthRoute exact path="/messaging" component={messaging} />
 
-                  <AuthRoute exact path="/vault/:orderID" component={photoVault} />
+                  <AuthRoute
+                    exact
+                    path="/vault/:orderID"
+                    component={photoVault}
+                  />
 
                   <Route exact path="/search/:searchQuery" component={search} />
 
                   {/* <Route exact path="/search/:type/:city/:state" component={search} /> */}
 
-                  <Route exact path="/photographers/:photographerID" component={specificPhotographer} />
+                  <AuthRoute
+                    exact
+                    path="/yourPhotographyProfile"
+                    component={editPhotographyPage}
+                  />
 
-                  <AuthRoute exact path="/yourPhotographyProfile" component={editPhotographyPage} />
+                  <AuthRoute
+                    exact
+                    path="/yourPhotographyProfile/setYourSchedule"
+                    component={setYourSchedule}
+                  />
 
-                  <AuthRoute exact path="/yourPhotographyProfile/setYourSchedule" component={setYourSchedule} />
+                  <AuthRoute
+                    exact
+                    path="/uploadPhotographyPictures"
+                    component={photographyPictures}
+                  />
 
-                  <AuthRoute exact path="/uploadPhotographyPictures" component={photographyPictures} />
+                  <AuthRoute
+                    exact
+                    path="/photographers/:photographerID/book"
+                    component={book}
+                  />
 
-                  <AuthRoute exact path="/photographers/:photographerID/book" component={book} />
-                  
                   <Elements stripe={stripePromise}>
-                  <AuthRoute exact path="/photographers/:photographerID/book/checkout" component={checkout} />
+                    <AuthRoute
+                      exact
+                      path="/photographers/:photographerID/book/checkout"
+                      component={checkout}
+                    />
                   </Elements>
-
                 </div>
               </Switch>
             </BrowserRouter>

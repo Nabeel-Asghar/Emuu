@@ -3,14 +3,16 @@ import React from "react";
 import { connectCurrentRefinements } from "react-instantsearch-dom";
 
 const ClearRefinements = ({ items, refine }) => (
-  <Button
-    onClick={() => refine(items)}
-    disabled={!items.length}
-    variant="contained"
-    color="secondary"
-  >
-    <Typography style={{ fontWeight: "bold" }}>Clear</Typography>
-  </Button>
+  <div style={{ textAlign: "center" }}>
+    <Button
+      onClick={() => refine(items)}
+      disabled={!items.length}
+      variant="contained"
+      color="secondary"
+    >
+      <Typography style={{ fontWeight: "bold" }}>Clear</Typography>
+    </Button>
+  </div>
 );
 
 const ConnectedClearRefinements = connectCurrentRefinements(ClearRefinements);
