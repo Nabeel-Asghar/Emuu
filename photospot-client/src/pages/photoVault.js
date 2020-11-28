@@ -75,7 +75,9 @@ class photoVault extends Component {
     });
     if (this.state.access) {
       this.setState({
-        intialImagesLength: this.props.vault.vaultData.images.length,
+        intialImagesLength:
+          this.props.vault.vaultData.images &&
+          this.props.vault.vaultData.images.length,
       });
     }
   }
@@ -185,7 +187,7 @@ class photoVault extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <div>
+      <div className={classes.pageContainer}>
         {this.state.access ? (
           <Paper>
             <Grid container style={{ padding: "10px 10px" }}>

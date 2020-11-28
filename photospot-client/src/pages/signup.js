@@ -3,7 +3,7 @@ import { Redirect, Link } from "react-router-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
 import PropTypes from "prop-types";
 import AppIcon from "../images/logo.png";
-import Background from "../images/background.png";
+import Background from "../images/background.jpg";
 
 // MUI
 import Grid from "@material-ui/core/Grid";
@@ -95,24 +95,15 @@ class signup extends Component {
     } = this.props;
     const { errors } = this.state;
     return (
-      <Grid
-        container
-        className={classes.form}
-      >
-        <Grid item xs />
-        <Paper
-          style={{
-            width: "480px",
-            margin: "auto",
-            paddingBottom: "25px",
-            marginTop: 100,
-          }}
-        >
-          <Grid item xs={8} style={{ margin: "auto" }}>
-            <img src={AppIcon} alt="Logo" className={classes.logoImage} />
-            <Typography variant="h2" className={classes.pageTitle}>
-              Signup
+      <Grid container className={classes.form}>
+        <Paper className={classes.auth}>
+          <Grid item xs={9} style={{ margin: "auto" }}>
+            <img src={AppIcon} alt="Logo" className={classes.brand} />
+
+            <Typography variant="h5" className={classes.authHeader}>
+              Welcome to PhotoSpot
             </Typography>
+            <Typography varaint="h6">Create an account to continue</Typography>
             <form noValidate onSubmit={this.handleSubmit}>
               <TextField
                 id="email"
@@ -189,16 +180,19 @@ class signup extends Component {
                 value={this.state.photographer}
                 exclusive
                 onChange={this.handleToggleChange}
+                style={{ maxWidth: "100%" }}
               >
                 <ToggleButton
                   thumbSwitchedStyle={{ background: "green" }}
                   value={true}
+                  style={{ width: 200 }}
                 >
                   Photographer
                 </ToggleButton>
                 <ToggleButton
                   thumbSwitchedStyle={{ background: "green" }}
                   value={false}
+                  style={{ width: 200 }}
                 >
                   Customer
                 </ToggleButton>
@@ -217,6 +211,7 @@ class signup extends Component {
                 className={classes.button}
                 disabled={loading}
                 style={{ marginTop: "20px" }}
+                fullWidth
               >
                 Signup
                 {loading && (
@@ -229,16 +224,9 @@ class signup extends Component {
             </form>
           </Grid>
         </Paper>
-        <Grid item xs />
+
         <Grid item xs={12}>
-          <Paper
-            style={{
-              width: "480px",
-              margin: "auto",
-              padding: "15px 0 15px 0",
-              marginTop: 15,
-            }}
-          >
+          <Paper className={classes.bottomAuth}>
             <Button
               component={Link}
               to="/login"

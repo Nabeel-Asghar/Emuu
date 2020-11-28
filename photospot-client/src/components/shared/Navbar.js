@@ -61,7 +61,7 @@ const Navbar = () => {
   return (
     <AppBar>
       <Toolbar>
-        <div style={{ width: 1000, height: "50px", margin: "auto" }}>
+        <div style={{ width: 1150, height: "50px", margin: "auto" }}>
           <Box display="flex" p={1}>
             <Box p={1} flexGrow={1}>
               <IconButton

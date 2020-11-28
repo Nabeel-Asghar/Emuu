@@ -1,7 +1,9 @@
 // React
+import React, { Component } from "react";
+
+// Material UI
 import Collapse from "@material-ui/core/Collapse";
 import Fab from "@material-ui/core/Fab";
-// Material UI
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
@@ -15,17 +17,21 @@ import AddIcon from "@material-ui/icons/Add";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import equal from "fast-deep-equal";
-import React, { Component } from "react";
+
 // Redux
 import { connect } from "react-redux";
 import StarRatings from "react-star-ratings";
+import { getPhotographerPage, getReviews } from "../redux/actions/dataActions";
+import { reviewPhotographer } from "../redux/actions/userActions";
+
+// Components
 import Bio from "../components/photographer-page/bio";
 import PhotoSamples from "../components/photographer-page/photoSamples";
 import ReviewDialog from "../components/photographer-page/reviewDialog";
 import Usercard from "../components/photographer-page/usercard";
 import PhotographerReviews from "../components/shared/photographerReviews";
-import { getPhotographerPage, getReviews } from "../redux/actions/dataActions";
-import { reviewPhotographer } from "../redux/actions/userActions";
+import UserImage from "../components/photographer-page/userImage";
+import UserInfo from "../components/photographer-page/userInfo";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -240,151 +246,171 @@ class specificPhotographer extends Component {
 
     return (
       <div>
-        <Paper elevation={3} className={classes.margin}>
+        <div style={{ margin: "65px auto 0px auto" }}>
+          <UserImage background={this.state.background} loading={loadingData} />
+        </div>
+        <div
+          style={{
+            maxWidth: 1000,
+            margin: "-350px auto 0 auto",
+            paddingBottom: "20px",
+          }}
+        >
           <Grid
             container
             direction="column"
             alignItems="center"
             justify="center"
           >
-            <Grid item xs={12}>
-              <Usercard
-                background={this.state.background}
-                firstName={this.state.firstName}
-                lastName={this.state.lastName}
-                email={this.state.email}
-                profileImage={this.state.profileImage}
-                userEmail={this.state.userEmail}
-                userProfileImage={this.state.userProfileImage}
-                credentials={this.props.credentials}
-                location_city={this.state.location_city}
-                location_state={this.state.location_state}
-                instagram={this.state.instagram}
-                company={this.state.company}
-                tags={this.state.tags}
-                loading={loadingData}
-                history={this.props.history}
-                headline={this.state.headline}
-                camera={this.state.camera}
-              />
-            </Grid>
-          </Grid>
-        </Paper>
-        <Paper elevation={3} className={classes.margin}>
-          <Grid
-            container
-            direction="row"
-            alignItems="center"
-            justify="flex-start"
-          >
-            <Grid item sm={12}>
-              <Bio
-                key={this.state.bio}
-                bio={this.state.bio}
-                loading={loadingData}
-              />
-            </Grid>
-          </Grid>
-        </Paper>
+            <Usercard
+              firstName={this.state.firstName}
+              lastName={this.state.lastName}
+              email={this.state.email}
+              profileImage={this.state.profileImage}
+              userEmail={this.state.userEmail}
+              userProfileImage={this.state.userProfileImage}
+              credentials={this.props.credentials}
+              location_city={this.state.location_city}
+              location_state={this.state.location_state}
+              instagram={this.state.instagram}
+              company={this.state.company}
+              tags={this.state.tags}
+              loading={loadingData}
+              history={this.props.history}
+              headline={this.state.headline}
+              camera={this.state.camera}
+            />
 
-        <Paper elevation={3} className={classes.margin}>
-          <Grid container>
-            <Grid item xs={12}>
-              <List dense="true">
-                <ListItem>
-                  <ListItemText
-                    primary={
-                      <div style={{ marginTop: "2px" }}>
-                        <Typography variant="subtitle2" display="inline">
-                          <StarRatings
-                            rating={this.state.trueOverall}
-                            numberOfStars={5}
-                            name="rating"
-                            starDimension="20px"
-                            starRatedColor="#23ba8b"
-                            starSpacing="3px"
-                          />
-                        </Typography>
-                        <Typography variant="subtitle2" display="inline">
-                          &nbsp;&nbsp;{this.state.reviewCount}{" "}
-                          {this.state.reviewCount > 1 ? (
-                            <Typography display="inline">ratings</Typography>
-                          ) : (
-                            <Typography display="inline">rating</Typography>
-                          )}
-                        </Typography>
-                      </div>
-                    }
-                    style={{
-                      textAlign: "center",
-                    }}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" onClick={() => this.handleCheck()}>
-                      {this.state.checked ? (
-                        <KeyboardArrowDownIcon />
-                      ) : (
-                        <KeyboardArrowLeftIcon />
-                      )}
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              </List>
-            </Grid>
+            <UserInfo
+              firstName={this.state.firstName}
+              lastName={this.state.lastName}
+              location_city={this.state.location_city}
+              location_state={this.state.location_state}
+              instagram={this.state.instagram}
+              company={this.state.company}
+              loading={loadingData}
+              history={this.props.history}
+              headline={this.state.headline}
+              camera={this.state.camera}
+            />
           </Grid>
-        </Paper>
 
-        <Collapse in={this.state.checked}>
-          {gridImages}
-          <Fab
-            variant="extended"
-            color="secondary"
-            aria-label="add"
-            style={{ margin: "10px 0 20px 0", float: "right" }}
-            onClick={() => this.handleReviewOpenState()}
-          >
-            <AddIcon className={classes.extendedIcon} />
-            <Typography style={{ fontWeight: "bold" }}>ADD REVIEW</Typography>
-          </Fab>
-          <ReviewDialog
-            openReview={this.state.openReview}
-            errors={this.state.errors}
-            loadingReviewAction={loadingReviewAction}
-            newReviewSucess={newReviewSucess}
-            handleDisagree={this.handleDisagree}
-            changeRating={this.changeRating}
-            handleBackdropClose={this.handleBackdropClose}
-            handleReviewOpenState={this.handleReviewOpenState}
-            handleReviewDialogAgree={this.handleReviewDialogAgree}
-            newReviewRating={this.state.newReviewRating}
-            description={this.state.description}
-            title={this.state.title}
-            rating={this.state.newReviewRating}
-            photographerProfile={this.state.profileImage}
-            photographerLastName={this.state.lastName}
-            photographerFirstName={this.state.firstName}
-            openBackdrop={this.state.openBackdrop}
-            type={"Review Photographer"}
-            typeReview="submitted"
-          />
-        </Collapse>
-
-        <Paper elevation={3}>
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justify="center"
-          >
-            <Grid item xs={12} className={classes.centerGrid}>
-              <PhotoSamples
-                key={this.state.images}
-                images={this.state.images}
-                loading={loadingData}
-              />
+          <Paper elevation={3} className={classes.margin}>
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              justify="flex-start"
+            >
+              <Grid item sm={12}>
+                <Bio
+                  key={this.state.bio}
+                  bio={this.state.bio}
+                  loading={loadingData}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-        </Paper>
+          </Paper>
+
+          <Paper elevation={3} className={classes.margin}>
+            <Grid container>
+              <Grid item xs={12}>
+                <List dense="true">
+                  <ListItem>
+                    <ListItemText
+                      primary={
+                        <div style={{ marginTop: "2px" }}>
+                          <Typography variant="subtitle2" display="inline">
+                            <StarRatings
+                              rating={this.state.trueOverall}
+                              numberOfStars={5}
+                              name="rating"
+                              starDimension="20px"
+                              starRatedColor="#23ba8b"
+                              starSpacing="3px"
+                            />
+                          </Typography>
+                          <Typography variant="subtitle2" display="inline">
+                            &nbsp;&nbsp;{this.state.reviewCount}{" "}
+                            {this.state.reviewCount > 1 ? (
+                              <Typography display="inline">ratings</Typography>
+                            ) : (
+                              <Typography display="inline">rating</Typography>
+                            )}
+                          </Typography>
+                        </div>
+                      }
+                      style={{
+                        textAlign: "center",
+                      }}
+                    />
+                    <ListItemSecondaryAction>
+                      <IconButton edge="end" onClick={() => this.handleCheck()}>
+                        {this.state.checked ? (
+                          <KeyboardArrowDownIcon />
+                        ) : (
+                          <KeyboardArrowLeftIcon />
+                        )}
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </List>
+              </Grid>
+            </Grid>
+          </Paper>
+
+          <Collapse in={this.state.checked}>
+            {gridImages}
+            <Fab
+              variant="extended"
+              color="secondary"
+              aria-label="add"
+              style={{ margin: "10px 0 20px 0", float: "right" }}
+              onClick={() => this.handleReviewOpenState()}
+            >
+              <AddIcon className={classes.extendedIcon} />
+              <Typography style={{ fontWeight: "bold" }}>ADD REVIEW</Typography>
+            </Fab>
+            <ReviewDialog
+              openReview={this.state.openReview}
+              errors={this.state.errors}
+              loadingReviewAction={loadingReviewAction}
+              newReviewSucess={newReviewSucess}
+              handleDisagree={this.handleDisagree}
+              changeRating={this.changeRating}
+              handleBackdropClose={this.handleBackdropClose}
+              handleReviewOpenState={this.handleReviewOpenState}
+              handleReviewDialogAgree={this.handleReviewDialogAgree}
+              newReviewRating={this.state.newReviewRating}
+              description={this.state.description}
+              title={this.state.title}
+              rating={this.state.newReviewRating}
+              photographerProfile={this.state.profileImage}
+              photographerLastName={this.state.lastName}
+              photographerFirstName={this.state.firstName}
+              openBackdrop={this.state.openBackdrop}
+              type={"Review Photographer"}
+              typeReview="submitted"
+            />
+          </Collapse>
+
+          <Paper elevation={3}>
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justify="center"
+            >
+              <Grid item xs={12} className={classes.centerGrid}>
+                <PhotoSamples
+                  key={this.state.images}
+                  images={this.state.images}
+                  loading={loadingData}
+                />
+              </Grid>
+            </Grid>
+          </Paper>
+        </div>
       </div>
     );
   }

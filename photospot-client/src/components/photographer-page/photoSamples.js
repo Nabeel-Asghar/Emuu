@@ -3,12 +3,8 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Skeleton from "@material-ui/lab/Skeleton";
 import Gallery from "react-photo-gallery";
 import Button from "@material-ui/core/Button";
-import Lightbox from "react-image-lightbox";
-import "react-image-lightbox/style.css";
-import OpenWithIcon from "@material-ui/icons/OpenWith";
-import IconButton from "@material-ui/core/IconButton";
-
-import equal from "fast-deep-equal";
+import Lightbox from "react-awesome-lightbox";
+import "react-awesome-lightbox/build/style.css";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -19,7 +15,7 @@ class photoSamples extends Component {
     super();
     this.state = {
       photoIndex: 0,
-      isOpen: false,
+      open: false,
       imageContainer: [],
       lightboxImages: [],
     };
@@ -27,10 +23,7 @@ class photoSamples extends Component {
 
   handleImage = () => {
     let gridImages = [];
-
-    this.setState({
-      lightboxImages: this.props.images,
-    });
+    let lightboxImages = [];
 
     for (var i = 0; i < this.props.images.length; i++) {
       var img = new Image();
@@ -44,76 +37,66 @@ class photoSamples extends Component {
         width: width,
         height: height,
       });
+
+      lightboxImages.push({ url: img.src, title: i });
     }
 
-    this.setState({ imageContainer: gridImages });
+    this.setState({
+      imageContainer: gridImages,
+      lightboxImages: lightboxImages,
+    });
   };
+
+  openLightBox() {
+    this.setState({
+      open: true,
+    });
+  }
+
+  closeLightBox() {
+    this.setState({
+      open: false,
+      photoIndex: 0,
+    });
+  }
+
+  openImage = (event, { photo, index }) => {
+    this.setState({ photoIndex: index }, this.openLightBox);
+  };
+
+  openImageProp = this.openImage.bind(this);
 
   render() {
     const { classes, images, loading } = this.props;
     let gridImages = [];
-    for (var i = 0; i < this.props.images.length; i++) {
+    for (var i = 0; i < images.length; i++) {
       gridImages.push(
-        <img
-          hidden
-          src={this.props.images[i]}
-          onLoad={() => this.handleImage()}
-        />
+        <img hidden src={images[i]} onLoad={() => this.handleImage()} />
       );
     }
 
-    // var imageContainer = [];
-    // var lightboxImages = [];
-
-    const { photoIndex, isOpen } = this.state;
     return (
       <div>
-        {loading ? (
-          <Skeleton variant="rect" height={500} width={500} />
-        ) : (
-          <div>
-            <Button
-              style={{ padding: "10px 0 10px 0" }}
-              fullWidth
-              onClick={() => this.setState({ isOpen: true })}
-            >
-              Open Images
-            </Button>
+        <Button
+          style={{ padding: "10px 0px" }}
+          fullWidth
+          onClick={() => this.openLightBox()}
+        >
+          Open Images
+        </Button>
 
-            {isOpen && (
-              <Lightbox
-                mainSrc={this.state.lightboxImages[photoIndex]}
-                nextSrc={
-                  this.state.lightboxImages[
-                    (photoIndex + 1) % this.state.lightboxImages.length
-                  ]
-                }
-                prevSrc={
-                  this.state.lightboxImages[
-                    (photoIndex + this.state.lightboxImages.length - 1) %
-                      this.state.lightboxImages.length
-                  ]
-                }
-                onCloseRequest={() => this.setState({ isOpen: false })}
-                onMovePrevRequest={() =>
-                  this.setState({
-                    photoIndex:
-                      (photoIndex + this.state.lightboxImages.length - 1) %
-                      this.state.lightboxImages.length,
-                  })
-                }
-                onMoveNextRequest={() =>
-                  this.setState({
-                    photoIndex:
-                      (photoIndex + 1) % this.state.lightboxImages.length,
-                  })
-                }
-              />
-            )}
-
-            <Gallery photos={this.state.imageContainer} />
-          </div>
+        {this.state.open && (
+          <Lightbox
+            images={this.state.lightboxImages}
+            startIndex={this.state.photoIndex}
+            onClose={() => this.closeLightBox()}
+          />
         )}
+
+        <Gallery
+          photos={this.state.imageContainer}
+          onClick={this.openImageProp}
+        />
         {gridImages}
       </div>
     );
