@@ -295,7 +295,7 @@ function validateRefund(shootDate, shootTime) {
   var duration = moment.duration(shootDate.diff(today));
   var hours = duration.asHours();
 
-  if (hours < 24) {
+  if (hours < 12) {
     return false;
   } else {
     return true;
