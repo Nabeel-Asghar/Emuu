@@ -179,12 +179,6 @@ if (token) {
   }
 }
 
-const SearchContainer = () => (
-  <div className="searchContainer">
-    <Route exact path="/search" component={search} />
-  </div>
-);
-
 const DefaultContainer = () => (
   <div>
     <Route exact path="/" component={home} />
@@ -195,6 +189,8 @@ const DefaultContainer = () => (
       <Route exact path="/signup" component={signup} />
 
       <Route exact path="/resetPassword" component={resetPassword} />
+
+      <Route exact path="/search" component={search} />
 
       <AuthRoute exact path="/onboard" component={onboard} />
 
@@ -280,8 +276,6 @@ class App extends Component {
             <BrowserRouter>
               <Navbar />
               <Switch>
-                <Route exact path="/search" component={SearchContainer} />
-
                 <Route component={DefaultContainer} />
                 {/* prettier-ignore */}
               </Switch>

@@ -1,4 +1,11 @@
-import { Grid, Paper, Typography } from "@material-ui/core";
+import {
+  Grid,
+  Paper,
+  Typography,
+  AppBar,
+  Toolbar,
+  Box,
+} from "@material-ui/core";
 import * as algoliasearch from "algoliasearch";
 import React, { Component } from "react";
 import { InstantSearch, SortBy, RefinementList } from "react-instantsearch-dom";
@@ -58,14 +65,8 @@ class Search extends Component {
   };
 
   render() {
-    console.log("searchState", this.state.searchState);
-    console.log("createURL", createURL(this.state.searchState));
-    console.log(
-      "serachQuery",
-      searchStateToUrl(this.props, this.state.searchState)
-    );
     return (
-      <Grid container>
+      <div>
         <InstantSearch
           indexName="photographers"
           searchClient={client}
@@ -73,72 +74,61 @@ class Search extends Component {
           onSearchStateChange={this.onSearchStateChange}
           createURL={createURL}
         >
-          <Grid
-            item
-            xs={6}
-            style={{
-              textAlign: "center",
+          <ConnectedSearchBox />
+          <Grid container>
+            <Grid container style={{ backgroundColor: "yellow" }}>
+              <Grid item xs={6} style={{ textAlign: "left" }}>
+                <ConnectedStats />
+              </Grid>
+              <Grid item xs={6} style={{ textAlign: "right" }}>
+                <ConnectedSortBy
+                  defaultRefinement="photographers"
+                  items={[
+                    { value: "photographers", label: "Featured" },
+                    { value: "rating_desc", label: "Average Rating" },
+                    { value: "price_desc", label: "Price: High to Low" },
+                    { value: "price_asc", label: "Price: Low to High" },
+                  ]}
+                />
+              </Grid>
+            </Grid>
 
-              right: 0,
-              left: 0,
-              marginRight: "auto",
-              marginLeft: "auto",
-            }}
-          >
-            <ConnectedSearchBox />
-          </Grid>
-
-          <Grid container style={{ backgroundColor: "blue" }}>
-            <Grid item xs={6} style={{ textAlign: "left" }}>
+            <Grid item xs={3}>
               <ConnectedStats />
-            </Grid>
-            <Grid item xs={6} style={{ textAlign: "right" }}>
-              <ConnectedSortBy
-                defaultRefinement="photographers"
+              <Typography style={{ fontWeight: "bold" }}>Category</Typography>
+              <ConnectedRefinementList attribute="categories" />
+              <Typography style={{ fontWeight: "bold" }}>
+                Average Rating
+              </Typography>
+              <ConnectedNumericMenu
+                attribute="avgRating"
                 items={[
-                  { value: "photographers", label: "Featured" },
-                  { value: "rating_desc", label: "Average Rating" },
-                  { value: "price_desc", label: "Price: High to Low" },
-                  { value: "price_asc", label: "Price: Low to High" },
+                  { label: 4, start: 4 },
+                  { label: 3, start: 3 },
+                  { label: 2, start: 2 },
+                  { label: 1, start: 1 },
                 ]}
+                transformItems={(items) =>
+                  items.filter((item) => item.value !== "")
+                }
               />
+              <Typography style={{ fontWeight: "bold" }}>City</Typography>
+              <ConnectedRefinementList attribute="location_city" />
+
+              <Typography style={{ fontWeight: "bold" }}>Date</Typography>
+              {/* <ConnectedDate /> */}
+
+              <ConnectedClearRefinements />
             </Grid>
-          </Grid>
 
-          <Grid item xs={3}>
-            <Typography style={{ fontWeight: "bold" }}>Category</Typography>
-            <ConnectedRefinementList attribute="categories" />
-            <Typography style={{ fontWeight: "bold" }}>
-              Average Rating
-            </Typography>
-            <ConnectedNumericMenu
-              attribute="avgRating"
-              items={[
-                { label: 4, start: 4 },
-                { label: 3, start: 3 },
-                { label: 2, start: 2 },
-                { label: 1, start: 1 },
-              ]}
-              transformItems={(items) =>
-                items.filter((item) => item.value !== "")
-              }
-            />
-            <Typography style={{ fontWeight: "bold" }}>City</Typography>
-            <ConnectedRefinementList attribute="location_city" />
-
-            <Typography style={{ fontWeight: "bold" }}>Date</Typography>
-            {/* <ConnectedDate /> */}
-
-            <ConnectedClearRefinements />
-          </Grid>
-
-          <Grid item xs={9}>
-            <Grid spacing={2} container direction="row">
-              <ConnectedHits />
+            <Grid item xs={9}>
+              <Grid spacing={2} container direction="row">
+                <ConnectedHits />
+              </Grid>
             </Grid>
           </Grid>
         </InstantSearch>
-      </Grid>
+      </div>
     );
   }
 }

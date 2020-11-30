@@ -4,10 +4,11 @@ import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import Toolbar from "@material-ui/core/Toolbar";
+import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 import { AccountCircle } from "@material-ui/icons";
 import MenuIcon from "@material-ui/icons/Menu";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, withRouter } from "react-router-dom";
 import AppIcon from "../../images/logo.png";
@@ -19,6 +20,7 @@ import qs from "qs";
 import { useHistory } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
+import SvgIcon from "@material-ui/core/SvgIcon";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -32,15 +34,19 @@ const useStyles = makeStyles((theme) => ({
       marginTop: 5,
     },
   },
-  input: { width: "400px" },
-  iconButton: {
-    padding: 10,
-  },
+  input: { width: "250px", paddingLeft: "20px" },
+  iconButton: { padding: "10px" },
 
   imageStyle: {
     width: "40px",
     height: "40px",
     borderRadius: "50%",
+  },
+  searchBox: {
+    padding: "2px 4px",
+    display: "flex",
+    alignItems: "center",
+    margin: "0 auto",
   },
 }));
 
@@ -50,6 +56,7 @@ const Navbar = (props) => {
   const authenticated = useSelector((state) => state.user.authenticated);
   const details = useSelector((state) => state.user.credentials);
   const [query, setName] = useState("");
+
   const [showChild, setShowChild] = useState(false);
   // Allow photographer options if user is a photographer
   let photographerStatus = false;
@@ -87,125 +94,131 @@ const Navbar = (props) => {
   return (
     <AppBar>
       <Toolbar>
-        <div style={{ width: 1000, margin: "auto" }}>
-          <Box display="flex" p={1} className={classes.box}>
-            <Box p={1} className={classes.box}>
-              <IconButton
-                edge="start"
-                style={{ backgroundColor: "transparent" }}
-                component={Link}
-                to="/"
-              >
-                <img src={AppIcon} alt="Logo" className={classes.imageStyle} />
-                <Typography>
-                  <Box fontWeight="fontWeightBold" fontSize="h6.fontSize">
-                    &nbsp; PhotoSpot
-                  </Box>
-                </Typography>
-              </IconButton>
-            </Box>
+        <Grid container alignItems="center" justify="center">
+          <Grid item xs={4}>
+            <IconButton
+              edge="start"
+              style={{ backgroundColor: "transparent" }}
+              component={Link}
+              to="/"
+            >
+              <img src={AppIcon} alt="Logo" className={classes.imageStyle} />
+              <Typography>
+                <Box fontWeight="fontWeightBold" fontSize="h6.fontSize">
+                  &nbsp; PhotoSpot
+                </Box>
+              </Typography>
+            </IconButton>
+          </Grid>
 
-            <Box p={1} flexGrow={1}>
-              <InputBase
-                id="query"
-                name="query"
-                label="Feature"
-                style={{ backgroundColor: "gray" }}
-                className={classes.input}
-                placeholder="Search"
-                // defaultValue={currentRefinement}
-                onChange={handleChange}
-                color="secondary"
-                onKeyPress={(event) => {
-                  if (event.key === "Enter") {
-                    handleSubmit(query);
-                  }
-                }}
-              />
-              <IconButton
-                className={classes.iconButton}
-                onClick={() => handleSubmit(query)}
-                color="secondary"
-              >
-                <SearchIcon />
-              </IconButton>
-            </Box>
-
-            <Box p={1} className={classes.box}>
-              <IconButton
-                edge="end"
-                aria-label="account of current user"
-                aria-controls="menu-appbar"
-                aria-haspopup="true"
-                onClick={handleMenu}
-                color="inherit"
-              >
-                <MenuIcon fontSize="large" />
-                <AccountCircle color="secondary" fontSize="large" />
-              </IconButton>
-            </Box>
-
-            {authenticated && (
-              <div>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  keepMounted
-                  open={open}
-                  onClose={handleClose}
-                  getContentAnchorEl={null}
+          <Grid item xs={4} align="center">
+            <Box
+              width="fit-content"
+              border={1}
+              borderColor="secondary"
+              className={classes.box}
+            >
+              <Paper className={classes.searchBox}>
+                <InputBase
+                  id="query"
+                  className={classes.input}
+                  name="query"
+                  label="Feature"
+                  inputStyle={{ textAlign: "center" }}
+                  placeholder="Search"
+                  onChange={handleChange}
+                  color="secondary"
+                  onKeyPress={(event) => {
+                    if (event.key === "Enter") {
+                      handleSubmit(query);
+                    }
+                  }}
+                />
+                <IconButton
+                  className={classes.iconButton}
+                  onClick={() => handleSubmit(query)}
+                  color="secondary"
                 >
-                  {!photographerStatus && (
-                    <MenuItem component={Link} to="/userDashboard">
+                  <SearchIcon />
+                </IconButton>
+              </Paper>
+            </Box>
+          </Grid>
+
+          <Grid item xs={4} align="right">
+            <IconButton
+              edge="end"
+              aria-label="account of current user"
+              aria-controls="menu-appbar"
+              aria-haspopup="true"
+              onClick={handleMenu}
+              color="inherit"
+            >
+              <MenuIcon fontSize="large" />
+              <AccountCircle color="secondary" fontSize="large" />
+            </IconButton>
+          </Grid>
+
+          {authenticated && (
+            <div>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                keepMounted
+                open={open}
+                onClose={handleClose}
+                getContentAnchorEl={null}
+              >
+                {!photographerStatus && (
+                  <MenuItem component={Link} to="/userDashboard">
+                    Dashboard
+                  </MenuItem>
+                )}
+
+                {photographerStatus && (
+                  <div>
+                    <MenuItem component={Link} to="/photographerDashboard">
                       Dashboard
                     </MenuItem>
-                  )}
 
-                  {photographerStatus && (
-                    <div>
-                      <MenuItem component={Link} to="/photographerDashboard">
-                        Dashboard
-                      </MenuItem>
+                    <MenuItem component={Link} to="/yourPhotographyProfile">
+                      Photographer Page
+                    </MenuItem>
+                  </div>
+                )}
 
-                      <MenuItem component={Link} to="/yourPhotographyProfile">
-                        Photographer Page
-                      </MenuItem>
-                    </div>
-                  )}
+                <MenuItem component={Link} to="/messaging">
+                  Messaging
+                </MenuItem>
 
-                  <MenuItem component={Link} to="/messaging">
-                    Messaging
-                  </MenuItem>
+                <MenuItem onClick={() => dispatch(logoutUser())}>
+                  Logout
+                </MenuItem>
+              </Menu>
+            </div>
+          )}
 
-                  <MenuItem onClick={() => dispatch(logoutUser())}>
-                    Logout
-                  </MenuItem>
-                </Menu>
-              </div>
-            )}
+          {!authenticated && (
+            <div>
+              <Menu
+                id="menu-appbar"
+                anchorEl={anchorEl}
+                keepMounted
+                open={open}
+                onClose={handleClose}
+                getContentAnchorEl={null}
+              >
+                <MenuItem component={Link} to="/login">
+                  Login
+                </MenuItem>
 
-            {!authenticated && (
-              <div>
-                <Menu
-                  id="menu-appbar"
-                  anchorEl={anchorEl}
-                  keepMounted
-                  open={open}
-                  onClose={handleClose}
-                  getContentAnchorEl={null}
-                >
-                  <MenuItem component={Link} to="/login">
-                    Login
-                  </MenuItem>
-
-                  <MenuItem component={Link} component={Link} to="/signup">
-                    Signup
-                  </MenuItem>
-                </Menu>
-              </div>
-            )}
-          </Box>
-        </div>
+                <MenuItem component={Link} component={Link} to="/signup">
+                  Signup
+                </MenuItem>
+              </Menu>
+            </div>
+          )}
+        </Grid>
       </Toolbar>
     </AppBar>
   );

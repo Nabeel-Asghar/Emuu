@@ -65,7 +65,6 @@ const CustomSortBy = ({ items, refine, createURL }) => {
       onChange={handleChange}
       input={<BootstrapInput />}
     >
-      {console.log(items)}
       {items.map((item) => (
         <MenuItem value={item.value}>
           <a
