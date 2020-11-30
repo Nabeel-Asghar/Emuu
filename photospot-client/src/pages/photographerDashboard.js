@@ -65,6 +65,7 @@ class photograhperDashboard extends Component {
       views: 0,
       ratePerHour: 0,
       totalCompletedOrders: 0,
+      stripeStatus: true,
     };
   }
 
@@ -92,7 +93,11 @@ class photograhperDashboard extends Component {
     this.props.getYourPhotographyPage().then(() => {
       this.assignValues(this.props.credentials);
     });
-    this.props.getStripeStatus();
+    this.props.getStripeStatus().then(() => {
+      if (!this.props.stripeStatus) {
+        this.setState({ stripeStatus: false });
+      }
+    });
     this.props.getPhotographerReviews();
     this.setState({
       allReviews: Object.values(this.props.userReviews || {}),
@@ -201,7 +206,7 @@ class photograhperDashboard extends Component {
             email={this.state.email}
           />
 
-          {!this.props.stripeStatus && <StripeCard />}
+          {!this.state.stripeStatus && <StripeCard />}
 
           <SettingsCard />
         </Grid>
