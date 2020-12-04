@@ -11,10 +11,11 @@ import SearchIcon from "@material-ui/icons/Search";
 const useStyles = makeStyles((theme) => ({
   searchBox: {
     padding: "2px 4px",
-    display: "flex",
+    display: "none",
     alignItems: "center",
-    width: 400,
+    width: "400px",
     margin: "0 auto",
+    pointerEvents: "auto",
   },
   button: {
     marginTop: 23,
@@ -90,22 +91,18 @@ const CustomSearchBox = React.forwardRef((props, myRef) => {
       {/* <TextField
         ref={myRef}
         id="name"
+        disableUnderline={true}
         name="name"
-        label="Feature"
         placeholder="Search for what you're like to build..."
         defaultValue={currentRefinement}
         onChange={handleChange}
         className={classes.textField}
-        variant="outlined"
         margin="normal"
         size="small"
         fullWidth
-        InputLabelProps={{
-          shrink: true,
-        }}
       />
 
-      <Button
+      <IconButton
         variant="contained"
         color="secondary"
         className={classes.button}
