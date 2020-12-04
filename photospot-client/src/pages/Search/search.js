@@ -65,6 +65,7 @@ class Search extends Component {
   };
 
   render() {
+    console.log(this.state.searchState);
     return (
       <div>
         <InstantSearch

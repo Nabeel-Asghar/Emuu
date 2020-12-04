@@ -17,7 +17,7 @@ import Paper from "@material-ui/core/Paper";
 import InputBase from "@material-ui/core/InputBase";
 import SearchIcon from "@material-ui/icons/Search";
 import qs from "qs";
-import { useHistory } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import SvgIcon from "@material-ui/core/SvgIcon";
@@ -55,10 +55,15 @@ const Navbar = (props) => {
 
   const authenticated = useSelector((state) => state.user.authenticated);
   const details = useSelector((state) => state.user.credentials);
-  const [query, setName] = useState("");
 
-  const [showChild, setShowChild] = useState(false);
-  // Allow photographer options if user is a photographer
+  //Algolia
+  const location = useLocation();
+  const urlToSearchState = (location) => qs.parse(location.search.slice(1));
+  const [query, setName] = useState("");
+  const [urlQuery] = useState(urlToSearchState(location).query);
+  console.log("1", query);
+  console.log("2", urlQuery);
+
   let photographerStatus = false;
   if (authenticated && details[0]) {
     const { photographer } = details[0];
@@ -124,6 +129,7 @@ const Navbar = (props) => {
                   className={classes.input}
                   name="query"
                   label="Feature"
+                  defaultValue={urlQuery}
                   inputStyle={{ textAlign: "center" }}
                   placeholder="Search"
                   onChange={handleChange}
