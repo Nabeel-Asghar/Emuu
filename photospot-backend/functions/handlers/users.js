@@ -504,16 +504,19 @@ exports.getYourPhotographerPage = (req, res) => {
         bio: doc.data().bio,
         background: doc.data().background,
         images: doc.data().images,
+        createdAt: doc.data().createdAt,
         location_city: doc.data().location_city,
         location_state: doc.data().location_state,
         profileImage: doc.data().profileImage,
         company: doc.data().company,
         website: doc.data().website,
         instagram: doc.data().instagram,
-        ratePerHour: doc.data().location_state,
+        ratePerHour: doc.data().ratePerHour,
         camera: doc.data().camera,
         headline: doc.data().headline,
         categories: doc.data().categories,
+        views: doc.data().views,
+        totalCompletedOrders: doc.data().totalCompletedOrders,
       });
 
       return res.json(page);
@@ -861,17 +864,18 @@ exports.editBookingTimes = (req, res) => {
     .collection("bookings")
     .doc(date)
     .set(timeslots)
-    .then(()=>{
+    .then(() => {
       index
-      .partialUpdateObject({
-        bookings: algoliaDates,
-        objectID: userid,
-      }).catch((err) => {
-        console.log(err);
-        return res.status(500).json({ error: `something went wrong` });
-      });
+        .partialUpdateObject({
+          bookings: algoliaDates,
+          objectID: userid,
+        })
+        .catch((err) => {
+          console.log(err);
+          return res.status(500).json({ error: `something went wrong` });
+        });
     })
-    .then(()=> {
+    .then(() => {
       return res.json({ message: "success" });
     })
     .catch((err) => {

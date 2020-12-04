@@ -1,15 +1,12 @@
-import {
-  Grid,
-  Paper,
-  Typography,
-  AppBar,
-  Toolbar,
-  Box,
-} from "@material-ui/core";
 import * as algoliasearch from "algoliasearch";
 import React, { Component } from "react";
 import { InstantSearch, SortBy, RefinementList } from "react-instantsearch-dom";
 import qs from "qs";
+
+// Material UI
+import withStyles from "@material-ui/core/styles/withStyles";
+import Divider from "@material-ui/core/Divider";
+import { Grid, Paper, Typography } from "@material-ui/core";
 
 // Componenents
 import ConnectedClearRefinements from "./ConnectedClearRefinements";
@@ -17,6 +14,7 @@ import ConnectedHits from "./ConnectedHits";
 import ConnectedNumericMenu from "./ConnectedNumericMenu";
 import ConnectedRefinementList from "./ConnectedRefinementList";
 import ConnectedSearchBox from "./ConnnectedSearchBox";
+import SearchRefinement from "./SearchRefinement";
 import ConnectedDate from "./ConnectedDate";
 import ConnectedSortBy from "./ConnectedSortBy";
 import ConnectedStats from "./ConnectedStats";
@@ -134,4 +132,4 @@ class Search extends Component {
   }
 }
 
-export default Search;
+export default withStyles(styles)(Search);

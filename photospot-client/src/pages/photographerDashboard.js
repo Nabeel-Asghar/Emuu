@@ -6,7 +6,7 @@ import equal from "fast-deep-equal";
 // Redux
 import { connect } from "react-redux";
 import {
-  getUserData,
+  getYourPhotographyPage,
   uploadProfileImage,
   getPhotographerOrders,
   getPhotographerPastOrders,
@@ -25,6 +25,7 @@ import Typography from "@material-ui/core/Typography";
 import Grid from "@material-ui/core/Grid";
 
 // components
+import DashboardInfo from "../components/dashboard/dashboardInfo";
 import OrderCard from "../components/dashboard/orderCard";
 import ProfileCard from "../components/dashboard/profileCard";
 import ContactCard from "../components/dashboard/contactCard";
@@ -61,6 +62,9 @@ class photograhperDashboard extends Component {
       openRefundDialog: false,
       orderID: "",
       openSuccess: false,
+      views: 0,
+      ratePerHour: 0,
+      totalCompletedOrders: 0,
     };
   }
 
@@ -85,7 +89,7 @@ class photograhperDashboard extends Component {
   componentDidMount() {
     this.props.getPhotographerOrders();
     this.props.getPhotographerPastOrders();
-    this.props.getUserData().then(() => {
+    this.props.getYourPhotographyPage().then(() => {
       this.assignValues(this.props.credentials);
     });
     this.props.getStripeStatus();
@@ -203,6 +207,13 @@ class photograhperDashboard extends Component {
         </Grid>
 
         <Grid item xs={8}>
+          <DashboardInfo
+            views={this.state.views}
+            totalOrders={this.state.totalCompletedOrders}
+            totalRevenue={
+              this.state.totalCompletedOrders * this.state.ratePerHour
+            }
+          />
           <CollapseItems items={theUserOrders} text="Upcoming Shoots" />
 
           <CollapseItems items={theUserPastOrders} text="Past Shoots" />
@@ -248,7 +259,7 @@ class photograhperDashboard extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  credentials: state.user.credentials,
+  credentials: state.user.yourPhotographyPageDetails,
   userOrders: state.user.userOrders,
   userPastOrders: state.user.userPastOrders,
   stripeStatus: state.payment.stripeStatus,
@@ -256,7 +267,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapActionsToProps = {
-  getUserData,
+  getYourPhotographyPage,
   uploadProfileImage,
   getPhotographerOrders,
   getPhotographerPastOrders,

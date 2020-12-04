@@ -42,7 +42,7 @@ const styles = (theme) => ({
   ...theme.spreadThis,
 
   homeContainer: {
-    margin: "60px 12px 0 0px",
+    margin: "60px 0",
     backgroundColor: "white",
   },
 
@@ -371,8 +371,9 @@ class home extends Component {
             </Grid>
           )}
 
-          <Grid item xs={12}>
-            <div
+          <Grid item xs={12} style={{ textAlign: "center" }}>
+            <Box
+              p={1}
               style={{
                 maxWidth: 1000,
                 margin: "-50px auto -50px auto",
@@ -380,18 +381,16 @@ class home extends Component {
                 textAlign: "center",
               }}
             >
-              <Box p={1}>
-                <Typography variant="h3" className={classes.introText}>
-                  Hire photographers and videographers
-                </Typography>
-                <Typography variant="h3" className={classes.introText}>
-                  ...at any price
-                </Typography>
-                <Typography variant="h3" className={classes.introText}>
-                  ...at any time
-                </Typography>
-              </Box>
-            </div>
+              <Typography variant="h3" className={classes.introText}>
+                Hire photographers and videographers
+              </Typography>
+              <Typography variant="h3" className={classes.introText}>
+                ...at any price
+              </Typography>
+              <Typography variant="h3" className={classes.introText}>
+                ...at any time
+              </Typography>
+            </Box>
           </Grid>
         </Grid>
 

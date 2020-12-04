@@ -7,23 +7,19 @@ import withStyles from "@material-ui/core/styles/withStyles";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
-  textLabels: {
-    paddingBottom: "15px",
-    fontWeight: "bold",
-  },
 });
 
 class settingsCard extends Component {
   render() {
-    const { location_city, location_state, email, classes } = this.props;
+    const { classes } = this.props;
     return (
-      <Paper style={{ marginTop: "5px", padding: "20px 0px 15px 0px" }}>
-        <div style={{ marginLeft: "45px" }}>
-          <Typography variant="subtitle2">Settings</Typography>
+      <Paper className={classes.cardStyle}>
+        <div className={classes.interiorCard}>
+          <Typography variant="subtitle2">SETTINGS</Typography>
           <Typography
             variant="body1"
             inline
-            className={classes.textLabels}
+            className={classes.textStyle}
             component={Link}
             to="/changePassword"
           >

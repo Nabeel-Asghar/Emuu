@@ -1,22 +1,19 @@
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ListItemText from "@material-ui/core/ListItemText";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
-import BusinessIcon from "@material-ui/icons/Business";
-import InstagramIcon from "@material-ui/icons/Instagram";
-import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import Skeleton from "@material-ui/lab/Skeleton";
 import React, { Component } from "react";
 import firebase from "../../firestore";
 import NewChatComponent from "../messaging/newChat";
+import BookIcon from "@material-ui/icons/Book";
+import CallIcon from "@material-ui/icons/Call";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
+  margin: {
+    margin: theme.spacing(1),
+  },
 });
 
 class usercard extends Component {
@@ -28,6 +25,7 @@ class usercard extends Component {
       userEmail: "",
       userProfileImage: "",
       profileImage: "",
+      text: false,
     };
   }
 
@@ -37,6 +35,18 @@ class usercard extends Component {
       userEmail: newProps.userEmail,
       profileImage: newProps.profileImage,
       userProfileImage: newProps.userProfileImage,
+    });
+  }
+
+  handleHover() {
+    this.setState({
+      text: true,
+    });
+  }
+
+  handleOut() {
+    this.setState({
+      text: false,
     });
   }
 
@@ -61,27 +71,14 @@ class usercard extends Component {
     } = this.props;
 
     return (
-      <Grid container>
-        <Grid item xs={12}>
-          {loading ? (
-            <Skeleton
-              variant="rect"
-              className={classes.background}
-              width={1000}
-              height={200}
-            />
-          ) : (
-            <img className={classes.background} src={background} />
-          )}
-        </Grid>
-        <Grid item xs={6}>
+      <Grid container style={{ zIndex: 1 }}>
+        <Grid item xs={12} style={{ textAlign: "center" }}>
           {loading ? (
             <Skeleton variant="rect" className={classes.avatar} />
           ) : (
             <img className={classes.avatar} src={profileImage} />
           )}
-        </Grid>
-        <Grid item xs={6} className={classes.rightGrid}>
+
           {loading ? (
             <Skeleton>
               <Typography variant="h3">Book</Typography>
@@ -90,9 +87,11 @@ class usercard extends Component {
             <div>
               <Button
                 className={classes.bookButton}
+                startIcon={<BookIcon />}
                 disabled={loading}
                 variant="outlined"
                 color="secondary"
+                size="large"
                 onClick={() =>
                   this.props.history.push(
                     `${this.props.history.location.pathname}/book`
@@ -103,9 +102,11 @@ class usercard extends Component {
               </Button>
               <Button
                 className={classes.bookButton}
+                startIcon={<CallIcon />}
                 variant="contained"
                 color="secondary"
                 disableElevation
+                size="large"
                 onClick={this.handleContactClickOpen}
               >
                 <Typography style={{ fontWeight: "bold" }}>Contact</Typography>
@@ -118,83 +119,6 @@ class usercard extends Component {
               ></NewChatComponent>
             </div>
           )}
-        </Grid>
-
-        <Grid item xs={8}>
-          <div className={classes.textGrid}>
-            <Typography variant="h4">
-              {loading ? (
-                <Skeleton width="25%" />
-              ) : (
-                <div>
-                  {firstName} {lastName}
-                </div>
-              )}
-            </Typography>
-
-            <Typography variant="h6">
-              {loading ? <Skeleton width="25%" /> : <div>{headline}</div>}
-            </Typography>
-
-            <Typography variant="subtitle1">
-              {loading ? (
-                <Skeleton width="25%" />
-              ) : (
-                <div>
-                  {location_city}, {location_state}
-                </div>
-              )}
-            </Typography>
-          </div>
-        </Grid>
-
-        <Grid item xs={4}>
-          <div style={{ width: "100%" }}>
-            <List dense="true">
-              <ListItem>
-                <ListItemText primary={camera} style={{ textAlign: "right" }} />
-                <ListItemSecondaryAction>
-                  <a
-                    target="_blank"
-                    href={`https://www.google.com/search?q=${camera}`}
-                  >
-                    <IconButton edge="end" aria-label="icon">
-                      <PhotoCameraIcon color="secondary" />
-                    </IconButton>
-                  </a>
-                </ListItemSecondaryAction>
-              </ListItem>
-
-              <ListItem>
-                <ListItemText
-                  primary={instagram}
-                  style={{ textAlign: "right" }}
-                />
-                <ListItemSecondaryAction>
-                  <a
-                    target="_blank"
-                    href={`http://www.instagram.com/${instagram}`}
-                  >
-                    <IconButton edge="end" aria-label="icon">
-                      <InstagramIcon color="secondary" />
-                    </IconButton>
-                  </a>
-                </ListItemSecondaryAction>
-              </ListItem>
-
-              <ListItem>
-                <ListItemText
-                  primary={company}
-                  style={{ textAlign: "right" }}
-                />
-                <ListItemSecondaryAction>
-                  <IconButton edge="end" aria-label="icon">
-                    <BusinessIcon color="secondary" />
-                  </IconButton>
-                </ListItemSecondaryAction>
-              </ListItem>
-            </List>
-          </div>
         </Grid>
       </Grid>
     );

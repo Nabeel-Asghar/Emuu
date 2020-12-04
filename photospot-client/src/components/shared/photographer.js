@@ -15,17 +15,16 @@ import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import IconButton from "@material-ui/core/IconButton";
 
 const styles = {
-  card: {
-    maxWidth: "325px",
-    height: "325px",
-  },
-
-  content: {
-    padding: "15px 10px 15px 10px",
+  root: {
+    padding: "5px 10px 0px 10px",
+    paddingBottom: 0,
     objectFit: "cover",
     overflow: "hidden",
     whiteSpace: "nowrap",
     textOverflow: "ellipsis",
+    "&:last-child": {
+      paddingBottom: 0,
+    },
   },
 
   allText: {
@@ -36,7 +35,7 @@ const styles = {
 
   media: {
     height: 0,
-    paddingTop: "70%", // 16:9
+    paddingTop: "100%", // 16:9
   },
 };
 
@@ -52,8 +51,6 @@ class photographer extends Component {
         location_city,
         location_state,
         camera,
-        instagram,
-        company,
         headline,
         reviewCount,
         totalRating,
@@ -73,8 +70,8 @@ class photographer extends Component {
               title="Profile Image"
             />
           </Link>
-          <CardContent className={classes.content}>
-            <Typography variant="subtitle2" style={{ height: "25px" }}>
+          <CardContent className={classes.root}>
+            <Typography variant="subtitle2">
               {reviewCount ? (
                 <Rating reviewCount={reviewCount} totalRating={totalRating} />
               ) : (
