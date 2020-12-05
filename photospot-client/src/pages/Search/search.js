@@ -14,7 +14,9 @@ import ConnectedNumericMenu from "./ConnectedNumericMenu";
 import ConnectedRefinementList from "./ConnectedRefinementList";
 import ConnectedSearchBox from "./ConnnectedSearchBox";
 import SearchRefinement from "./SearchRefinement";
+import ConnectedSortBy from "./ConnectedSortBy";
 import ConnectedDate from "./ConnectedDate";
+import ConnectedStats from "./ConnectedStats";
 import "./search.css";
 
 const styles = (theme) => ({
@@ -40,8 +42,7 @@ class Search extends Component {
       <Grid container spacing={2}>
         <InstantSearch indexName="photographers" searchClient={client}>
           <Grid item xs={12} style={{ textAlign: "center" }}>
-            <ConnectedSearchBox />
-            <SortBy
+            <ConnectedSortBy
               defaultRefinement="photographers"
               items={[
                 { value: "photographers", label: "Featured" },
@@ -54,13 +55,15 @@ class Search extends Component {
 
           <Grid item xs={3}>
             <Paper style={{ padding: "20px 0px" }}>
+              <ConnectedStats />
+
               {refinements.map((refinement) => (
                 <>
                   <SearchRefinement
                     attribute={refinement.name}
                     header={refinement.header}
                   />
-                  <Divider className={classes.divider} />
+                  {/* <Divider className={classes.divider} /> */}
                 </>
               ))}
 
@@ -77,7 +80,7 @@ class Search extends Component {
                 }
               />
 
-              <Divider className={classes.divider} />
+              {/* <Divider className={classes.divider} /> */}
 
               <ConnectedClearRefinements />
             </Paper>
