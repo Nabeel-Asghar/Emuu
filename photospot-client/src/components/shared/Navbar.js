@@ -61,8 +61,6 @@ const Navbar = (props) => {
   const urlToSearchState = (location) => qs.parse(location.search.slice(1));
   const [query, setName] = useState("");
   const [urlQuery] = useState(urlToSearchState(location).query);
-  console.log("1", query);
-  console.log("2", urlQuery);
 
   let photographerStatus = false;
   if (authenticated && details[0]) {

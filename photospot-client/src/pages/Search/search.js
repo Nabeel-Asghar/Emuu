@@ -32,6 +32,13 @@ const searchStateToUrl = (props, searchState) =>
 
 const urlToSearchState = (location) => qs.parse(location.search.slice(1));
 
+const styles = (theme) => ({
+  ...theme.spreadThis,
+  divider: {
+    margin: "15px 0px",
+  },
+});
+
 class Search extends Component {
   state = {
     searchState: urlToSearchState(this.props.location),
@@ -63,7 +70,11 @@ class Search extends Component {
   };
 
   render() {
-    console.log(this.state.searchState);
+    const { classes } = this.props;
+    const refinements = [
+      { name: "location_city", header: "City" },
+      { name: "categories", header: "Category" },
+    ];
     return (
       <div>
         <InstantSearch
@@ -74,7 +85,7 @@ class Search extends Component {
           createURL={createURL}
         >
           <ConnectedSearchBox />
-          <Grid container>
+          <Grid container spacing={2}>
             <Grid container style={{ backgroundColor: "yellow" }}>
               <Grid item xs={6} style={{ textAlign: "left" }}>
                 <ConnectedStats />
@@ -93,31 +104,32 @@ class Search extends Component {
             </Grid>
 
             <Grid item xs={3}>
-              <ConnectedStats />
-              <Typography style={{ fontWeight: "bold" }}>Category</Typography>
-              <ConnectedRefinementList attribute="categories" />
-              <Typography style={{ fontWeight: "bold" }}>
-                Average Rating
-              </Typography>
-              <ConnectedNumericMenu
-                attribute="avgRating"
-                items={[
-                  { label: 4, start: 4 },
-                  { label: 3, start: 3 },
-                  { label: 2, start: 2 },
-                  { label: 1, start: 1 },
-                ]}
-                transformItems={(items) =>
-                  items.filter((item) => item.value !== "")
-                }
-              />
-              <Typography style={{ fontWeight: "bold" }}>City</Typography>
-              <ConnectedRefinementList attribute="location_city" />
-
-              <Typography style={{ fontWeight: "bold" }}>Date</Typography>
-              {/* <ConnectedDate /> */}
-
-              <ConnectedClearRefinements />
+              <Paper style={{ padding: "20px 0px" }}>
+                {refinements.map((refinement) => (
+                  <>
+                    <SearchRefinement
+                      attribute={refinement.name}
+                      header={refinement.header}
+                    />
+                    <Divider className={classes.divider} />
+                  </>
+                ))}
+                <ConnectedNumericMenu
+                  attribute="avgRating"
+                  items={[
+                    { label: 4, start: 4 },
+                    { label: 3, start: 3 },
+                    { label: 2, start: 2 },
+                    { label: 1, start: 1 },
+                  ]}
+                  transformItems={(items) =>
+                    items.filter((item) => item.value !== "")
+                  }
+                />
+                <Typography style={{ fontWeight: "bold" }}>City</Typography>
+                <ConnectedRefinementList attribute="location_city" />
+                <ConnectedClearRefinements />{" "}
+              </Paper>
             </Grid>
 
             <Grid item xs={9}>
@@ -132,4 +144,4 @@ class Search extends Component {
   }
 }
 
-export default Search;
+export default withStyles(styles)(Search);
