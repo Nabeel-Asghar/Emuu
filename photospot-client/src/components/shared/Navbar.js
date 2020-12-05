@@ -24,7 +24,16 @@ const Navbar = () => {
   const authenticated = useSelector((state) => state.user.authenticated);
   const details = useSelector((state) => state.user.credentials);
 
+<<<<<<< HEAD
+  //Algolia
+  const location = useLocation();
+  const urlToSearchState = (location) => qs.parse(location.search.slice(1));
+  const [query, setName] = useState("");
+  const [urlQuery] = useState(urlToSearchState(location).query);
+
+=======
   // Allow photographer options if user is a photographer
+>>>>>>> 1cd6e86123d51f10d195fb579f923c250a6302bf
   let photographerStatus = false;
   if (authenticated && details[0]) {
     const { photographer } = details[0];

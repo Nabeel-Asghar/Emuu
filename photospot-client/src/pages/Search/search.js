@@ -24,6 +24,13 @@ const styles = (theme) => ({
   },
 });
 
+const styles = (theme) => ({
+  ...theme.spreadThis,
+  divider: {
+    margin: "15px 0px",
+  },
+});
+
 class Search extends Component {
   render() {
     const { classes } = this.props;
@@ -36,6 +43,70 @@ class Search extends Component {
 
     var client = algoliasearch(APP_ID, SEARCH_KEY);
 
+<<<<<<< HEAD
+  render() {
+    const { classes } = this.props;
+    const refinements = [
+      { name: "location_city", header: "City" },
+      { name: "categories", header: "Category" },
+    ];
+    return (
+      <div>
+        <InstantSearch
+          indexName="photographers"
+          searchClient={client}
+          searchState={this.state.searchState}
+          onSearchStateChange={this.onSearchStateChange}
+          createURL={createURL}
+        >
+          <ConnectedSearchBox />
+          <Grid container spacing={2}>
+            <Grid container style={{ backgroundColor: "yellow" }}>
+              <Grid item xs={6} style={{ textAlign: "left" }}>
+                <ConnectedStats />
+              </Grid>
+              <Grid item xs={6} style={{ textAlign: "right" }}>
+                <ConnectedSortBy
+                  defaultRefinement="photographers"
+                  items={[
+                    { value: "photographers", label: "Featured" },
+                    { value: "rating_desc", label: "Average Rating" },
+                    { value: "price_desc", label: "Price: High to Low" },
+                    { value: "price_asc", label: "Price: Low to High" },
+                  ]}
+                />
+              </Grid>
+            </Grid>
+
+            <Grid item xs={3}>
+              <Paper style={{ padding: "20px 0px" }}>
+                {refinements.map((refinement) => (
+                  <>
+                    <SearchRefinement
+                      attribute={refinement.name}
+                      header={refinement.header}
+                    />
+                    <Divider className={classes.divider} />
+                  </>
+                ))}
+                <ConnectedNumericMenu
+                  attribute="avgRating"
+                  items={[
+                    { label: 4, start: 4 },
+                    { label: 3, start: 3 },
+                    { label: 2, start: 2 },
+                    { label: 1, start: 1 },
+                  ]}
+                  transformItems={(items) =>
+                    items.filter((item) => item.value !== "")
+                  }
+                />
+                <Typography style={{ fontWeight: "bold" }}>City</Typography>
+                <ConnectedRefinementList attribute="location_city" />
+                <ConnectedClearRefinements />{" "}
+              </Paper>
+            </Grid>
+=======
     return (
       <Grid container spacing={2}>
         <InstantSearch indexName="photographers" searchClient={client}>
@@ -82,6 +153,7 @@ class Search extends Component {
               <ConnectedClearRefinements />
             </Paper>
           </Grid>
+>>>>>>> 1cd6e86123d51f10d195fb579f923c250a6302bf
 
           <Grid item xs={9}>
             <Grid spacing={2} container direction="row">
