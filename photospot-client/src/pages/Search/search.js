@@ -132,4 +132,4 @@ class Search extends Component {
   }
 }
 
-export default withStyles(styles)(Search);
+export default Search;
