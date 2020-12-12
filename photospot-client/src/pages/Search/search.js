@@ -6,7 +6,7 @@ import { InstantSearch, SortBy, RefinementList } from "react-instantsearch-dom";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Divider from "@material-ui/core/Divider";
 import { Grid, Paper, Typography } from "@material-ui/core";
-
+import qs from "qs";
 // Componenents
 import ConnectedClearRefinements from "./ConnectedClearRefinements";
 import ConnectedHits from "./ConnectedHits";
@@ -26,11 +26,50 @@ const styles = (theme) => ({
   },
 });
 
+const DEBOUNCE_TIME = 0;
+const APP_ID = "SYUBAMS440";
+const SEARCH_KEY = "587bf2e2211c20cdb452ed974fbd6b77";
+const client = algoliasearch(APP_ID, SEARCH_KEY);
+
+const createURL = (state) => `?${qs.stringify(state)}`;
+
+const searchStateToUrl = (props, searchState) =>
+  searchState ? `${props.location.pathname}${createURL(searchState)}` : "";
+
+const urlToSearchState = (location) => qs.parse(location.search.slice(1));
+
 class Search extends Component {
+  state = {
+    searchState: urlToSearchState(this.props.location),
+    lastLocation: this.props.location,
+  };
+
+  static getDerivedStateFromProps(props, state) {
+    if (props.location !== state.lastLocation) {
+      return {
+        searchState: urlToSearchState(props.location),
+        lastLocation: props.location,
+      };
+    }
+
+    return null;
+  }
+
+  onSearchStateChange = (searchState) => {
+    clearTimeout(this.debouncedSetState);
+
+    this.debouncedSetState = setTimeout(() => {
+      this.props.history.push(
+        searchStateToUrl(this.props, searchState),
+        searchState
+      );
+    }, DEBOUNCE_TIME);
+
+    this.setState({ searchState });
+  };
+
   render() {
     const { classes } = this.props;
-    const APP_ID = "SYUBAMS440";
-    const SEARCH_KEY = "587bf2e2211c20cdb452ed974fbd6b77";
     const refinements = [
       { name: "location_city", header: "City" },
       { name: "categories", header: "Category" },
@@ -40,7 +79,14 @@ class Search extends Component {
 
     return (
       <Grid container spacing={2}>
-        <InstantSearch indexName="photographers" searchClient={client}>
+        <InstantSearch
+          indexName="photographers"
+          searchClient={client}
+          searchState={this.state.searchState}
+          onSearchStateChange={this.onSearchStateChange}
+          createURL={createURL}
+        >
+          <ConnectedSearchBox />
           <Grid item xs={12} style={{ textAlign: "center" }}>
             <ConnectedSortBy
               defaultRefinement="photographers"
@@ -82,6 +128,7 @@ class Search extends Component {
 
               {/* <Divider className={classes.divider} /> */}
 
+              <ConnectedDate />
               <ConnectedClearRefinements />
             </Paper>
           </Grid>

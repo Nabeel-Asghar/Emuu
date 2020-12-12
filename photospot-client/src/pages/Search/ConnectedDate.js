@@ -3,6 +3,7 @@ import MomentUtils from "@date-io/moment";
 import lightBlue from "@material-ui/core/colors/lightBlue";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+const moment = require("moment");
 
 const materialTheme = createMuiTheme({
   palette: {
@@ -16,9 +17,7 @@ const materialTheme = createMuiTheme({
 });
 
 function ConnectedDate() {
-  const [selectedDate, handleDateChange] = useState(
-    new Date("MMMM DD, h:00 a")
-  );
+  const [selectedDate, handleDateChange] = useState(moment());
 
   return (
     <ThemeProvider theme={materialTheme}>
@@ -27,7 +26,7 @@ function ConnectedDate() {
           format={"MMMM DD, h:00 a"}
           minutesStep={60}
           value={selectedDate}
-          onAccept={console.log(this.state?.selectedDate)}
+          //onAccept={console.log(this.state?.selectedDate)}
           onChange={handleDateChange}
         />
       </MuiPickersUtilsProvider>{" "}
