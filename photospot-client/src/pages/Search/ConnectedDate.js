@@ -1,8 +1,9 @@
-import React, { useState } from "react";
 import MomentUtils from "@date-io/moment";
-import lightBlue from "@material-ui/core/colors/lightBlue";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import { DatePicker, KeyboardDatePicker } from "@material-ui/pickers";
+import React, { useState } from "react";
+import { connectRefinementList } from "react-instantsearch-dom";
 const moment = require("moment");
 
 const materialTheme = createMuiTheme({
@@ -16,22 +17,22 @@ const materialTheme = createMuiTheme({
   },
 });
 
-function ConnectedDate() {
+const Date = ({ refine }) => {
   const [selectedDate, handleDateChange] = useState(moment());
 
   return (
     <ThemeProvider theme={materialTheme}>
       <MuiPickersUtilsProvider utils={MomentUtils}>
-        <DateTimePicker
-          format={"MMMM DD, h:00 a"}
-          minutesStep={60}
+        <DatePicker
+          variant="inline"
+          label="Basic example"
           value={selectedDate}
-          //onAccept={console.log(this.state?.selectedDate)}
           onChange={handleDateChange}
         />
       </MuiPickersUtilsProvider>{" "}
     </ThemeProvider>
   );
-}
+};
 
+const ConnectedDate = connectRefinementList(Date);
 export default ConnectedDate;

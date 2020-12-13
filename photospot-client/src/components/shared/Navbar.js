@@ -91,7 +91,6 @@ const Navbar = (props) => {
   };
 
   const handleSubmit = (objValues) => {
-    console.log("submitted");
     props.history.push("/search/?" + qs.stringify(objValues) + "&page=1");
   };
 
