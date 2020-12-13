@@ -677,6 +677,7 @@ exports.getUsersOrders = (req, res) => {
           shootDate: doc.data().shootDate,
           shootTime: doc.data().shootTime,
           formattedDate: doc.data().formattedDate,
+          status: doc.data().status,
         });
       });
       return res.json(orders);

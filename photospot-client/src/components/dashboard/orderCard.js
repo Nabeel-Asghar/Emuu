@@ -15,6 +15,7 @@ import { red } from "@material-ui/core/colors";
 // util
 import { timeConvert } from "../../util/timeConvert";
 import { dateConvert } from "../../util/dateConvert";
+import { shootStatus, showVault } from "../../util/constants";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -43,7 +44,6 @@ class orderCard extends Component {
   render() {
     const {
       classes,
-      refundStatus,
       photographer: {
         orderID,
         paymentID,
@@ -67,7 +67,7 @@ class orderCard extends Component {
                 <img
                   src={profileImage}
                   style={{
-                    width: "90%",
+                    maxWidth: "90%",
                     textAlign: "center",
                     objectFit: "cover",
                   }}
@@ -116,7 +116,7 @@ class orderCard extends Component {
                     </Paper>
                   </Grid>
                   <Grid item xs={12} style={{ textAlign: "right" }}>
-                    {refundStatus ? (
+                    {showVault.includes(status) ? (
                       <div className={classes.root}>
                         <Button
                           variant="contained"
