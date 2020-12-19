@@ -1,8 +1,8 @@
+import React, { useState } from "react";
 import MomentUtils from "@date-io/moment";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
-import { DatePicker, KeyboardDatePicker } from "@material-ui/pickers";
-import React, { useState } from "react";
+import { DatePicker } from "@material-ui/pickers";
 import { connectRefinementList } from "react-instantsearch-dom";
 const moment = require("moment");
 
@@ -21,16 +21,19 @@ const Date = ({ refine }) => {
   const [selectedDate, handleDateChange] = useState(moment());
 
   return (
-    <ThemeProvider theme={materialTheme}>
-      <MuiPickersUtilsProvider utils={MomentUtils}>
-        <DatePicker
-          variant="inline"
-          label="Basic example"
-          value={selectedDate}
-          onChange={handleDateChange}
-        />
-      </MuiPickersUtilsProvider>{" "}
-    </ThemeProvider>
+    <div style={{ padding: "0px 25px" }}>
+      <ThemeProvider theme={materialTheme}>
+        <MuiPickersUtilsProvider utils={MomentUtils}>
+          <DatePicker
+            format={"MMMM DD, YYYY"}
+            value={selectedDate}
+            onAccept={() => refine(selectedDate?.format("MM-DD-YYYY"))}
+            onChange={handleDateChange}
+            showTodayButton
+          />
+        </MuiPickersUtilsProvider>
+      </ThemeProvider>
+    </div>
   );
 };
 
