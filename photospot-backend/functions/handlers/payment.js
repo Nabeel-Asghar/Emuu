@@ -4,8 +4,8 @@ dotenv.config();
 const moment = require("moment");
 
 // Test keys
-const stripePublicKey = process.env.STRIPE_PUBLIC_KEY;
 const stripePrivateKey = process.env.STRIPE_PRIVATE_KEY;
+const paymentFee = process.env.paymentFee;
 
 const stripe = require("stripe")(stripePrivateKey);
 
@@ -144,7 +144,7 @@ exports.refund = async (req, res) => {
   let userID = req.user.uid;
   let orderID = req.body.orderID;
 
-  const [paymentID, shootDate, shootTime, amount] = await getPaymentID(
+  const { paymentID, shootDate, shootTime, amount } = await getPaymentID(
     userID,
     orderID
   );
@@ -162,6 +162,8 @@ exports.refund = async (req, res) => {
     await processRefund(paymentID, amount / 2);
   }
 
+  console.log("Refund in progress. This may take a few moments.");
+
   return res.json({
     message: "Refund in progress. This may take a few moments.",
   });
@@ -175,6 +177,8 @@ exports.refundFromPhotographer = async (req, res) => {
   const paymentID = await getPaymentIDAsPhotographer(userID, orderID);
 
   await processRefundFromPhotographer(paymentID);
+
+  console.log("Refund in progress. This may take a few moments.");
 
   return res.json({
     message: "Refund in progress. This may take a few moments.",
@@ -226,7 +230,7 @@ function calculateOrderAmount(photographerId) {
 
 // Calculate how much we will take as a fee
 function calculateFeeAmount(amount) {
-  return 0.05 * amount;
+  return paymentFee * amount;
 }
 
 // Generate unique order id
@@ -304,7 +308,6 @@ function validateRefund(shootDate, shootTime) {
 
 // Get payment ID from users current order to refund
 function getPaymentID(userID, orderID) {
-  console.log("orderID: ", orderID);
   return db
     .collection("users")
     .doc(userID)
@@ -312,12 +315,12 @@ function getPaymentID(userID, orderID) {
     .doc(orderID)
     .get()
     .then((doc) => {
-      return [
-        doc.data().paymentID,
-        doc.data().shootDate,
-        doc.data().shootTime,
-        doc.data().amount,
-      ];
+      return {
+        paymentID: doc.data().paymentID,
+        shootDate: doc.data().shootDate,
+        shootTime: doc.data().shootTime,
+        amount: doc.data().amount,
+      };
     })
     .catch((err) => {
       return null;
@@ -358,3 +361,43 @@ function processRefundFromPhotographer(paymentID) {
     metadata: { photographerCancel: "true" },
   });
 }
+
+async function payOut(orderID, consumerID, photographerID) {
+  const { paymentID } = await getPaymentID(consumerID, orderID);
+  await transferToBank(paymentID, orderID, consumerID, photographerID);
+  console.log("Paid out photographer");
+  return true;
+}
+
+async function transferToBank(paymentID, orderID, consumerID, photographerID) {
+  const paymentIntent = await stripe.paymentIntents.retrieve(paymentID);
+
+  const {
+    amount,
+    application_fee_amount,
+    transfer_data: { destination },
+  } = paymentIntent;
+
+  const payoutAmount = amount - application_fee_amount;
+  try {
+    console.log("Paying out photographer", orderID);
+    const payout = await stripe.payouts.create(
+      {
+        amount: payoutAmount,
+        currency: "usd",
+        metadata: {
+          orderID: orderID,
+          consumerID: consumerID,
+          photographerID: photographerID,
+        },
+      },
+      { stripeAccount: destination }
+    );
+    return true;
+  } catch (err) {
+    console.log("Error paying out photographer: ", err);
+    return false;
+  }
+}
+
+exports.payOut = payOut;
