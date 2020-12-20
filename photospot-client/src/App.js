@@ -80,14 +80,17 @@ const theme = createMuiTheme({
     auth: {
       maxWidth: "420px",
       margin: "auto",
-      padding: "25px 0px",
-      marginTop: 100,
+      textAlign: "center",
     },
     bottomAuth: {
       maxWidth: "420px",
       margin: "auto",
-      padding: "15px 0 15px 0",
+      padding: "15px 0px",
       marginTop: 15,
+      textAlign: "center",
+    },
+    authText: {
+      padding: "20px 35px",
     },
     pageContainer: {
       paddingBottom: "15px",
@@ -105,9 +108,6 @@ const theme = createMuiTheme({
     },
     interiorCard: {
       padding: "0px 10px 0px 40px",
-    },
-    form: {
-      textAlign: "center",
     },
     margin: {
       margin: "10px 0px",

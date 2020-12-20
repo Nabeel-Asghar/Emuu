@@ -31,6 +31,7 @@
     "react": "^16.13.1",
     "react-awesome-lightbox": "^1.7.3",
     "react-circular-progressbar": "^2.0.3",
+    "react-custom-scrollbars": "^4.2.1",
     "react-datetime": "^3.0.4",
     "react-datetime-picker": "^3.0.4",
     "react-dom": "^16.13.1",

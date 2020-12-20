@@ -66,9 +66,9 @@ class login extends Component {
     const { errors } = this.state;
 
     return (
-      <Grid container className={classes.form}>
+      <div>
         <Paper className={classes.auth}>
-          <Grid item xs={9} style={{ margin: "auto" }}>
+          <div className={classes.authText}>
             <img src={AppIcon} alt="Logo" className={classes.brand} />
 
             <Typography variant="h5" className={classes.authHeader}>
@@ -128,22 +128,20 @@ class login extends Component {
                 )}
               </Button>
             </form>
-          </Grid>
+          </div>
         </Paper>
 
-        <Grid item xs={12}>
-          <Paper className={classes.bottomAuth}>
-            <Button
-              component={Link}
-              to="/signup"
-              style={{ textTransform: "none" }}
-            >
-              Don't have an account?{" "}
-              <span style={{ color: "#23ba8b" }}>&nbsp;Sign up</span>
-            </Button>
-          </Paper>
-        </Grid>
-      </Grid>
+        <Paper className={classes.bottomAuth}>
+          <Button
+            component={Link}
+            to="/signup"
+            style={{ textTransform: "none" }}
+          >
+            Don't have an account?{" "}
+            <span style={{ color: "#23ba8b" }}>&nbsp;Sign up</span>
+          </Button>
+        </Paper>
+      </div>
     );
   }
 }

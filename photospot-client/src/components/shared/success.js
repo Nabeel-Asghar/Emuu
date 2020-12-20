@@ -8,6 +8,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Grid from "@material-ui/core/Grid";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import { Typography } from "@material-ui/core";
+import Fab from "@material-ui/core/Fab";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -19,30 +20,53 @@ const styles = (theme) => ({
 
 class success extends Component {
   render() {
-    const { classes, open, body, redirect, reload } = this.props;
+    const { classes, open, headline, body, redirect, reload } = this.props;
 
     return (
       <div>
         <Backdrop className={classes.backdrop} open={open}>
-          <Paper
-            style={{ width: 700, padding: "40px 20px 40px 20px" }}
-            elevation={3}
-          >
+          <Paper style={{ width: 275, padding: "20px 20px" }} elevation={3}>
             <Grid container alignItems="center">
-              <Grid item md={3}>
-                <CheckCircleIcon color="secondary" style={{ fontSize: 150 }} />
+              <Grid item xs={12} className={classes.centerGrid}>
+                <Fab
+                  color="primary"
+                  disableFocusRipple
+                  disableRipple
+                  style={{
+                    width: 120,
+                    height: 120,
+                    marginTop: -75,
+                    pointerEvents: "none",
+                  }}
+                >
+                  <CheckCircleIcon
+                    color="secondary"
+                    style={{
+                      fontSize: 150,
+                    }}
+                  />
+                </Fab>
               </Grid>
-              <Grid item md={9}>
+              <Grid
+                item
+                xs={12}
+                className={classes.centerGrid}
+                style={{ paddingTop: "10px" }}
+              >
+                <Typography variant="h5" gutterBottom>
+                  {headline}
+                </Typography>
                 {body}
               </Grid>
-              <Grid item xs={12}>
+              <Grid item xs={12} style={{ marginTop: "15px" }}>
                 {reload ? (
                   <Button
                     onClick={() => window.location.reload()}
                     color="secondary"
-                    variant="outlined"
+                    variant="contained"
+                    fullWidth
                   >
-                    Reload
+                    Continue
                   </Button>
                 ) : (
                   <Button
@@ -50,8 +74,9 @@ class success extends Component {
                     to={redirect}
                     color="secondary"
                     variant="outlined"
+                    fullWidth
                   >
-                    Redirect
+                    Continue
                   </Button>
                 )}
               </Grid>
