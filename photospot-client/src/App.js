@@ -233,12 +233,12 @@ class App extends Component {
                   component={specificPhotographer}
                 />
 
+                <Route exact path="/login" component={login} />
+
+                <Route exact path="/signup" component={signup} />
+
                 <div className="container">
                   <Route exact path="/search" component={search} />
-
-                  <Route exact path="/login" component={login} />
-
-                  <Route exact path="/signup" component={signup} />
 
                   <Route
                     exact

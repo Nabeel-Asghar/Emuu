@@ -66,82 +66,91 @@ class login extends Component {
     const { errors } = this.state;
 
     return (
-      <div>
-        <Paper className={classes.auth}>
-          <div className={classes.authText}>
-            <img src={AppIcon} alt="Logo" className={classes.brand} />
+      <Grid
+        container
+        align="center"
+        justify="center"
+        direction="column"
+        style={{ height: "100vh" }}
+      >
+        <Grid item>
+          <Paper className={classes.auth}>
+            <div className={classes.authText}>
+              <a href="/">
+                <img src={AppIcon} alt="Logo" className={classes.brand} />
+              </a>
+              <Typography variant="h5" className={classes.authHeader}>
+                Welcome to PhotoSpot
+              </Typography>
 
-            <Typography variant="h5" className={classes.authHeader}>
-              Welcome to PhotoSpot
-            </Typography>
+              <form noValidate onSubmit={this.handleSubmit}>
+                <TextField
+                  id="email"
+                  name="email"
+                  type="email"
+                  label="Email"
+                  className={classes.textField}
+                  helperText={errors.email}
+                  error={errors.email ? true : false}
+                  value={this.state.email}
+                  onChange={this.handleChange}
+                  variant="outlined"
+                  color="secondary"
+                  fullWidth
+                />
+                <TextField
+                  id="password"
+                  name="password"
+                  type="password"
+                  label="Password"
+                  className={classes.textField}
+                  helperText={errors.password}
+                  error={errors.password ? true : false}
+                  value={this.state.password}
+                  onChange={this.handleChange}
+                  fullWidth
+                  variant="outlined"
+                  color="secondary"
+                />
 
-            <form noValidate onSubmit={this.handleSubmit}>
-              <TextField
-                id="email"
-                name="email"
-                type="email"
-                label="Email"
-                className={classes.textField}
-                helperText={errors.email}
-                error={errors.email ? true : false}
-                value={this.state.email}
-                onChange={this.handleChange}
-                variant="outlined"
-                color="secondary"
-                fullWidth
-              />
-              <TextField
-                id="password"
-                name="password"
-                type="password"
-                label="Password"
-                className={classes.textField}
-                helperText={errors.password}
-                error={errors.password ? true : false}
-                value={this.state.password}
-                onChange={this.handleChange}
-                fullWidth
-                variant="outlined"
-                color="secondary"
-              />
-
-              {errors.general && (
-                <Typography variant="body2" className={classes.customError}>
-                  {errors.general}
-                </Typography>
-              )}
-              <Button
-                type="submit"
-                variant="contained"
-                color="secondary"
-                className={classes.button}
-                disabled={loading}
-                size="large"
-                fullWidth
-              >
-                Login
-                {loading && (
-                  <CircularProgress
-                    color="secondary"
-                    className={classes.progress}
-                  />
+                {errors.general && (
+                  <Typography variant="body2" className={classes.customError}>
+                    {errors.general}
+                  </Typography>
                 )}
-              </Button>
-            </form>
-          </div>
-        </Paper>
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="secondary"
+                  className={classes.button}
+                  disabled={loading}
+                  size="large"
+                  fullWidth
+                >
+                  Login
+                  {loading && (
+                    <CircularProgress
+                      color="secondary"
+                      className={classes.progress}
+                    />
+                  )}
+                </Button>
+              </form>
+            </div>
+          </Paper>
 
-        <Paper className={classes.bottomAuth}>
-          <Button
-            component={Link}
-            to="/signup"
-            style={{ textTransform: "none" }}
-          >
-            Don't have an account?{" "}
-            <span style={{ color: "#23ba8b" }}>&nbsp;Sign up</span>
-          </Button>
-        </Paper>
-      </div>
+          <Paper className={classes.bottomAuth}>
+            <Button
+              component={Link}
+              to="/signup"
+              style={{ textTransform: "none" }}
+            >
+              Don't have an account?{" "}
+              <span style={{ color: "#23ba8b" }}>&nbsp;Sign up</span>
+            </Button>
+          </Paper>
+        </Grid>
+      </Grid>
     );
   }
 }

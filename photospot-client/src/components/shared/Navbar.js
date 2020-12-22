@@ -59,7 +59,15 @@ const Navbar = () => {
   };
 
   return (
-    <AppBar>
+    <AppBar
+      style={{
+        visibility:
+          window.location.pathname === "/login" ||
+          window.location.pathname === "/signup"
+            ? "hidden"
+            : "visible",
+      }}
+    >
       <Toolbar>
         <div style={{ width: 1150, height: "50px", margin: "auto" }}>
           <Box display="flex" p={1}>

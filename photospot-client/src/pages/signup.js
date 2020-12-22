@@ -122,141 +122,153 @@ class signup extends Component {
     } = this.props;
     const { errors } = this.state;
     return (
-      <div className={classes.authContainer}>
-        <Paper className={classes.auth}>
-          <div className={classes.authText}>
-            <img src={AppIcon} alt="Logo" className={classes.brand} />
+      <Grid
+        container
+        align="center"
+        justify="center"
+        direction="column"
+        style={{ height: "100vh" }}
+      >
+        <Grid item>
+          <Paper className={classes.auth}>
+            <div className={classes.authText}>
+              <a href="/">
+                <img src={AppIcon} alt="Logo" className={classes.brand} />
+              </a>
+              <Typography variant="h5" className={classes.authHeader}>
+                Welcome to PhotoSpot
+              </Typography>
+              <Typography varaint="h6" gutterBottom>
+                Create an account to continue
+              </Typography>
 
-            <Typography variant="h5" className={classes.authHeader}>
-              Welcome to PhotoSpot
-            </Typography>
-            <Typography varaint="h6">Create an account to continue</Typography>
-            <form noValidate onSubmit={this.handleSubmit}>
-              <TextField
-                id="email"
-                name="email"
-                type="email"
-                label="Email"
-                className={classes.textField}
-                color="secondary"
-                helperText={errors.email}
-                error={errors.email ? true : false}
-                value={this.state.email}
-                onChange={this.handleChange}
-                fullWidth
-              />
-              <TextField
-                id="password"
-                name="password"
-                type="password"
-                label="Password"
-                className={classes.textField}
-                color="secondary"
-                helperText={errors.password}
-                error={errors.password ? true : false}
-                value={this.state.password}
-                onChange={this.handleChange}
-                fullWidth
-              />
-              <TextField
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                label="Confirm Password"
-                className={classes.textField}
-                color="secondary"
-                helperText={errors.confirmPassword}
-                error={errors.confirmPassword ? true : false}
-                value={this.state.confirmPassword}
-                onChange={this.handleChange}
-                fullWidth
-              />
-              <TextField
-                id="firstName"
-                name="firstName"
-                label="First Name"
-                type="text"
-                className={classes.textField}
-                color="secondary"
-                helperText={errors.firstName}
-                error={errors.firstName ? true : false}
-                value={this.state.firstName}
-                onChange={this.handleChange}
-                fullWidth
-              />
-              <TextField
-                id="lastName"
-                name="lastName"
-                label="Last Name"
-                type="text"
-                className={classes.textField}
-                color="secondary"
-                helperText={errors.lastName}
-                error={errors.lastName ? true : false}
-                value={this.state.lastName}
-                onChange={this.handleChange}
-                fullWidth
-              />
-              <br />
-              <br />
+              <form noValidate onSubmit={this.handleSubmit}>
+                <TextField
+                  id="email"
+                  name="email"
+                  type="email"
+                  label="Email"
+                  className={classes.textField}
+                  color="secondary"
+                  helperText={errors.email}
+                  error={errors.email ? true : false}
+                  value={this.state.email}
+                  onChange={this.handleChange}
+                  fullWidth
+                />
+                <TextField
+                  id="password"
+                  name="password"
+                  type="password"
+                  label="Password"
+                  className={classes.textField}
+                  color="secondary"
+                  helperText={errors.password}
+                  error={errors.password ? true : false}
+                  value={this.state.password}
+                  onChange={this.handleChange}
+                  fullWidth
+                />
+                <TextField
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  label="Confirm Password"
+                  className={classes.textField}
+                  color="secondary"
+                  helperText={errors.confirmPassword}
+                  error={errors.confirmPassword ? true : false}
+                  value={this.state.confirmPassword}
+                  onChange={this.handleChange}
+                  fullWidth
+                />
+                <TextField
+                  id="firstName"
+                  name="firstName"
+                  label="First Name"
+                  type="text"
+                  className={classes.textField}
+                  color="secondary"
+                  helperText={errors.firstName}
+                  error={errors.firstName ? true : false}
+                  value={this.state.firstName}
+                  onChange={this.handleChange}
+                  fullWidth
+                />
+                <TextField
+                  id="lastName"
+                  name="lastName"
+                  label="Last Name"
+                  type="text"
+                  className={classes.textField}
+                  color="secondary"
+                  helperText={errors.lastName}
+                  error={errors.lastName ? true : false}
+                  value={this.state.lastName}
+                  onChange={this.handleChange}
+                  fullWidth
+                />
+                <br />
+                <br />
 
-              <ButtonGroup
-                color="secondary"
-                aria-label="outlined primary button group"
-                fullWidth
-              >
-                <Button
-                  variant={this.state.photographer ? "contained" : "outlined"}
-                  onClick={() => this.handleToggleChange("photographer")}
+                <ButtonGroup
+                  color="secondary"
+                  aria-label="outlined primary button group"
+                  fullWidth
                 >
-                  Photographer
-                </Button>
-                <Button
-                  variant={this.state.photographer ? "outlined" : "contained"}
-                  onClick={() => this.handleToggleChange("customer")}
-                >
-                  Customer
-                </Button>
-              </ButtonGroup>
+                  <Button
+                    variant={this.state.photographer ? "contained" : "outlined"}
+                    onClick={() => this.handleToggleChange("photographer")}
+                  >
+                    Photographer
+                  </Button>
+                  <Button
+                    variant={this.state.photographer ? "outlined" : "contained"}
+                    onClick={() => this.handleToggleChange("customer")}
+                  >
+                    Customer
+                  </Button>
+                </ButtonGroup>
 
-              {errors.general && (
-                <Typography variant="body2" className={classes.customError}>
-                  {errors.general}
-                </Typography>
-              )}
-              <br />
-              <Button
-                type="submit"
-                variant="contained"
-                color="secondary"
-                className={classes.button}
-                disabled={loading}
-                style={{ marginTop: "20px" }}
-                fullWidth
-              >
-                Signup
-                {loading && (
-                  <CircularProgress
-                    color="secondary"
-                    className={classes.progress}
-                  />
+                {errors.general && (
+                  <Typography variant="body2" className={classes.customError}>
+                    {errors.general}
+                  </Typography>
                 )}
-              </Button>
-            </form>
-          </div>
-        </Paper>
+                <br />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="secondary"
+                  className={classes.button}
+                  disabled={loading}
+                  style={{ marginTop: "20px" }}
+                  fullWidth
+                >
+                  Signup
+                  {loading && (
+                    <CircularProgress
+                      color="secondary"
+                      className={classes.progress}
+                    />
+                  )}
+                </Button>
+              </form>
+            </div>
+          </Paper>
 
-        <Paper className={classes.bottomAuth}>
-          <Button
-            component={Link}
-            to="/login"
-            style={{ textTransform: "none" }}
-          >
-            Have an account?{" "}
-            <span style={{ color: "#23ba8b" }}>&nbsp;Log in</span>
-          </Button>
-        </Paper>
-      </div>
+          <Paper className={classes.bottomAuth}>
+            <Button
+              component={Link}
+              to="/login"
+              style={{ textTransform: "none" }}
+            >
+              Have an account?{" "}
+              <span style={{ color: "#23ba8b" }}>&nbsp;Log in</span>
+            </Button>
+          </Paper>
+        </Grid>
+      </Grid>
     );
   }
 }

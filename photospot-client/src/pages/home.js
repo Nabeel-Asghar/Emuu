@@ -48,9 +48,9 @@ const styles = (theme) => ({
 
   homeGrid: {
     textAlign: "center",
-    backgroundImage: `url(${require("../images/background.jpg")})`,
+    backgroundImage: `url(${require("../images/background1.jfif")})`,
     backgroundSize: "cover",
-    padding: "0px",
+    padding: "0px 0px 175px 0px",
   },
 
   paper: {
