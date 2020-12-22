@@ -295,7 +295,7 @@ class specificPhotographer extends Component {
             />
           </Grid>
 
-          <Paper elevation={3} className={classes.margin}>
+          <Paper elevation={3} className={classes.paperComponent}>
             <Grid
               container
               direction="row"
@@ -304,6 +304,7 @@ class specificPhotographer extends Component {
             >
               <Grid item sm={12}>
                 <Bio
+                  {...this.props}
                   key={this.state.bio}
                   bio={this.state.bio}
                   loading={loadingData}

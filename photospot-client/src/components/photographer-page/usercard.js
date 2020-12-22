@@ -174,27 +174,6 @@ class usercard extends Component {
   buildDocKey = () => {
     return [this.state.email, this.state.userEmail].sort().join(":");
   };
-
-  // chatExists = async () => {
-  //   const docKey = this.buildDocKey();
-  //   const chat = await firebase
-  //     .firestore()
-  //     .collection("chats")
-  //     .doc(docKey)
-  //     .get();
-
-  //   return chat.exists;
-  // };
-
-  //   goToChat = async (docKey, msg) => {
-  //   const usersInChat = docKey.split(":");
-  //   const chat = this.state.chats.find((_chat) =>
-  //     usersInChat.every((_user) => _chat.users.includes(_user))
-  //   );
-  //   this.setState({ newChatFormVisible: false });
-  //   await this.selectChat(this.state.chats.indexOf(chat));
-  //   this.submitMessage(msg);
-  // };
 }
 
 export default withStyles(styles)(usercard);

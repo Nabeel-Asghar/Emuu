@@ -72,6 +72,16 @@ const theme = createMuiTheme({
     },
   },
 
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 600,
+      md: 960,
+      lg: 1280,
+      xl: 1920,
+    },
+  },
+
   typography: {
     useNextVariants: true,
   },
@@ -99,12 +109,22 @@ const theme = createMuiTheme({
       marginTop: "5px",
       padding: "20px 0px 15px 0px",
     },
+    paperComponent: {
+      width: "100%",
+      margin: "10px 0px",
+      padding: "15px 0px",
+    },
     textStyle: {
       overflow: "hidden",
       whiteSpace: "nowrap",
       textOverflow: "ellipsis",
       paddingBottom: "15px",
       fontWeight: "bold",
+    },
+    noOverflow: {
+      overflow: "hidden",
+      whiteSpace: "nowrap",
+      textOverflow: "ellipsis",
     },
     interiorCard: {
       padding: "0px 10px 0px 40px",
@@ -187,7 +207,7 @@ const theme = createMuiTheme({
     },
 
     textGrid: {
-      marginLeft: "50px",
+      marginLeft: "25px",
     },
 
     rightGrid: {
@@ -231,6 +251,12 @@ class App extends Component {
                   exact
                   path="/photographers/:photographerID"
                   component={specificPhotographer}
+                />
+
+                <AuthRoute
+                  exact
+                  path="/yourPhotographyProfile"
+                  component={editPhotographyPage}
                 />
 
                 <Route exact path="/login" component={login} />
@@ -303,12 +329,6 @@ class App extends Component {
                   <Route exact path="/search/:searchQuery" component={search} />
 
                   {/* <Route exact path="/search/:type/:city/:state" component={search} /> */}
-
-                  <AuthRoute
-                    exact
-                    path="/yourPhotographyProfile"
-                    component={editPhotographyPage}
-                  />
 
                   <AuthRoute
                     exact
