@@ -100,11 +100,15 @@ class specificPhotographer extends Component {
       });
       this.handleCount(this.state.allReviews);
     });
-    this.setState({
-      openBackdrop: false,
-      userEmail: this.props.credentials[0]?.email,
-      userProfileImage: this.props.credentials[0]?.profileImage,
-    });
+    if (this.props.credentials) {
+      this.setState({
+        openBackdrop: false,
+        userEmail: this.props.credentials[0]?.email,
+        userFirstName: this.props.credentials[0]?.firstName,
+        userLastName: this.props.credentials[0]?.lastName,
+        userProfileImage: this.props.credentials[0]?.profileImage,
+      });
+    }
   }
 
   componentDidUpdate(prevProps) {
@@ -267,6 +271,8 @@ class specificPhotographer extends Component {
               lastName={this.state.lastName}
               email={this.state.email}
               profileImage={this.state.profileImage}
+              userFirstName={this.state.userFirstName}
+              userLastName={this.state.userLastName}
               userEmail={this.state.userEmail}
               userProfileImage={this.state.userProfileImage}
               credentials={this.props.credentials}
