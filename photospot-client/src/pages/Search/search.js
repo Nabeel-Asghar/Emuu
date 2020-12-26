@@ -100,7 +100,7 @@ class Search extends Component {
           </Grid>
 
           <Grid item xs={3}>
-            <Paper style={{ padding: "20px 0px" }}>
+            <Paper style={{ padding: "20px 25px" }}>
               <ConnectedStats />
 
               {refinements.map((refinement) => (
@@ -128,8 +128,10 @@ class Search extends Component {
 
               {/* <Divider className={classes.divider} /> */}
 
-              {/* <ConnectedDate /> */}
-              <ConnectedClearRefinements />
+              <ConnectedDate attribute="dates" />
+              <ConnectedClearRefinements
+                translation={{ avgRating: "Average Rating" }}
+              />
             </Paper>
           </Grid>
 

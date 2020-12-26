@@ -27,7 +27,7 @@ class NewChatComponent extends Component {
     return (
       <Dialog
         open={this.props.open}
-        onClose={this.props.handleDisagree}
+        onClose={this.props.handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
         fullWidth
@@ -36,9 +36,6 @@ class NewChatComponent extends Component {
         <main className={classes.main}>
           <CssBaseline></CssBaseline>
           <Paper className={classes.paper}>
-            <Typography component="h1" variant="h5">
-              Send a message!
-            </Typography>
             <form
               className={classes.form}
               onSubmit={(e) => this.submitNewChat(e)}

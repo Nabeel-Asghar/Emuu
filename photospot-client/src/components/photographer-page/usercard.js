@@ -114,6 +114,7 @@ class usercard extends Component {
               <NewChatComponent
                 email={email}
                 open={this.state.open}
+                handleClose={this.handleContactClickClose}
                 goToChatFn={this.goToChat}
                 newChatSubmitFn={this.newChatSubmit}
               ></NewChatComponent>
@@ -127,6 +128,12 @@ class usercard extends Component {
   handleContactClickOpen = () => {
     this.setState({
       open: true,
+    });
+  };
+
+  handleContactClickClose = () => {
+    this.setState({
+      open: false,
     });
   };
 
