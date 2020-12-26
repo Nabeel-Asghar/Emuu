@@ -146,12 +146,17 @@ class usercard extends Component {
   newChatSubmit = async (chatObject) => {
     const docKey = this.buildDocKey();
     console.log(docKey);
-    var names = docKey.split(":");
-    var friend = names[0];
-    let friendProfile;
-    if (names[0] == this.state.email) {
-      friend = names[1];
+    var emails = docKey.split(":");
+    var friendEmail = emails[0];
+    if (emails[0] == this.state.email) {
+      friendEmail = emails[1];
     }
+
+    var userName = this.props.userFirstName + " " + this.props.userLastName;
+    var friendName = this.props.firstName + " " + this.props.lastName;
+
+    console.log(userName);
+    console.log(friendName);
 
     await firebase
       .firestore()
@@ -168,7 +173,8 @@ class usercard extends Component {
           }),
           timestamp: Date.now(),
           [this.state.email]: { profileImage: this.state.profileImage },
-          [friend]: { profileImage: this.state.userProfileImage },
+          [friendEmail]: { profileImage: this.state.userProfileImage },
+          names: [userName, friendName],
         },
         { merge: true }
       );

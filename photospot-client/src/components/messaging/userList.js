@@ -51,80 +51,74 @@ const styles = (theme) => ({
 
 class UserListComponent extends Component {
   render() {
-    const { classes, selectChatFn, chat } = this.props;
+    const { classes, selectChatFn, chat, userName } = this.props;
 
     console.log(this.props);
 
-    if (!chat || chat.length === 0) {
-      return <div>Login in to chat.</div>;
-    } else {
-      return (
-        <main>
-          <Typography
-            component="h1"
-            variant="h5"
-            align="center"
-            className={classes.newChatBtn}
-          >
-            Chats
-          </Typography>
+    return (
+      <main>
+        <Typography
+          component="h1"
+          variant="h5"
+          align="center"
+          className={classes.newChatBtn}
+        >
+          Chats
+        </Typography>
 
-          <List className={classes.theList}>
-            {chat.map((_chat, _index) => {
-              return (
-                <div key={_index}>
-                  <ListItem
-                    onClick={() => selectChatFn(_index)}
-                    className={classes.listItem}
-                    selected={this.props.selectedChatIndex === _index}
-                    alignItems="flex-start"
-                  >
-                    {/* <ListItemAvatar>
-                      <Avatar
-                        alt="remy Sharp"
-                        src={
-                          _chat[
-                            _chat.users.filter(
-                              (_user) => _user !== this.props.userEmail
-                            )[0]
-                          ].profileImage
-                        }
-                      ></Avatar>
-                    </ListItemAvatar> */}
-                    <ListItemText
-                      classes={{ primary: classes.listItemText }}
-                      primary={
-                        _chat.users.filter(
-                          (_user) => _user !== this.props.userEmail
-                        )[0]
+        <List className={classes.theList}>
+          {chat.map((_chat, _index) => {
+            return (
+              <div key={_index}>
+                <ListItem
+                  onClick={() => selectChatFn(_index)}
+                  className={classes.listItem}
+                  selected={this.props.selectedChatIndex === _index}
+                  alignItems="flex-start"
+                >
+                  <ListItemAvatar>
+                    <Avatar
+                      alt="remy Sharp"
+                      src={
+                        _chat[
+                          _chat.users.filter(
+                            (_user) => _user !== this.props.userEmail
+                          )[0]
+                        ].profileImage
                       }
-                      secondary={
-                        <React.Fragment>
-                          <Typography component="span" color="textPrimary">
-                            {_chat.messages[
-                              _chat.messages.length - 1
-                            ].message.substring(0, 30)}
-                          </Typography>
-                        </React.Fragment>
-                      }
-                    ></ListItemText>
-                    {_chat.receiverHasRead === false &&
-                    !this.userIsSender(_chat) ? (
-                      <ListItemIcon>
-                        <NotificationImportant
-                          className={classes.unreadMessage}
-                        ></NotificationImportant>
-                      </ListItemIcon>
-                    ) : null}
-                  </ListItem>
-                  <Divider />
-                </div>
-              );
-            })}
-          </List>
-        </main>
-      );
-    }
+                    ></Avatar>
+                  </ListItemAvatar>
+                  <ListItemText
+                    classes={{ primary: classes.listItemText }}
+                    primary={
+                      _chat.names.filter((_user) => _user !== userName)[0]
+                    }
+                    secondary={
+                      <React.Fragment>
+                        <Typography component="span" color="textPrimary">
+                          {_chat.messages[
+                            _chat.messages.length - 1
+                          ].message.substring(0, 30)}
+                        </Typography>
+                      </React.Fragment>
+                    }
+                  ></ListItemText>
+                  {_chat.receiverHasRead === false &&
+                  !this.userIsSender(_chat) ? (
+                    <ListItemIcon>
+                      <NotificationImportant
+                        className={classes.unreadMessage}
+                      ></NotificationImportant>
+                    </ListItemIcon>
+                  ) : null}
+                </ListItem>
+                <Divider />
+              </div>
+            );
+          })}
+        </List>
+      </main>
+    );
   }
 
   newChat = () => {

@@ -71,7 +71,7 @@ class messaging extends Component {
   componentDidMount() {
     this.props.getUserData().then(() => {
       this.assignValues(this.props.credentials);
-      console.log(this.state.email);
+      console.log(this.props.credentials);
       firebase
         .firestore()
         .collection("chats")
@@ -95,48 +95,53 @@ class messaging extends Component {
 
   render() {
     const { classes } = this.props;
-
-    return (
-      <div
-        style={{
-          border: "2px solid #e6e6e6",
-        }}
-      >
-        <Grid container spacing={0} className={classes.messaging}>
-          <Grid item xs={3} className={classes.UserList}>
-            <UserListComponent
-              history={this.props.history}
-              newChatBtnFunction={this.newChatBtnClicked}
-              selectChatFn={this.selectChat}
-              chat={this.state.chats}
-              userEmail={this.state.email}
-              selectedChatIndex={this.state.selectedChat}
-            ></UserListComponent>
-          </Grid>
-          <Grid item xs={9} className={classes.ChatList}>
-            {this.state.newChatFormVisible ? null : (
-              <ChatViewComponent
+    if (!this.state.chats || this.state.chats?.length === 0) {
+      return <div>Message someone to start a conversation!</div>;
+    } else {
+      return (
+        <div
+          style={{
+            border: "2px solid #e6e6e6",
+          }}
+        >
+          <Grid container spacing={0} className={classes.messaging}>
+            <Grid item xs={4} className={classes.UserList}>
+              <UserListComponent
+                history={this.props.history}
+                newChatBtnFunction={this.newChatBtnClicked}
+                selectChatFn={this.selectChat}
+                chat={this.state.chats}
+                userName={this.state.firstName + " " + this.state.lastName}
                 userEmail={this.state.email}
-                chat={this.state.chats[this.state.selectedChat]}
-              ></ChatViewComponent>
-            )}
-            {this.state.selectedChat !== null &&
-            !this.state.newChatFormVisible ? (
-              <ChatTextBoxComponent
-                messageReadFn={this.messageRead}
-                submitMessageFn={this.submitMessage}
-              ></ChatTextBoxComponent>
-            ) : null}
-            {this.state.newChatFormVisible ? (
-              <NewChatComponent
-                goToChatFn={this.goToChat}
-                newChatSubmitFn={this.newChatSubmit}
-              ></NewChatComponent>
-            ) : null}
+                selectedChatIndex={this.state.selectedChat}
+              ></UserListComponent>
+            </Grid>
+            <Grid item xs={8} className={classes.ChatList}>
+              {this.state.newChatFormVisible ? null : (
+                <ChatViewComponent
+                  userEmail={this.state.email}
+                  userName={this.state.firstName + " " + this.state.lastName}
+                  chat={this.state.chats[this.state.selectedChat]}
+                ></ChatViewComponent>
+              )}
+              {this.state.selectedChat !== null &&
+              !this.state.newChatFormVisible ? (
+                <ChatTextBoxComponent
+                  messageReadFn={this.messageRead}
+                  submitMessageFn={this.submitMessage}
+                ></ChatTextBoxComponent>
+              ) : null}
+              {this.state.newChatFormVisible ? (
+                <NewChatComponent
+                  goToChatFn={this.goToChat}
+                  newChatSubmitFn={this.newChatSubmit}
+                ></NewChatComponent>
+              ) : null}
+            </Grid>
           </Grid>
-        </Grid>
-      </div>
-    );
+        </div>
+      );
+    }
   }
 
   submitMessage = (msg) => {
@@ -195,6 +200,8 @@ class messaging extends Component {
     var names = docKey.split(":");
     var friend = names[0];
     let friendProfile;
+    let friendName;
+    let userName = this.state.firstName + " " + this.state.lastName;
     if (names[0] == this.state.email) {
       friend = names[1];
     }
@@ -206,6 +213,8 @@ class messaging extends Component {
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           friendProfile = doc.data().profileImage;
+          friendName = doc.data().firstName;
+          friendName += doc.data().lastName;
         });
       });
 
@@ -220,6 +229,8 @@ class messaging extends Component {
         messages: [{ message: chatObject.message, sender: this.state.email }],
         [this.state.email]: { profileImage: this.state.profileImage },
         [friend]: { profileImage: friendProfile },
+        names: ["bob", "dad"],
+        bigmad: true,
       });
     this.setState({ newChatFormVisible: false });
     this.selectChat(this.state.chats.length - 1);
