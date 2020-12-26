@@ -8,6 +8,7 @@ import OutlinedInput from "@material-ui/core/OutlinedInput";
 import InputLabel from "@material-ui/core/InputLabel";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import FormHelperText from "@material-ui/core/FormHelperText";
+import Container from "@material-ui/core/Container";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 import Visibility from "@material-ui/icons/Visibility";
@@ -25,11 +26,13 @@ import { connect } from "react-redux";
 const styles = (theme) => ({
   ...theme.spreadThis,
 
-  root: {
-    marginTop: "10px",
+  root: { marginTop: "10px" },
+  paper: {
+    boxShadow: "none",
     backgroundColor: "#e6e6e6",
     padding: "10px",
     display: "flex",
+    marginRight: "5px",
     alignItems: "center",
     borderRadius: "30px",
   },
@@ -40,10 +43,6 @@ const styles = (theme) => ({
   iconButton: {
     padding: 10,
     color: "secondary",
-  },
-  divider: {
-    height: 28,
-    margin: 4,
   },
 });
 
@@ -59,29 +58,33 @@ class ChatTextBoxComponent extends Component {
     const { classes, submitMessageFn } = this.props;
 
     return (
-      <Grid container alignItems="center">
-        <Grid item xs={11}>
-          <Paper className={classes.root}>
+      <Grid container alignItems="center" className={classes.root}>
+        <Grid item xs justify="center" alignItems="center">
+          <Paper className={classes.paper}>
             <InputBase
               className={classes.input}
               placeholder="Type a message"
               onKeyUp={(e) => this.userTyping(e)}
               id="chattextbox"
               onFocus={this.userClickedInput}
-              inputProps={{ "aria-label": "send a message" }}
+              inputProps={{
+                "aria-label": "send a message",
+                autoComplete: "off",
+                autoCapitalize: "sentences",
+              }}
             />
           </Paper>
         </Grid>
-        <Grid item xs={1}>
+        <Grid item xs={1} justify="center" alignItems="center">
           <Fab
             variant="extended"
             color="secondary"
             size="small"
             style={{
-              width: "50px",
-              height: "50px",
+              boxShadow: "none",
+              width: "52px",
+              height: "52px",
               borderRadius: "50%",
-              margin: "5px 0 0 7px",
             }}
           >
             <SendIcon
