@@ -113,11 +113,14 @@ class usercard extends Component {
               </Button>
               <NewChatComponent
                 email={email}
+                photographerProfile={this.state.profileImage}
+                photographerLastName={this.props.lastName}
+                photographerFirstName={this.props.firstName}
                 open={this.state.open}
                 handleClose={this.handleContactClickClose}
                 goToChatFn={this.goToChat}
                 newChatSubmitFn={this.newChatSubmit}
-              ></NewChatComponent>
+              />
             </div>
           )}
         </Grid>

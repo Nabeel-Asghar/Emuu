@@ -195,7 +195,8 @@ const theme = createMuiTheme({
     },
 
     bookButton: {
-      marginRight: "20px",
+      marginRight: "10px",
+      marginLeft: "10px",
       marginTop: "12px",
     },
   },
