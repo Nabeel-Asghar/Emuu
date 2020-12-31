@@ -16,6 +16,7 @@ import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import StarRatings from "react-star-ratings";
 import "../your-photography-page/editBiocss.css";
+import { Slide } from "@material-ui/core";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -48,6 +49,10 @@ const styles = (theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
   },
+});
+
+const Transition = React.forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
 });
 
 class ReviewDialog extends Component {
@@ -124,6 +129,7 @@ class ReviewDialog extends Component {
 
     return (
       <Dialog
+        TransitionComponent={Transition}
         fullWidth="true"
         maxWidth="sm"
         open={this.props.openReview}

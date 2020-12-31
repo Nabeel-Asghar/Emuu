@@ -4,7 +4,7 @@ import { connectNumericMenu } from "react-instantsearch-dom";
 import StarRatings from "react-star-ratings";
 
 const NumericMenu = ({ items, refine, createURL }) => (
-  <div style={{ padding: "0px 25px" }}>
+  <div>
     <Typography variant="h6" style={{ fontWeight: "bold" }} gutterBottom>
       Average Rating
     </Typography>

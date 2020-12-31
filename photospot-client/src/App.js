@@ -243,6 +243,11 @@ const theme = createMuiTheme({
       maxWidth: 800,
       margin: "0 auto",
     },
+    bookButton: {
+      marginRight: "10px",
+      marginLeft: "10px",
+      marginTop: "12px",
+    },
   },
 });
 

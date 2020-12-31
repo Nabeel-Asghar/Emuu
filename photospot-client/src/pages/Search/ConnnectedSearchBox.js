@@ -11,7 +11,7 @@ import SearchIcon from "@material-ui/icons/Search";
 const useStyles = makeStyles((theme) => ({
   searchBox: {
     padding: "2px 4px",
-    display: "flex",
+    display: "none",
     alignItems: "center",
     width: 400,
     margin: "0 auto",
