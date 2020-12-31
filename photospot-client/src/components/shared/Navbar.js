@@ -43,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "50%",
   },
   searchBox: {
+    borderRadius: 25,
     padding: "2px 4px",
     display: "flex",
     alignItems: "center",
@@ -90,7 +91,6 @@ const Navbar = (props) => {
   };
 
   const handleSubmit = (objValues) => {
-    console.log("submitted");
     props.history.push("/search/?" + qs.stringify(objValues) + "&page=1");
   };
 
@@ -118,6 +118,7 @@ const Navbar = (props) => {
             <Box
               width="fit-content"
               border={1}
+              borderRadius={25}
               borderColor="secondary"
               className={classes.box}
             >
