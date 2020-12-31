@@ -225,7 +225,7 @@ class home extends Component {
                 >
                   <InputLabel
                     className={classes.textLabel}
-                    id="demo-simple-select-outlined-label"
+                    inputProps={{ disableUnderline: true }}
                   >
                     Name
                   </InputLabel>
@@ -238,6 +238,7 @@ class home extends Component {
                     value={this.state.searchQuery}
                     onChange={this.handleChange}
                     style={{ marginTop: "0" }}
+                    disableUnderline
                   />
                 </FormControl>
 
@@ -260,6 +261,7 @@ class home extends Component {
                     name="type"
                     value={this.state.type}
                     onChange={this.handleChange}
+                    disableUnderline
                   >
                     <MenuItem value="">
                       <em>None</em>
@@ -289,6 +291,7 @@ class home extends Component {
                     label="City"
                     value={this.state.city}
                     onChange={this.handleChange}
+                    disableUnderline
                   >
                     <MenuItem value="">
                       <em>None</em>

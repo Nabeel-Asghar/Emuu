@@ -11,6 +11,7 @@ import { logoutUser, getUserData } from "./redux/actions/userActions";
 // Theme
 import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 // Pages
 import searchPage from "./pages/searchPage";
@@ -75,7 +76,7 @@ const theme = createMuiTheme({
   breakpoints: {
     values: {
       xs: 0,
-      sm: 600,
+      sm: 800,
       md: 960,
       lg: 1280,
       xl: 1920,
@@ -186,20 +187,39 @@ const theme = createMuiTheme({
     },
 
     background: {
-      height: "500px",
+      height: "50vh",
       width: "100%",
       objectFit: "cover",
       clipPath: "polygon(0 0, 0 100%, 100% 75%, 100% 0)",
       zIndex: "auto",
     },
 
-    avatar: {
-      width: "350px",
-      height: "350px",
-      borderRadius: "50%",
-      objectFit: "cover",
+    timeslots: {
+      width: "120px",
+      display: "flex",
+      margin: "0 auto",
+    },
+
+    userCard: {
       zIndex: 1,
+      marginTop: "100px",
+    },
+
+    avatarContainer: {
+      width: "35vh",
+      paddingBottom: "35vh",
+      borderRadius: "50%",
+      position: "relative",
+      overflow: "hidden",
       border: "5px solid #fff",
+      zIndex: 1,
+      margin: "0 auto",
+    },
+    avatar: {
+      position: "absolute",
+      height: "100%",
+      top: 0,
+      left: 0,
     },
 
     notFullWidth: {
@@ -214,9 +234,14 @@ const theme = createMuiTheme({
       textAlign: "right",
     },
 
-    bookButton: {
-      marginRight: "20px",
-      marginTop: "12px",
+    spacedButton: {
+      margin: "10px",
+    },
+
+    mediumPaperContainer: {
+      padding: 15,
+      maxWidth: 800,
+      margin: "0 auto",
     },
   },
 });
@@ -225,7 +250,7 @@ const token = localStorage.FirebaseIdToken;
 
 if (token) {
   const decodedToken = tokenDecoder(token);
-  if (decodedToken.exp * 1000 < Date.now()) {
+  if (decodedToken.exp * 2000 < Date.now()) {
     store.dispatch(logoutUser());
     window.location.href = "/login";
   } else {

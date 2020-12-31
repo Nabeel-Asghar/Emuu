@@ -71,12 +71,14 @@ class usercard extends Component {
     } = this.props;
 
     return (
-      <Grid container style={{ zIndex: 1 }}>
+      <Grid container className={classes.userCard}>
         <Grid item xs={12} style={{ textAlign: "center" }}>
           {loading ? (
             <Skeleton variant="rect" className={classes.avatar} />
           ) : (
-            <img className={classes.avatar} src={profileImage} />
+            <div className={classes.avatarContainer}>
+              <img className={classes.avatar} src={profileImage} />
+            </div>
           )}
 
           {loading ? (
@@ -86,7 +88,7 @@ class usercard extends Component {
           ) : (
             <div>
               <Button
-                className={classes.bookButton}
+                className={classes.spacedButton}
                 startIcon={<BookIcon />}
                 disabled={loading}
                 variant="outlined"
@@ -101,7 +103,7 @@ class usercard extends Component {
                 <Typography style={{ fontWeight: "bold" }}>Book</Typography>
               </Button>
               <Button
-                className={classes.bookButton}
+                className={classes.spacedButton}
                 startIcon={<CallIcon />}
                 variant="contained"
                 color="secondary"

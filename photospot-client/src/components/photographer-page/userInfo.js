@@ -75,7 +75,7 @@ class usercard extends Component {
                 target="_blank"
                 href={`https://www.google.com/search?q=${camera}`}
               >
-                <IconButton edge="end" aria-label="icon">
+                <IconButton aria-label="icon">
                   <PhotoCameraIcon color="secondary" fontSize="large" />
                 </IconButton>
               </a>
@@ -92,7 +92,7 @@ class usercard extends Component {
           <Grid item xs={4}>
             <Paper elevation={3} style={{ padding: 10 }}>
               <a target="_blank" href={`http://www.instagram.com/${instagram}`}>
-                <IconButton edge="end" aria-label="icon">
+                <IconButton aria-label="icon">
                   <InstagramIcon color="secondary" fontSize="large" />
                 </IconButton>
               </a>
@@ -108,7 +108,7 @@ class usercard extends Component {
 
           <Grid item xs={4}>
             <Paper elevation={3} style={{ padding: 10 }}>
-              <IconButton edge="end" aria-label="icon">
+              <IconButton aria-label="icon">
                 <BusinessIcon color="secondary" fontSize="large" />
               </IconButton>
 
