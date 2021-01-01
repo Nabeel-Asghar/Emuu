@@ -1,5 +1,4 @@
 # PhotoSpot-App
-MAKE ORDER IDS UNIQUE
 
 Photospot startup. This will be done with React, Express.js, and Firebase
 
