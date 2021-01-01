@@ -129,6 +129,14 @@ const Navbar = (props) => {
               borderRadius={25}
               borderColor="secondary"
               className={classes.box}
+              style={{
+                visibility:
+                  window.location.pathname === "/login" ||
+                  window.location.pathname === "/signup" ||
+                  window.location.pathname === "/"
+                    ? "hidden"
+                    : "visible",
+              }}
             >
               <Paper className={classes.searchBox}>
                 <InputBase
