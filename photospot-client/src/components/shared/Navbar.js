@@ -95,7 +95,15 @@ const Navbar = (props) => {
   };
 
   return (
-    <AppBar>
+    <AppBar
+      style={{
+        visibility:
+          window.location.pathname === "/login" ||
+          window.location.pathname === "/signup"
+            ? "hidden"
+            : "visible",
+      }}
+    >
       <Toolbar>
         <Grid container alignItems="center" justify="center">
           <Grid item xs={4}>

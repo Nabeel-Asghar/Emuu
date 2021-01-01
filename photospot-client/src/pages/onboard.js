@@ -23,6 +23,7 @@ export class onboard extends Component {
     super();
     this.state = {
       photographer: true,
+      stripe: true,
     };
   }
 
@@ -49,7 +50,9 @@ export class onboard extends Component {
       this.assignValues(this.props.credentials);
     });
     this.props.getStripeStatus().then(() => {
-      console.log(this.props.photographerStatus);
+      if (!this.props.stripeStatus) {
+        this.setState({ stripe: false });
+      }
     });
   }
 
@@ -65,7 +68,7 @@ export class onboard extends Component {
         <Paper style={{ padding: "20px", marginBottom: "12px" }}>
           <Typography>
             Stripe Status:{" "}
-            {this.props.stripeStatus ? (
+            {this.state.stripe ? (
               <span style={{ color: "#23ba8b" }}>Connected</span>
             ) : (
               <span style={{ color: "red" }}>Not Connected</span>
@@ -77,7 +80,7 @@ export class onboard extends Component {
             variant="contained"
             color="secondary"
             onClick={() => this.handleClick()}
-            disabled={this.props.stripeStatus}
+            disabled={this.state.stripe}
           >
             Setup payouts with Stripe
           </Button>

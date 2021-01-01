@@ -10,6 +10,8 @@ import {
   uploadToVault,
   getSize,
   deleteImages,
+  notifyCustomer,
+  confirmPictures,
 } from "../redux/actions/vaultActions";
 
 // Material UI
@@ -21,6 +23,8 @@ import SaveIcon from "@material-ui/icons/Save";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
 import GetAppIcon from "@material-ui/icons/GetApp";
+import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
+import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 // Components
 import ImageGrid from "../components/shared/imageGrid";
@@ -28,6 +32,8 @@ import GoBackButton from "../components/shared/goBackButton";
 import ProgressBar from "../components/photo-vault/progressBar";
 import Success from "../components/shared/success";
 import Progress from "../components/shared/progress";
+import Confirmation from "../components/shared/confirmation";
+import LoadingPage from "../components/shared/loadingPage";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -51,18 +57,28 @@ class photoVault extends Component {
       imagesToDelete: [],
       imageSizes: [],
       totalSize: 0,
+      intialLoading: false,
       open: false,
       disabled: true,
       openProgress: false,
       downloadDisable: false,
+      openDialog: false,
+      notifiedCustomer: true,
+      confirmedByCustomer: false,
+      openSuccessNotification: false,
+      openCustomerFinal: false,
+      openSuccessFinalize: false,
     };
   }
 
   async componentDidMount() {
     await this.props.getVault(this.props.match.params.orderID).then(() => {
       this.setState({
+        intialLoading: true,
         access: this.props.vault.access,
         images: this.props.vault.vaultData.images,
+        notifiedCustomer: this.props.vault.vaultData.notifiedCustomer,
+        confirmedByCustomer: this.props.vault.vaultData.confirmedByCustomer,
       });
     });
     await this.props.getSize(this.props.match.params.orderID).then(() => {
@@ -175,112 +191,271 @@ class photoVault extends Component {
       formData.append("image", image, image.name);
     });
 
-    await this.props.deleteImages(
-      this.props.match.params.orderID,
-      this.state.imagesToDelete
-    );
-    await this.props.uploadToVault(this.props.match.params.orderID, formData);
+    if (this.state.imagesToDelete.length > 0) {
+      await this.props.deleteImages(
+        this.props.match.params.orderID,
+        this.state.imagesToDelete
+      );
+    }
+    if (this.state.imagesToUpload.length > 0) {
+      await this.props.uploadToVault(this.props.match.params.orderID, formData);
+    }
 
     this.setState({ open: true });
+  }
+
+  notifyCustomer() {
+    this.setState({
+      disabled: true,
+      openDialog: false,
+    });
+
+    this.props.notifyCustomer(this.props.match.params.orderID).then(() => {
+      this.setState({
+        openSuccessNotification: true,
+      });
+    });
+  }
+
+  confirmPictures() {
+    this.setState({
+      disabled: true,
+      openCustomerFinal: false,
+    });
+
+    this.props.confirmPictures(this.props.match.params.orderID).then(() => {
+      this.setState({
+        openSuccessFinalize: true,
+      });
+    });
+  }
+
+  openFinalizeDialog(type) {
+    type === "photographer"
+      ? this.setState({
+          openDialog: true,
+        })
+      : this.setState({
+          openCustomerFinal: true,
+        });
+  }
+
+  closeFinalizeDialog(type) {
+    type === "photographer"
+      ? this.setState({
+          openDialog: false,
+        })
+      : this.setState({
+          openCustomerFinal: false,
+        });
   }
 
   render() {
     const { classes } = this.props;
     return (
       <div className={classes.pageContainer}>
-        {this.state.access ? (
-          <Paper>
-            <Grid container style={{ padding: "10px 10px" }}>
-              <Grid item xs={2} style={{ textAlign: "left" }}>
-                <GoBackButton
-                  {...this.props}
-                  disabled={this.state.openProgress}
-                />
-              </Grid>
+        {this.state.intialLoading ? (
+          this.state.access ? (
+            <Paper>
+              <Grid container style={{ padding: "10px 10px" }}>
+                <Grid item xs={3} style={{ textAlign: "left" }}>
+                  <GoBackButton
+                    {...this.props}
+                    disabled={this.state.openProgress}
+                  />
+                </Grid>
 
-              <Grid item xs={8} style={{ textAlign: "center" }}>
-                <ProgressBar
-                  totalSize={this.state.totalSize}
-                  setSize={this.setSize.bind(this)}
-                />
-              </Grid>
-              <Grid item xs={2} style={{ textAlign: "right" }}>
-                <Button
-                  color="secondary"
-                  variant="outlined"
-                  onClick={() => this.downloadImages()}
-                  disabled={this.state.downloadDisable}
-                  startIcon={<GetAppIcon />}
-                >
-                  Download
-                  {this.state.downloadDisable && (
-                    <CircularProgress
-                      color="secondary"
-                      className={classes.progress}
-                    />
-                  )}
-                </Button>
-              </Grid>
-              {this.state.images && (
-                <ImageGrid
-                  images={this.state.images}
-                  deleteImage={this.deleteImage.bind(this)}
-                  access={this.state.access}
-                />
-              )}
-              <Grid item xs={12}>
-                {this.state.access === "photographer" && (
-                  <div className={classes.root}>
-                    <Button
-                      variant="outlined"
-                      color="secondary"
-                      startIcon={<CloudUploadIcon />}
-                      onClick={this.handleEditPicture}
-                      disabled={this.state.openProgress}
-                    >
-                      <input
-                        type="file"
-                        id="addImage"
-                        accept="image/*"
-                        onChange={this.handleImageAdd}
-                        hidden
-                        multiple
-                      />
-                      Upload
-                    </Button>
-
+                <Grid item xs={6} style={{ textAlign: "center" }}>
+                  <ProgressBar
+                    totalSize={this.state.totalSize}
+                    setSize={this.setSize.bind(this)}
+                  />
+                </Grid>
+                <Grid item xs={3} style={{ textAlign: "right" }}>
+                  {this.state.access === "photographer" ? (
                     <Button
                       variant="contained"
                       color="secondary"
-                      disabled={this.state.disabled}
-                      startIcon={<SaveIcon />}
-                      onClick={() => this.handleSubmit()}
+                      disabled={
+                        this.state.openProgress ||
+                        this.state.notifiedCustomer ||
+                        this.props.vault.loading
+                      }
+                      onClick={() => this.openFinalizeDialog("photographer")}
+                      startIcon={<NotificationsActiveIcon />}
                     >
-                      Save Changes
+                      Notify Customer
+                      {this.props.vault.loading && (
+                        <CircularProgress
+                          color="secondary"
+                          className={classes.progress}
+                        />
+                      )}
                     </Button>
+                  ) : (
+                    this.state.confirmedByCustomer && (
+                      <Button
+                        color="secondary"
+                        variant="outlined"
+                        onClick={() => this.downloadImages()}
+                        disabled={this.state.downloadDisable}
+                        startIcon={<GetAppIcon />}
+                      >
+                        Download
+                        {this.state.downloadDisable && (
+                          <CircularProgress
+                            color="secondary"
+                            className={classes.progress}
+                          />
+                        )}
+                      </Button>
+                    )
+                  )}
+                </Grid>
+                <Grid item xs={12}>
+                  {this.state.images?.length > 0 ? (
+                    <ImageGrid
+                      images={this.state.images}
+                      deleteImage={this.deleteImage.bind(this)}
+                      access={this.state.access}
+                    />
+                  ) : (
+                    <Typography
+                      variant="subtitle2"
+                      style={{ margin: "75px 0", textAlign: "center" }}
+                    >
+                      No images to display
+                    </Typography>
+                  )}
+                </Grid>
+                <Grid item xs={12} className={classes.centerGrid}>
+                  <div className={classes.root}>
+                    {this.state.access === "photographer" ? (
+                      <>
+                        <Button
+                          variant="outlined"
+                          color="secondary"
+                          startIcon={<CloudUploadIcon />}
+                          onClick={this.handleEditPicture}
+                          disabled={
+                            this.state.openProgress ||
+                            this.state.confirmedByCustomer
+                          }
+                        >
+                          <input
+                            type="file"
+                            id="addImage"
+                            accept="image/*"
+                            onChange={this.handleImageAdd}
+                            hidden
+                            multiple
+                          />
+                          Upload
+                        </Button>
+
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          disabled={this.state.disabled}
+                          startIcon={<SaveIcon />}
+                          onClick={() => this.handleSubmit()}
+                        >
+                          Save Changes
+                        </Button>
+                      </>
+                    ) : (
+                      this.state.notifiedCustomer &&
+                      !this.state.confirmedByCustomer && (
+                        <Button
+                          variant="contained"
+                          color="secondary"
+                          startIcon={<CheckCircleIcon />}
+                          onClick={() => this.openFinalizeDialog()}
+                        >
+                          Confirm Pictures
+                        </Button>
+                      )
+                    )}
                   </div>
-                )}
+                </Grid>
               </Grid>
-            </Grid>
 
-            <Progress
-              open={this.state.openProgress}
-              value={this.props.vault.progress}
-            />
+              {/* Notify customer that photos are finished */}
+              <Confirmation
+                open={this.state.openDialog}
+                secondaryConfirmation={false}
+                handleAgree={() => this.notifyCustomer()}
+                handleDisagree={() => this.closeFinalizeDialog("photographer")}
+                title="Confirm Notifying Customer"
+                text={
+                  "This will notify the customer that the photos are finished. Do not confirm if you are still uploading or still need to upload."
+                }
+              />
 
-            <Success
-              open={this.state.open}
-              body={
-                <div>
-                  <Typography>{this.props.vault.vaultResponse[0]}</Typography>
-                  <Typography>{this.props.vault.vaultResponse[1]}</Typography>
-                </div>
-              }
-              reload={true}
-            />
-          </Paper>
+              {/* Customer confirms pictures and photographer is paid */}
+              <Confirmation
+                open={this.state.openCustomerFinal}
+                secondaryConfirmation={true}
+                handleAgree={() => this.confirmPictures()}
+                handleDisagree={() => this.closeFinalizeDialog()}
+                title="Confirm Pictures"
+                text={
+                  "This will pay your photographer and finalize your shoot. You will be allowed to download photos in this vault after confirming."
+                }
+                label="This is not reversable. Are you sure you want to do this?"
+              />
+
+              <Progress
+                open={this.state.openProgress}
+                value={this.props.vault.progress}
+              />
+
+              <Success
+                open={this.state.openSuccessNotification}
+                headline="Awesome!"
+                body={
+                  <Typography>
+                    Successfully notified and emailed customer.
+                  </Typography>
+                }
+                reload={true}
+              />
+
+              <Success
+                open={this.state.openSuccessFinalize}
+                headline="Awesome!"
+                body={
+                  <Typography>{this.props.vault.finalizeResponse}</Typography>
+                }
+                reload={true}
+              />
+
+              <Success
+                open={this.state.open}
+                headline="Awesome!"
+                body={
+                  <div>
+                    {this.props.vault.uploadResponse && (
+                      <Typography>{this.props.vault.uploadResponse}</Typography>
+                    )}
+                    {this.props.vault.deleteResponse && (
+                      <Typography>{this.props.vault.deleteResponse}</Typography>
+                    )}
+                  </div>
+                }
+                reload={true}
+              />
+            </Paper>
+          ) : (
+            <Typography
+              variant="h4"
+              style={{ textAlign: "center", fontWeight: "bold" }}
+            >
+              You do not have access to this!
+            </Typography>
+          )
         ) : (
-          <Typography>You do not have access to this!</Typography>
+          <LoadingPage />
         )}
       </div>
     );
@@ -297,6 +472,8 @@ const mapActionsToProps = {
   uploadToVault,
   getSize,
   deleteImages,
+  notifyCustomer,
+  confirmPictures,
 };
 
 export default connect(

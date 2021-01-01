@@ -580,6 +580,7 @@ exports.getYourPhotographerOrders = (req, res) => {
           formattedDate: doc.data().formattedDate,
           amount: doc.data().amount,
           paymentID: doc.data().paymentID,
+          status: doc.data().status,
         });
       });
       return res.json(orders);
@@ -677,6 +678,7 @@ exports.getUsersOrders = (req, res) => {
           shootDate: doc.data().shootDate,
           shootTime: doc.data().shootTime,
           formattedDate: doc.data().formattedDate,
+          status: doc.data().status,
         });
       });
       return res.json(orders);

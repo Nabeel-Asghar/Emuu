@@ -15,7 +15,7 @@ const styles = (theme) => ({
   deleteButton: {
     position: "absolute",
     top: 10,
-    right: 10,
+    left: 10,
     padding: 0,
   },
 });
@@ -65,7 +65,7 @@ export class imageGrid extends Component {
       const id = i;
       lightboxImages.push({ url: img.src, title: i });
       imageContainer.push(
-        <Grid item xs={4}>
+        <Grid item xs={6}>
           <div className={classes.imageHolder}>
             <Button
               onClick={() => this.openImageLightBox(id)}
@@ -99,8 +99,14 @@ export class imageGrid extends Component {
     return (
       <div>
         <Grid container spacing={2}>
-          <Grid item xs={12}>
-            <Button onClick={() => this.toggleLightBox()}>OPEN IMAGES</Button>
+          <Grid item xs={12} className={this.props.classes.centerGrid}>
+            <Button
+              style={{ marginTop: 15 }}
+              color="secondary"
+              onClick={() => this.toggleLightBox()}
+            >
+              OPEN IMAGES
+            </Button>
           </Grid>
           {imageContainer}
           {this.state.open && (

@@ -21,22 +21,21 @@ const defaultMaterialTheme = createMuiTheme({
 class dateView extends Component {
   render() {
     return (
-      <div style={{ marginLeft: "10px" }}>
-        <MuiPickersUtilsProvider utils={MomentUtils}>
-          <ThemeProvider theme={defaultMaterialTheme}>
-            <DatePicker
-              disablePast
-              autoOk
-              orientation="landscape"
-              variant="static"
-              openTo="date"
-              format="MM/dd/yyyy"
-              value={this.props.selectedDate}
-              onChange={this.props.handleDateChange}
-            />
-          </ThemeProvider>
-        </MuiPickersUtilsProvider>
-      </div>
+      <MuiPickersUtilsProvider utils={MomentUtils}>
+        <ThemeProvider theme={defaultMaterialTheme}>
+          <DatePicker
+            disablePast
+            autoOk
+            variant="static"
+            orientation="portrait"
+            openTo="date"
+            format="MM/dd/yyyy"
+            value={this.props.selectedDate}
+            onChange={this.props.handleDateChange}
+            style={{ margin: "0 auto" }}
+          />
+        </ThemeProvider>
+      </MuiPickersUtilsProvider>
     );
   }
 }

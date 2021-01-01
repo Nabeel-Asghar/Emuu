@@ -21,6 +21,7 @@ import ToggleButton from "@material-ui/lab/ToggleButton";
 import ToggleButtonGroup from "@material-ui/lab/ToggleButtonGroup";
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
+import ButtonGroup from "@material-ui/core/ButtonGroup";
 
 // Redux
 import { connect } from "react-redux";
@@ -28,7 +29,29 @@ import { signupUser } from "../redux/actions/userActions";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
+  toggleButton: {
+    "&:hover": {
+      backgroundColor: "blue",
+    },
+    "&:selected": {
+      backgroundColor: "green",
+    },
+    "& > :first-child": {
+      backgroundColor: "yellow",
+    },
+  },
 });
+
+const StyledToggleButton = withStyles({
+  root: {
+    background: "linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)",
+    color: "white",
+  },
+  selected: {
+    background: "blue",
+    color: "white",
+  },
+})(ToggleButton);
 
 class signup extends Component {
   constructor() {
@@ -77,10 +100,14 @@ class signup extends Component {
     });
   };
 
-  handleToggleChange = (event, newValue) => {
-    if (newValue !== null) {
+  handleToggleChange = (value) => {
+    if (value === "photographer") {
       this.setState({
-        photographer: newValue,
+        photographer: true,
+      });
+    } else {
+      this.setState({
+        photographer: false,
       });
     }
   };
@@ -95,137 +122,141 @@ class signup extends Component {
     } = this.props;
     const { errors } = this.state;
     return (
-      <Grid container className={classes.form}>
-        <Paper className={classes.auth}>
-          <Grid item xs={9} style={{ margin: "auto" }}>
-            <img src={AppIcon} alt="Logo" className={classes.brand} />
+      <Grid
+        container
+        align="center"
+        justify="center"
+        direction="column"
+        style={{ height: "100vh" }}
+      >
+        <Grid item>
+          <Paper className={classes.auth}>
+            <div className={classes.authText}>
+              <a href="/">
+                <img src={AppIcon} alt="Logo" className={classes.brand} />
+              </a>
+              <Typography variant="h5" className={classes.authHeader}>
+                Welcome to PhotoSpot
+              </Typography>
+              <Typography varaint="h6" gutterBottom>
+                Create an account to continue
+              </Typography>
 
-            <Typography variant="h5" className={classes.authHeader}>
-              Welcome to PhotoSpot
-            </Typography>
-            <Typography varaint="h6">Create an account to continue</Typography>
-            <form noValidate onSubmit={this.handleSubmit}>
-              <TextField
-                id="email"
-                name="email"
-                type="email"
-                label="Email"
-                className={classes.textField}
-                color="secondary"
-                helperText={errors.email}
-                error={errors.email ? true : false}
-                value={this.state.email}
-                onChange={this.handleChange}
-                fullWidth
-              />
-              <TextField
-                id="password"
-                name="password"
-                type="password"
-                label="Password"
-                className={classes.textField}
-                color="secondary"
-                helperText={errors.password}
-                error={errors.password ? true : false}
-                value={this.state.password}
-                onChange={this.handleChange}
-                fullWidth
-              />
-              <TextField
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                label="Confirm Password"
-                className={classes.textField}
-                color="secondary"
-                helperText={errors.confirmPassword}
-                error={errors.confirmPassword ? true : false}
-                value={this.state.confirmPassword}
-                onChange={this.handleChange}
-                fullWidth
-              />
-              <TextField
-                id="firstName"
-                name="firstName"
-                label="First Name"
-                type="text"
-                className={classes.textField}
-                color="secondary"
-                helperText={errors.firstName}
-                error={errors.firstName ? true : false}
-                value={this.state.firstName}
-                onChange={this.handleChange}
-                fullWidth
-              />
-              <TextField
-                id="lastName"
-                name="lastName"
-                label="Last Name"
-                type="text"
-                className={classes.textField}
-                color="secondary"
-                helperText={errors.lastName}
-                error={errors.lastName ? true : false}
-                value={this.state.lastName}
-                onChange={this.handleChange}
-                fullWidth
-              />
-              <br />
-              <br />
+              <form noValidate onSubmit={this.handleSubmit}>
+                <TextField
+                  id="email"
+                  name="email"
+                  type="email"
+                  label="Email"
+                  className={classes.textField}
+                  color="secondary"
+                  helperText={errors.email}
+                  error={errors.email ? true : false}
+                  value={this.state.email}
+                  onChange={this.handleChange}
+                  fullWidth
+                />
+                <TextField
+                  id="password"
+                  name="password"
+                  type="password"
+                  label="Password"
+                  className={classes.textField}
+                  color="secondary"
+                  helperText={errors.password}
+                  error={errors.password ? true : false}
+                  value={this.state.password}
+                  onChange={this.handleChange}
+                  fullWidth
+                />
+                <TextField
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  type="password"
+                  label="Confirm Password"
+                  className={classes.textField}
+                  color="secondary"
+                  helperText={errors.confirmPassword}
+                  error={errors.confirmPassword ? true : false}
+                  value={this.state.confirmPassword}
+                  onChange={this.handleChange}
+                  fullWidth
+                />
+                <TextField
+                  id="firstName"
+                  name="firstName"
+                  label="First Name"
+                  type="text"
+                  className={classes.textField}
+                  color="secondary"
+                  helperText={errors.firstName}
+                  error={errors.firstName ? true : false}
+                  value={this.state.firstName}
+                  onChange={this.handleChange}
+                  fullWidth
+                />
+                <TextField
+                  id="lastName"
+                  name="lastName"
+                  label="Last Name"
+                  type="text"
+                  className={classes.textField}
+                  color="secondary"
+                  helperText={errors.lastName}
+                  error={errors.lastName ? true : false}
+                  value={this.state.lastName}
+                  onChange={this.handleChange}
+                  fullWidth
+                />
+                <br />
+                <br />
 
-              <ToggleButtonGroup
-                size="small"
-                thumbSwitchedStyle={{ background: "green" }}
-                name="photographer"
-                value={this.state.photographer}
-                exclusive
-                onChange={this.handleToggleChange}
-                style={{ maxWidth: "100%" }}
-              >
-                <ToggleButton
-                  thumbSwitchedStyle={{ background: "green" }}
-                  value={true}
-                  style={{ width: 200 }}
+                <ButtonGroup
+                  color="secondary"
+                  aria-label="outlined primary button group"
+                  fullWidth
                 >
-                  Photographer
-                </ToggleButton>
-                <ToggleButton
-                  thumbSwitchedStyle={{ background: "green" }}
-                  value={false}
-                  style={{ width: 200 }}
-                >
-                  Customer
-                </ToggleButton>
-              </ToggleButtonGroup>
+                  <Button
+                    variant={this.state.photographer ? "contained" : "outlined"}
+                    onClick={() => this.handleToggleChange("photographer")}
+                  >
+                    Photographer
+                  </Button>
+                  <Button
+                    variant={this.state.photographer ? "outlined" : "contained"}
+                    onClick={() => this.handleToggleChange("customer")}
+                  >
+                    Customer
+                  </Button>
+                </ButtonGroup>
 
-              {errors.general && (
-                <Typography variant="body2" className={classes.customError}>
-                  {errors.general}
-                </Typography>
-              )}
-              <br />
-              <Button
-                type="submit"
-                variant="contained"
-                color="secondary"
-                className={classes.button}
-                disabled={loading}
-                style={{ marginTop: "20px" }}
-                fullWidth
-              >
-                Signup
-                {loading && (
-                  <CircularProgress
-                    color="secondary"
-                    className={classes.progress}
-                  />
+                {errors.general && (
+                  <Typography variant="body2" className={classes.customError}>
+                    {errors.general}
+                  </Typography>
                 )}
-              </Button>
-            </form>
-          </Grid>
-        </Paper>
+                <br />
+                <Button
+                  type="submit"
+                  variant="contained"
+                  color="secondary"
+                  className={classes.button}
+                  disabled={loading}
+                  style={{ marginTop: "20px" }}
+                  fullWidth
+                >
+                  Signup
+                  {loading && (
+                    <CircularProgress
+                      color="secondary"
+                      className={classes.progress}
+                    />
+                  )}
+                </Button>
+              </form>
+            </div>
+          </Paper>
 
-        <Grid item xs={12}>
           <Paper className={classes.bottomAuth}>
             <Button
               component={Link}

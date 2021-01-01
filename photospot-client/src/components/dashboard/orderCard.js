@@ -15,6 +15,7 @@ import { red } from "@material-ui/core/colors";
 // util
 import { timeConvert } from "../../util/timeConvert";
 import { dateConvert } from "../../util/dateConvert";
+import { showVault, showCancel } from "../../util/constants";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -22,10 +23,8 @@ const styles = (theme) => ({
     zIndex: theme.zIndex.drawer + 1,
     color: "#fff",
   },
-  root: {
-    "& > *": {
-      margin: theme.spacing(1),
-    },
+  buttonSpacing: {
+    margin: "8px 0px 8px 8px",
   },
 });
 
@@ -43,7 +42,6 @@ class orderCard extends Component {
   render() {
     const {
       classes,
-      refundStatus,
       photographer: {
         orderID,
         paymentID,
@@ -67,7 +65,7 @@ class orderCard extends Component {
                 <img
                   src={profileImage}
                   style={{
-                    width: "90%",
+                    maxWidth: "90%",
                     textAlign: "center",
                     objectFit: "cover",
                   }}
@@ -116,30 +114,35 @@ class orderCard extends Component {
                     </Paper>
                   </Grid>
                   <Grid item xs={12} style={{ textAlign: "right" }}>
-                    {refundStatus ? (
-                      <div className={classes.root}>
+                    <>
+                      {showVault.includes(status) && (
                         <Button
                           variant="contained"
                           color="secondary"
                           onClick={() =>
                             this.props.history.push(`vault/${orderID}`)
                           }
+                          className={classes.buttonSpacing}
                         >
                           Photo Vault
                         </Button>
+                      )}
+                      {showCancel.includes(status) && (
                         <ColorButton
                           variant="contained"
                           color="secondary"
                           onClick={() => this.props.handleRefund(orderID)}
+                          className={classes.buttonSpacing}
                         >
                           Cancel
                         </ColorButton>
-                      </div>
-                    ) : (
-                      <Typography>
-                        Status: <b>{status}</b>
-                      </Typography>
-                    )}
+                      )}
+                    </>
+                  </Grid>
+                  <Grid item xs={12} style={{ textAlign: "right" }}>
+                    <Typography>
+                      Status: <b>{status}</b>
+                    </Typography>
                   </Grid>
                 </Grid>
               </Grid>

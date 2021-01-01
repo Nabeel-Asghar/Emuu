@@ -11,6 +11,7 @@ html body {
 .container {
   margin: 80px auto 0 auto;
   max-width: 1150px;
+  padding: 0px 10px;
 }
 
 .nav-container {

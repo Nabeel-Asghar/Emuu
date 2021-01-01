@@ -72,3 +72,31 @@ export const getSize = (vaultID) => (dispatch) => {
       dispatch({ type: "VAULT_SIZE", payload: null });
     });
 };
+
+export const notifyCustomer = (vaultID) => (dispatch) => {
+  dispatch({ type: "VAULT_LOADING" });
+  return API.get(`/vault/${vaultID}/notifyCustomer`, vaultID)
+    .then((res) => {
+      return true;
+    })
+    .catch(() => {
+      return false;
+    });
+};
+
+export const confirmPictures = (vaultID) => (dispatch) => {
+  dispatch({ type: "VAULT_LOADING" });
+  return API.post(`/vault/${vaultID}/finalize`, vaultID)
+    .then((res) => {
+      dispatch({
+        type: "FINALIZE_RESPONSE",
+        payload: res.data.response,
+      });
+    })
+    .catch((res) => {
+      dispatch({
+        type: "FINALIZE_RESPONSE",
+        payload: res.data.response,
+      });
+    });
+};

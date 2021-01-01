@@ -3,8 +3,10 @@ const intialState = {
   loading: false,
   vaultData: "",
   vaultSize: [],
-  vaultResponse: [],
+  uploadResponse: "",
+  deleteResponse: "",
   progress: 0,
+  finalizeResponse: "",
 };
 
 export default function (state = intialState, action) {
@@ -30,19 +32,31 @@ export default function (state = intialState, action) {
     case "UPLOAD_RESPONSE":
       return {
         ...state,
-        vaultResponse: [...state.vaultResponse, action.payload],
+        uploadResponse: action.payload,
       };
 
     case "DELETE_RESPONSE":
       return {
         ...state,
-        vaultResponse: [...state.vaultResponse, action.payload],
+        deleteResponse: action.payload,
       };
 
     case "VAULT_SIZE":
       return {
         ...state,
         vaultSize: { ...action.payload },
+      };
+
+    case "VAULT_LOADING":
+      return {
+        ...state,
+        loading: true,
+      };
+
+    case "FINALIZE_RESPONSE":
+      return {
+        ...state,
+        finalizeResponse: action.payload,
       };
     default:
       return state;

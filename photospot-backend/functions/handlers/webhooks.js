@@ -1,8 +1,8 @@
 const { admin, db } = require("../util/admin");
 const dotenv = require("dotenv");
-
 dotenv.config();
 const payment__webhook_secret = process.env.payment_signing_secret;
+const { shootStatus } = require("../util/constants");
 
 // Import email functions
 const email = require("./email");
@@ -21,10 +21,7 @@ exports.webhooks = (req, res) => {
       );
       break;
 
-    // refund requested by photographer
-    // TODO: detect when photographer cancels verses customer
-
-    // refund requested by customer
+    // refund
     case "charge.refunded":
       if (event.data.object.refunds.data[0].metadata.photographerCancel) {
         console.log("Refund By Photographer Successful");
@@ -43,10 +40,40 @@ exports.webhooks = (req, res) => {
       }
 
       break;
+
+    case "payout.paid":
+      console.log("Successful Payout", event.data);
+      handlePayout(
+        event.data.object.metadata,
+        event.data.object.amount,
+        event.data.object.id
+      );
   }
 
   return res.status(200).end();
 };
+
+// handle payouts
+async function handlePayout(orderDetails, amount, payoutID) {
+  let orderID = orderDetails.orderID;
+  let photographerID = orderDetails.photographerID;
+  let consumerID = orderDetails.consumerID;
+
+  let booking = await getOrderDetails(orderID);
+  booking.status = shootStatus.completed;
+
+  await deleteFromOrders(orderID);
+  await deleteFromPhotographers(photographerID, orderID);
+  await deleteFromUser(consumerID, orderID);
+
+  await addToOverallCompletedOrders(booking, orderID);
+  await addToUserCompletedOrders(consumerID, orderID, booking);
+  await addToPhotographersCompletedOrders(photographerID, orderID, booking);
+
+  await confirmedByCustomer(orderID);
+
+  await email.emailPayout(booking);
+}
 
 // handle successful refunds intiated by customer
 async function handleRefund(orderDetails, chargeAmount, paymentID) {
@@ -61,7 +88,7 @@ async function handleRefund(orderDetails, chargeAmount, paymentID) {
     orderDetails,
     chargeAmount,
     paymentID,
-    "Refunded"
+    shootStatus.customer
   );
 
   await deleteFromOrders(orderID);
@@ -93,7 +120,7 @@ async function handleRefundByPhotographer(
     orderDetails,
     chargeAmount,
     paymentID,
-    "Refunded"
+    shootStatus.photographer
   );
 
   await deleteFromOrders(orderID);
@@ -121,7 +148,7 @@ async function handlePayment(orderDetails, chargeAmount, paymentID) {
     orderDetails,
     chargeAmount,
     paymentID,
-    "In Progress"
+    shootStatus.inProgress
   );
 
   await updateMainOrders(orderID, booking);
@@ -188,7 +215,7 @@ function createPhotoVault(orderID, photographerID, consumerID) {
   };
 
   db.collection("photoVault")
-    .doc(`vault_${orderID}`)
+    .doc(`${orderID}`)
     .set(intialObject)
     .then(() => {
       return true;
@@ -373,7 +400,36 @@ function addToPhotographersCompletedOrders(photographerID, orderID, booking) {
     });
 }
 
-// Generate unique order id
+function getOrderDetails(orderID) {
+  return db
+    .collection("allOrders")
+    .doc(orderID)
+    .get()
+    .then((doc) => {
+      return doc.data();
+    })
+    .catch((err) => {
+      console.log("error getting order details: ", err);
+      return false;
+    });
+}
+
+// set field to confirm customer approved photos
+function confirmedByCustomer(orderID) {
+  db.collection("photoVault")
+    .doc(orderID)
+    .update({ confirmedByCustomer: true })
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(
+        "error updating field to confirm customer approved photos: ",
+        err
+      );
+      return false;
+    });
+}
 
 // Email functions
 //

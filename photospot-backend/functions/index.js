@@ -15,6 +15,8 @@ app.use(
     saveUninitialized: true,
   })
 );
+const { admin, db } = require("./util/admin");
+const payment = require("./handlers/payment");
 
 // TODO: alternate to request.session due to memory leak
 // TODO: find fix for raw-body limit, currently hard coded in C:\Users\nabee\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\raw-body\index.js
@@ -77,7 +79,11 @@ const {
   deleteFromVault,
   downloadImages,
   getVaultSize,
+  notifyCustomer,
+  finalizeVault,
 } = require("./handlers/vault");
+
+const { testFunction } = require("./handlers/test");
 
 const FBAuth = require("./util/FBAuth");
 
@@ -146,7 +152,7 @@ app.get("/search/:searchQuery", searchPhotographer);
 app.get("/filter/:type/:city/:state", filterPhotographers);
 app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);
 
-//Administrator
+// Administrator
 app.get("/admin/completedOrders", completedOrders);
 
 // Webhooks for Stripe
@@ -157,6 +163,39 @@ app.get("/vault/:vaultID", FBAuth, getVault);
 app.post("/vault/:vaultID/upload", FBAuth, uploadToVault);
 app.post("/vault/:vaultID/delete", FBAuth, deleteFromVault);
 app.get("/vault/:vaultID/download", FBAuth, downloadImages);
-app.get("/vault/:vaultID/getSize", getVaultSize);
+app.get("/vault/:vaultID/getSize", FBAuth, getVaultSize);
+app.get("/vault/:vaultID/notifyCustomer", FBAuth, notifyCustomer);
+app.post("/vault/:vaultID/finalize", FBAuth, finalizeVault);
+
+// Testing
+app.post("/test", testFunction);
+
+exports.dailyJob = functions.pubsub
+  .schedule(`*/15 * * * *`)
+  .onRun(async (context) => {
+    const now = admin.firestore.Timestamp.now();
+    db.collection("scheduler")
+      .where("performAt", "<=", now)
+      .where("status", "==", "scheduled")
+      .get()
+      .then(function (querySnapshot) {
+        if (querySnapshot.size > 0) {
+          querySnapshot.forEach(async function (doc) {
+            payment.payOut(
+              doc.id,
+              doc.data().data.consumerID,
+              doc.data().data.photographerID
+            );
+          });
+          return res.json({ message: "Job done" });
+        } else {
+          return res.json({ message: "No jobs to do" });
+        }
+      })
+      .catch((err) => {
+        console.log("error in doing cronjob in payouts", err);
+        return res.status(400).json({ response: err });
+      });
+  });
 
 exports.api = functions.https.onRequest(app);
