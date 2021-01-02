@@ -378,6 +378,7 @@ exports.uploadProfilePicture = async (req, res) => {
 
     file.pipe(fs.createWriteStream(tempPath));
     file.pipe(fs.createWriteStream(imagePath));
+    file.pipe(fs.createWriteStream(thumbnailPath));
   });
 
   busboy.on("finish", () => {
@@ -564,6 +565,7 @@ exports.getYourUserProfile = (req, res) => {
         createdAt: doc.data().createdAt,
         location_city: doc.data().location_city,
         location_state: doc.data().location_state,
+        thumbnailImage: doc.data().thumbnailImage,
       });
 
       return res.json(page);

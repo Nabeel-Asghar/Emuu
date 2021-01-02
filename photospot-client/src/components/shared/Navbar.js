@@ -21,6 +21,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import SvgIcon from "@material-ui/core/SvgIcon";
+import Avatar from "@material-ui/core/Avatar";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -64,9 +65,13 @@ const Navbar = (props) => {
   const [urlQuery] = useState(urlToSearchState(location).query);
 
   let photographerStatus = false;
+  let avatarUrl = "";
+
   if (authenticated && details[0]) {
     const { photographer } = details[0];
+    const { thumbnailImage } = details[0];
     photographerStatus = photographer;
+    avatarUrl = thumbnailImage;
   }
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -176,7 +181,7 @@ const Navbar = (props) => {
               color="inherit"
             >
               <MenuIcon fontSize="large" />
-              <AccountCircle color="secondary" fontSize="large" />
+              <Avatar alt="Remy Sharp" src={avatarUrl} />
             </IconButton>
           </Grid>
 
