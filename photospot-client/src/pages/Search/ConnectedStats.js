@@ -1,8 +1,10 @@
+import { Typography } from "@material-ui/core";
 import React from "react";
+
 import { connectStats } from "react-instantsearch-dom";
 
 const CustomStats = ({ processingTimeMS, nbHits }) => (
-  <p style={{ padding: "0px", margin: "0px" }}>Found {nbHits} results</p>
+  <Typography gutterBottom>Found {nbHits} results</Typography>
 );
 
 const ConnectedStats = connectStats(CustomStats);
