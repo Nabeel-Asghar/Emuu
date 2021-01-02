@@ -14,6 +14,7 @@ import {
   ListItemText,
   Typography,
   Divider,
+  Hidden,
 } from "@material-ui/core";
 
 const styles = (theme) => ({
@@ -21,7 +22,7 @@ const styles = (theme) => ({
   theList: {
     paddingTop: "0px",
     backgroundColor: "white",
-    height: " calc(60vh + 110px);",
+    height: "calc(100vh - 200px);",
   },
   newChatBtn: {
     height: "50px",
@@ -31,7 +32,14 @@ const styles = (theme) => ({
   },
 
   listItem: {
+    [theme.breakpoints.down("sm")]: {
+      paddingLeft: "0px",
+    },
+    paddingRight: "0px",
+
     cursor: "pointer",
+    display: "flex",
+    alignItems: "center",
   },
 
   unreadMessage: {
@@ -59,7 +67,7 @@ class UserListComponent extends Component {
       <main>
         <Typography
           component="h1"
-          variant="h5"
+          variant="h6"
           align="center"
           className={classes.newChatBtn}
         >
@@ -74,10 +82,12 @@ class UserListComponent extends Component {
                   onClick={() => selectChatFn(_index)}
                   className={classes.listItem}
                   selected={this.props.selectedChatIndex === _index}
-                  alignItems="flex-start"
+                  alignItems="center"
+                  style={{ margin: "auto" }}
                 >
-                  <ListItemAvatar>
+                  <ListItemAvatar style={{ margin: "auto" }}>
                     <Avatar
+                      style={{ margin: "auto" }}
                       alt="remy Sharp"
                       src={
                         _chat[
@@ -86,29 +96,31 @@ class UserListComponent extends Component {
                           )[0]
                         ].profileImage
                       }
-                    ></Avatar>
+                    />
                   </ListItemAvatar>
-                  <ListItemText
-                    classes={{ primary: classes.listItemText }}
-                    primary={
-                      _chat.names.filter((_user) => _user !== userName)[0]
-                    }
-                    secondary={
-                      <React.Fragment>
-                        <Typography component="span" color="textPrimary">
-                          {_chat.messages[
-                            _chat.messages.length - 1
-                          ].message.substring(0, 30)}
-                        </Typography>
-                      </React.Fragment>
-                    }
-                  ></ListItemText>
+                  <Hidden xsDown>
+                    <ListItemText
+                      classes={{ primary: classes.listItemText }}
+                      primary={
+                        _chat.names.filter((_user) => _user !== userName)[0]
+                      }
+                      secondary={
+                        <React.Fragment>
+                          <Typography component="span" color="textPrimary">
+                            {_chat.messages[
+                              _chat.messages.length - 1
+                            ].message.substring(0, 30)}
+                          </Typography>
+                        </React.Fragment>
+                      }
+                    />
+                  </Hidden>
                   {_chat.receiverHasRead === false &&
                   !this.userIsSender(_chat) ? (
                     <ListItemIcon>
                       <NotificationImportant
                         className={classes.unreadMessage}
-                      ></NotificationImportant>
+                      />
                     </ListItemIcon>
                   ) : null}
                 </ListItem>

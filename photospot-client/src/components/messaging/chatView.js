@@ -1,4 +1,4 @@
-import { Avatar, Box } from "@material-ui/core";
+import { Avatar, Box, Hidden } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
 import React, { Component } from "react";
 // Redux
@@ -6,7 +6,10 @@ import { connect } from "react-redux";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
-  friendSent: {
+  root: {
+    flexGrow: 1,
+  },
+  userSent: {
     float: "left",
     textAlign: "left",
     clear: "both",
@@ -16,15 +19,16 @@ const styles = (theme) => ({
     wordWrap: "break-word",
     backgroundColor: "white",
     color: "black",
-    width: "300px",
+    width: "240px",
     borderRadius: "30px",
   },
 
   friendSentTimestamp: {
     float: "left",
     textAlign: "left",
-    paddingLeft: "24px",
+    paddingLeft: "16px",
     paddingBottom: "8px",
+    color: "gray",
   },
 
   friendSentProfileImage: {
@@ -38,10 +42,12 @@ const styles = (theme) => ({
     paddingBottom: "0px",
     backgroundColor: "#e6e6e6",
     paddingTop: "0px",
+    paddingLeft: "0px",
     marginBottom: "0px",
+    marginLeft: "8px",
   },
 
-  userSent: {
+  friendSent: {
     float: "right",
     clear: "both",
     padding: "17px",
@@ -50,15 +56,16 @@ const styles = (theme) => ({
     marginBottom: "0px",
     backgroundColor: "#23ba8b",
     color: "white",
-    width: "300px",
+    width: "240px",
     borderRadius: "30px",
   },
 
   userSentTimestamp: {
     float: "right",
     textAlign: "right",
-    paddingRight: "24px",
-    paddingBottom: "8px",
+    paddingRight: "16px",
+    paddingBottom: "4px",
+    color: "gray",
   },
 
   avatar: {
@@ -77,7 +84,9 @@ const styles = (theme) => ({
     paddingBottom: "0px",
     backgroundColor: "#e6e6e6",
     paddingTop: "0px",
+    paddingRight: "0px",
     marginBottom: "0px",
+    marginRight: "8px",
   },
 
   chatHeader: {
@@ -94,7 +103,7 @@ const styles = (theme) => ({
 
   chatViewContainer: {
     backgroundColor: "#e6e6e6",
-    height: "65vh",
+    height: "calc(100vh - 262px);",
     overflow: "auto",
     "&::-webkit-scrollbar": {
       width: "0.4em",
@@ -109,7 +118,10 @@ const styles = (theme) => ({
     },
   },
 
-  boxPadding: { paddingBottom: "60px", marginBottom: "0px" },
+  boxPadding: {
+    paddingBottom: "60px",
+    marginBottom: "0px",
+  },
 });
 
 const moment = require("moment");
@@ -121,18 +133,25 @@ class ChatViewComponent extends Component {
   };
 
   formatDate = (date) => {
-    var dateString = moment.unix(date / 1000).format("lll");
+    var dateString = moment.unix(date / 1000).format("MMM Do, h:mm A");
+    return dateString;
+  };
+
+  formatDateOnlyTime = (date) => {
+    var dateString = moment.unix(date / 1000).format("LT");
     return dateString;
   };
 
   render() {
     const { classes, userName, chat } = this.props;
+    const { width } = this.props;
     console.log(chat);
     if (chat === undefined) {
       return <main id="chatview-container" className={classes.content} />;
     } else {
       return (
-        <div>
+        <div className={classes.root}>
+          {console.log("The current width is:", width)}
           <div className={classes.chatHeader}>
             {chat.names.filter((_usr) => _usr !== userName)[0]}
           </div>
@@ -141,16 +160,6 @@ class ChatViewComponent extends Component {
               return (
                 <Box flexDirection="column" display="flex">
                   <div>
-                    {/* <div
-                    key={_index}
-                    className={
-                      _msg.sender === this.props.userEmail
-                        ? classes.userSentUsername
-                        : classes.friendSentUsername
-                    }
-                  >
-                    {_msg.sender}
-                  </div> */}
                     <Box
                       display="flex"
                       p={1}
@@ -162,14 +171,16 @@ class ChatViewComponent extends Component {
                           : classes.friendSentBox
                       }
                     >
-                      <Box p={1} className={classes.avatar}>
-                        <Avatar
-                          className={classes.userSentProfileImage}
-                          alt="Remy Sharp"
-                          src={chat[_msg.sender].profileImage}
-                        />
-                      </Box>
-                      <Box p={1} padding="8px 8px 0px 8px">
+                      <Hidden xsDown>
+                        <Box p={1} className={classes.avatar}>
+                          <Avatar
+                            className={classes.userSentProfileImage}
+                            alt="Remy Sharp"
+                            src={chat[_msg.sender].profileImage}
+                          />
+                        </Box>
+                      </Hidden>
+                      <Box p={1} padding="8px 0px 0px 0px">
                         <div
                           key={_index}
                           className={
@@ -192,7 +203,9 @@ class ChatViewComponent extends Component {
                         : classes.friendSentTimestamp
                     }
                   >
-                    {this.formatDate(_msg.timestamp)}
+                    {Date.now() > _msg.timestamp + 28800000
+                      ? this.formatDate(_msg.timestamp)
+                      : this.formatDateOnlyTime(_msg.timestamp)}
                   </div>
                 </Box>
               );

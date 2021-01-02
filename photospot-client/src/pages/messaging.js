@@ -21,15 +21,20 @@ const styles = (theme) => ({
   },
 
   //Left Grid
-  UserList: {
-    marginBottom: "10px",
-  },
+  UserList: {},
 
   //Right grid
   ChatList: {
-    marginBottom: "10px",
     boxSizing: "border-box",
     overflowY: "hidden",
+  },
+
+  messagingContainer: {
+    border: "2px solid #e6e6e6",
+    [theme.breakpoints.down("xs")]: {
+      margin: "0px",
+    },
+    margin: "8px",
   },
 });
 
@@ -99,13 +104,9 @@ class messaging extends Component {
       return <div>Message someone to start a conversation!</div>;
     } else {
       return (
-        <div
-          style={{
-            border: "2px solid #e6e6e6",
-          }}
-        >
+        <div className={classes.messagingContainer}>
           <Grid container spacing={0} className={classes.messaging}>
-            <Grid item xs={4} className={classes.UserList}>
+            <Grid item xs={2} sm={4} className={classes.UserList}>
               <UserListComponent
                 history={this.props.history}
                 newChatBtnFunction={this.newChatBtnClicked}
@@ -114,28 +115,28 @@ class messaging extends Component {
                 userName={this.state.firstName + " " + this.state.lastName}
                 userEmail={this.state.email}
                 selectedChatIndex={this.state.selectedChat}
-              ></UserListComponent>
+              />
             </Grid>
-            <Grid item xs={8} className={classes.ChatList}>
+            <Grid item xs={10} sm={8} className={classes.ChatList}>
               {this.state.newChatFormVisible ? null : (
                 <ChatViewComponent
                   userEmail={this.state.email}
                   userName={this.state.firstName + " " + this.state.lastName}
                   chat={this.state.chats[this.state.selectedChat]}
-                ></ChatViewComponent>
+                />
               )}
               {this.state.selectedChat !== null &&
               !this.state.newChatFormVisible ? (
                 <ChatTextBoxComponent
                   messageReadFn={this.messageRead}
                   submitMessageFn={this.submitMessage}
-                ></ChatTextBoxComponent>
+                />
               ) : null}
               {this.state.newChatFormVisible ? (
                 <NewChatComponent
                   goToChatFn={this.goToChat}
                   newChatSubmitFn={this.newChatSubmit}
-                ></NewChatComponent>
+                />
               ) : null}
             </Grid>
           </Grid>

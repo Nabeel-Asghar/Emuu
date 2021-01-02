@@ -1,32 +1,18 @@
-import React, { Component } from "react";
-import withStyles from "@material-ui/core/styles/withStyles";
-import { makeStyles } from "@material-ui/core/styles";
-import IconButton from "@material-ui/core/IconButton";
-import Input from "@material-ui/core/Input";
-import FilledInput from "@material-ui/core/FilledInput";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import InputLabel from "@material-ui/core/InputLabel";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import FormHelperText from "@material-ui/core/FormHelperText";
-import Container from "@material-ui/core/Container";
-import FormControl from "@material-ui/core/FormControl";
-import TextField from "@material-ui/core/TextField";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
-import Paper from "@material-ui/core/Paper";
-import Send from "@material-ui/icons/Send";
-import InputBase from "@material-ui/core/InputBase";
-import Grid from "@material-ui/core/Grid";
-import SendIcon from "@material-ui/icons/Send";
+import { Box } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
-
+import Grid from "@material-ui/core/Grid";
+import InputBase from "@material-ui/core/InputBase";
+import Paper from "@material-ui/core/Paper";
+import withStyles from "@material-ui/core/styles/withStyles";
+import SendIcon from "@material-ui/icons/Send";
+import React, { Component } from "react";
 // Redux
 import { connect } from "react-redux";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
 
-  root: { marginTop: "10px" },
+  root: { marginTop: "10px", marginBottom: "10px" },
   paper: {
     boxShadow: "none",
     backgroundColor: "#e6e6e6",
@@ -35,6 +21,10 @@ const styles = (theme) => ({
     marginRight: "5px",
     alignItems: "center",
     borderRadius: "30px",
+  },
+  boxStyle: {
+    padding: "0px",
+    marginRight: "2px",
   },
   input: {
     marginLeft: theme.spacing(1),
@@ -58,55 +48,48 @@ class ChatTextBoxComponent extends Component {
     const { classes, submitMessageFn } = this.props;
 
     return (
-      <Grid container alignItems="center" className={classes.root}>
-        <Grid item xs justify="center" alignItems="center">
-          <Paper className={classes.paper}>
-            <InputBase
-              className={classes.input}
-              placeholder="Type a message"
-              onKeyUp={(e) => this.userTyping(e)}
-              id="chattextbox"
-              onFocus={this.userClickedInput}
-              inputProps={{
-                "aria-label": "send a message",
-                autoComplete: "off",
-                autoCapitalize: "sentences",
+      <div className={classes.root}>
+        <Box display="flex" p={1} className={classes.boxStyle}>
+          <Box p={1} flexGrow={1} className={classes.boxStyle}>
+            <Paper className={classes.paper}>
+              <InputBase
+                className={classes.input}
+                placeholder="Type a message"
+                onKeyUp={(e) => this.userTyping(e)}
+                id="chattextbox"
+                onFocus={this.userClickedInput}
+                inputProps={{
+                  "aria-label": "send a message",
+                  autoComplete: "off",
+                  autoCapitalize: "sentences",
+                }}
+              />
+            </Paper>
+          </Box>
+          <Box p={1} className={classes.boxStyle}>
+            <Fab
+              variant="extended"
+              color="secondary"
+              size="small"
+              style={{
+                boxShadow: "none",
+                width: "52px",
+                height: "52px",
+                borderRadius: "50%",
               }}
-            />
-          </Paper>
-        </Grid>
-        <Grid item xs={1} justify="center" alignItems="center">
-          <Fab
-            variant="extended"
-            color="secondary"
-            size="small"
-            style={{
-              boxShadow: "none",
-              width: "52px",
-              height: "52px",
-              borderRadius: "50%",
-            }}
-          >
-            <SendIcon
-              type="submit"
-              onClick={this.submitMessage}
-              className={classes.iconButton}
-              aria-label="search"
-              color="primary"
-              fontSize="small"
-            />
-          </Fab>
-        </Grid>
-
-        {/*       <IconButton
-            type="submit"
-            onClick={this.submitMessage}
-            className={classes.iconButton}
-            aria-label="search"
-          >
-            <SendIcon />
-          </IconButton> */}
-      </Grid>
+            >
+              <SendIcon
+                type="submit"
+                onClick={this.submitMessage}
+                className={classes.iconButton}
+                aria-label="search"
+                color="primary"
+                fontSize="small"
+              />
+            </Fab>
+          </Box>
+        </Box>
+      </div>
     );
   }
 

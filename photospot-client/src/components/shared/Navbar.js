@@ -21,6 +21,7 @@ import { useHistory, useLocation } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import SvgIcon from "@material-ui/core/SvgIcon";
+import { Hidden } from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
       marginTop: 5,
     },
   },
-  input: { width: "250px", paddingLeft: "20px" },
+  input: { width: "100%", paddingLeft: "20px" },
   iconButton: { padding: "10px" },
 
   imageStyle: {
@@ -98,7 +99,7 @@ const Navbar = (props) => {
     <AppBar>
       <Toolbar>
         <Grid container alignItems="center" justify="center">
-          <Grid item xs={4}>
+          <Grid item xs={3}>
             <IconButton
               edge="start"
               style={{ backgroundColor: "transparent" }}
@@ -106,17 +107,19 @@ const Navbar = (props) => {
               to="/"
             >
               <img src={AppIcon} alt="Logo" className={classes.imageStyle} />
-              <Typography>
-                <Box fontWeight="fontWeightBold" fontSize="h6.fontSize">
-                  &nbsp; PhotoSpot
-                </Box>
-              </Typography>
+              <Hidden smDown>
+                <Typography>
+                  <Box fontWeight="fontWeightBold" fontSize="h6.fontSize">
+                    &nbsp; PhotoSpot
+                  </Box>
+                </Typography>
+              </Hidden>
             </IconButton>
           </Grid>
 
-          <Grid item xs={4} align="center">
+          <Grid item xs={6} align="center">
             <Box
-              width="fit-content"
+              width="100%"
               border={1}
               borderRadius={25}
               borderColor="secondary"
@@ -150,7 +153,7 @@ const Navbar = (props) => {
             </Box>
           </Grid>
 
-          <Grid item xs={4} align="right">
+          <Grid item xs={3} align="right">
             <IconButton
               edge="end"
               aria-label="account of current user"
