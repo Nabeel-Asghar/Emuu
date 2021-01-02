@@ -1,6 +1,8 @@
 const { admin, db, index } = require("../util/admin");
 const config = require("../util/config");
 const storageBucketVar = config.storageBucket;
+const sharp = require("sharp");
+const path = require("path");
 
 const firebase = require("firebase");
 firebase.initializeApp(config);
@@ -335,16 +337,19 @@ exports.updatePhotographerCategoriesAndBio = (req, res) => {
 };
 
 // upload profile image for user
-exports.uploadProfilePicture = (req, res) => {
+exports.uploadProfilePicture = async (req, res) => {
   const BusBoy = require("busboy");
-  const path = require("path");
   const os = require("os");
   const fs = require("fs");
 
   const busboy = new BusBoy({ headers: req.headers });
 
   let imageFileName;
+  let thumbnailName;
+
   let imageToBeUploaded = {};
+  let profileImageToBeUploaded = {};
+  let thumbnailToBeUploaded = {};
 
   busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
     if (!mimetype.includes("image")) {
@@ -353,45 +358,55 @@ exports.uploadProfilePicture = (req, res) => {
 
     const imageExtension = filename.split(".")[filename.split(".").length - 1];
 
+    const source = `source.${imageExtension}`;
+
     imageFileName = `${Math.round(
       Math.random() * 1000000000
     )}.${imageExtension}`;
 
-    const filepath = path.join(os.tmpdir(), imageFileName);
-    imageToBeUploaded = { filepath, mimetype };
+    thumbnailName = `${Math.round(
+      Math.random() * 1000000000
+    )}.${imageExtension}`;
 
-    file.pipe(fs.createWriteStream(filepath));
+    const tempPath = path.join(os.tmpdir(), source);
+    const imagePath = path.join(os.tmpdir(), imageFileName);
+    const thumbnailPath = path.join(os.tmpdir(), thumbnailName);
+
+    imageToBeUploaded = { tempPath, mimetype };
+    profileImageToBeUploaded = { imagePath: imagePath, mimetype };
+    thumbnailToBeUploaded = { imagePath: thumbnailPath, mimetype };
+
+    file.pipe(fs.createWriteStream(tempPath));
+    file.pipe(fs.createWriteStream(imagePath));
   });
 
   busboy.on("finish", () => {
-    admin
-      .storage()
-      .bucket(config.storageBucket)
-      .upload(imageToBeUploaded.filepath, {
-        resumable: false,
-        metadata: {
-          metadata: {
-            contentType: imageToBeUploaded.mimetype,
-          },
-        },
-      })
-      .then(() => {
-        const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
-        return db.doc(`/users/${req.user.uid}`).update({ profileImage });
-      })
-      .then(() => {
-        const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
-        return db.doc(`/photographer/${req.user.uid}`).update({ profileImage });
-      })
-      .then(() => {
-        return res.json({ message: "Profile Image update" });
-      })
-      .catch((err) => {
-        console.log(err);
-        return res.status(500).json({ error: err.code });
-      });
+    try {
+      uploadProfileImage(
+        imageToBeUploaded,
+        profileImageToBeUploaded,
+        imageFileName,
+        req.user.uid,
+        500,
+        false,
+        res.locals.photographer
+      );
+      uploadProfileImage(
+        imageToBeUploaded,
+        thumbnailToBeUploaded,
+        thumbnailName,
+        req.user.uid,
+        100,
+        true,
+        res.locals.photographer
+      );
+    } catch (err) {
+      console.log("error uploading profile/thumbnail.", err);
+      return res.json({ message: "Something went wrong." });
+    }
   });
   busboy.end(req.rawBody);
+  return res.json({ message: "Success!" });
 };
 
 // upload your background picture for your page
@@ -885,3 +900,59 @@ exports.editBookingTimes = (req, res) => {
       return res.json({ error: err });
     });
 };
+
+function uploadProfileImage(
+  originalImage,
+  image,
+  fileName,
+  userID,
+  size,
+  thumbnail,
+  photographer
+) {
+  console.log(fileName, image.imagePath);
+  sharp(originalImage.tempPath)
+    .resize(size, size)
+    .toFile(image.imagePath)
+    .then(() => {
+      uploadToStorage(image);
+      updateProfileImage("users", userID, fileName, thumbnail);
+      photographer &&
+        updateProfileImage("photographer", userID, fileName, thumbnail);
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+}
+
+function uploadToStorage(file) {
+  admin
+    .storage()
+    .bucket(config.storageBucket)
+    .upload(file.imagePath, {
+      resumable: false,
+      metadata: {
+        metadata: {
+          contentType: file.mimetype,
+        },
+      },
+    })
+    .then(() => {
+      return true;
+    })
+    .catch(() => {
+      return false;
+    });
+}
+
+function updateProfileImage(database, id, imageFileName, thumbnail) {
+  if (thumbnail) {
+    const thumbnailImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+    return db.doc(`/${database}/${id}`).update({ thumbnailImage });
+  } else {
+    const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+    return db.doc(`/${database}/${id}`).update({ profileImage });
+  }
+}
