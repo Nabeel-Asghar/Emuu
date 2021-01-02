@@ -47,12 +47,14 @@ const Date = ({ refine, currentRefinement }) => {
       <ThemeProvider theme={materialTheme}>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <DatePicker
+            variant="dialog"
             disablePast={true}
             defaultValue={null}
             format={"MMMM DD, YYYY"}
             value={selectedDate}
             onChange={handleDateChange}
             showTodayButton
+            emptyLabel="Pick a date"
           />
         </MuiPickersUtilsProvider>
       </ThemeProvider>

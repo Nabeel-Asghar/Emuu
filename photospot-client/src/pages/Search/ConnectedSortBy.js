@@ -71,7 +71,7 @@ const CustomSortBy = ({ items, refine, createURL }) => {
             href={createURL(item.value)}
             style={{
               fontWeight: item.isRefined ? "bold" : "",
-              color: "blue",
+              color: "black",
             }}
             onClick={(event) => {
               event.preventDefault();
