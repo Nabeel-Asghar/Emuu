@@ -60,9 +60,12 @@ class editableUsercard extends Component {
 
           <Grid item xs={12}>
             <div style={{ textAlign: "center", marginTop: "-250px" }}>
-              <Button onClick={this.props.handleEditProfileImage}>
+              <div
+                className={classes.avatarContainer}
+                onClick={this.props.handleEditProfileImage}
+              >
                 <img className={classes.avatar} src={profileImage} />
-              </Button>
+              </div>
               <input
                 type="file"
                 id="profileImageInput"
