@@ -33,7 +33,7 @@ import SettingsCard from "../components/dashboard/settingsCard";
 import StripeCard from "../components/dashboard/stripeCard";
 import PhotographerReviews from "../components/shared/photographerReviews";
 import CollapseItems from "../components/shared/collapse";
-import Confirmation from "../components/booking/confirmation";
+import Confirmation from "../components/shared/confirmation";
 import Success from "../components/shared/success";
 
 const styles = (theme) => ({
@@ -65,6 +65,7 @@ class photograhperDashboard extends Component {
       views: 0,
       ratePerHour: 0,
       totalCompletedOrders: 0,
+      stripeStatus: true,
     };
   }
 
@@ -92,7 +93,11 @@ class photograhperDashboard extends Component {
     this.props.getYourPhotographyPage().then(() => {
       this.assignValues(this.props.credentials);
     });
-    this.props.getStripeStatus();
+    this.props.getStripeStatus().then(() => {
+      if (!this.props.stripeStatus) {
+        this.setState({ stripeStatus: false });
+      }
+    });
     this.props.getPhotographerReviews();
     this.setState({
       allReviews: Object.values(this.props.userReviews || {}),
@@ -138,7 +143,6 @@ class photograhperDashboard extends Component {
           {...this.props}
           key={key}
           photographer={userOrders[key]}
-          refundStatus={true}
           handleRefund={this.handleRefundDialog.bind(this)}
         />
       </div>
@@ -152,7 +156,6 @@ class photograhperDashboard extends Component {
           {...this.props}
           key={key}
           photographer={userPastOrders[key]}
-          refundStatus={false}
         />
       </div>
     ));
@@ -201,7 +204,7 @@ class photograhperDashboard extends Component {
             email={this.state.email}
           />
 
-          {!this.props.stripeStatus && <StripeCard />}
+          {!this.state.stripeStatus && <StripeCard />}
 
           <SettingsCard />
         </Grid>

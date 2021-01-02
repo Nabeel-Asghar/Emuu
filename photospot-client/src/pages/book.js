@@ -22,7 +22,7 @@ import ProfileCard from "../components/booking/card";
 import Date from "../components/booking/date";
 import equal from "fast-deep-equal";
 import Time from "../components/booking/time";
-import Confirmation from "../components/booking/confirmation";
+import Confirmation from "../components/shared/confirmation";
 
 // Date format
 import moment from "moment";

@@ -21,6 +21,14 @@ const emailRefundsByPhotographer = (orderDetails) => {
   emailRefundToPhotographerByPhotographer(orderDetails);
 };
 
+const emailVaultReady = (customerDetails) => {
+  emailVaultReadyToCustomer(customerDetails);
+};
+
+const emailPayout = (orderDetails) => {
+  emailPayOutReceiptToPhotographer(orderDetails);
+};
+
 // Customer ordered refund
 function emailRefundToCustomerByCustomer(orderDetails) {
   const msg = {
@@ -38,6 +46,7 @@ function emailRefundToCustomerByCustomer(orderDetails) {
   };
   sgMail.send(msg);
   console.log("Refund intiated by customer sent to customer");
+  return true;
 }
 
 function emailRefundToPhotographerByCustomer(orderDetails) {
@@ -57,9 +66,10 @@ function emailRefundToPhotographerByCustomer(orderDetails) {
   };
   sgMail.send(msg);
   console.log("Refund intiated by customer sent to photographer");
+  return true;
 }
 
-// Order detials
+// Order details
 function emailOrderToCustomer(orderDetails) {
   let url =
     "http://localhost:3000/photographers/" + orderDetails.photographerID;
@@ -80,6 +90,7 @@ function emailOrderToCustomer(orderDetails) {
   };
   sgMail.send(msg);
   console.log("Email sent to customer!");
+  return true;
 }
 
 function emailOrderToPhotographer(orderDetails) {
@@ -99,6 +110,7 @@ function emailOrderToPhotographer(orderDetails) {
   };
   sgMail.send(msg);
   console.log("Email sent to photographer!");
+  return true;
 }
 
 // Photographer ordered refund
@@ -118,6 +130,7 @@ function emailRefundToCustomerByPhotographer(orderDetails) {
   };
   sgMail.send(msg);
   console.log("Refund intiated by photographer sent to customer");
+  return true;
 }
 
 function emailRefundToPhotographerByPhotographer(orderDetails) {
@@ -137,8 +150,44 @@ function emailRefundToPhotographerByPhotographer(orderDetails) {
   };
   sgMail.send(msg);
   console.log("Refund intiated by photographer sent to photographer");
+  return true;
+}
+
+// Vault emails
+function emailVaultReadyToCustomer(customerDetails) {
+  let url = "http://localhost:3000/vault/" + customerDetails.vaultID;
+
+  const msg = {
+    to: customerDetails.email,
+    from: "PhotoSpot@photospot.site",
+    templateId: "d-d4b9dc76c51f46048eca13e80d8e2fd0",
+    dynamic_template_data: {
+      consumerFirstName: customerDetails.firstName,
+      link: url,
+    },
+  };
+  sgMail.send(msg);
+  console.log("Vault ready message sent to customer");
+  return true;
+}
+
+function emailPayOutReceiptToPhotographer(customerDetails) {
+  const msg = {
+    to: customerDetails.photographerEmail,
+    from: "PhotoSpot@photospot.site",
+    templateId: "d-3e961ecd94e041b4bb6515ae96e6893c",
+    dynamic_template_data: {
+      photographerFirstName: orderDetails.photographerFirstName,
+      amount: orderDetails.amount,
+    },
+  };
+  sgMail.send(msg);
+  console.log("Payout has been sent to photographer");
+  return true;
 }
 
 exports.emailOrderDetails = emailOrderDetails;
 exports.emailRefundsByCustomer = emailRefundsByCustomer;
 exports.emailRefundsByPhotographer = emailRefundsByPhotographer;
+exports.emailVaultReady = emailVaultReady;
+exports.emailPayout = emailPayout;

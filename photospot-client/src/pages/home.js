@@ -48,9 +48,9 @@ const styles = (theme) => ({
 
   homeGrid: {
     textAlign: "center",
-    backgroundImage: `url(${require("../images/background.jpg")})`,
+    backgroundImage: `url(${require("../images/background1.jfif")})`,
     backgroundSize: "cover",
-    padding: "0px",
+    padding: "0px 0px 175px 0px",
   },
 
   paper: {
@@ -60,9 +60,12 @@ const styles = (theme) => ({
     backgroundColor: theme.palette.secondary.main,
   },
 
-  welcomeText: {
-    color: "white",
-    paddingTop: "50px",
+  root: {
+    paddingTop: "20px",
+    marginBottom: "-25px",
+    "& > *": {
+      margin: theme.spacing(2),
+    },
   },
 
   introText: {
@@ -74,7 +77,7 @@ const styles = (theme) => ({
   },
 
   formControlLarge: {
-    minWidth: "220px",
+    minWidth: "250px",
     float: "left",
   },
 
@@ -115,7 +118,7 @@ const styles = (theme) => ({
 
   textContainer: {
     margin: "0 auto 0 auto",
-    width: "800px",
+    width: "750px",
     backgroundColor: "white",
     borderRadius: "35px",
   },
@@ -201,9 +204,11 @@ class home extends Component {
       <div className={classes.homeContainer}>
         <Grid container className={classes.homeGrid} spacing={5}>
           <Grid item xs={12}>
-            <Typography variant="h3" className={classes.welcomeText}>
-              Welcome to <span style={{ color: "#23ba8b" }}>PhotoSpot</span>
-            </Typography>
+            <div className={classes.root}>
+              <Button color="primary">PhotoSpot</Button>
+              <Button color="primary">FAQ</Button>
+              <Button color="primary">Contact</Button>
+            </div>
           </Grid>
 
           <Grid item xs={12}>
@@ -220,7 +225,7 @@ class home extends Component {
                 >
                   <InputLabel
                     className={classes.textLabel}
-                    id="demo-simple-select-outlined-label"
+                    inputProps={{ disableUnderline: true }}
                   >
                     Name
                   </InputLabel>
@@ -233,6 +238,7 @@ class home extends Component {
                     value={this.state.searchQuery}
                     onChange={this.handleChange}
                     style={{ marginTop: "0" }}
+                    disableUnderline
                   />
                 </FormControl>
 
@@ -255,6 +261,7 @@ class home extends Component {
                     name="type"
                     value={this.state.type}
                     onChange={this.handleChange}
+                    disableUnderline
                   >
                     <MenuItem value="">
                       <em>None</em>
@@ -284,6 +291,7 @@ class home extends Component {
                     label="City"
                     value={this.state.city}
                     onChange={this.handleChange}
+                    disableUnderline
                   >
                     <MenuItem value="">
                       <em>None</em>
@@ -293,28 +301,6 @@ class home extends Component {
                       Rochester Hills
                     </MenuItem>
                     <MenuItem value={"Auburn Hills"}>Auburn Hills</MenuItem>
-                  </Select>
-                </FormControl>
-
-                <FormControl
-                  variant="filled"
-                  color="secondary"
-                  className={classes.formControlSmall}
-                  style={{ float: "left" }}
-                >
-                  <InputLabel id="state" className={classes.textLabel}>
-                    State
-                  </InputLabel>
-                  <Select
-                    className={classes.textBox}
-                    labelId="state"
-                    id="state"
-                    label="state"
-                    name="state"
-                    value={this.state.state}
-                    onChange={this.handleChange}
-                  >
-                    <MenuItem value={"MI"}>MI</MenuItem>
                   </Select>
                 </FormControl>
 
@@ -344,52 +330,21 @@ class home extends Component {
             </div>
           </Grid>
 
-          {!this.props.authenticated && (
-            <Grid item xs={12} style={{ margin: "20px 0 -50px 0" }}>
-              <Button
-                variant="contained"
-                color="primary"
-                size="large"
-                className={classes.margin}
-                component={Link}
-                to="/login"
-                style={{ width: "100px" }}
-              >
-                Login
-              </Button>
-              <Button
-                variant="contained"
-                color="secondary"
-                size="large"
-                className={classes.margin}
-                component={Link}
-                to="/signup"
-                style={{ width: "100px" }}
-              >
-                Signup
-              </Button>
-            </Grid>
-          )}
-
-          <Grid item xs={12} style={{ textAlign: "center" }}>
+          <Grid item xs={12} justify="center">
             <Box
               p={1}
               style={{
-                maxWidth: 1000,
-                margin: "-50px auto -50px auto",
-                padding: "100px 50px 100px 50px",
-                textAlign: "center",
+                maxWidth: 400,
+                margin: "0 auto",
+                padding: "100px 0px",
               }}
             >
-              <Typography variant="h3" className={classes.introText}>
-                Hire photographers and videographers
+              <Typography variant="h2" className={classes.introText}>
+                TAKE A SHOT
               </Typography>
-              <Typography variant="h3" className={classes.introText}>
-                ...at any price
-              </Typography>
-              <Typography variant="h3" className={classes.introText}>
-                ...at any time
-              </Typography>
+              <Button fullWidth color="primary" variant="outlined">
+                <Typography variant="h6">Shoot nearby</Typography>
+              </Button>
             </Box>
           </Grid>
         </Grid>

@@ -36,92 +36,93 @@ class usercard extends Component {
     } = this.props;
 
     return (
-      <Paper
-        style={{ width: "100%", marginTop: "10px", padding: "15px 0px" }}
-        elevation={3}
-      >
-        <Grid container>
-          <Grid item xs={8}>
-            <div className={classes.textGrid}>
-              <Typography variant="h4">
-                {loading ? (
-                  <Skeleton width="25%" />
-                ) : (
-                  <div>
-                    {firstName} {lastName}
-                  </div>
-                )}
-              </Typography>
+      <>
+        <Paper className={classes.paperComponent} elevation={3}>
+          <Grid container>
+            <Grid item sm={8} xs={12}>
+              <div className={classes.textGrid}>
+                <Typography variant="h4">
+                  {loading ? (
+                    <Skeleton width="25%" />
+                  ) : (
+                    <div>
+                      {firstName} {lastName}
+                    </div>
+                  )}
+                </Typography>
 
-              <Typography variant="h6" gutterBottom>
-                {loading ? <Skeleton width="25%" /> : <div>{headline}</div>}
-              </Typography>
+                <Typography variant="h6" gutterBottom>
+                  {loading ? <Skeleton width="25%" /> : <div>{headline}</div>}
+                </Typography>
 
-              <Typography variant="subtitle1">
-                {loading ? (
-                  <Skeleton width="25%" />
-                ) : (
-                  <div>
-                    {location_city}, {location_state}
-                  </div>
-                )}
+                <Typography variant="subtitle1">
+                  {loading ? (
+                    <Skeleton width="25%" />
+                  ) : (
+                    <div>
+                      {location_city}, {location_state}
+                    </div>
+                  )}
+                </Typography>
+              </div>
+            </Grid>
+          </Grid>
+        </Paper>
+        <Grid container spacing={1} style={{ textAlign: "center" }}>
+          <Grid item xs={4}>
+            <Paper elevation={3} style={{ padding: 10 }}>
+              <a
+                target="_blank"
+                href={`https://www.google.com/search?q=${camera}`}
+              >
+                <IconButton aria-label="icon">
+                  <PhotoCameraIcon color="secondary" fontSize="large" />
+                </IconButton>
+              </a>
+              <Typography
+                variant="body1"
+                gutterBottom
+                className={classes.noOverflow}
+              >
+                {camera}
               </Typography>
-            </div>
+            </Paper>
           </Grid>
 
           <Grid item xs={4}>
-            <div style={{ width: "100%" }}>
-              <List dense="true">
-                <ListItem>
-                  <ListItemText
-                    primary={camera}
-                    style={{ textAlign: "right" }}
-                  />
-                  <ListItemSecondaryAction>
-                    <a
-                      target="_blank"
-                      href={`https://www.google.com/search?q=${camera}`}
-                    >
-                      <IconButton edge="end" aria-label="icon">
-                        <PhotoCameraIcon color="secondary" />
-                      </IconButton>
-                    </a>
-                  </ListItemSecondaryAction>
-                </ListItem>
+            <Paper elevation={3} style={{ padding: 10 }}>
+              <a target="_blank" href={`http://www.instagram.com/${instagram}`}>
+                <IconButton aria-label="icon">
+                  <InstagramIcon color="secondary" fontSize="large" />
+                </IconButton>
+              </a>
+              <Typography
+                variant="body1"
+                gutterBottom
+                className={classes.noOverflow}
+              >
+                {instagram}
+              </Typography>
+            </Paper>
+          </Grid>
 
-                <ListItem>
-                  <ListItemText
-                    primary={instagram}
-                    style={{ textAlign: "right" }}
-                  />
-                  <ListItemSecondaryAction>
-                    <a
-                      target="_blank"
-                      href={`http://www.instagram.com/${instagram}`}
-                    >
-                      <IconButton edge="end" aria-label="icon">
-                        <InstagramIcon color="secondary" />
-                      </IconButton>
-                    </a>
-                  </ListItemSecondaryAction>
-                </ListItem>
+          <Grid item xs={4}>
+            <Paper elevation={3} style={{ padding: 10 }}>
+              <IconButton aria-label="icon">
+                <BusinessIcon color="secondary" fontSize="large" />
+              </IconButton>
 
-                <ListItem>
-                  <ListItemText
-                    primary={company}
-                    style={{ textAlign: "right" }}
-                  />
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="icon">
-                      <BusinessIcon color="secondary" />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              </List>
-            </div>
+              <Typography
+                variant="body1"
+                gutterBottom
+                className={classes.noOverflow}
+              >
+                {company}
+              </Typography>
+            </Paper>
           </Grid>
         </Grid>
-      </Paper>
+      </>
     );
   }
 }

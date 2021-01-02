@@ -3,6 +3,9 @@ const config = require("../util/config");
 const storageBucketVar = config.photoVault;
 var JSZip = require("jszip");
 const imageToBase64 = require("image-to-base64");
+const email = require("./email");
+const payment = require("./payment");
+const { TIME_TO_PAYOUT } = require("../util/constants");
 
 exports.getVault = async (req, res) => {
   console.log(storageBucketVar);
@@ -74,11 +77,11 @@ exports.uploadToVault = async (req, res) => {
 
     imagesToUpload.forEach((imageToBeUploaded) => {
       // Replace the "/" with "%2F" in the url since google storage does that for some dumbass reason if placing in folder
-      url = `https://firebasestorage.googleapis.com/v0/b/${storageBucketVar}/o/vault_${vaultID}%2F${imageToBeUploaded.imageFileName}?alt=media`;
+      url = `https://firebasestorage.googleapis.com/v0/b/${storageBucketVar}/o/${vaultID}%2F${imageToBeUploaded.imageFileName}?alt=media`;
       imageUrls.push(url);
       promises.push(
         storage.bucket(storageBucketVar).upload(imageToBeUploaded.filepath, {
-          destination: `vault_${vaultID}/${imageToBeUploaded.imageFileName}`,
+          destination: `${vaultID}/${imageToBeUploaded.imageFileName}`,
           resumable: false,
           metadata: {
             metadata: {
@@ -92,7 +95,7 @@ exports.uploadToVault = async (req, res) => {
     console.log("ImageURLS:", imageUrls);
     // TODO: store images without a for loop
     imageUrls.forEach((image) => {
-      db.doc(`/photoVault/vault_${vaultID}`)
+      db.doc(`/photoVault/${vaultID}`)
         .update({
           images: admin.firestore.FieldValue.arrayUnion(image),
         })
@@ -137,16 +140,72 @@ exports.getVaultSize = async (req, res) => {
   return res.json({ size: allSizes });
 };
 
+exports.notifyCustomer = async (req, res) => {
+  try {
+    const { consumerID, photographerID } = await getVaultOwners(orderID);
+    let customerDetails = await getPersonDetails(consumerID);
+    customerDetails.vaultID = req.params.vaultID;
+    await editVaultValues(req.params.vaultID, { notifiedCustomer: true });
+    await email.emailVaultReady(customerDetails);
+    await schedulePayout(orderID, consumerID, photographerID);
+    return res.json({ response: true });
+  } catch (err) {
+    console.log(err);
+    return res.status(400).json({ response: false });
+  }
+};
+
+exports.finalizeVault = async (req, res) => {
+  try {
+    const orderID = req.params.vaultID;
+    const { consumerID, photographerID } = await getVaultOwners(orderID);
+    await payment.payOut(orderID, consumerID, photographerID);
+    return res.json({
+      response: "You've confirmed your photos. You may now download them!",
+    });
+  } catch (err) {
+    console.log("error finalizing vault: ", err);
+    return res.status(400).json({ response: "Error confirming photos." });
+  }
+};
+
+function getVaultOwners(orderID) {
+  return db
+    .collection("photoVault")
+    .doc(orderID)
+    .get()
+    .then((doc) => {
+      return {
+        consumerID: doc.data().consumerID,
+        photographerID: doc.data().photographerID,
+      };
+    })
+    .catch((err) => {
+      console.log("error getting getting vault owners");
+      return null;
+    });
+}
+
 function checkID(vaultID, id) {
   return db
     .collection("photoVault")
-    .doc(`vault_${vaultID}`)
+    .doc(`${vaultID}`)
     .get()
     .then((doc) => {
       if (doc.data().consumerID === id) {
-        return { access: "consumer", data: doc.data() };
+        return {
+          access: "consumer",
+          data: doc.data(),
+          notifiedCustomer: doc.data().notifiedCustomer,
+          confirmedByCustomer: doc.data().confirmedByCustomer,
+        };
       } else if (doc.data().photographerID === id) {
-        return { access: "photographer", data: doc.data() };
+        return {
+          access: "photographer",
+          data: doc.data(),
+          notifiedCustomer: doc.data().notifiedCustomer,
+          confirmedByCustomer: doc.data().confirmedByCustomer,
+        };
       } else {
         return null;
       }
@@ -160,7 +219,7 @@ function checkID(vaultID, id) {
 function getFiles(vaultID) {
   return storage
     .bucket(storageBucketVar)
-    .getFiles({ prefix: `vault_${vaultID}/` })
+    .getFiles({ prefix: `${vaultID}/` })
     .then((files) => {
       return files;
     })
@@ -231,7 +290,7 @@ function deleteFromStorage(imageLocation) {
 }
 
 function deleteFromDatabase(image, vaultID) {
-  const docs = db.collection("photoVault").doc(`vault_${vaultID}`);
+  const docs = db.collection("photoVault").doc(`${vaultID}`);
   docs
     .update({ images: admin.firestore.FieldValue.arrayRemove(image) })
     .then((res) => {
@@ -247,6 +306,65 @@ function getImageLocation(image, vaultID) {
   let urlSplit = image.split("%2F");
   let partWeWant = urlSplit[1];
   let imageName = partWeWant.split("?");
-  let imageLocation = `vault_${vaultID}/${imageName[0]}`;
+  let imageLocation = `${vaultID}/${imageName[0]}`;
   return imageLocation;
+}
+
+function getPersonID(vaultID, type) {
+  return db
+    .collection("photoVault")
+    .doc(`${vaultID}`)
+    .get()
+    .then((doc) => {
+      if (type === "customer") {
+        return doc.data().consumerID;
+      } else if (type === "photographer") {
+        return doc.data().photographerID;
+      }
+    });
+}
+
+function getPersonDetails(id) {
+  return db
+    .collection("users")
+    .doc(id)
+    .get()
+    .then((doc) => {
+      return doc.data();
+    });
+}
+
+function editVaultValues(id, object) {
+  return db
+    .collection("photoVault")
+    .doc(`${id}`)
+    .update(object)
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(err);
+      return false;
+    });
+}
+
+function schedulePayout(orderID, consumerID, photographerID) {
+  let theDate = new Date();
+  theDate.setDate(theDate.getDate() + 2);
+  db.collection("scheduler")
+    .doc(orderID)
+    .set({
+      data: {
+        consumerID: consumerID,
+        photographerID: photographerID,
+      },
+      performAt: getDateToPayout(),
+      status: "scheduled",
+    });
+}
+
+function getDateToPayout() {
+  let theDate = new Date();
+  theDate.setDate(theDate.getDate() + TIME_TO_PAYOUT);
+  return theDate;
 }

@@ -21,7 +21,11 @@ import { useHistory, useLocation } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import SvgIcon from "@material-ui/core/SvgIcon";
+<<<<<<< HEAD
 import { Hidden } from "@material-ui/core";
+=======
+import Avatar from "@material-ui/core/Avatar";
+>>>>>>> 9dfa49e829a95df70d535b3da8de9cd053ee57ea
 
 const useStyles = makeStyles((theme) => ({
   box: {
@@ -65,9 +69,13 @@ const Navbar = (props) => {
   const [urlQuery] = useState(urlToSearchState(location).query);
 
   let photographerStatus = false;
+  let avatarUrl = "";
+
   if (authenticated && details[0]) {
     const { photographer } = details[0];
+    const { thumbnailImage } = details[0];
     photographerStatus = photographer;
+    avatarUrl = thumbnailImage;
   }
 
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -96,7 +104,15 @@ const Navbar = (props) => {
   };
 
   return (
-    <AppBar>
+    <AppBar
+      style={{
+        visibility:
+          window.location.pathname === "/login" ||
+          window.location.pathname === "/signup"
+            ? "hidden"
+            : "visible",
+      }}
+    >
       <Toolbar>
         <Grid container alignItems="center" justify="center">
           <Grid item xs={3}>
@@ -124,6 +140,14 @@ const Navbar = (props) => {
               borderRadius={25}
               borderColor="secondary"
               className={classes.box}
+              style={{
+                visibility:
+                  window.location.pathname === "/login" ||
+                  window.location.pathname === "/signup" ||
+                  window.location.pathname === "/"
+                    ? "hidden"
+                    : "visible",
+              }}
             >
               <Paper className={classes.searchBox}>
                 <InputBase
@@ -163,7 +187,7 @@ const Navbar = (props) => {
               color="inherit"
             >
               <MenuIcon fontSize="large" />
-              <AccountCircle color="secondary" fontSize="large" />
+              <Avatar alt="Remy Sharp" src={avatarUrl} />
             </IconButton>
           </Grid>
 

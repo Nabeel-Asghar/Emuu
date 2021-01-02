@@ -18,7 +18,7 @@ const RefinementList = ({ items, refine }) => (
         >
           <Checkbox
             style={{
-              padding: 0,
+              padding: 3,
               verticalAlign: "middle",
               transform: "scale(.9)",
             }}

@@ -87,7 +87,7 @@ class Search extends Component {
           createURL={createURL}
         >
           <ConnectedSearchBox />
-          <Grid item xs={12} style={{ textAlign: "center" }}>
+          <Grid item xs={12} style={{ textAlign: "right" }}>
             <ConnectedSortBy
               defaultRefinement="photographers"
               items={[
@@ -100,9 +100,15 @@ class Search extends Component {
           </Grid>
 
           <Grid item xs={3}>
-            <Paper style={{ padding: "20px 25px" }}>
+            <Paper style={{ padding: "20px 25px", marginBottom: "20px" }}>
               <ConnectedStats />
 
+              <ConnectedClearRefinements
+                translation={{ avgRating: "Average Rating" }}
+                style={{ textAlign: "left" }}
+              />
+            </Paper>
+            <Paper style={{ padding: "20px 25px" }}>
               {refinements.map((refinement) => (
                 <>
                   <SearchRefinement
@@ -129,9 +135,6 @@ class Search extends Component {
               {/* <Divider className={classes.divider} /> */}
 
               <ConnectedDate attribute="dates" />
-              <ConnectedClearRefinements
-                translation={{ avgRating: "Average Rating" }}
-              />
             </Paper>
           </Grid>
 

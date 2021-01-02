@@ -43,7 +43,7 @@ class timeView extends Component {
     //           handleClose={this.handleClose}
 
     return (
-      <form onSubmit={this.props.handleSubmit}>
+      <form onSubmit={this.props.handleSubmit} style={{ width: "100%" }}>
         <Snackbar
           anchorOrigin={{
             vertical: "top",
@@ -62,18 +62,22 @@ class timeView extends Component {
         </Snackbar>
         <FormControl
           component="fieldset"
-          className={classes.form}
+          style={{ margin: "0 auto", width: "100%" }}
           color="secondary"
         >
           <FormLabel
             component="legend"
-            style={{ color: "black", padding: "15px 0 15px 0" }}
+            style={{
+              textAlign: "center",
+              color: "black",
+              padding: "15px 0 15px 0",
+            }}
           >
             Choose timeslots that you are available at
           </FormLabel>
           <FormGroup>
             <Grid container>
-              <Grid item xs={4}>
+              <Grid item xs={6}>
                 <FormControlLabel
                   disabled={disabled.includes(9) ? true : false}
                   control={
@@ -87,7 +91,7 @@ class timeView extends Component {
                   }
                   label={"9:00 AM"}
                   key={9}
-                  style={{ width: "120px" }}
+                  className={classes.timeslots}
                 />
 
                 <FormControlLabel
@@ -103,7 +107,7 @@ class timeView extends Component {
                   }
                   label={"10:00 AM"}
                   key={10}
-                  style={{ width: "120px" }}
+                  className={classes.timeslots}
                 />
 
                 <FormControlLabel
@@ -119,7 +123,7 @@ class timeView extends Component {
                   }
                   label={"11:00 AM"}
                   key={11}
-                  style={{ width: "120px" }}
+                  className={classes.timeslots}
                 />
 
                 <FormControlLabel
@@ -135,11 +139,9 @@ class timeView extends Component {
                   }
                   label={"12:00 PM"}
                   key={12}
-                  style={{ width: "120px" }}
+                  className={classes.timeslots}
                 />
-              </Grid>
 
-              <Grid item xs={4}>
                 <FormControlLabel
                   disabled={disabled.includes(13) ? true : false}
                   control={
@@ -153,7 +155,7 @@ class timeView extends Component {
                   }
                   label={"1:00 PM"}
                   key={13}
-                  style={{ width: "120px" }}
+                  className={classes.timeslots}
                 />
                 <FormControlLabel
                   disabled={disabled.includes(14) ? true : false}
@@ -168,8 +170,10 @@ class timeView extends Component {
                   }
                   label={"2:00 PM"}
                   key={14}
-                  style={{ width: "120px" }}
+                  className={classes.timeslots}
                 />
+              </Grid>
+              <Grid item xs={6}>
                 <FormControlLabel
                   disabled={disabled.includes(15) ? true : false}
                   control={
@@ -183,7 +187,7 @@ class timeView extends Component {
                   }
                   label={"3:00 PM"}
                   key={15}
-                  style={{ width: "120px" }}
+                  className={classes.timeslots}
                 />
                 <FormControlLabel
                   disabled={disabled.includes(16) ? true : false}
@@ -198,11 +202,9 @@ class timeView extends Component {
                   }
                   label={"4:00 PM"}
                   key={16}
-                  style={{ width: "120px" }}
+                  className={classes.timeslots}
                 />
-              </Grid>
 
-              <Grid item xs={4}>
                 <FormControlLabel
                   disabled={disabled.includes(17) ? true : false}
                   control={
@@ -216,7 +218,7 @@ class timeView extends Component {
                   }
                   label={"5:00 PM"}
                   key={17}
-                  style={{ width: "120px" }}
+                  className={classes.timeslots}
                 />
                 <FormControlLabel
                   disabled={disabled.includes(18) ? true : false}
@@ -231,7 +233,7 @@ class timeView extends Component {
                   }
                   label={"6:00 PM"}
                   key={18}
-                  style={{ width: "120px" }}
+                  className={classes.timeslots}
                 />
                 <FormControlLabel
                   disabled={disabled.includes(19) ? true : false}
@@ -246,7 +248,7 @@ class timeView extends Component {
                   }
                   label={"7:00 PM"}
                   key={19}
-                  style={{ width: "120px" }}
+                  className={classes.timeslots}
                 />
 
                 <FormControlLabel
@@ -262,41 +264,16 @@ class timeView extends Component {
                   }
                   label={"8:00 PM"}
                   key={20}
-                  style={{ width: "120px" }}
+                  className={classes.timeslots}
                 />
               </Grid>
 
-              <Grid item xs={12} style={{ marginTop: "20px" }}>
+              <Grid
+                item
+                xs={12}
+                style={{ marginTop: "20px", textAlign: "center" }}
+              >
                 <RadioLegend />
-              </Grid>
-
-              <Grid item xs={12}>
-                <div className={classes.root} style={{ marginTop: "10px" }}>
-                  <Button
-                    variant="outlined"
-                    disabled={this.props.loading}
-                    color="secondary"
-                    onClick={() => {
-                      this.props.reset();
-                    }}
-                  >
-                    Reset
-                  </Button>
-                  <Button
-                    variant="contained"
-                    disabled={this.props.loading}
-                    color="secondary"
-                    onClick={() => this.props.submit()}
-                  >
-                    Submit
-                    {this.props.loading && (
-                      <CircularProgress
-                        className={classes.progress}
-                        color="secondary"
-                      />
-                    )}
-                  </Button>
-                </div>
               </Grid>
             </Grid>
           </FormGroup>

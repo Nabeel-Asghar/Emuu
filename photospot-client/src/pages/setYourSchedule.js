@@ -5,6 +5,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import Button from "@material-ui/core/Button";
 
 // Components
 import DateView from "../components/set-your-schedule/dateView";
@@ -114,16 +115,15 @@ export class setYourSchedule extends Component {
     var formattedDict = {};
     var algoliaDates = [];
 
-
-    
-
     for (var i = 0; i < this.state.checkedSlots.length; i++) {
       var date = this.convertTimeToString(this.state.checkedSlots[i]);
       var timeSlot = { [date]: false };
       formatedTimeslots.push(timeSlot);
       formattedDict[[date]] = false;
 
-      let momentDate = moment.utc(this.state.formattedDate + " " + date).format();
+      let momentDate = moment
+        .utc(this.state.formattedDate + " " + date)
+        .format();
       algoliaDates.push(momentDate);
     }
 
@@ -133,7 +133,11 @@ export class setYourSchedule extends Component {
       formattedDict[[date]] = true;
     }
 
-    var dayAndTime = { date: this.state.formattedDate, time: formattedDict , algoliaDates: algoliaDates};
+    var dayAndTime = {
+      date: this.state.formattedDate,
+      time: formattedDict,
+      algoliaDates: algoliaDates,
+    };
 
     this.props.editBookingTimes(dayAndTime).then(() => {
       this.setState({ open: true });
@@ -197,37 +201,72 @@ export class setYourSchedule extends Component {
     } = this.props;
 
     return (
-      <Paper style={{ paddingTop: "20px" }}>
-        <Grid container spacing={6}>
-          <Grid item xs={6}>
-            <DateView
-              selectedDate={this.state.selectedDate}
-              handleDateChange={this.handleDateChange}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            {loadingData ? (
-              <CircularProgress
-                className={classes.progress}
-                color="secondary"
-              />
-            ) : (
-              <TimeView
-                date={this.state.formattedDate}
-                checked={this.state.checkedSlots}
-                disabled={this.state.disabledCheckSlots}
-                reset={this.resetChecked}
-                submit={this.handleSubmit}
-                handleChange={this.handleChange}
-                loading={loadingAction}
-                open={this.state.open}
-                error={generalError}
-                handleClose={this.handleClose}
-              />
-            )}
-          </Grid>
+      <Grid
+        container
+        spacing={1}
+        justify="center"
+        style={{ maxWidth: 700, margin: "0 auto" }}
+      >
+        <Grid item sm={6} xs={12}>
+          <DateView
+            selectedDate={this.state.selectedDate}
+            handleDateChange={this.handleDateChange}
+          />
         </Grid>
-      </Paper>
+        <Grid item sm={6} xs={12}>
+          {loadingData ? (
+            <CircularProgress className={classes.progress} color="secondary" />
+          ) : (
+            <TimeView
+              date={this.state.formattedDate}
+              checked={this.state.checkedSlots}
+              disabled={this.state.disabledCheckSlots}
+              reset={this.resetChecked}
+              submit={this.handleSubmit}
+              handleChange={this.handleChange}
+              loading={loadingAction}
+              open={this.state.open}
+              error={generalError}
+              handleClose={this.handleClose}
+            />
+          )}
+        </Grid>
+        <Grid item xs={12}>
+          <div
+            className={classes.root}
+            style={{ marginTop: "10px", textAlign: "center" }}
+          >
+            <Button
+              variant="outlined"
+              disabled={loadingAction}
+              color="secondary"
+              onClick={() => {
+                this.resetChecked();
+              }}
+              className={classes.spacedButton}
+              size="large"
+            >
+              Reset
+            </Button>
+            <Button
+              variant="contained"
+              disabled={loadingAction}
+              color="secondary"
+              onClick={() => this.handleSubmit()}
+              className={classes.spacedButton}
+              size="large"
+            >
+              Submit
+              {loadingAction && (
+                <CircularProgress
+                  className={classes.progress}
+                  color="secondary"
+                />
+              )}
+            </Button>
+          </div>
+        </Grid>
+      </Grid>
     );
   }
 }

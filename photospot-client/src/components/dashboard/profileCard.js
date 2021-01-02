@@ -10,8 +10,8 @@ import withStyles from "@material-ui/core/styles/withStyles";
 const styles = (theme) => ({
   ...theme.spreadThis,
   profileAvatar: {
-    width: "200px",
-    height: "200px",
+    width: "225px",
+    height: "225px",
     borderRadius: "50%",
     objectFit: "cover",
     padding: "10px",

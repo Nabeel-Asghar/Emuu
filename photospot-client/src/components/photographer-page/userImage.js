@@ -1,6 +1,5 @@
 import Skeleton from "@material-ui/lab/Skeleton";
 import React, { Component } from "react";
-import firebase from "../../firestore";
 import withStyles from "@material-ui/core/styles/withStyles";
 
 const styles = (theme) => ({

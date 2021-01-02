@@ -71,12 +71,14 @@ class usercard extends Component {
     } = this.props;
 
     return (
-      <Grid container style={{ zIndex: 1 }}>
+      <Grid container className={classes.userCard}>
         <Grid item xs={12} style={{ textAlign: "center" }}>
           {loading ? (
             <Skeleton variant="rect" className={classes.avatar} />
           ) : (
-            <img className={classes.avatar} src={profileImage} />
+            <div className={classes.avatarContainer}>
+              <img className={classes.avatar} src={profileImage} />
+            </div>
           )}
 
           {loading ? (
@@ -86,7 +88,7 @@ class usercard extends Component {
           ) : (
             <div>
               <Button
-                className={classes.bookButton}
+                className={classes.spacedButton}
                 startIcon={<BookIcon />}
                 disabled={loading}
                 variant="outlined"
@@ -101,7 +103,7 @@ class usercard extends Component {
                 <Typography style={{ fontWeight: "bold" }}>Book</Typography>
               </Button>
               <Button
-                className={classes.bookButton}
+                className={classes.spacedButton}
                 startIcon={<CallIcon />}
                 variant="contained"
                 color="secondary"
@@ -190,27 +192,6 @@ class usercard extends Component {
   buildDocKey = () => {
     return [this.state.email, this.state.userEmail].sort().join(":");
   };
-
-  // chatExists = async () => {
-  //   const docKey = this.buildDocKey();
-  //   const chat = await firebase
-  //     .firestore()
-  //     .collection("chats")
-  //     .doc(docKey)
-  //     .get();
-
-  //   return chat.exists;
-  // };
-
-  //   goToChat = async (docKey, msg) => {
-  //   const usersInChat = docKey.split(":");
-  //   const chat = this.state.chats.find((_chat) =>
-  //     usersInChat.every((_user) => _chat.users.includes(_user))
-  //   );
-  //   this.setState({ newChatFormVisible: false });
-  //   await this.selectChat(this.state.chats.indexOf(chat));
-  //   this.submitMessage(msg);
-  // };
 }
 
 export default withStyles(styles)(usercard);

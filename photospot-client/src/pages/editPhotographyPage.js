@@ -262,31 +262,29 @@ class editPhotographyPage extends Component {
 
     return (
       <div>
-        <Paper elevation={3} className={classes.margin}>
-          <Grid container>
-            <Grid item xs={12}>
-              <EditableUsercard
-                profileImage={this.state.profileImage}
-                background={this.state.background}
-                firstName={this.state.firstName}
-                lastName={this.state.lastName}
-                location_city={this.state.location_city}
-                location_state={this.state.location_state}
-                instagram={this.state.instagram}
-                company={this.state.company}
-                headline={this.state.headline}
-                camera={this.state.camera}
-                loading={loading}
-                handleBackgroundChange={this.handleBackgroundChange}
-                handleEditBackground={this.handleEditBackground}
-                handleProfileImageChange={this.handleProfileImageChange}
-                handleEditProfileImage={this.handleEditProfileImage}
-                handleOpenEdit={this.handleClickOpen}
-                history={this.props.history}
-              />
-            </Grid>
+        <Grid container>
+          <Grid item xs={12}>
+            <EditableUsercard
+              profileImage={this.state.profileImage}
+              background={this.state.background}
+              firstName={this.state.firstName}
+              lastName={this.state.lastName}
+              location_city={this.state.location_city}
+              location_state={this.state.location_state}
+              instagram={this.state.instagram}
+              company={this.state.company}
+              headline={this.state.headline}
+              camera={this.state.camera}
+              loading={loading}
+              handleBackgroundChange={this.handleBackgroundChange}
+              handleEditBackground={this.handleEditBackground}
+              handleProfileImageChange={this.handleProfileImageChange}
+              handleEditProfileImage={this.handleEditProfileImage}
+              handleOpenEdit={this.handleClickOpen}
+              history={this.props.history}
+            />
           </Grid>
-        </Paper>
+        </Grid>
 
         <EditUserDetails
           open={this.state.openDetails}
@@ -298,87 +296,94 @@ class editPhotographyPage extends Component {
           company={this.state.fakeCompany}
           headline={this.state.fakeHeadline}
         />
-
-        <Paper elevation={3} className={classes.margin}>
-          <Grid container>
-            <Grid item xs={10}>
-              <TextField
-                className={classes.textGrid}
-                disabled
-                id="standard-full-width"
-                name="bio"
-                type="text"
-                label="Biography"
-                value={this.state.bio}
-                helperText="Tell us about yourself"
-                fullWidth
-                multiline
-                rows={4}
-                margin="normal"
-                variant="outlined"
-                onChange={this.handleBioChange}
-                InputLabelProps={{
-                  shrink: true,
-                }}
+        <div
+          style={{
+            maxWidth: 1000,
+            margin: "0 auto",
+            paddingBottom: "20px",
+          }}
+        >
+          <Paper elevation={3} className={classes.margin}>
+            <Grid container>
+              <Grid item xs={11}>
+                <TextField
+                  className={classes.textGrid}
+                  disabled
+                  id="standard-full-width"
+                  name="bio"
+                  type="text"
+                  label="Biography"
+                  value={this.state.bio}
+                  helperText="Tell us about yourself"
+                  fullWidth
+                  multiline
+                  rows={4}
+                  margin="normal"
+                  variant="outlined"
+                  onChange={this.handleBioChange}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
+              </Grid>
+              <EditBio
+                open={this.state.open}
+                handleAgree={this.handleBioAgree}
+                handleDisagree={this.handleBioDisagree}
+                handleChange={this.handleBioChange}
+                handleCatChange={this.handleCategoryChange}
+                bio={this.state.fakeBio}
+                categories={this.state.tempCategories}
               />
+              <Grid item xs={1}>
+                <List style={{ marginTop: "10px" }}>
+                  <ListItem>
+                    <ListItemSecondaryAction>
+                      <IconButton edge="end" aria-label="icon">
+                        <EditIcon
+                          color="secondary"
+                          onClick={this.handleBioClickOpen}
+                        />
+                      </IconButton>
+                    </ListItemSecondaryAction>
+                  </ListItem>
+                </List>
+              </Grid>
             </Grid>
-            <EditBio
-              open={this.state.open}
-              handleAgree={this.handleBioAgree}
-              handleDisagree={this.handleBioDisagree}
-              handleChange={this.handleBioChange}
-              handleCatChange={this.handleCategoryChange}
-              bio={this.state.fakeBio}
-              categories={this.state.tempCategories}
-            />
-            <Grid item xs={2}>
-              <List style={{ marginTop: "10px" }}>
-                <ListItem>
-                  <ListItemSecondaryAction>
-                    <IconButton edge="end" aria-label="icon">
-                      <EditIcon
-                        color="secondary"
-                        onClick={this.handleBioClickOpen}
-                      />
-                    </IconButton>
-                  </ListItemSecondaryAction>
-                </ListItem>
-              </List>
+          </Paper>
+          <Paper elevation={3} className={classes.margin}>
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justify="center"
+            >
+              <Grid item xs={12} className={classes.centerGrid}>
+                <Button
+                  variant="contained"
+                  color="secondary"
+                  component={Link}
+                  style={{ margin: "10px" }}
+                  to={{
+                    pathname: "/uploadPhotographyPictures",
+                    state: {
+                      images: this.state.images,
+                    },
+                  }}
+                >
+                  Edit Pictures
+                </Button>
+              </Grid>
+              <Grid item xs={12} className={classes.centerGrid}>
+                <PhotoSamples
+                  key={this.state.images}
+                  images={this.state.images}
+                  loading={loading}
+                />
+              </Grid>
             </Grid>
-          </Grid>
-        </Paper>
-        <Paper elevation={3} className={classes.margin}>
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justify="center"
-          >
-            <Grid item xs={12} className={classes.centerGrid}>
-              <Button
-                variant="contained"
-                color="secondary"
-                component={Link}
-                style={{ margin: "10px" }}
-                to={{
-                  pathname: "/uploadPhotographyPictures",
-                  state: {
-                    images: this.state.images,
-                  },
-                }}
-              >
-                Edit Pictures
-              </Button>
-            </Grid>
-            <Grid item xs={12} className={classes.centerGrid}>
-              <PhotoSamples
-                key={this.state.images}
-                images={this.state.images}
-                loading={loading}
-              />
-            </Grid>
-          </Grid>
-        </Paper>
+          </Paper>
+        </div>
       </div>
     );
   }

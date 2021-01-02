@@ -11,6 +11,7 @@ import { logoutUser, getUserData } from "./redux/actions/userActions";
 // Theme
 import { ThemeProvider as MuiThemeProvider } from "@material-ui/core/styles";
 import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 // Pages
 import searchPage from "./pages/searchPage";
@@ -72,6 +73,16 @@ const theme = createMuiTheme({
     },
   },
 
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 800,
+      md: 960,
+      lg: 1280,
+      xl: 1920,
+    },
+  },
+
   typography: {
     useNextVariants: true,
   },
@@ -80,14 +91,17 @@ const theme = createMuiTheme({
     auth: {
       maxWidth: "420px",
       margin: "auto",
-      padding: "25px 0px",
-      marginTop: 100,
+      textAlign: "center",
     },
     bottomAuth: {
       maxWidth: "420px",
       margin: "auto",
-      padding: "15px 0 15px 0",
+      padding: "15px 0px",
       marginTop: 15,
+      textAlign: "center",
+    },
+    authText: {
+      padding: "20px 35px",
     },
     pageContainer: {
       paddingBottom: "15px",
@@ -96,6 +110,11 @@ const theme = createMuiTheme({
       marginTop: "5px",
       padding: "20px 0px 15px 0px",
     },
+    paperComponent: {
+      width: "100%",
+      margin: "10px 0px",
+      padding: "15px 0px",
+    },
     textStyle: {
       overflow: "hidden",
       whiteSpace: "nowrap",
@@ -103,11 +122,13 @@ const theme = createMuiTheme({
       paddingBottom: "15px",
       fontWeight: "bold",
     },
+    noOverflow: {
+      overflow: "hidden",
+      whiteSpace: "nowrap",
+      textOverflow: "ellipsis",
+    },
     interiorCard: {
       padding: "0px 10px 0px 40px",
-    },
-    form: {
-      textAlign: "center",
     },
     margin: {
       margin: "10px 0px",
@@ -166,20 +187,39 @@ const theme = createMuiTheme({
     },
 
     background: {
-      height: "500px",
+      height: "50vh",
       width: "100%",
       objectFit: "cover",
       clipPath: "polygon(0 0, 0 100%, 100% 75%, 100% 0)",
       zIndex: "auto",
     },
 
-    avatar: {
-      width: "350px",
-      height: "350px",
-      borderRadius: "50%",
-      objectFit: "cover",
+    timeslots: {
+      width: "120px",
+      display: "flex",
+      margin: "0 auto",
+    },
+
+    userCard: {
       zIndex: 1,
+      marginTop: "100px",
+    },
+
+    avatarContainer: {
+      width: "35vh",
+      paddingBottom: "35vh",
+      borderRadius: "50%",
+      position: "relative",
+      overflow: "hidden",
       border: "5px solid #fff",
+      zIndex: 1,
+      margin: "0 auto",
+    },
+    avatar: {
+      position: "absolute",
+      height: "100%",
+      top: 0,
+      left: 0,
     },
 
     notFullWidth: {
@@ -187,13 +227,22 @@ const theme = createMuiTheme({
     },
 
     textGrid: {
-      marginLeft: "50px",
+      marginLeft: "25px",
     },
 
     rightGrid: {
       textAlign: "right",
     },
 
+    spacedButton: {
+      margin: "10px",
+    },
+
+    mediumPaperContainer: {
+      padding: 15,
+      maxWidth: 800,
+      margin: "0 auto",
+    },
     bookButton: {
       marginRight: "10px",
       marginLeft: "10px",
@@ -206,7 +255,7 @@ const token = localStorage.FirebaseIdToken;
 
 if (token) {
   const decodedToken = tokenDecoder(token);
-  if (decodedToken.exp * 1000 < Date.now()) {
+  if (decodedToken.exp * 2000 < Date.now()) {
     store.dispatch(logoutUser());
     window.location.href = "/login";
   } else {
@@ -234,12 +283,18 @@ class App extends Component {
                   component={specificPhotographer}
                 />
 
+                <AuthRoute
+                  exact
+                  path="/yourPhotographyProfile"
+                  component={editPhotographyPage}
+                />
+
+                <Route exact path="/login" component={login} />
+
+                <Route exact path="/signup" component={signup} />
+
                 <div className="container">
                   <Route exact path="/search" component={search} />
-
-                  <Route exact path="/login" component={login} />
-
-                  <Route exact path="/signup" component={signup} />
 
                   <Route
                     exact
@@ -304,12 +359,6 @@ class App extends Component {
                   <Route exact path="/search/:searchQuery" component={search} />
 
                   {/* <Route exact path="/search/:type/:city/:state" component={search} /> */}
-
-                  <AuthRoute
-                    exact
-                    path="/yourPhotographyProfile"
-                    component={editPhotographyPage}
-                  />
 
                   <AuthRoute
                     exact

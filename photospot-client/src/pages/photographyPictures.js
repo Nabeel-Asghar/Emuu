@@ -94,6 +94,7 @@ class photographyPictures extends Component {
         <ImageGrid
           images={this.state.images}
           deleteImage={this.deleteImage.bind(this)}
+          access={"photographer"}
         />
         <Grid container spacing={2}>
           <Grid item xs={12} className={classes.centerGrid}>
