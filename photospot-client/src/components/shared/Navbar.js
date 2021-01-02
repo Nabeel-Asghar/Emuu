@@ -21,11 +21,8 @@ import { useHistory, useLocation } from "react-router-dom";
 import { Redirect } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import SvgIcon from "@material-ui/core/SvgIcon";
-<<<<<<< HEAD
 import { Hidden } from "@material-ui/core";
-=======
 import Avatar from "@material-ui/core/Avatar";
->>>>>>> 9dfa49e829a95df70d535b3da8de9cd053ee57ea
 
 const useStyles = makeStyles((theme) => ({
   box: {
