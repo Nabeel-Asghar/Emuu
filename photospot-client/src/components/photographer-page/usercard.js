@@ -58,16 +58,8 @@ class usercard extends Component {
       email,
       userEmail,
       profileImage,
-      background,
-      location_city,
-      location_state,
-      instagram,
-      company,
-      tags,
       loading,
-      headline,
-      camera,
-      credentials,
+      photographer,
     } = this.props;
 
     return (
@@ -90,7 +82,7 @@ class usercard extends Component {
               <Button
                 className={classes.spacedButton}
                 startIcon={<BookIcon />}
-                disabled={loading}
+                disabled={loading || photographer}
                 variant="outlined"
                 color="secondary"
                 size="large"
@@ -110,6 +102,7 @@ class usercard extends Component {
                 disableElevation
                 size="large"
                 onClick={this.handleContactClickOpen}
+                disabled={loading || photographer}
               >
                 <Typography style={{ fontWeight: "bold" }}>Contact</Typography>
               </Button>

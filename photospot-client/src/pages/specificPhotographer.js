@@ -42,6 +42,7 @@ class specificPhotographer extends Component {
     super();
     this.state = {
       allReviews: [],
+      photographer: true,
       userEmail: "",
       userProfileImage: "",
       email: "",
@@ -101,6 +102,13 @@ class specificPhotographer extends Component {
       this.handleCount(this.state.allReviews);
     });
     if (this.props.credentials) {
+      if (this.props.credentials[0]?.photographer) {
+        this.setState({
+          photographer: true,
+        });
+      } else {
+        this.setState({ photographer: false });
+      }
       this.setState({
         openBackdrop: false,
         userEmail: this.props.credentials[0]?.email,
@@ -270,21 +278,10 @@ class specificPhotographer extends Component {
               firstName={this.state.firstName}
               lastName={this.state.lastName}
               email={this.state.email}
-              profileImage={this.state.profileImage}
-              userFirstName={this.state.userFirstName}
-              userLastName={this.state.userLastName}
               userEmail={this.state.userEmail}
-              userProfileImage={this.state.userProfileImage}
-              credentials={this.props.credentials}
-              location_city={this.state.location_city}
-              location_state={this.state.location_state}
-              instagram={this.state.instagram}
-              company={this.state.company}
-              tags={this.state.tags}
+              profileImage={this.state.profileImage}
               loading={loadingData}
-              history={this.props.history}
-              headline={this.state.headline}
-              camera={this.state.camera}
+              photographer={this.state.photographer}
             />
 
             <UserInfo
