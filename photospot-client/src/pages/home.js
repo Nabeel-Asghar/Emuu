@@ -37,6 +37,10 @@ import TimelineContent from "@material-ui/lab/TimelineContent";
 import TimelineOppositeContent from "@material-ui/lab/TimelineOppositeContent";
 import TimelineDot from "@material-ui/lab/TimelineDot";
 import Fab from "@material-ui/core/Fab";
+import AppBar from "@material-ui/core/AppBar";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
+import Slide from "@material-ui/core/Slide";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -51,6 +55,7 @@ const styles = (theme) => ({
     backgroundImage: `url(${require("../images/background1.jfif")})`,
     backgroundSize: "cover",
     padding: "0px 0px 175px 0px",
+    minHeight: "100vh",
   },
 
   paper: {
@@ -62,7 +67,6 @@ const styles = (theme) => ({
 
   root: {
     paddingTop: "20px",
-    marginBottom: "-25px",
     "& > *": {
       margin: theme.spacing(2),
     },
@@ -123,6 +127,13 @@ const styles = (theme) => ({
     borderRadius: "35px",
   },
 
+  transparentTextContainer: {
+    margin: "0 auto 0 auto",
+    maxWidth: "600px",
+    backgroundColor: "rgba(255,255,255,0.5)",
+    borderRadius: "35px",
+  },
+
   textBox: {
     paddingLeft: "10px",
     borderRadius: "35px",
@@ -142,6 +153,9 @@ const styles = (theme) => ({
   textLabel: {
     marginTop: "5px",
     paddingLeft: "12px",
+  },
+  boldText: {
+    fontWeight: "bold",
   },
 });
 
@@ -166,6 +180,7 @@ class home extends Component {
       type: "",
       city: "",
       state: "",
+      tabValue: 0,
     };
   }
 
@@ -197,155 +212,229 @@ class home extends Component {
     });
   };
 
+  handleTabChange = (event, value) => {
+    this.setState({
+      tabValue: value,
+    });
+  };
+
   render() {
     const { classes } = this.props;
 
     return (
       <div className={classes.homeContainer}>
-        <Grid container className={classes.homeGrid} spacing={5}>
+        <Grid container direction="column" className={classes.homeGrid}>
           <Grid item xs={12}>
             <div className={classes.root}>
-              <Button color="primary">PhotoSpot</Button>
-              <Button color="primary">FAQ</Button>
-              <Button color="primary">Contact</Button>
-            </div>
-          </Grid>
-
-          <Grid item xs={12}>
-            <div className={classes.textContainer}>
-              <form
-                onSubmit={this.handleFilterSubmit}
-                noValidate
-                autoComplete="off"
+              <Tabs
+                value={this.state.tabValue}
+                indicatorColor="secondary"
+                textColor="primary"
+                onChange={this.handleTabChange}
+                aria-label="disabled tabs example"
+                centered
               >
-                <FormControl
-                  variant="filled"
-                  color="secondary"
-                  className={classes.formControlLarge}
-                >
-                  <InputLabel
-                    className={classes.textLabel}
-                    inputProps={{ disableUnderline: true }}
-                  >
-                    Name
-                  </InputLabel>
-                  <StyledInput
-                    className={classes.textBoxName}
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    label="Name"
-                    name="searchQuery"
-                    value={this.state.searchQuery}
-                    onChange={this.handleChange}
-                    style={{ marginTop: "0" }}
-                    disableUnderline
-                  />
-                </FormControl>
-
-                <FormControl
-                  variant="filled"
-                  color="secondary"
-                  className={classes.formControlLarge}
-                >
-                  <InputLabel
-                    className={classes.textLabel}
-                    id="demo-simple-select-outlined-label"
-                  >
-                    Shoot Type
-                  </InputLabel>
-                  <Select
-                    className={classes.textBox}
-                    labelId="demo-simple-select-outlined-label"
-                    id="demo-simple-select-outlined"
-                    label="Shoot Type"
-                    name="type"
-                    value={this.state.type}
-                    onChange={this.handleChange}
-                    disableUnderline
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={"Instagram"}>Instagram</MenuItem>
-                    <MenuItem value={"LinkedIn Portrait"}>
-                      LinkedIn Portrait
-                    </MenuItem>
-                    <MenuItem value={"Personal Shoot"}>Personal Shoot</MenuItem>
-                  </Select>
-                </FormControl>
-
-                <FormControl
-                  variant="filled"
-                  color="secondary"
-                  className={classes.formControlMedium}
-                  style={{ float: "left" }}
-                >
-                  <InputLabel id="city" className={classes.textLabel}>
-                    City
-                  </InputLabel>
-                  <Select
-                    className={classes.textBox}
-                    labelId="city"
-                    id="city"
-                    name="city"
-                    label="City"
-                    value={this.state.city}
-                    onChange={this.handleChange}
-                    disableUnderline
-                  >
-                    <MenuItem value="">
-                      <em>None</em>
-                    </MenuItem>
-                    <MenuItem value={"Troy"}>Troy</MenuItem>
-                    <MenuItem value={"Rochester Hills"}>
-                      Rochester Hills
-                    </MenuItem>
-                    <MenuItem value={"Auburn Hills"}>Auburn Hills</MenuItem>
-                  </Select>
-                </FormControl>
-
-                {/* <Button
-                  variant="contained"
-                  color="secondary"
-                  name="submitSearch"
-                  type="submit"
-                  style={{
-                    borderRadius: "50%",
-                    margin: "2px 0px 1px 0",
-                  }}
-                > */}
-                <Fab
-                  color="secondary"
-                  onClick={
-                    this.state.type.length == 0
-                      ? this.handleSubmit
-                      : this.handleFilterSubmit
-                  }
-                  style={{ margin: "2px 0px 2px 15px" }}
-                >
-                  <SearchIcon />
-                </Fab>
-                {/* </Button> */}
-              </form>
+                <Tab label={<b>PhotoSpot</b>} />
+                <Tab label={<b>FAQ</b>} />
+                <Tab label={<b>Contact</b>} />
+              </Tabs>
             </div>
           </Grid>
-
-          <Grid item xs={12} justify="center">
-            <Box
-              p={1}
-              style={{
-                maxWidth: 400,
-                margin: "0 auto",
-                padding: "100px 0px",
-              }}
+          <Grid item xs={12}>
+            <Slide
+              direction="up"
+              in={this.state.tabValue === 0}
+              mountOnEnter
+              unmountOnExit
             >
-              <Typography variant="h2" className={classes.introText}>
-                TAKE A SHOT
-              </Typography>
-              <Button fullWidth color="primary" variant="outlined">
-                <Typography variant="h6">Shoot nearby</Typography>
-              </Button>
-            </Box>
+              <div>
+                <div className={classes.textContainer}>
+                  <form
+                    onSubmit={this.handleFilterSubmit}
+                    noValidate
+                    autoComplete="off"
+                  >
+                    <FormControl
+                      variant="filled"
+                      color="secondary"
+                      className={classes.formControlLarge}
+                    >
+                      <InputLabel
+                        className={classes.textLabel}
+                        inputProps={{ disableUnderline: true }}
+                      >
+                        Name
+                      </InputLabel>
+                      <StyledInput
+                        className={classes.textBoxName}
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        label="Name"
+                        name="searchQuery"
+                        value={this.state.searchQuery}
+                        onChange={this.handleChange}
+                        style={{ marginTop: "0" }}
+                        disableUnderline
+                      />
+                    </FormControl>
+
+                    <FormControl
+                      variant="filled"
+                      color="secondary"
+                      className={classes.formControlLarge}
+                    >
+                      <InputLabel
+                        className={classes.textLabel}
+                        id="demo-simple-select-outlined-label"
+                      >
+                        Shoot Type
+                      </InputLabel>
+                      <Select
+                        className={classes.textBox}
+                        labelId="demo-simple-select-outlined-label"
+                        id="demo-simple-select-outlined"
+                        label="Shoot Type"
+                        name="type"
+                        value={this.state.type}
+                        onChange={this.handleChange}
+                        disableUnderline
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={"Instagram"}>Instagram</MenuItem>
+                        <MenuItem value={"LinkedIn Portrait"}>
+                          LinkedIn Portrait
+                        </MenuItem>
+                        <MenuItem value={"Personal Shoot"}>
+                          Personal Shoot
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+
+                    <FormControl
+                      variant="filled"
+                      color="secondary"
+                      className={classes.formControlMedium}
+                      style={{ float: "left" }}
+                    >
+                      <InputLabel id="city" className={classes.textLabel}>
+                        City
+                      </InputLabel>
+                      <Select
+                        className={classes.textBox}
+                        labelId="city"
+                        id="city"
+                        name="city"
+                        label="City"
+                        value={this.state.city}
+                        onChange={this.handleChange}
+                        disableUnderline
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={"Troy"}>Troy</MenuItem>
+                        <MenuItem value={"Rochester Hills"}>
+                          Rochester Hills
+                        </MenuItem>
+                        <MenuItem value={"Auburn Hills"}>Auburn Hills</MenuItem>
+                      </Select>
+                    </FormControl>
+
+                    <Fab
+                      color="secondary"
+                      onClick={
+                        this.state.type.length == 0
+                          ? this.handleSubmit
+                          : this.handleFilterSubmit
+                      }
+                      style={{ margin: "2px 0px 2px 15px" }}
+                    >
+                      <SearchIcon />
+                    </Fab>
+                  </form>
+                </div>
+                <Box
+                  p={1}
+                  style={{
+                    maxWidth: 400,
+                    margin: "150px auto",
+                    padding: "10px",
+                  }}
+                >
+                  <Typography variant="h2" className={classes.introText}>
+                    TAKE A SHOT
+                  </Typography>
+                  <Button fullWidth color="primary" variant="outlined">
+                    <Typography variant="h6">Shoot nearby</Typography>
+                  </Button>
+                </Box>
+              </div>
+            </Slide>
+
+            <Slide
+              direction="up"
+              in={this.state.tabValue === 1}
+              mountOnEnter
+              unmountOnExit
+            >
+              <Paper
+                className={classes.transparentTextContainer}
+                style={{ textAlign: "left", padding: "20px" }}
+              >
+                <Typography className={classes.boldText}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit?
+                </Typography>
+                <Typography gutterBottom>
+                  Pellentesque egestas sed lectus ac maximus. Integer nec mi eu
+                  ex venenatis gravida. In interdum sit amet orci ac dictum.{" "}
+                </Typography>
+                <Typography className={classes.boldText}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit?
+                </Typography>
+                <Typography gutterBottom>
+                  Pellentesque egestas sed lectus ac maximus. Integer nec mi eu
+                  ex venenatis gravida. In interdum sit amet orci ac dictum.{" "}
+                </Typography>
+
+                <Typography className={classes.boldText}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit?
+                </Typography>
+                <Typography gutterBottom>
+                  Pellentesque egestas sed lectus ac maximus. Integer nec mi eu
+                  ex venenatis gravida. In interdum sit amet orci ac dictum.{" "}
+                </Typography>
+                <Typography className={classes.boldText}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit?
+                </Typography>
+                <Typography gutterBottom>
+                  Pellentesque egestas sed lectus ac maximus. Integer nec mi eu
+                  ex venenatis gravida. In interdum sit amet orci ac dictum.{" "}
+                </Typography>
+                <Typography className={classes.boldText}>
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit?
+                </Typography>
+                <Typography gutterBottom>
+                  Pellentesque egestas sed lectus ac maximus. Integer nec mi eu
+                  ex venenatis gravida. In interdum sit amet orci ac dictum.{" "}
+                </Typography>
+              </Paper>
+            </Slide>
+
+            <Slide
+              direction="up"
+              in={this.state.tabValue === 2}
+              mountOnEnter
+              unmountOnExit
+            >
+              <Paper className={classes.transparentTextContainer}>
+                <Typography className={classes.boldText}>Email</Typography>
+                <Typography gutterBottom>admin@photospot.site </Typography>
+                <Typography className={classes.boldText}>Phone</Typography>
+                <Typography gutterBottom>(248) 453-4661</Typography>
+              </Paper>
+            </Slide>
           </Grid>
         </Grid>
 
@@ -377,7 +466,7 @@ class home extends Component {
                       <Typography
                         variant="h6"
                         component="h1"
-                        style={{ fontWeight: "bold" }}
+                        className={classes.boldText}
                       >
                         Sign up
                       </Typography>
@@ -400,7 +489,7 @@ class home extends Component {
                       <Typography
                         variant="h6"
                         component="h1"
-                        style={{ fontWeight: "bold" }}
+                        className={classes.boldText}
                       >
                         Search
                       </Typography>
@@ -424,7 +513,7 @@ class home extends Component {
                       <Typography
                         variant="h6"
                         component="h1"
-                        style={{ fontWeight: "bold" }}
+                        className={classes.boldText}
                       >
                         Shoot
                       </Typography>
@@ -447,7 +536,7 @@ class home extends Component {
                       <Typography
                         variant="h6"
                         component="h1"
-                        style={{ fontWeight: "bold" }}
+                        className={classes.boldText}
                       >
                         Recieve
                       </Typography>

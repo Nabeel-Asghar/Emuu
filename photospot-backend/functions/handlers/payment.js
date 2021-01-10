@@ -88,6 +88,10 @@ exports.createPayment = (req, res) => {
   let photographerBooked = req.params.photographerId;
   let orderID = generatePushID();
 
+  if (res.locals.photographer) {
+    return res.json({ message: "Photographers cannot book shoots." });
+  }
+
   calculateOrderAmount(photographerBooked)
     .then((amount) => {
       getPhotographerStripeID(photographerBooked)

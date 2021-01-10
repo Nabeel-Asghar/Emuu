@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { Redirect } from "react-router-dom";
 
 // MUI
 import Grid from "@material-ui/core/Grid";
@@ -197,6 +198,12 @@ class book extends Component {
   };
 
   render() {
+    if (this.props.credentials) {
+      if (this.props.credentials[0]?.photographer) {
+        console.log("you are a photographer");
+        return <Redirect to="/" />;
+      }
+    }
     const {
       classes,
       UI: { loadingAction, errors, loadingData },
@@ -275,6 +282,7 @@ const mapStateToProps = (state) => ({
   photographerDetails: state.data.photographerPage,
   timings: state.data.timings,
   UI: state.UI,
+  credentials: state.user.credentials,
 });
 
 const mapActionsToProps = {
