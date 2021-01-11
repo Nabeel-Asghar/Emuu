@@ -193,10 +193,12 @@ const Navbar = (props) => {
               <Menu
                 id="menu-appbar"
                 anchorEl={anchorEl}
+                getContentAnchorEl={null}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
                 keepMounted
                 open={open}
                 onClose={handleClose}
-                getContentAnchorEl={null}
               >
                 {!photographerStatus && (
                   <MenuItem component={Link} to="/userDashboard">

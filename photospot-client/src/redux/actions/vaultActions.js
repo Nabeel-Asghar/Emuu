@@ -36,7 +36,7 @@ export const uploadToVault = (vaultID, formData) => (dispatch) => {
     .then((res) => {
       dispatch({
         type: "UPLOAD_RESPONSE",
-        payload: "Successfully uploaded images.",
+        payload: "Successfully uploaded image(s).",
       });
     })
     .catch((err) => {
@@ -52,7 +52,7 @@ export const deleteImages = (vaultID, images) => (dispatch) => {
     .then((res) => {
       dispatch({
         type: "DELETE_RESPONSE",
-        payload: "Successfully deleted images.",
+        payload: "Successfully deleted image(s).",
       });
     })
     .catch((err) => {
