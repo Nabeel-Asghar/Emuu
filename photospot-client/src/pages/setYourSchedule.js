@@ -113,7 +113,6 @@ export class setYourSchedule extends Component {
   handleSubmit = () => {
     var formatedTimeslots = [];
     var formattedDict = {};
-    var algoliaDates = [];
 
     for (var i = 0; i < this.state.checkedSlots.length; i++) {
       var date = this.convertTimeToString(this.state.checkedSlots[i]);
@@ -121,11 +120,15 @@ export class setYourSchedule extends Component {
       formatedTimeslots.push(timeSlot);
       formattedDict[[date]] = false;
 
-      let momentDate = moment
-        .utc(this.state.formattedDate + " " + date)
-        .format();
-      algoliaDates.push(momentDate);
+      // let momentDate = moment
+      //   .utc(this.state.formattedDate + " " + date)
+      //   .format("MM-DD-YYYY-HH");
+      // algoliaDates.push(momentDate);
     }
+
+    var algoliaDates = moment
+      .utc(this.state.formattedDate + " " + date)
+      .format("MM-DD-YYYY");
 
     for (var i = 0; i < this.state.disabledCheckSlots.length; i++) {
       var date = this.convertTimeToString(this.state.disabledCheckSlots[i]);
@@ -142,6 +145,10 @@ export class setYourSchedule extends Component {
     this.props.editBookingTimes(dayAndTime).then(() => {
       this.setState({ open: true });
     });
+
+    console.log(formatedTimeslots);
+    console.log(formattedDict);
+    console.log(algoliaDates);
   };
 
   extractTimeSlots() {

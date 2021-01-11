@@ -61,22 +61,12 @@ exports.signup = (req, res) => {
         db.doc(`/photographer/${userId}`)
           .set(userCredentials)
           .then(() => {
-            db.doc(`/users/${userId}`)
-              .set(userCredentials)
-              .then(() => {
-                index
-                  .saveObjects(userCredentials)
-                  .then(() => {
-                    console.log("user added");
-                    return res.json({ message: "User added successfully!" });
-                  })
-                  .catch((err) => {
-                    return res.status(500).json({ error: err.code });
-                  });
-              })
-              .catch((err) => {
-                return res.status(500).json({ error: err.code });
-              });
+            db.doc(`/users/${userId}`).set(userCredentials);
+            try {
+              index.saveObject(userCredentials);
+            } catch (e) {
+              console.error(e);
+            }
           })
           .catch((err) => {
             console.error(err);
@@ -872,6 +862,7 @@ exports.editBookingTimes = (req, res) => {
   let date = req.body.date;
   let timeslots = req.body.time;
   let algoliaDates = req.body.algoliaDates;
+  console.log(algoliaDates);
   let userid = req.user.uid;
 
   console.log("Date: ", date);
@@ -886,7 +877,7 @@ exports.editBookingTimes = (req, res) => {
     .then(() => {
       index
         .partialUpdateObject({
-          bookings: algoliaDates,
+          dates: { _operation: "AddUnique", value: algoliaDates },
           objectID: userid,
         })
         .catch((err) => {
