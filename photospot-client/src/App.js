@@ -27,7 +27,7 @@ import profile from "./pages/profile";
 import Search from "./pages/Search/search";
 import editPhotographyPage from "./pages/editPhotographyPage";
 import photographyPictures from "./pages/photographyPictures";
-import home from "./pages/home";
+import Home from "./pages/home";
 import setYourSchedule from "./pages/setYourSchedule";
 import userDashboard from "./pages/userDashboard";
 import photographerDashboard from "./pages/photographerDashboard";
@@ -74,9 +74,9 @@ const theme = createMuiTheme({
 
   breakpoints: {
     values: {
-      xs: 0,
-      sm: 800,
-      md: 960,
+      xs: 0, // 0-500
+      sm: 500, // 500-899
+      md: 900, // 900-1280
       lg: 1280,
       xl: 1920,
     },
@@ -87,6 +87,10 @@ const theme = createMuiTheme({
   },
 
   spreadThis: {
+    authContainer: {
+      height: "100vh",
+      padding: "0 10px",
+    },
     auth: {
       maxWidth: "420px",
       margin: "auto",
@@ -98,6 +102,9 @@ const theme = createMuiTheme({
       padding: "15px 0px",
       marginTop: 15,
       textAlign: "center",
+    },
+    extendedIcon: {
+      marginRight: 5,
     },
     authText: {
       padding: "20px 35px",
@@ -266,6 +273,7 @@ if (token) {
 
 const App = () => {
   const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));
+  const halfScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
   return (
     <MuiThemeProvider theme={theme}>
@@ -275,7 +283,17 @@ const App = () => {
             <Navbar />
 
             <Switch>
-              <Route exact path="/" component={home} />
+              <Route
+                exact
+                path="/"
+                render={(props) => (
+                  <Home
+                    {...props}
+                    halfScreen={halfScreen}
+                    fullScreen={fullScreen}
+                  />
+                )}
+              />
 
               <Route
                 exact
@@ -298,7 +316,7 @@ const App = () => {
                   exact
                   path="/search"
                   render={(props) => (
-                    <Search {...props} fullScreen={fullScreen} />
+                    <Search {...props} fullScreen={halfScreen} />
                   )}
                 />
 
@@ -352,6 +370,7 @@ const App = () => {
                   exact
                   path="/vault/:orderID"
                   component={photoVault}
+                  fullScreen={halfScreen}
                 />
 
                 <Route
@@ -366,6 +385,7 @@ const App = () => {
                   exact
                   path="/yourPhotographyProfile/setYourSchedule"
                   component={setYourSchedule}
+                  fullScreen={fullScreen}
                 />
 
                 <AuthRoute

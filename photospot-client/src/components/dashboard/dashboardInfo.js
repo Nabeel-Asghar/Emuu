@@ -27,7 +27,7 @@ export class dashboardInfo extends Component {
     const { classes } = this.props;
     return (
       <Grid container spacing={2} style={{ marginBottom: 20 }}>
-        <Grid item xs={4} style={{ textAlign: "center" }}>
+        <Grid item sm={4} xs={6} style={{ textAlign: "center" }}>
           <DashboardPaper variant="outlined">
             <Typography variant="h4" className={classes.number}>
               {this.props.views}
@@ -45,7 +45,7 @@ export class dashboardInfo extends Component {
             />
           </DashboardPaper>
         </Grid>
-        <Grid item xs={4} style={{ textAlign: "center" }}>
+        <Grid item sm={4} xs={6} style={{ textAlign: "center" }}>
           <DashboardPaper variant="outlined">
             <Typography variant="h4" className={classes.number}>
               {this.props.totalOrders}
@@ -63,7 +63,7 @@ export class dashboardInfo extends Component {
             />
           </DashboardPaper>
         </Grid>
-        <Grid item xs={4} style={{ textAlign: "center" }}>
+        <Grid item sm={4} xs={12} style={{ textAlign: "center" }}>
           <DashboardPaper variant="outlined">
             <Typography variant="h4" className={classes.number}>
               ${this.props.totalRevenue}.00

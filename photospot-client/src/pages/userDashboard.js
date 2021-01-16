@@ -194,7 +194,7 @@ class userDashboard extends Component {
   render() {
     dayjs.extend(relativeTime);
     const {
-      UI: { loadingReviewAction, newReviewSucess, loading },
+      UI: { loadingReviewAction, newReviewSucess, loading, fullScreen },
     } = this.props;
 
     const { errors } = this.state;
@@ -285,7 +285,7 @@ class userDashboard extends Component {
     return (
       <Grid container spacing={5}>
         {/* Left sidebar */}
-        <Grid item xs={4}>
+        <Grid item md={4} sm={12} xs={12}>
           <ProfileCard
             profileImage={this.state.profileImage}
             firstName={this.state.firstName}
@@ -334,7 +334,7 @@ class userDashboard extends Component {
           reload={true}
         />
 
-        <Grid item xs={8}>
+        <Grid item md={8} sm={12} xs={12}>
           <CollapseItems text="Upcoming Shoot" items={theUserOrders} />
 
           <CollapseItems text="Past Shoots" items={theUserPastOrders} />

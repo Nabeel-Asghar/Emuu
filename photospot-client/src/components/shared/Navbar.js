@@ -233,11 +233,13 @@ const Navbar = (props) => {
             <div>
               <Menu
                 id="menu-appbar"
-                anchorEl={anchorEl}
                 keepMounted
                 open={open}
                 onClose={handleClose}
+                anchorEl={anchorEl}
                 getContentAnchorEl={null}
+                anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
+                transformOrigin={{ vertical: "top", horizontal: "right" }}
               >
                 <MenuItem component={Link} to="/login">
                   Login

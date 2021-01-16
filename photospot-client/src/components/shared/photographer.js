@@ -58,7 +58,7 @@ class photographer extends Component {
     } = this.props;
 
     return (
-      <Grid item sm={6} md={4} xs={12}>
+      <Grid item md={4} sm={6} xs={12}>
         <Card className={classes.card}>
           <Link
             to={`/photographers/${objectID}`}

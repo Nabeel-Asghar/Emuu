@@ -61,18 +61,19 @@ class orderCard extends Component {
         {photographerID && (
           <Paper>
             <Grid container justify="center" alignItems="center">
-              <Grid item xs={4} style={{ textAlign: "center" }}>
+              <Grid item md={4} sm={5} xs={12} style={{ textAlign: "center" }}>
                 <img
                   src={profileImage}
                   style={{
                     maxWidth: "90%",
+                    padding: 10,
                     textAlign: "center",
                     objectFit: "cover",
                   }}
                 />
               </Grid>
 
-              <Grid item xs={8}>
+              <Grid item md={8} sm={7} xs={12}>
                 <Grid
                   container
                   direction="column"

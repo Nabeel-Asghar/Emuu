@@ -31,7 +31,7 @@ class progressBar extends Component {
         border={2}
         borderRadius={16}
         borderColor="secondary.main"
-        style={{ maxWidth: 250, margin: "0px auto" }}
+        style={{ maxWidth: 250, margin: "0px auto", padding: 10 }}
       >
         {this.state.theTotalSize}/500 MB
         <IconButton onClick={() => this.props.setSize()} style={{ padding: 5 }}>

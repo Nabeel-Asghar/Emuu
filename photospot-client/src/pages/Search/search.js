@@ -113,7 +113,7 @@ class Search extends Component {
             />
           </Grid>
 
-          <Grid item sm={3} xs={12}>
+          <Grid item md={3} sm={12}>
             {this.props.fullScreen ? (
               <>
                 <Button onClick={this.toggleDialog} color="secondary">
@@ -204,7 +204,7 @@ class Search extends Component {
             )}
           </Grid>
 
-          <Grid item sm={9} xs={12}>
+          <Grid item md={9} sm={12} xs={12}>
             <Grid spacing={2} container direction="row">
               <ConnectedHits />
             </Grid>
