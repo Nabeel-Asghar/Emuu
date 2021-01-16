@@ -14,7 +14,6 @@ import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 // Pages
-import searchPage from "./pages/searchPage";
 import login from "./pages/login";
 import signup from "./pages/signup";
 import resetPassword from "./pages/resetPassword";
@@ -25,10 +24,10 @@ import messaging from "./pages/messaging";
 import specificPhotographer from "./pages/specificPhotographer";
 import book from "./pages/book";
 import profile from "./pages/profile";
-import search from "./pages/Search/search";
+import Search from "./pages/Search/search";
 import editPhotographyPage from "./pages/editPhotographyPage";
 import photographyPictures from "./pages/photographyPictures";
-import home from "./pages/home";
+import Home from "./pages/home";
 import setYourSchedule from "./pages/setYourSchedule";
 import userDashboard from "./pages/userDashboard";
 import photographerDashboard from "./pages/photographerDashboard";
@@ -75,9 +74,9 @@ const theme = createMuiTheme({
 
   breakpoints: {
     values: {
-      xs: 0,
-      sm: 800,
-      md: 960,
+      xs: 0, // 0-500
+      sm: 500, // 500-899
+      md: 900, // 900-1280
       lg: 1280,
       xl: 1920,
     },
@@ -88,6 +87,10 @@ const theme = createMuiTheme({
   },
 
   spreadThis: {
+    authContainer: {
+      height: "100vh",
+      padding: "0 10px",
+    },
     auth: {
       maxWidth: "420px",
       margin: "auto",
@@ -99,6 +102,9 @@ const theme = createMuiTheme({
       padding: "15px 0px",
       marginTop: 15,
       textAlign: "center",
+    },
+    extendedIcon: {
+      marginRight: 5,
     },
     authText: {
       padding: "20px 35px",
@@ -265,134 +271,149 @@ if (token) {
   }
 }
 
-class App extends Component {
-  render() {
-    return (
-      <MuiThemeProvider theme={theme}>
-        <Provider store={store}>
-          <div className="App">
-            <BrowserRouter>
-              <Navbar />
+const App = () => {
+  const fullScreen = useMediaQuery(theme.breakpoints.down("xs"));
+  const halfScreen = useMediaQuery(theme.breakpoints.down("sm"));
 
-              <Switch>
-                <Route exact path="/" component={home} />
+  return (
+    <MuiThemeProvider theme={theme}>
+      <Provider store={store}>
+        <div className="App">
+          <BrowserRouter>
+            <Navbar />
+
+            <Switch>
+              <Route
+                exact
+                path="/"
+                render={(props) => (
+                  <Home
+                    {...props}
+                    halfScreen={halfScreen}
+                    fullScreen={fullScreen}
+                  />
+                )}
+              />
+
+              <Route
+                exact
+                path="/photographers/:photographerID"
+                component={specificPhotographer}
+              />
+
+              <AuthRoute
+                exact
+                path="/yourPhotographyProfile"
+                component={editPhotographyPage}
+              />
+
+              <Route exact path="/login" component={login} />
+
+              <Route exact path="/signup" component={signup} />
+
+              <div className="container">
+                <Route
+                  exact
+                  path="/search"
+                  render={(props) => (
+                    <Search {...props} fullScreen={halfScreen} />
+                  )}
+                />
+
+                <Route exact path="/resetPassword" component={resetPassword} />
+
+                <AuthRoute exact path="/onboard" component={onboard} />
+
+                <AuthRoute
+                  exact
+                  path="/onboard/success"
+                  component={successPage}
+                />
+
+                <AuthRoute exact path="/onboard/refresh" component={onboard} />
 
                 <Route
                   exact
-                  path="/photographers/:photographerID"
-                  component={specificPhotographer}
+                  path="/resetPasswordSent"
+                  component={resetPasswordSent}
                 />
 
                 <AuthRoute
                   exact
-                  path="/yourPhotographyProfile"
-                  component={editPhotographyPage}
+                  path="/changePassword"
+                  component={changePassword}
                 />
 
-                <Route exact path="/login" component={login} />
+                <AuthRoute
+                  exact
+                  path="/changePasswordSent"
+                  component={changePasswordSent}
+                />
 
-                <Route exact path="/signup" component={signup} />
+                <AuthRoute
+                  exact
+                  path="/userDashboard"
+                  component={userDashboard}
+                />
 
-                <div className="container">
-                  <Route exact path="/search" component={search} />
+                <AuthRoute
+                  exact
+                  path="/photographerDashboard"
+                  component={photographerDashboard}
+                />
 
-                  <Route
-                    exact
-                    path="/resetPassword"
-                    component={resetPassword}
-                  />
+                <AuthRoute exact path="/profile" component={profile} />
 
-                  <AuthRoute exact path="/onboard" component={onboard} />
+                <AuthRoute exact path="/messaging" component={messaging} />
 
+                <AuthRoute
+                  exact
+                  path="/vault/:orderID"
+                  component={photoVault}
+                  fullScreen={halfScreen}
+                />
+
+                <Route
+                  exact
+                  path="/search/:searchQuery"
+                  render={(props) => (
+                    <Search {...props} fullScreen={fullScreen} />
+                  )}
+                />
+
+                <AuthRoute
+                  exact
+                  path="/yourPhotographyProfile/setYourSchedule"
+                  component={setYourSchedule}
+                  fullScreen={fullScreen}
+                />
+
+                <AuthRoute
+                  exact
+                  path="/uploadPhotographyPictures"
+                  component={photographyPictures}
+                />
+
+                <AuthRoute
+                  exact
+                  path="/photographers/:photographerID/book"
+                  component={book}
+                />
+
+                <Elements stripe={stripePromise}>
                   <AuthRoute
                     exact
-                    path="/onboard/success"
-                    component={successPage}
+                    path="/photographers/:photographerID/book/checkout"
+                    component={checkout}
                   />
-
-                  <AuthRoute
-                    exact
-                    path="/onboard/refresh"
-                    component={onboard}
-                  />
-
-                  <Route
-                    exact
-                    path="/resetPasswordSent"
-                    component={resetPasswordSent}
-                  />
-
-                  <AuthRoute
-                    exact
-                    path="/changePassword"
-                    component={changePassword}
-                  />
-
-                  <AuthRoute
-                    exact
-                    path="/changePasswordSent"
-                    component={changePasswordSent}
-                  />
-
-                  <AuthRoute
-                    exact
-                    path="/userDashboard"
-                    component={userDashboard}
-                  />
-
-                  <AuthRoute
-                    exact
-                    path="/photographerDashboard"
-                    component={photographerDashboard}
-                  />
-
-                  <AuthRoute exact path="/profile" component={profile} />
-
-                  <AuthRoute exact path="/messaging" component={messaging} />
-
-                  <AuthRoute
-                    exact
-                    path="/vault/:orderID"
-                    component={photoVault}
-                  />
-
-                  <Route exact path="/search/:searchQuery" component={search} />
-
-                  {/* <Route exact path="/search/:type/:city/:state" component={search} /> */}
-
-                  <AuthRoute
-                    exact
-                    path="/yourPhotographyProfile/setYourSchedule"
-                    component={setYourSchedule}
-                  />
-
-                  <AuthRoute
-                    exact
-                    path="/uploadPhotographyPictures"
-                    component={photographyPictures}
-                  />
-
-                  <AuthRoute
-                    exact
-                    path="/photographers/:photographerID/book"
-                    component={book}
-                  />
-
-                  <Elements stripe={stripePromise}>
-                    <AuthRoute
-                      exact
-                      path="/photographers/:photographerID/book/checkout"
-                      component={checkout}
-                    />
-                  </Elements>
-                </div>
-              </Switch>
-            </BrowserRouter>
-          </div>
-        </Provider>
-      </MuiThemeProvider>
-    );
-  }
-}
+                </Elements>
+              </div>
+            </Switch>
+          </BrowserRouter>
+        </div>
+      </Provider>
+    </MuiThemeProvider>
+  );
+};
 
 export default App;

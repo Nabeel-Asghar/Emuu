@@ -24,7 +24,7 @@ const styles = (theme) => ({
   ...theme.spreadThis,
 });
 
-export class setYourSchedule extends Component {
+class SetYourSchedule extends Component {
   constructor() {
     super();
     this.state = {
@@ -198,6 +198,7 @@ export class setYourSchedule extends Component {
     const {
       classes,
       UI: { loadingAction, generalError, loadingData },
+      fullScreen,
     } = this.props;
 
     return (
@@ -205,15 +206,16 @@ export class setYourSchedule extends Component {
         container
         spacing={1}
         justify="center"
-        style={{ maxWidth: 700, margin: "0 auto" }}
+        style={{ maxWidth: 900, margin: "0 auto" }}
       >
-        <Grid item sm={6} xs={12}>
+        <Grid item md={6} sm={12} style={{ maxWidth: 330 }}>
           <DateView
             selectedDate={this.state.selectedDate}
             handleDateChange={this.handleDateChange}
+            fullScreen={fullScreen}
           />
         </Grid>
-        <Grid item sm={6} xs={12}>
+        <Grid item md={6} sm={12} style={{ maxWidth: 450 }}>
           {loadingData ? (
             <CircularProgress className={classes.progress} color="secondary" />
           ) : (
@@ -286,4 +288,4 @@ const mapActionsToProps = {
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(withStyles(styles)(setYourSchedule));
+)(withStyles(styles)(SetYourSchedule));

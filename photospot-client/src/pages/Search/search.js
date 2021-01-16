@@ -5,8 +5,14 @@ import { InstantSearch, SortBy, RefinementList } from "react-instantsearch-dom";
 // Material UI
 import withStyles from "@material-ui/core/styles/withStyles";
 import Divider from "@material-ui/core/Divider";
-import { Grid, Paper, Typography } from "@material-ui/core";
+import { Grid, Paper, Button } from "@material-ui/core";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogContentText from "@material-ui/core/DialogContentText";
+import DialogTitle from "@material-ui/core/DialogTitle";
 import qs from "qs";
+
 // Componenents
 import ConnectedClearRefinements from "./ConnectedClearRefinements";
 import ConnectedHits from "./ConnectedHits";
@@ -18,6 +24,7 @@ import ConnectedSortBy from "./ConnectedSortBy";
 import ConnectedDate from "./ConnectedDate";
 import ConnectedStats from "./ConnectedStats";
 import "./search.css";
+import { Filter1 } from "@material-ui/icons";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -42,6 +49,7 @@ class Search extends Component {
   state = {
     searchState: urlToSearchState(this.props.location),
     lastLocation: this.props.location,
+    openFilter: false,
   };
 
   static getDerivedStateFromProps(props, state) {
@@ -66,6 +74,12 @@ class Search extends Component {
     }, DEBOUNCE_TIME);
 
     this.setState({ searchState });
+  };
+
+  toggleDialog = () => {
+    this.setState((prevState) => ({
+      openFilter: !prevState.openFilter,
+    }));
   };
 
   render() {
@@ -99,46 +113,98 @@ class Search extends Component {
             />
           </Grid>
 
-          <Grid item xs={3}>
-            <Paper style={{ padding: "20px 25px", marginBottom: "20px" }}>
-              <ConnectedStats />
+          <Grid item md={3} sm={12}>
+            {this.props.fullScreen ? (
+              <>
+                <Button onClick={this.toggleDialog} color="secondary">
+                  Filter
+                </Button>
+                <Dialog
+                  mountOnEnter
+                  unmountOnExit
+                  fullScreen={true}
+                  open={this.state.openFilter}
+                  onClose={this.toggleDialog}
+                  aria-labelledby="responsive-dialog-title"
+                >
+                  <DialogTitle id="responsive-dialog-title">
+                    <Button onClick={this.toggleDialog} color="secondary">
+                      Filter
+                    </Button>
+                  </DialogTitle>
+                  <DialogContent>
+                    {refinements.map((refinement) => (
+                      <>
+                        <SearchRefinement
+                          attribute={refinement.name}
+                          header={refinement.header}
+                        />
+                        <Divider className={classes.divider} />
+                      </>
+                    ))}
 
-              <ConnectedClearRefinements
-                translation={{ avgRating: "Average Rating" }}
-                style={{ textAlign: "left" }}
-              />
-            </Paper>
-            <Paper style={{ padding: "20px 25px" }}>
-              {refinements.map((refinement) => (
-                <>
-                  <SearchRefinement
-                    attribute={refinement.name}
-                    header={refinement.header}
+                    <ConnectedNumericMenu
+                      attribute="avgRating"
+                      items={[
+                        { label: 4, start: 4 },
+                        { label: 3, start: 3 },
+                        { label: 2, start: 2 },
+                        { label: 1, start: 1 },
+                      ]}
+                      transformItems={(items) =>
+                        items.filter((item) => item.value !== "")
+                      }
+                    />
+
+                    <Divider className={classes.divider} />
+
+                    <ConnectedDate attribute="dates" />
+                  </DialogContent>
+                </Dialog>
+              </>
+            ) : (
+              <>
+                <Paper style={{ padding: "20px 25px", marginBottom: "20px" }}>
+                  <ConnectedStats />
+
+                  <ConnectedClearRefinements
+                    translation={{ avgRating: "Average Rating" }}
+                    style={{ textAlign: "left" }}
                   />
-                  {/* <Divider className={classes.divider} /> */}
-                </>
-              ))}
+                </Paper>
+                <Paper style={{ padding: "20px 25px" }}>
+                  {refinements.map((refinement) => (
+                    <>
+                      <SearchRefinement
+                        attribute={refinement.name}
+                        header={refinement.header}
+                      />
+                      <Divider className={classes.divider} />
+                    </>
+                  ))}
 
-              <ConnectedNumericMenu
-                attribute="avgRating"
-                items={[
-                  { label: 4, start: 4 },
-                  { label: 3, start: 3 },
-                  { label: 2, start: 2 },
-                  { label: 1, start: 1 },
-                ]}
-                transformItems={(items) =>
-                  items.filter((item) => item.value !== "")
-                }
-              />
+                  <ConnectedNumericMenu
+                    attribute="avgRating"
+                    items={[
+                      { label: 4, start: 4 },
+                      { label: 3, start: 3 },
+                      { label: 2, start: 2 },
+                      { label: 1, start: 1 },
+                    ]}
+                    transformItems={(items) =>
+                      items.filter((item) => item.value !== "")
+                    }
+                  />
 
-              {/* <Divider className={classes.divider} /> */}
+                  <Divider className={classes.divider} />
 
-              <ConnectedDate attribute="dates" />
-            </Paper>
+                  <ConnectedDate attribute="dates" />
+                </Paper>
+              </>
+            )}
           </Grid>
 
-          <Grid item xs={9}>
+          <Grid item md={9} sm={12} xs={12}>
             <Grid spacing={2} container direction="row">
               <ConnectedHits />
             </Grid>
@@ -149,4 +215,4 @@ class Search extends Component {
   }
 }
 
-export default Search;
+export default withStyles(styles)(Search);

@@ -8,7 +8,7 @@ const AuthRoute = ({ component: Component, authenticated, ...rest }) => (
     {...rest}
     render={(props) =>
       authenticated === true ? (
-        <Component {...props} />
+        <Component {...props} fullScreen={rest.fullScreen} />
       ) : (
         <Redirect to="/login" />
       )

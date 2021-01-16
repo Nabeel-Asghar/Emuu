@@ -22,6 +22,7 @@ const Confirmation = (props) => {
 
   return (
     <Dialog
+      maxWidth="xs"
       open={props.open}
       onClose={props.handleClose}
       aria-labelledby="alert-dialog-title"

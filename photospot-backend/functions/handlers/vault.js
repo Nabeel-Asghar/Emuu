@@ -142,6 +142,7 @@ exports.getVaultSize = async (req, res) => {
 
 exports.notifyCustomer = async (req, res) => {
   try {
+    const orderID = req.params.vaultID;
     const { consumerID, photographerID } = await getVaultOwners(orderID);
     let customerDetails = await getPersonDetails(consumerID);
     customerDetails.vaultID = req.params.vaultID;

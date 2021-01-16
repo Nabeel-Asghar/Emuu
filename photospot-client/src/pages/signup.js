@@ -127,7 +127,7 @@ class signup extends Component {
         align="center"
         justify="center"
         direction="column"
-        style={{ height: "100vh" }}
+        className={classes.authContainer}
       >
         <Grid item>
           <Paper className={classes.auth}>

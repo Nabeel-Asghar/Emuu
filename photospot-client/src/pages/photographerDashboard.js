@@ -187,10 +187,10 @@ class photograhperDashboard extends Component {
       );
     }
 
-    const { classes } = this.props;
+    const { classes, fullScreen } = this.props;
     return (
       <Grid container spacing={5}>
-        <Grid item xs={4}>
+        <Grid item md={4} sm={12} xs={12}>
           <ProfileCard
             profileImage={this.state.profileImage}
             firstName={this.state.firstName}
@@ -209,7 +209,7 @@ class photograhperDashboard extends Component {
           <SettingsCard />
         </Grid>
 
-        <Grid item xs={8}>
+        <Grid item md={8} sm={12} xs={12}>
           <DashboardInfo
             views={this.state.views}
             totalOrders={this.state.totalCompletedOrders}
