@@ -62,11 +62,12 @@ exports.signup = (req, res) => {
           .set(userCredentials)
           .then(() => {
             db.doc(`/users/${userId}`).set(userCredentials);
-            try {
-              index.saveObject(userCredentials);
-            } catch (e) {
-              console.error(e);
-            }
+            let algoliaCredentials = userCredentials;
+            algoliaCredentials.objectID = userId;
+            index.saveObject(algoliaCredentials).catch((err) => {
+              res.status(500).json({ error: err.code });
+              console.log(err);
+            });
           })
           .catch((err) => {
             console.error(err);
@@ -169,6 +170,7 @@ exports.reauthenticateUser = () => {
   return user.reauthenticateWithCredential(credential);
 };
 
+// change your account password
 exports.changePassword = (req, res) => {
   var email = req.body.email;
   var oldPassword = req.body.oldPassword;
@@ -223,6 +225,7 @@ exports.changePassword = (req, res) => {
     });
 };
 
+// send reset password email
 exports.resetPassword = (req, res) => {
   var emailAddress = req.body.email;
 
@@ -263,8 +266,6 @@ exports.setYourPhotographyPage = (req, res) => {
     website: req.body.website,
     instagram: req.body.instagram,
     ratePerHour: req.body.ratePerHour,
-    totalRating: 0,
-    reviewCount: 0,
   };
 
   const { valid, errors } = validatePhotographerPageData(
@@ -474,6 +475,11 @@ exports.updateUserProfile = (req, res) => {
         db.doc(`/photographer/${req.user.uid}`)
           .update(userDetails)
           .then(() => {
+            let alogliaUserDetails = userDetails;
+            alogliaUserDetails.objectID = req.user.uid;
+            index.partialUpdateObject(alogliaUserDetails);
+          })
+          .then(() => {
             return res.json({ message: "Your user profile has been updated." });
           })
           .catch((err) => {
@@ -532,6 +538,7 @@ exports.getYourPhotographerPage = (req, res) => {
     });
 };
 
+// getting the current user profile page
 exports.getYourUserProfile = (req, res) => {
   let userid = req.user.uid;
 
