@@ -187,14 +187,13 @@ exports.dailyJob = functions.pubsub
               doc.data().data.photographerID
             );
           });
-          return res.json({ message: "Job done" });
+          console.log("Job done");
         } else {
-          return res.json({ message: "No jobs to do" });
+          console.log("No jobs to do");
         }
       })
       .catch((err) => {
         console.log("error in doing cronjob in payouts", err);
-        return res.status(400).json({ response: err });
       });
   });
 
