@@ -25,6 +25,7 @@ import Typography from "@material-ui/core/Typography";
 import GetAppIcon from "@material-ui/icons/GetApp";
 import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import Fab from "@material-ui/core/Fab";
 
 // Components
 import ImageGrid from "../components/shared/imageGrid";
@@ -34,6 +35,7 @@ import Success from "../components/shared/success";
 import Progress from "../components/shared/progress";
 import Confirmation from "../components/shared/confirmation";
 import LoadingPage from "../components/shared/loadingPage";
+import DownloadOrNotify from "../components/photo-vault/downloadOrNotify";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -251,67 +253,61 @@ class photoVault extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, fullScreen } = this.props;
     return (
       <div className={classes.pageContainer}>
         {this.state.intialLoading ? (
           this.state.access ? (
             <Paper>
-              <Grid container style={{ padding: "10px 10px" }}>
-                <Grid item xs={3} style={{ textAlign: "left" }}>
+              <Grid container style={{ padding: 10 }}>
+                <Grid item md={3} sm={12} xs={12} style={{ paddingBottom: 25 }}>
                   <GoBackButton
                     {...this.props}
                     disabled={this.state.openProgress}
                   />
+                  {fullScreen && (
+                    <div style={{ float: "right" }}>
+                      <DownloadOrNotify
+                        access={this.state.access}
+                        openProgress={this.state.openProgress}
+                        notifiedCustomer={this.state.notifiedCustomer}
+                        loading={this.props.vault.loading}
+                        confirmedByCustomer={this.state.confirmedByCustomer}
+                        downloadDisable={this.state.downloadDisable}
+                        openFinalizeDialog={this.openFinalizeDialog.bind(this)}
+                        downloadImages={this.downloadImages}
+                      />
+                    </div>
+                  )}
                 </Grid>
 
-                <Grid item xs={6} style={{ textAlign: "center" }}>
+                <Grid
+                  item
+                  md={6}
+                  sm={12}
+                  style={{ textAlign: "center", margin: "0 auto" }}
+                >
                   <ProgressBar
                     totalSize={this.state.totalSize}
                     setSize={this.setSize.bind(this)}
                   />
                 </Grid>
-                <Grid item xs={3} style={{ textAlign: "right" }}>
-                  {this.state.access === "photographer" ? (
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      disabled={
-                        this.state.openProgress ||
-                        this.state.notifiedCustomer ||
-                        this.props.vault.loading
-                      }
-                      onClick={() => this.openFinalizeDialog("photographer")}
-                      startIcon={<NotificationsActiveIcon />}
-                    >
-                      Notify Customer
-                      {this.props.vault.loading && (
-                        <CircularProgress
-                          color="secondary"
-                          className={classes.progress}
-                        />
-                      )}
-                    </Button>
-                  ) : (
-                    this.state.confirmedByCustomer && (
-                      <Button
-                        color="secondary"
-                        variant="outlined"
-                        onClick={() => this.downloadImages()}
-                        disabled={this.state.downloadDisable}
-                        startIcon={<GetAppIcon />}
-                      >
-                        Download
-                        {this.state.downloadDisable && (
-                          <CircularProgress
-                            color="secondary"
-                            className={classes.progress}
-                          />
-                        )}
-                      </Button>
-                    )
-                  )}
-                </Grid>
+
+                {!fullScreen && (
+                  <Grid item md={3} style={{ textAlign: "right" }}>
+                    <DownloadOrNotify
+                      access={this.state.access}
+                      openProgress={this.state.openProgress}
+                      notifiedCustomer={this.state.notifiedCustomer}
+                      loading={this.props.vault.loading}
+                      confirmedByCustomer={this.state.confirmedByCustomer}
+                      downloadDisable={this.state.downloadDisable}
+                      openFinalizeDialog={this.openFinalizeDialog.bind(this)}
+                      downloadImages={this.downloadImages}
+                    />
+                  </Grid>
+                )}
+
                 <Grid item xs={12}>
                   {this.state.images?.length > 0 ? (
                     <ImageGrid

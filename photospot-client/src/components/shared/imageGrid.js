@@ -65,7 +65,7 @@ export class imageGrid extends Component {
       const id = i;
       lightboxImages.push({ url: img.src, title: i });
       imageContainer.push(
-        <Grid item xs={6}>
+        <Grid item sm={6} xs={12}>
           <div className={classes.imageHolder}>
             <Button
               onClick={() => this.openImageLightBox(id)}
