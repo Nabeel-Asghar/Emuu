@@ -10,7 +10,8 @@ export class rating extends Component {
         style={{ fontSize: "110%", height: "25px" }}
       >
         <span style={{ fontSize: "130%", color: "#23ba8b" }}>&#9733;</span>{" "}
-        {Math.round((totalRating / reviewCount) * 10) / 10} ({reviewCount})
+        {Number.parseFloat(totalRating / reviewCount).toFixed(1)} ({reviewCount}
+        )
       </Typography>
     );
   }

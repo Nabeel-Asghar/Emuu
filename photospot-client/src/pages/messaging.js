@@ -31,8 +31,8 @@ const styles = (theme) => ({
 
   messagingContainer: {
     border: "2px solid #e6e6e6",
-    [theme.breakpoints.down("xs")]: {
-      margin: "0px",
+    [theme.breakpoints.down(600)]: {
+      margin: "-16px -10px -10px -10px",
     },
     margin: "8px",
   },
@@ -76,7 +76,6 @@ class messaging extends Component {
   componentDidMount() {
     this.props.getUserData().then(() => {
       this.assignValues(this.props.credentials);
-      console.log(this.props.credentials);
       firebase
         .firestore()
         .collection("chats")
@@ -86,7 +85,6 @@ class messaging extends Component {
           chats.sort(function (a, b) {
             return parseFloat(b.timestamp) - parseFloat(a.timestamp);
           });
-          console.log("abc");
           this.setState({ chats: chats, selectedChat: 0 });
         });
     });
@@ -200,8 +198,8 @@ class messaging extends Component {
     const docKey = this.buildDocKey(chatObject.sendTo);
     var names = docKey.split(":");
     var friend = names[0];
-    let friendProfile;
-    let friendName;
+    let friendProfile = "";
+    let friendName = "";
     let userName = this.state.firstName + " " + this.state.lastName;
     if (names[0] == this.state.email) {
       friend = names[1];
@@ -213,7 +211,7 @@ class messaging extends Component {
       .get()
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          friendProfile = doc.data().profileImage;
+          friendProfile = doc.data()?.profileImage;
           friendName = doc.data().firstName;
           friendName += doc.data().lastName;
         });
