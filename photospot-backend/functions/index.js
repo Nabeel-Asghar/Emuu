@@ -143,11 +143,7 @@ app.post("/photographers/:photographerId/review", FBAuth, reviewPhotographer);
 app.get("/photographers/:photographerId/getReviews", getReviews);
 app.post("/userDashboard/editReview", FBAuth, editReview);
 app.post("/userDashboard/deleteReview", FBAuth, deleteReview);
-app.get(
-  "/photographers/:photographerId/bookingTimes",
-  FBAuth,
-  getPhotographerSchedule
-);
+app.get("/photographers/:photographerId/bookingTimes", getPhotographerSchedule);
 app.get("/search/:searchQuery", searchPhotographer);
 app.get("/filter/:type/:city/:state", filterPhotographers);
 app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);

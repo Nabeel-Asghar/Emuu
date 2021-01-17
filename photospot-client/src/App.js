@@ -394,7 +394,7 @@ const App = () => {
                   component={photographyPictures}
                 />
 
-                <AuthRoute
+                <Route
                   exact
                   path="/photographers/:photographerID/book"
                   component={book}
