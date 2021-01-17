@@ -1,6 +1,8 @@
 import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Redirect } from "react-router-dom";
+import { storage, firebase } from "../firestore";
+import { nanoid } from "nanoid";
 
 // Redux
 import { connect } from "react-redux";
@@ -20,12 +22,8 @@ import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import SaveIcon from "@material-ui/icons/Save";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Typography from "@material-ui/core/Typography";
-import GetAppIcon from "@material-ui/icons/GetApp";
-import NotificationsActiveIcon from "@material-ui/icons/NotificationsActive";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
-import Fab from "@material-ui/core/Fab";
 
 // Components
 import ImageGrid from "../components/shared/imageGrid";
@@ -70,6 +68,9 @@ class photoVault extends Component {
       openSuccessNotification: false,
       openCustomerFinal: false,
       openSuccessFinalize: false,
+      totalNewImagesSize: 0,
+      uploadProgress: 0,
+      uploadResponse: "",
     };
   }
 
@@ -148,13 +149,14 @@ class photoVault extends Component {
     let imageUrls = this.state.images ? this.state.images : [];
     let newImages = this.state.imagesToUpload ? this.state.imagesToUpload : [];
     let newImageSizes = this.state.imageSizes ? this.state.imageSizes : [];
+    let totalNewImagesSize = 0;
 
     if (images) {
       for (let i = 0; i < images.length; i++) {
         imageUrls.push(URL.createObjectURL(images[i]));
         newImages.push(images[i]);
         newImageSizes.push(images[i].size);
-        // console.log("GB: ", event.target.files[0].size / Math.pow(1024, 3));
+        totalNewImagesSize += images[i].size;
       }
 
       this.setState(
@@ -163,6 +165,7 @@ class photoVault extends Component {
           imagesToUpload: newImages,
           imageSizes: newImageSizes,
           disabled: false,
+          totalNewImagesSize,
         },
         this.setSize()
       );
@@ -187,11 +190,6 @@ class photoVault extends Component {
       openProgress: true,
       downloadDisable: true,
     });
-    const formData = new FormData();
-
-    this.state.imagesToUpload.forEach((image) => {
-      formData.append("image", image, image.name);
-    });
 
     if (this.state.imagesToDelete.length > 0) {
       await this.props.deleteImages(
@@ -200,10 +198,50 @@ class photoVault extends Component {
       );
     }
     if (this.state.imagesToUpload.length > 0) {
-      await this.props.uploadToVault(this.props.match.params.orderID, formData);
-    }
+      const promises = [];
+      const imageNames = [];
 
-    this.setState({ open: true });
+      const totalSize = this.state.totalNewImagesSize;
+      const that = this;
+
+      this.state.imagesToUpload.forEach((image) => {
+        const imageName = nanoid(10);
+        imageNames.push(imageName);
+
+        var task = firebase
+          .storage()
+          .ref(this.props.match.params.orderID)
+          .child(imageName)
+          .put(image);
+
+        promises.push(task);
+
+        task.on(
+          "state_changed",
+          function progress(snapshot) {
+            var percentage = (snapshot.bytesTransferred / totalSize) * 100;
+            that.setState({
+              uploadProgress: percentage,
+            });
+          },
+          function error(err) {
+            that.setState({
+              uploadResponse: "Failed to upload images.",
+            });
+          }
+        );
+      });
+
+      Promise.all(promises)
+        .then(() => {
+          this.props.uploadToVault(this.props.match.params.orderID, imageNames);
+          this.setState({
+            open: true,
+            uploadResponse: "Successfully uploaded images.",
+          });
+        })
+        .catch((err) => console.log(err.code));
+    }
   }
 
   notifyCustomer() {
@@ -403,7 +441,7 @@ class photoVault extends Component {
 
               <Progress
                 open={this.state.openProgress}
-                value={this.props.vault.progress}
+                value={Number.parseFloat(this.state.uploadProgress).toFixed(0)}
               />
 
               <Success
@@ -431,8 +469,8 @@ class photoVault extends Component {
                 headline="Awesome!"
                 body={
                   <div>
-                    {this.props.vault.uploadResponse && (
-                      <Typography>{this.props.vault.uploadResponse}</Typography>
+                    {this.state.uploadResponse && (
+                      <Typography>{this.state.uploadResponse}</Typography>
                     )}
                     {this.props.vault.deleteResponse && (
                       <Typography>{this.props.vault.deleteResponse}</Typography>

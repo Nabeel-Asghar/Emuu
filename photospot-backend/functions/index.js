@@ -2,11 +2,11 @@ const functions = require("firebase-functions");
 const cors = require("cors");
 const helmet = require("helmet");
 const session = require("express-session");
+const bodyParser = require("body-parser");
 const app = require("express")();
 require("dotenv").config();
-const express = require("express");
-app.use(express.json());
-app.use(cors({ origin: true }));
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(cors());
 app.use(helmet());
 app.use(
   session({

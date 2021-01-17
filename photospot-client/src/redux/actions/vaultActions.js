@@ -25,25 +25,14 @@ export const getDownload = (vaultID) => (dispatch) => {
     .catch(() => {});
 };
 
-export const uploadToVault = (vaultID, formData) => (dispatch) => {
-  return API.post(`/vault/${vaultID}/upload`, formData, {
-    onUploadProgress: (progressEvent) =>
-      dispatch({
-        type: "VAULT_UPLOAD_PROGRESS",
-        payload: Math.round((progressEvent.loaded * 100) / progressEvent.total),
-      }),
-  })
+export const uploadToVault = (vaultID, imageNames) => (dispatch) => {
+  console.log(imageNames);
+  return API.post(`/vault/${vaultID}/upload`, imageNames)
     .then((res) => {
-      dispatch({
-        type: "UPLOAD_RESPONSE",
-        payload: "Successfully uploaded image(s).",
-      });
+      return true;
     })
     .catch((err) => {
-      dispatch({
-        type: "UPLOAD_RESPONSE",
-        payload: "We couldn't upload to your vault.",
-      });
+      return false;
     });
 };
 
