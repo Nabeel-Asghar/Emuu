@@ -244,9 +244,9 @@ class specificPhotographer extends Component {
       UI: { loadingData, loadingReviewAction, newReviewSucess },
     } = this.props;
 
-    let gridImages = [];
+    let allReviews = [];
     for (var key = 0; key < this.state.allReviews.length; key++) {
-      gridImages.push(
+      allReviews.push(
         <div>
           <PhotographerReviews
             review={this.state.allReviews[key]}
@@ -365,17 +365,23 @@ class specificPhotographer extends Component {
           </Paper>
 
           <Collapse in={this.state.checked}>
-            {gridImages}
-            <Fab
-              variant="extended"
-              color="secondary"
-              aria-label="add"
-              style={{ margin: "10px 0 20px 0", float: "right" }}
-              onClick={() => this.handleReviewOpenState()}
-            >
-              <AddIcon className={classes.extendedIcon} />
-              <Typography style={{ fontWeight: "bold" }}>ADD REVIEW</Typography>
-            </Fab>
+            {allReviews}
+            {this.props.user.authenticated &&
+              this.props.user.credentials[0]?.photographer === false && (
+                <Fab
+                  variant="extended"
+                  color="secondary"
+                  aria-label="add"
+                  style={{ margin: "10px 0 20px 0", float: "right" }}
+                  onClick={() => this.handleReviewOpenState()}
+                >
+                  <AddIcon className={classes.extendedIcon} />
+                  <Typography style={{ fontWeight: "bold" }}>
+                    ADD REVIEW
+                  </Typography>
+                </Fab>
+              )}
+
             <ReviewDialog
               openReview={this.state.openReview}
               errors={this.state.errors}
@@ -427,6 +433,7 @@ const mapStateToProps = (state) => ({
   credentials: state.user.credentials,
   reviews: state.data.reviews,
   errors: state.UI.errors,
+  user: state.user,
 });
 
 const mapActionsToProps = {
