@@ -102,7 +102,7 @@ class usercard extends Component {
                 disableElevation
                 size="large"
                 onClick={this.handleContactClickOpen}
-                disabled={loading || photographer}
+                disabled={loading || photographer || !this.props.authenticated}
               >
                 <Typography style={{ fontWeight: "bold" }}>Contact</Typography>
               </Button>

@@ -275,6 +275,7 @@ class specificPhotographer extends Component {
             justify="center"
           >
             <Usercard
+              authenticated={this.props.user.authenticated}
               history={this.props.history}
               firstName={this.state.firstName}
               lastName={this.state.lastName}

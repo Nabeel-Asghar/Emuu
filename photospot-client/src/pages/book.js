@@ -198,8 +198,8 @@ class book extends Component {
   };
 
   render() {
-    if (this.props.credentials) {
-      if (this.props.credentials[0]?.photographer) {
+    if (this.props.user.credentials) {
+      if (this.props.user.credentials[0]?.photographer) {
         console.log("you are a photographer");
         return <Redirect to="/" />;
       }
@@ -251,7 +251,9 @@ class book extends Component {
               />
             ) : (
               <Time
+                {...this.props}
                 key={this.state.timeslots}
+                authenticated={this.props.user.authenticated}
                 timeslots={this.state.timeslots}
                 handleSubmit={this.handleSubmit}
                 handleRadioChange={this.handleRadioChange}
@@ -282,7 +284,7 @@ const mapStateToProps = (state) => ({
   photographerDetails: state.data.photographerPage,
   timings: state.data.timings,
   UI: state.UI,
-  credentials: state.user.credentials,
+  user: state.user,
 });
 
 const mapActionsToProps = {

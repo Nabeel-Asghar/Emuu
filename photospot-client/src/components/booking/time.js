@@ -155,9 +155,21 @@ class time extends Component {
             >
               {displayTimeslots}
             </RadioGroup>
-            {this.props.time && (
+            {this.props.authenticated ? (
+              this.props.time && (
+                <Button
+                  type="submit"
+                  fullWidth
+                  variant="outlined"
+                  color="secondary"
+                  style={{ marginTop: "15px" }}
+                >
+                  Submit
+                </Button>
+              )
+            ) : (
               <Button
-                type="submit"
+                onClick={() => this.props.history.push("/login")}
                 fullWidth
                 variant="outlined"
                 color="secondary"
