@@ -8,7 +8,6 @@ const payment = require("./payment");
 const { TIME_TO_PAYOUT } = require("../util/constants");
 
 exports.getVault = async (req, res) => {
-  console.log(storageBucketVar);
   let vaultID = req.params.vaultID;
   let id = req.user.uid;
 
@@ -16,7 +15,6 @@ exports.getVault = async (req, res) => {
   let vault = await checkID(vaultID, id);
 
   if (vault) {
-    console.log(vault);
     return res.json(vault);
   } else {
     return res.status(401).json({ error: "Access denied" });
@@ -37,78 +35,24 @@ exports.downloadImages = async (req, res) => {
 };
 
 exports.uploadToVault = async (req, res) => {
-  let vaultID = req.params.vaultID;
+  const vaultID = req.params.vaultID;
+  const imageNames = req.body;
+  console.log(req.body);
+  let imageUrls = [];
 
-  console.log(vaultID);
-
-  const BusBoy = require("busboy");
-  const path = require("path");
-  const os = require("os");
-  const fs = require("fs");
-
-  const busboy = new BusBoy({ headers: req.headers });
-
-  let imageFileName;
-  let imageToAdd;
-  let imagesToUpload = [];
-
-  busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
-    if (!mimetype.includes("image")) {
-      return res.status(400).json({ error: "Please upload an image." });
-    }
-
-    const imageExtension = filename.split(".")[filename.split(".").length - 1];
-
-    imageFileName = `${Math.round(
-      Math.random() * 1000000000
-    )}.${imageExtension}`;
-
-    const filepath = path.join(os.tmpdir(), imageFileName);
-    console.log("filepath", filepath);
-    imageToAdd = { imageFileName, filepath, mimetype };
-
-    file.pipe(fs.createWriteStream(filepath));
-    imagesToUpload.push(imageToAdd);
+  imageNames.forEach((image) => {
+    // Replace the "/" with "%2F" in the url since google storage does that for some dumbass reason if placing in folder
+    url = `https://firebasestorage.googleapis.com/v0/b/${storageBucketVar}/o/${vaultID}%2F${image}?alt=media`;
+    imageUrls.push(url);
   });
 
-  busboy.on("finish", () => {
-    let promises = [];
-    let imageUrls = [];
-
-    imagesToUpload.forEach((imageToBeUploaded) => {
-      // Replace the "/" with "%2F" in the url since google storage does that for some dumbass reason if placing in folder
-      url = `https://firebasestorage.googleapis.com/v0/b/${storageBucketVar}/o/${vaultID}%2F${imageToBeUploaded.imageFileName}?alt=media`;
-      imageUrls.push(url);
-      promises.push(
-        storage.bucket(storageBucketVar).upload(imageToBeUploaded.filepath, {
-          destination: `${vaultID}/${imageToBeUploaded.imageFileName}`,
-          resumable: false,
-          metadata: {
-            metadata: {
-              contentType: imageToBeUploaded.mimetype,
-            },
-          },
-        })
-      );
+  db.doc(`/photoVault/${vaultID}`)
+    .update({
+      images: admin.firestore.FieldValue.arrayUnion(...imageUrls),
+    })
+    .catch((err) => {
+      return res.json({ error: err });
     });
-
-    console.log("ImageURLS:", imageUrls);
-    // TODO: store images without a for loop
-    imageUrls.forEach((image) => {
-      db.doc(`/photoVault/${vaultID}`)
-        .update({
-          images: admin.firestore.FieldValue.arrayUnion(image),
-        })
-        .catch((err) => {
-          return res.json({ error: err });
-        });
-    });
-
-    res.writeHead(200, { Connection: "close" });
-    res.end("All images uploaded successfully.");
-  });
-
-  busboy.end(req.rawBody);
 };
 
 exports.deleteFromVault = async (req, res) => {
@@ -133,7 +77,6 @@ exports.getVaultSize = async (req, res) => {
   let allSizes = [];
 
   files[0].forEach((file) => {
-    console.log(file.metadata.size);
     allSizes.push(file.metadata.size);
   });
 
