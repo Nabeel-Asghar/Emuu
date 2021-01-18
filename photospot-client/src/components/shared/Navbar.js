@@ -45,8 +45,9 @@ const useStyles = makeStyles((theme) => ({
     borderRadius: "50%",
   },
   searchBox: {
+    height: "38px",
     borderRadius: 25,
-    padding: "2px 4px",
+    padding: "0px 4px",
     display: "flex",
     alignItems: "center",
     margin: "0 auto",
@@ -112,7 +113,7 @@ const Navbar = (props) => {
     >
       <Toolbar>
         <Grid container alignItems="center" justify="center">
-          <Grid item xs={3}>
+          <Grid item xs={2} sm={3}>
             <IconButton
               edge="start"
               style={{ backgroundColor: "transparent" }}
@@ -130,7 +131,7 @@ const Navbar = (props) => {
             </IconButton>
           </Grid>
 
-          <Grid item xs={6} align="center">
+          <Grid item xs={8} sm={6} align="center">
             <Box
               width="100%"
               border={1}
@@ -174,7 +175,7 @@ const Navbar = (props) => {
             </Box>
           </Grid>
 
-          <Grid item xs={3} align="right">
+          <Grid item xs={2} sm={3} align="right">
             <IconButton
               edge="end"
               aria-label="account of current user"
@@ -183,7 +184,9 @@ const Navbar = (props) => {
               onClick={handleMenu}
               color="inherit"
             >
-              <MenuIcon fontSize="large" />
+              <Hidden xsDown>
+                <MenuIcon fontSize="large" />
+              </Hidden>
               <Avatar alt="Remy Sharp" src={avatarUrl} />
             </IconButton>
           </Grid>

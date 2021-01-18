@@ -104,6 +104,9 @@ const styles = (theme) => ({
   chatViewContainer: {
     backgroundColor: "#e6e6e6",
     height: "calc(100vh - 262px);",
+    [theme.breakpoints.down(600)]: {
+      height: "calc(100vh - 190px);",
+    },
     overflow: "auto",
     "&::-webkit-scrollbar": {
       width: "0.4em",
@@ -145,13 +148,11 @@ class ChatViewComponent extends Component {
   render() {
     const { classes, userName, chat } = this.props;
     const { width } = this.props;
-    console.log(chat);
     if (chat === undefined) {
       return <main id="chatview-container" className={classes.content} />;
     } else {
       return (
         <div className={classes.root}>
-          {console.log("The current width is:", width)}
           <div className={classes.chatHeader}>
             {chat.names.filter((_usr) => _usr !== userName)[0]}
           </div>

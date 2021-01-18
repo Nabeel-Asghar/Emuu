@@ -23,6 +23,9 @@ const styles = (theme) => ({
     paddingTop: "0px",
     backgroundColor: "white",
     height: "calc(100vh - 200px);",
+    [theme.breakpoints.down(600)]: {
+      height: "calc(100vh - 128px);",
+    },
   },
   newChatBtn: {
     height: "50px",
@@ -32,7 +35,7 @@ const styles = (theme) => ({
   },
 
   listItem: {
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down(600)]: {
       paddingLeft: "0px",
     },
     paddingRight: "0px",
@@ -55,24 +58,23 @@ const styles = (theme) => ({
     whiteSpace: "nowrap" /* Don't forget this one */,
     textOverflow: "ellipsis",
   },
+  avatar: {
+    margin: "auto",
+  },
 });
 
 class UserListComponent extends Component {
   render() {
     const { classes, selectChatFn, chat, userName } = this.props;
 
-    console.log(this.props);
-
     return (
       <main>
         <Typography
           component="h1"
-          variant="h6"
+          variant="subtitle1"
           align="center"
           className={classes.newChatBtn}
-        >
-          Chats
-        </Typography>
+        ></Typography>
 
         <List className={classes.theList}>
           {chat.map((_chat, _index) => {
@@ -85,7 +87,7 @@ class UserListComponent extends Component {
                   alignItems="center"
                   style={{ margin: "auto" }}
                 >
-                  <ListItemAvatar style={{ margin: "auto" }}>
+                  <ListItemAvatar className={classes.avatar}>
                     <Avatar
                       style={{ margin: "auto" }}
                       alt="remy Sharp"

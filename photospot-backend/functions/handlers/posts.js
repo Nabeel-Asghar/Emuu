@@ -33,28 +33,6 @@ exports.getAllPhotographers = (req, res) => {
     .catch((err) => console.error(err));
 };
 
-exports.createPost = (req, res) => {
-  if (isEmpty(req.body.body)) {
-    return res.status(400).json("Body must not be empty");
-  }
-
-  const newPost = {
-    body: req.body.body,
-    userHandle: req.user.handle,
-    createdAt: new Date().toISOString(),
-  };
-
-  db.collection("posts")
-    .add(newPost)
-    .then((doc) => {
-      res.json({ message: `document ${doc.id} created successfully!` });
-    })
-    .catch((err) => {
-      res.status(500).json({ error: `something went wrong` });
-      console.log(err);
-    });
-};
-
 exports.getReviews = (req, res) => {
   let photographerID = req.params.photographerId;
 
@@ -86,9 +64,8 @@ exports.getReviews = (req, res) => {
     });
 };
 
-exports.reviewPhotographer = (req, res) => {
+exports.reviewPhotographer = async (req, res) => {
   let description = req.body.description || "";
-  let rating = req.body.rating || "";
   let title = req.body.title || "";
   let userid = req.user.uid;
   let reviewID = req.user.uid;
@@ -96,8 +73,6 @@ exports.reviewPhotographer = (req, res) => {
   let photographerFirstName = req.body.photographerFirstName;
   let photographerLastName = req.body.photographerLastName;
   let photographerProfile = req.body.photographerProfile;
-  let reviewTotal = 1;
-  let reviewCount = 1;
 
   const newReview = {
     description: req.body.description,
@@ -130,32 +105,28 @@ exports.reviewPhotographer = (req, res) => {
     });
   }
 
+  const { valid, errors } = validateReview(newReview);
+  console.log("errors: ", errors);
+
+  let existingReview = await checkReviewExists(
+    photographerBeingReviewed,
+    userid
+  );
+  if (existingReview) {
+    return res
+      .status(400)
+      .json({ error: "You cannot review someone twice." })
+      .end();
+  }
+  if (!valid) return res.status(400).json(errors);
+
+  // Add review to that photographer document
   db.collection("photographer")
     .doc(photographerBeingReviewed)
     .collection("reviews")
     .doc(userid)
-    .get()
-    .then((doc) => {
-      if (doc.exists) {
-        console.log("cannot review twice");
-        return res
-          .status(400)
-          .json({ error: "You cannot review someone twice." });
-      }
-    })
-    .then(() => {
-      const { valid, errors } = validateReview(newReview);
-      console.log("errors: ", errors);
+    .set(newReview)
 
-      if (!valid) return res.status(400).json(errors);
-
-      // Add review to that photographer document
-      db.collection("photographer")
-        .doc(photographerBeingReviewed)
-        .collection("reviews")
-        .doc(userid)
-        .set(newReview);
-    })
     .then(() => {
       db.collection("users")
         .doc(userid)
@@ -173,10 +144,13 @@ exports.reviewPhotographer = (req, res) => {
           }
 
           // Compute new number of ratings
-          var newNumRatings = document.data().reviewCount + 1;
+          var newNumRatings = (document.data().reviewCount || 0) + 1;
+
+          console.log("old totalRating: ", document.data().totalRating);
 
           // Compute new average rating
-          var oldRatingTotal = document.data().totalRating + req.body.rating;
+          var oldRatingTotal =
+            (document.data().totalRating || 0) + req.body.rating;
           var newAvgRating = oldRatingTotal / newNumRatings;
 
           // Commit to Firestore
@@ -185,6 +159,11 @@ exports.reviewPhotographer = (req, res) => {
             totalRating: oldRatingTotal,
             avgRating: newAvgRating,
           });
+
+          console.log();
+          console.log("reviewCount: ", newNumRatings);
+          console.log("totalRating: ", oldRatingTotal);
+          console.log("avgRating: ", newAvgRating);
 
           index
             .partialUpdateObject({
@@ -211,6 +190,21 @@ exports.reviewPhotographer = (req, res) => {
       return res.status(500).json({ error: `something went wrong` });
     });
 };
+
+function checkReviewExists(photographerBeingReviewed, userID) {
+  return db
+    .collection("photographer")
+    .doc(photographerBeingReviewed)
+    .collection("reviews")
+    .doc(userID)
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        console.log("cannot review twice");
+        return true;
+      } else return false;
+    });
+}
 
 exports.editReview = (req, res) => {
   let description = req.body.description || "";

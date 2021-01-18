@@ -28,6 +28,7 @@ class changePasswordSent extends Component {
             paddingBottom: "25px",
             paddingTop: "25px",
             marginTop: 100,
+            textAlign: "center",
           }}
         >
           <Grid item xs={7} style={{ margin: "auto" }}>

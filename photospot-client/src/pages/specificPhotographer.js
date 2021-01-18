@@ -48,6 +48,8 @@ class specificPhotographer extends Component {
       email: "",
       firstName: "",
       lastName: "",
+      userFirstName: "",
+      userLastName: "",
       bio: "",
       profileImage: "",
       images: [],
@@ -149,7 +151,6 @@ class specificPhotographer extends Component {
     }
     if (nextProps.UI.newReviewSucess) {
       this.handleBackdropOpen();
-      console.log("gayyy");
     }
   }
 
@@ -279,6 +280,8 @@ class specificPhotographer extends Component {
               history={this.props.history}
               firstName={this.state.firstName}
               lastName={this.state.lastName}
+              userFirstName={this.state.userFirstName}
+              userLastName={this.state.userLastName}
               email={this.state.email}
               userEmail={this.state.userEmail}
               profileImage={this.state.profileImage}

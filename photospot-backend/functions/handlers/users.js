@@ -61,22 +61,13 @@ exports.signup = (req, res) => {
         db.doc(`/photographer/${userId}`)
           .set(userCredentials)
           .then(() => {
-            db.doc(`/users/${userId}`)
-              .set(userCredentials)
-              .then(() => {
-                index
-                  .saveObjects(userCredentials)
-                  .then(() => {
-                    console.log("user added");
-                    return res.json({ message: "User added successfully!" });
-                  })
-                  .catch((err) => {
-                    return res.status(500).json({ error: err.code });
-                  });
-              })
-              .catch((err) => {
-                return res.status(500).json({ error: err.code });
-              });
+            db.doc(`/users/${userId}`).set(userCredentials);
+            let algoliaCredentials = userCredentials;
+            algoliaCredentials.objectID = userId;
+            index.saveObject(algoliaCredentials).catch((err) => {
+              res.status(500).json({ error: err.code });
+              console.log(err);
+            });
           })
           .catch((err) => {
             console.error(err);
@@ -179,6 +170,7 @@ exports.reauthenticateUser = () => {
   return user.reauthenticateWithCredential(credential);
 };
 
+// change your account password
 exports.changePassword = (req, res) => {
   var email = req.body.email;
   var oldPassword = req.body.oldPassword;
@@ -233,6 +225,7 @@ exports.changePassword = (req, res) => {
     });
 };
 
+// send reset password email
 exports.resetPassword = (req, res) => {
   var emailAddress = req.body.email;
 
@@ -273,8 +266,6 @@ exports.setYourPhotographyPage = (req, res) => {
     website: req.body.website,
     instagram: req.body.instagram,
     ratePerHour: req.body.ratePerHour,
-    totalRating: 0,
-    reviewCount: 0,
   };
 
   const { valid, errors } = validatePhotographerPageData(
@@ -484,6 +475,11 @@ exports.updateUserProfile = (req, res) => {
         db.doc(`/photographer/${req.user.uid}`)
           .update(userDetails)
           .then(() => {
+            let alogliaUserDetails = userDetails;
+            alogliaUserDetails.objectID = req.user.uid;
+            index.partialUpdateObject(alogliaUserDetails);
+          })
+          .then(() => {
             return res.json({ message: "Your user profile has been updated." });
           })
           .catch((err) => {
@@ -542,6 +538,7 @@ exports.getYourPhotographerPage = (req, res) => {
     });
 };
 
+// getting the current user profile page
 exports.getYourUserProfile = (req, res) => {
   let userid = req.user.uid;
 
@@ -872,6 +869,7 @@ exports.editBookingTimes = (req, res) => {
   let date = req.body.date;
   let timeslots = req.body.time;
   let algoliaDates = req.body.algoliaDates;
+  console.log(algoliaDates);
   let userid = req.user.uid;
 
   console.log("Date: ", date);
@@ -886,7 +884,7 @@ exports.editBookingTimes = (req, res) => {
     .then(() => {
       index
         .partialUpdateObject({
-          bookings: algoliaDates,
+          dates: { _operation: "AddUnique", value: algoliaDates },
           objectID: userid,
         })
         .catch((err) => {

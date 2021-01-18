@@ -84,7 +84,7 @@ class editableUsercard extends Component {
         >
           <Grid item xs={12} style={{ textAlign: "center" }}>
             <Button
-              variant="outlined"
+              variant="contained"
               style={{ marginTop: 15 }}
               color="secondary"
               fullWidth
