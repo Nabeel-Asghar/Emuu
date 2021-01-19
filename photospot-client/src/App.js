@@ -46,6 +46,7 @@ import API from "./api";
 // Stripe
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import setUpProfile from "./pages/setUpProfile";
 const stripePromise = loadStripe(
   "pk_test_51HEMVlLQ55OPNOhDWc6WmWpkBFB2u4jz4fIBnkc2BQ9ZufE2eGDj5LG3GUxUWDJKxh0WU964w2EafrUTXNO3E3P600sAgdBLPU"
 );
@@ -318,6 +319,12 @@ const App = () => {
                   render={(props) => (
                     <Search {...props} fullScreen={halfScreen} />
                   )}
+                />
+
+                <AuthRoute
+                  exact
+                  path="/setupProfile"
+                  component={setUpProfile}
                 />
 
                 <Route exact path="/resetPassword" component={resetPassword} />
