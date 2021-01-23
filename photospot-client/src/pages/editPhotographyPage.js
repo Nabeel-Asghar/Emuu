@@ -38,6 +38,8 @@ import EditableUsercard from "../components/your-photography-page/editableUserca
 import PhotoSamples from "../components/photographer-page/photoSamples";
 import EditBio from "../components/your-photography-page/editBio";
 import EditUserDetails from "../components/your-photography-page/editUserDetails";
+import PictureUploader from "../components/shared/pictureUploader";
+import Feedback from "../components/shared/feedback";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -72,6 +74,13 @@ class editPhotographyPage extends Component {
       fakeCamera: "",
       fakeCompany: "",
       fakeHeadline: "",
+      backgroundImageName: "",
+      openBackgroundEditor: false,
+      backgroundImage: "",
+      profileImageName: "",
+      openProfileEditor: false,
+      croppedProfileImage: "",
+      openFeedback: false,
     };
   }
 
@@ -106,24 +115,31 @@ class editPhotographyPage extends Component {
     ) {
       this.props.getYourPhotographyPage().then(() => {
         this.assignValues(this.props.yourPhotographerPage);
-        console.log(this.props.yourPhotographerPage);
       });
     }
   }
 
   handleBackgroundChange = (event) => {
     const image = event.target.files[0];
-    console.log(image);
-    {
-      image &&
-        this.setState({
-          background: URL.createObjectURL(image),
-        });
-    }
+
+    image &&
+      this.setState({
+        backgroundImageName: image.name,
+        backgroundImage: URL.createObjectURL(image),
+        openBackgroundEditor: true,
+      });
+  };
+
+  saveBackgroundImage = (image) => {
     const formData = new FormData();
     formData.append("image", image, image.name);
-    console.log(formData);
-    this.props.uploadBackgroundImage(formData);
+    this.props.uploadBackgroundImage(formData).then(() =>
+      this.setState({
+        openFeedback: true,
+        background: URL.createObjectURL(image),
+        openBackgroundEditor: false,
+      })
+    );
   };
 
   handleEditBackground = () => {
@@ -131,19 +147,28 @@ class editPhotographyPage extends Component {
     fileInput.click();
   };
 
+  saveProfileImage = (image) => {
+    const formData = new FormData();
+    formData.append("image", image, image.name);
+    this.props.uploadProfileImage(formData).then(() =>
+      this.setState({
+        openFeedback: true,
+        profileImage: URL.createObjectURL(image),
+        openProfileEditor: false,
+      })
+    );
+  };
+
   handleProfileImageChange = (event) => {
     const image = event.target.files[0];
-    console.log(image);
     {
       image &&
         this.setState({
-          profileImage: URL.createObjectURL(image),
+          profileImageName: image.name,
+          openProfileEditor: true,
+          croppedProfileImage: URL.createObjectURL(image),
         });
     }
-    const formData = new FormData();
-    formData.append("image", image, image.name);
-    console.log(formData);
-    this.props.uploadProfileImage(formData);
   };
 
   handleEditProfileImage = () => {
@@ -255,8 +280,6 @@ class editPhotographyPage extends Component {
     });
   };
 
-  //------
-
   render() {
     const { loading, classes } = this.props;
 
@@ -285,6 +308,32 @@ class editPhotographyPage extends Component {
             />
           </Grid>
         </Grid>
+
+        <PictureUploader
+          {...this.props}
+          image={this.state.croppedProfileImage}
+          name={this.state.profileImageName}
+          open={this.state.openProfileEditor}
+          closeEditor={() => this.setState({ openProfileEditor: false })}
+          savePicture={(image) => this.saveProfileImage(image)}
+          aspect={1}
+        />
+
+        <PictureUploader
+          {...this.props}
+          image={this.state.backgroundImage}
+          name={this.state.backgroundImageName}
+          open={this.state.openBackgroundEditor}
+          closeEditor={() => this.setState({ openBackgroundEditor: false })}
+          savePicture={(image) => this.saveBackgroundImage(image)}
+          aspect={10 / 3}
+        />
+
+        <Feedback
+          open={this.state.openFeedback}
+          handleClose={() => this.setState({ openFeedback: false })}
+          error={this.props.user.uploadErrorResponse}
+        />
 
         <EditUserDetails
           open={this.state.openDetails}
@@ -392,6 +441,7 @@ class editPhotographyPage extends Component {
 const mapStateToProps = (state) => ({
   yourPhotographerPage: state.user.yourPhotographyPageDetails,
   loading: state.UI.loadingData,
+  user: state.user,
 });
 
 const mapActionsToProps = {

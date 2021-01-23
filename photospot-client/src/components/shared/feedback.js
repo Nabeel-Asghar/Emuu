@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Snackbar from "@material-ui/core/Snackbar";
 import Alert from "@material-ui/lab/Alert";
+import { theme } from "../../util/theme";
 
 export class feedback extends Component {
   render() {
@@ -16,8 +17,10 @@ export class feedback extends Component {
         onClose={this.props.handleClose}
       >
         <Alert
+          variant="filled"
           onClose={this.props.handleClose}
           severity={errors ? "warning" : "success"}
+          style={!errors && { backgroundColor: theme.main }}
         >
           {errors ? errors.message : "Your changes have been saved"}
         </Alert>

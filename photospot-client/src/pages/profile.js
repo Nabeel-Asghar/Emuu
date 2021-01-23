@@ -17,6 +17,7 @@ import Paper from "@material-ui/core/Paper";
 import EditProfileImage from "../components/user-profile/editProfileImage";
 import EditUserDetails from "../components/user-profile/editUserDetails";
 import Feedback from "../components/shared/feedback";
+import PictureUploader from "../components/shared/pictureUploader";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -34,6 +35,9 @@ class profileImage extends Component {
       profileImage: "",
       phoneNumber: "",
       openSnack: false,
+      openEditor: false,
+      profileImageName: "",
+      croppedProfileImage: "",
     };
   }
 
@@ -63,16 +67,26 @@ class profileImage extends Component {
 
   handleProfileImageChange = (event) => {
     const image = event.target.files[0];
-    console.log(image);
     {
       image &&
         this.setState({
-          profileImage: URL.createObjectURL(image),
+          openEditor: true,
+          profileImageName: image.name,
+          croppedProfileImage: URL.createObjectURL(image),
         });
     }
+  };
+
+  saveProfileImage = (image) => {
     const formData = new FormData();
     formData.append("image", image, image.name);
-    this.props.uploadProfileImage(formData);
+    this.props.uploadProfileImage(formData).then(() =>
+      this.setState({
+        openEditor: false,
+        openSnack: true,
+        profileImage: URL.createObjectURL(image),
+      })
+    );
   };
 
   handleEditProfileImage = () => {
@@ -117,12 +131,14 @@ class profileImage extends Component {
     return (
       <Grid container spacing={1}>
         <Feedback
-          errors={errors}
+          errors={
+            (errors && this.props.user.uploadErrorResponse) ||
+            (this.props.user.uploadErrorResponse &&
+              this.props.user.uploadErrorResponse)
+          }
           open={this.state.openSnack}
           handleClose={this.handleSnackbarClose}
         />
-
-        {console.log("somthing")}
 
         <Grid item sm={1} xs={0} />
         <Grid item md={4} sm={12} xs={12} className={classes.centerGrid}>
@@ -134,6 +150,16 @@ class profileImage extends Component {
             />
           </Paper>
         </Grid>
+
+        <PictureUploader
+          {...this.props}
+          image={this.state.croppedProfileImage}
+          name={this.state.profileImageName}
+          open={this.state.openEditor}
+          closeEditor={() => this.setState({ openEditor: false })}
+          savePicture={(image) => this.saveProfileImage(image)}
+          aspect={1}
+        />
 
         <Grid item md={6} sm={12} xs={12}>
           <Paper>
@@ -159,6 +185,7 @@ class profileImage extends Component {
 const mapStateToProps = (state) => ({
   credentials: state.user.credentials,
   UI: state.UI,
+  user: state.user,
 });
 
 const mapActionsToProps = {

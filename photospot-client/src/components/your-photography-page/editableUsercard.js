@@ -20,9 +20,78 @@ import EditIcon from "@material-ui/icons/Edit";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
+  overlayBackground: {
+    position: "absolute",
+    top: 65,
+    background: "rgb(0, 0, 0)",
+    background: "rgba(0, 0, 0, 0.5)",
+    color: "#f1f1f1",
+    width: "100%",
+    transition: ".5s ease",
+    opacity: 0,
+    color: "#fff",
+    fontSize: 20,
+    padding: "20px 0",
+    textAlign: "center",
+    opacity: 1,
+  },
+
+  overlayBackgroundActive: {
+    position: "absolute",
+    top: 65,
+    background: "rgba(35, 186, 139)",
+    color: "#f1f1f1",
+    width: "100%",
+    transition: ".5s ease",
+    opacity: 0,
+    color: "#fff",
+    fontSize: 20,
+    padding: "20px 0",
+    textAlign: "center",
+    opacity: 1,
+  },
+
+  overlayProfile: {
+    position: "absolute",
+    bottom: 0,
+    background: "rgb(0, 0, 0)",
+    background: "rgba(0, 0, 0, 0.5)",
+    color: "#f1f1f1",
+    width: "100%",
+    transition: ".5s ease",
+    opacity: 0,
+    color: "#fff",
+    fontSize: 20,
+    padding: "20px 0",
+    textAlign: "center",
+    opacity: 1,
+  },
+
+  overlayProfileActive: {
+    position: "absolute",
+    bottom: 0,
+    background: "rgba(35, 186, 139)",
+    color: "#f1f1f1",
+    width: "100%",
+    transition: ".5s ease",
+    opacity: 0,
+    color: "#fff",
+    fontSize: 20,
+    padding: "20px 0",
+    textAlign: "center",
+    opacity: 1,
+  },
 });
 
 class editableUsercard extends Component {
+  constructor() {
+    super();
+    this.state = {
+      hover: false,
+      hoverProfile: false,
+    };
+  }
+
   render() {
     const {
       classes,
@@ -42,36 +111,58 @@ class editableUsercard extends Component {
       <>
         <Grid container>
           <Grid item xs={12}>
-            <div>
-              <img
-                className={classes.background}
-                src={background}
-                onClick={this.props.handleEditBackground}
-              />
+            <div
+              onMouseEnter={() => this.setState({ hover: true })}
+              onMouseLeave={() => this.setState({ hover: false })}
+              style={{ cursor: "pointer" }}
+              onClick={this.props.handleEditBackground}
+            >
+              <img className={classes.background} src={background} />
               <input
                 type="file"
                 id="imageInput"
                 hidden="hidden"
                 accept="image/*"
-                onChange={this.props.handleBackgroundChange}
+                onInput={this.props.handleBackgroundChange}
               />
+              <div
+                className={
+                  this.state.hover
+                    ? classes.overlayBackgroundActive
+                    : classes.overlayBackground
+                }
+              >
+                EDIT IMAGE
+              </div>
             </div>
           </Grid>
 
-          <Grid item xs={12}>
+          <Grid item xs={12} className={classes.userCard}>
             <div style={{ textAlign: "center", marginTop: "-250px" }}>
               <div
                 className={classes.avatarContainer}
                 onClick={this.props.handleEditProfileImage}
+                onMouseEnter={() => this.setState({ hoverProfile: true })}
+                onMouseLeave={() => this.setState({ hoverProfile: false })}
+                style={{ cursor: "pointer" }}
               >
                 <img className={classes.avatar} src={profileImage} />
+                <div
+                  className={
+                    this.state.hoverProfile
+                      ? classes.overlayProfileActive
+                      : classes.overlayProfile
+                  }
+                >
+                  EDIT IMAGE
+                </div>
               </div>
               <input
                 type="file"
                 id="profileImageInput"
                 hidden="hidden"
                 accept="image/*"
-                onChange={this.props.handleProfileImageChange}
+                onInput={this.props.handleProfileImageChange}
               />
             </div>
           </Grid>
