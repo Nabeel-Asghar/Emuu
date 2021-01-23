@@ -5,6 +5,8 @@ const intialState = {
   userOrders: [],
   userPastOrders: [],
   userReviews: [],
+  uploadResponse: null,
+  uploadErrorResponse: null,
 };
 
 export default function (state = intialState, action) {
@@ -47,6 +49,18 @@ export default function (state = intialState, action) {
       return {
         ...state,
         userReviews: { ...action.payload },
+      };
+
+    case "SET_UPDATE_RESPONESE":
+      return {
+        ...state,
+        uploadResponse: { ...action.payload },
+      };
+
+    case "SET_ERROR__UPDATE_RESPONSE":
+      return {
+        ...state,
+        uploadErrorResponse: { ...action.payload },
       };
 
     default:

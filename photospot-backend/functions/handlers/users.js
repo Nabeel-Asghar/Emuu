@@ -347,6 +347,8 @@ exports.uploadProfilePicture = async (req, res) => {
       return res.status(400).json({ error: "Please upload an image." });
     }
 
+    console.log(file);
+
     const imageExtension = filename.split(".")[filename.split(".").length - 1];
 
     const source = `source.${imageExtension}`;
@@ -394,11 +396,11 @@ exports.uploadProfilePicture = async (req, res) => {
       );
     } catch (err) {
       console.log("error uploading profile/thumbnail.", err);
-      return res.json({ message: "Something went wrong." });
+      return res.status(400).json({ message: "Something went wrong." });
     }
   });
   busboy.end(req.rawBody);
-  return res.json({ message: "Success!" });
+  return res.json({ message: "Profile image updated" });
 };
 
 // upload your background picture for your page
@@ -418,6 +420,8 @@ exports.uploadBackgroundPicture = (req, res) => {
       return res.status(400).json({ error: "Please upload an image." });
     }
 
+    console.log(file);
+
     const imageExtension = filename.split(".")[filename.split(".").length - 1];
 
     imageFileName = `${Math.round(
@@ -431,30 +435,33 @@ exports.uploadBackgroundPicture = (req, res) => {
   });
 
   busboy.on("finish", () => {
-    admin
-      .storage()
-      .bucket(config.storageBucket)
-      .upload(imageToBeUploaded.filepath, {
-        resumable: false,
-        metadata: {
+    try {
+      admin
+        .storage()
+        .bucket(config.storageBucket)
+        .upload(imageToBeUploaded.filepath, {
+          resumable: false,
           metadata: {
-            contentType: imageToBeUploaded.mimetype,
+            metadata: {
+              contentType: imageToBeUploaded.mimetype,
+            },
           },
-        },
-      })
-      .then(() => {
-        const background = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
-        return db.doc(`/photographer/${req.user.uid}`).update({ background });
-      })
-      .then(() => {
-        return res.json({ message: "Background Image update" });
-      })
-      .catch((err) => {
-        console.log(err);
-        return res.status(500).json({ error: err.code });
-      });
+        })
+        .then(() => {
+          const background = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+          return db.doc(`/photographer/${req.user.uid}`).update({ background });
+        })
+        .catch((err) => {
+          console.log(err);
+          return res.status(500).json({ message: "Something went wrong." });
+        });
+    } catch (err) {
+      console.log(err);
+      return res.status(400).json({ message: "Something went wrong." });
+    }
   });
   busboy.end(req.rawBody);
+  return res.json({ message: "Background image updated" });
 };
 
 // update users profile details
