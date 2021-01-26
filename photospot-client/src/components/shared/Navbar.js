@@ -204,24 +204,40 @@ const Navbar = (props) => {
                 onClose={handleClose}
               >
                 {!photographerStatus && (
-                  <MenuItem component={Link} to="/userDashboard">
+                  <MenuItem
+                    onClick={handleClose}
+                    component={Link}
+                    to="/userDashboard"
+                  >
                     Dashboard
                   </MenuItem>
                 )}
 
                 {photographerStatus && (
                   <div>
-                    <MenuItem component={Link} to="/photographerDashboard">
+                    <MenuItem
+                      onClick={handleClose}
+                      component={Link}
+                      to="/photographerDashboard"
+                    >
                       Dashboard
                     </MenuItem>
 
-                    <MenuItem component={Link} to="/yourPhotographyProfile">
+                    <MenuItem
+                      onClick={handleClose}
+                      component={Link}
+                      to="/yourPhotographyProfile"
+                    >
                       Photographer Page
                     </MenuItem>
                   </div>
                 )}
 
-                <MenuItem component={Link} to="/messaging">
+                <MenuItem
+                  onClick={handleClose}
+                  component={Link}
+                  to="/messaging"
+                >
                   Messaging
                 </MenuItem>
 
@@ -244,11 +260,11 @@ const Navbar = (props) => {
                 anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
                 transformOrigin={{ vertical: "top", horizontal: "right" }}
               >
-                <MenuItem component={Link} to="/login">
+                <MenuItem onClick={handleClose} component={Link} to="/login">
                   Login
                 </MenuItem>
 
-                <MenuItem component={Link} component={Link} to="/signup">
+                <MenuItem onClick={handleClose} component={Link} to="/signup">
                   Signup
                 </MenuItem>
               </Menu>

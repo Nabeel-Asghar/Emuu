@@ -271,6 +271,7 @@ export const updateUserProfile = (details) => (dispatch) => {
   dispatch({ type: "LOADING_POST_ACTION" });
   return API.post("/youruserprofile/edit", details)
     .then((res) => {
+      dispatch({ type: "CLEAR_ERRORS" });
       dispatch({ type: "SET_SUCCESS_RESPONSE" });
     })
     .catch((err) => {

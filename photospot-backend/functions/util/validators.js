@@ -123,3 +123,20 @@ exports.validatePhotographerPageData = (data) => {
     valid: Object.keys(errors).length === 0 ? true : false,
   };
 };
+
+exports.validateProfileUpdate = (data) => {
+  let errors = {};
+
+  if (isEmpty(data.firstName)) {
+    errors.firstName = "Must not be empty";
+  }
+
+  if (isEmpty(data.lastName)) {
+    errors.lastName = "Must not be empty";
+  }
+
+  return {
+    errors,
+    valid: Object.keys(errors).length === 0 ? true : false,
+  };
+};

@@ -283,7 +283,7 @@ class userDashboard extends Component {
     }
 
     return (
-      <Grid container spacing={5}>
+      <Grid container spacing={5} style={{ overflow: "hidden" }}>
         {/* Left sidebar */}
         <Grid item md={4} sm={12} xs={12}>
           <ProfileCard

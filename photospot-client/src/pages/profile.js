@@ -129,19 +129,18 @@ class profileImage extends Component {
       UI: { loadingAction, errors },
     } = this.props;
     return (
-      <Grid container spacing={1}>
+      <Grid container spacing={1} style={{ maxWidth: 500, margin: "0 auto" }}>
         <Feedback
           errors={
-            (errors && this.props.user.uploadErrorResponse) ||
-            (this.props.user.uploadErrorResponse &&
-              this.props.user.uploadErrorResponse)
+            errors?.firstName ||
+            errors?.lastName ||
+            this.props?.user?.uploadErrorResponse
           }
           open={this.state.openSnack}
           handleClose={this.handleSnackbarClose}
         />
 
-        <Grid item sm={1} xs={0} />
-        <Grid item md={4} sm={12} xs={12} className={classes.centerGrid}>
+        <Grid item sm={12} xs={12} className={classes.centerGrid}>
           <Paper>
             <EditProfileImage
               profileImage={this.state.profileImage}
@@ -161,7 +160,7 @@ class profileImage extends Component {
           aspect={1}
         />
 
-        <Grid item md={6} sm={12} xs={12}>
+        <Grid item sm={12} xs={12}>
           <Paper>
             <EditUserDetails
               firstName={this.state.firstName}
@@ -171,6 +170,7 @@ class profileImage extends Component {
               phoneNumber={this.state.phoneNumber}
               handleChange={this.handleChange}
               handleAgree={this.handleAgree}
+              errors={this.props.UI.errors}
               loading={loadingAction}
             />
           </Paper>

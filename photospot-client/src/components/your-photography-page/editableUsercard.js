@@ -201,7 +201,7 @@ class editableUsercard extends Component {
                 </IconButton>
               </Grid>
 
-              <Grid item xs={8}>
+              <Grid item sm={8} xs={12}>
                 <div className={classes.textGrid}>
                   <Typography variant="h4">
                     {loading ? (
@@ -229,7 +229,7 @@ class editableUsercard extends Component {
                 </div>
               </Grid>
 
-              <Grid item xs={4}>
+              <Grid item sm={4} xs={12}>
                 <div style={{ width: "100%" }}>
                   <List dense="true">
                     <ListItem>

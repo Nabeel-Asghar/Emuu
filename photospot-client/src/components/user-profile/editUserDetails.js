@@ -22,11 +22,11 @@ export class editUserDetails extends Component {
       lastName,
       location_city,
       location_state,
-      phoneNumber,
+      errors,
     } = this.props;
 
     return (
-      <div style={{ textAlign: "center", padding: "10px 0px 10px 0px" }}>
+      <div style={{ textAlign: "center", padding: "10px 0px" }}>
         <form className={classes.root}>
           <TextField
             id="firstName"
@@ -36,7 +36,10 @@ export class editUserDetails extends Component {
             type="text"
             color="secondary"
             value={firstName}
+            required={true}
             onChange={this.props.handleChange}
+            error={errors?.firstName ? true : false}
+            helperText={errors?.firstName}
           />
 
           <TextField
@@ -47,7 +50,10 @@ export class editUserDetails extends Component {
             type="text"
             color="secondary"
             value={lastName}
+            required={true}
             onChange={this.props.handleChange}
+            error={errors?.lastName ? true : false}
+            helperText={errors?.lastName}
           />
 
           <TextField
@@ -58,6 +64,7 @@ export class editUserDetails extends Component {
             type="text"
             color="secondary"
             value={location_city}
+            required={true}
             onChange={this.props.handleChange}
           />
 
@@ -69,18 +76,7 @@ export class editUserDetails extends Component {
             type="text"
             color="secondary"
             value={location_state}
-            onChange={this.props.handleChange}
-          />
-
-          <TextField
-            id="phoneNumber"
-            disabled="true"
-            variant="filled"
-            name="phoneNumber"
-            label="Phone Number"
-            type="text"
-            color="secondary"
-            value={phoneNumber}
+            required={true}
             onChange={this.props.handleChange}
           />
         </form>

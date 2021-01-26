@@ -305,6 +305,7 @@ const App = () => {
                 exact
                 path="/yourPhotographyProfile"
                 component={editPhotographyPage}
+                fullScreen={halfScreen}
               />
 
               <Route exact path="/login" component={login} />
@@ -362,7 +363,12 @@ const App = () => {
                   component={photographerDashboard}
                 />
 
-                <AuthRoute exact path="/profile" component={profile} />
+                <AuthRoute
+                  exact
+                  path="/profile"
+                  component={profile}
+                  fullScreen={halfScreen}
+                />
 
                 <AuthRoute exact path="/messaging" component={messaging} />
 
