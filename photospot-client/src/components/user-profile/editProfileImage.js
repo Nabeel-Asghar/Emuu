@@ -5,6 +5,7 @@ import Button from "@material-ui/core/Button";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
+import defaultPic from "../../images/defaultProfilePicture.png";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -21,8 +22,11 @@ class editProfileImage extends Component {
     const { classes, profileImage } = this.props;
 
     return (
-      <div style={{ padding: "25px 0 25px 0" }}>
-        <img className={classes.profileAvatar} src={profileImage} />
+      <div style={{ padding: "10px 0 0px 0" }}>
+        <img
+          className={classes.profileAvatar}
+          src={profileImage ? profileImage : defaultPic}
+        />
         <input
           type="file"
           id="profileImageInput"
@@ -33,7 +37,7 @@ class editProfileImage extends Component {
         <Tooltip
           title="Edit Profile Image"
           placement="left-start"
-          style={{ marginLeft: "-50px" }}
+          style={{ marginLeft: "-50px", marginBottom: "10px" }}
         >
           <IconButton onClick={this.props.handleEditProfileImage}>
             <EditIcon color="secondary" />

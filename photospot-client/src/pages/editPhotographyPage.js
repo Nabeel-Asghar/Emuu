@@ -176,8 +176,6 @@ class editPhotographyPage extends Component {
   handleBioAgree = (event) => {
     this.setState({
       open: false,
-    });
-    this.setState({
       bio: this.state.fakeBio,
       categories: this.state.tempCategories,
     });
@@ -222,9 +220,6 @@ class editPhotographyPage extends Component {
   handleAgree = (event) => {
     this.setState({
       openDetails: false,
-    });
-
-    this.setState({
       instagram: this.state.fakeInstagram,
       camera: this.state.fakeCamera,
       company: this.state.fakeCompany,

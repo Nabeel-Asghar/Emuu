@@ -39,6 +39,7 @@ const { getMessages, sendMessage } = require("./handlers/messages");
 
 const {
   signup,
+  signupPhotographer,
   login,
   resetPassword,
   changePassword,
@@ -89,6 +90,7 @@ const FBAuth = require("./util/FBAuth");
 
 //--------User Routes-----------------
 app.post("/signup", signup);
+app.post("/signupPhotographer", signupPhotographer);
 app.post("/login", login);
 app.post("/resetPassword", resetPassword);
 app.post("/changePassword", changePassword);

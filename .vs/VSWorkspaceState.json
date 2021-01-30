@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\photospot-backend",
+    "\\photospot-backend\\functions",
+    "\\photospot-backend\\functions\\handlers",
+    "\\photospot-client",
+    "\\photospot-client\\src",
+    "\\photospot-client\\src\\components"
+  ],
+  "SelectedNode": "\\photospot-backend\\functions\\handlers\\users.js",
+  "PreviewInSolutionExplorer": false
+}

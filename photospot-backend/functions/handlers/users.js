@@ -82,7 +82,63 @@ exports.signup = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      return res.status(500).json({ error: err.code });
+      return res.status(500).json({ general: err.message });
+    });
+};
+
+exports.signupPhotographer = (req, res) => {
+  const defaultProfilePicture = "defaultProfilePicture.png";
+
+  const newPhotographer = req.body;
+  newPhotographer.createdAt = new Date().toISOString();
+  newPhotographer.profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultProfilePicture}?alt=media`;
+  console.log(newPhotographer);
+
+  const userCredentials = {
+    email: newPhotographer.email,
+    firstName: newPhotographer.firstName,
+    lastName: newPhotographer.lastName,
+    photographer: newPhotographer.photographer,
+    createdAt: newPhotographer.createdAt,
+    profileImage: newPhotographer.profileImage,
+  };
+
+  const { valid, errors } = validateSignUpData(newPhotographer);
+
+  if (!valid) return res.status(400).json(errors).end();
+
+  let token, userId;
+
+  firebase
+    .auth()
+    .createUserWithEmailAndPassword(
+      newPhotographer.email,
+      newPhotographer.password
+    )
+    .then((data) => {
+      userId = data.user.uid;
+      return data.user.getIdToken();
+    })
+    .then((tokenID) => {
+      token = tokenID;
+      db.doc(`/users/${userId}`).set(userCredentials);
+    })
+    .then(() => {
+      delete newPhotographer.confirmPassword;
+      delete newPhotographer.password;
+      db.doc(`/photographer/${userId}`).set(newPhotographer);
+      newPhotographer.objectID = userId;
+      index.saveObject(newPhotographer).catch((err) => {
+        res.status(500).json({ general: err.code });
+        console.log(err);
+      });
+    })
+    .then(() => {
+      return res.status(201).json({ token });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).json({ general: err.message });
     });
 };
 
@@ -301,15 +357,17 @@ exports.updatePhotographerCategoriesAndBio = (req, res) => {
   const photographerPageDetails = req.body;
   const categories = req.body.categories;
 
-  // const { valid, errors } = validateBio(photographerPageDetails);
-
-  // if (!valid) return res.status(400).json(errors);
+  console.log(req.body);
 
   db.doc(`/photographer/${req.user.uid}`)
     .update(photographerPageDetails)
     .then(() => {
       index
         .partialUpdateObject({
+          instagram: req.body.instagram,
+          camera: req.body.camera,
+          company: req.body.company,
+          headline: req.body.headline,
           categories: categories,
           objectID: req.user.uid,
         })
@@ -483,6 +541,7 @@ exports.updateUserProfile = (req, res) => {
             return res.json({ message: "Your user profile has been updated." });
           })
           .catch((err) => {
+            console.log(err);
             return res.status(500).json({ error: err.code });
           });
       } else {
@@ -490,6 +549,7 @@ exports.updateUserProfile = (req, res) => {
       }
     })
     .catch((err) => {
+      console.log(err);
       return res.status(500).json({ error: err.code });
     });
 };

@@ -35,6 +35,26 @@ export const signupUser = (newUserData, history) => (dispatch) => {
     });
 };
 
+export const signupPhotographer = (newPhotographerData, history) => (
+  dispatch
+) => {
+  dispatch({ type: "LOADING_UI" });
+  API.post("/signupPhotographer", newPhotographerData)
+    .then((res) => {
+      // setAuthorizationHeader(res.data.token);
+      // dispatch(getUserData());
+      dispatch({ type: "CLEAR_ERRORS" });
+      history.push("/login");
+    })
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: "SET_ERRORS",
+        payload: err.response.data,
+      });
+    });
+};
+
 export const resetPasswordAction = (data, history) => (dispatch) => {
   dispatch({ type: "RESET_PASSWORD" });
   API.post("/resetPassword", data)

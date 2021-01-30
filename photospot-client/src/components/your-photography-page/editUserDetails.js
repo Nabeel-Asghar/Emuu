@@ -91,7 +91,7 @@ class editUserDetails extends Component {
                   id="standard-instagram"
                   name="fakeInstagram"
                   type="text"
-                  label="Instagram Handle"
+                  label="Instagram Handle USER"
                   value={this.props.instagram}
                   margin="normal"
                   variant="outlined"

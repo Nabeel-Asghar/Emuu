@@ -13,13 +13,7 @@ import TextField from "@material-ui/core/TextField";
 import React, { Component } from "react";
 import states from "./states";
 
-const names = [
-  "Linkedin Portrait",
-  "Instagram",
-  "Personal Shoot",
-  "Algolia",
-  "Firebase",
-];
+const names = ["Linkedin Portrait", "Instagram", "Personal Shoot"];
 
 function getStyles(name, personName, theme) {
   return {
@@ -49,7 +43,7 @@ const styles = (theme) => ({
     margin: "20px auto",
   },
   textFieldWidth: {
-    width: "80%",
+    width: "100%",
     textAlign: "left",
   },
   chips: {
@@ -79,6 +73,9 @@ export class editPhotographerDetails extends Component {
   render() {
     const {
       classes,
+      email,
+      password,
+      confirmPassword,
       firstName,
       lastName,
       location_city,
@@ -90,12 +87,52 @@ export class editPhotographerDetails extends Component {
       company,
       biography,
       categories,
+      errors,
     } = this.props;
 
     return (
-      <div style={{ textAlign: "center", padding: "10px 0px 10px 0px" }}>
+      <div style={{ textAlign: "center", padding: "0px 0px 10px 0px" }}>
         <form className={classes.root}>
           <div className={classes.textField}>
+            <TextField
+              id="email"
+              name="email"
+              type="email"
+              label="Email"
+              className={classes.textFieldWidth}
+              color="secondary"
+              helperText={errors.email}
+              error={errors.email ? true : false}
+              value={email}
+              onChange={this.props.handleChange}
+              fullWidth
+            />
+            <TextField
+              id="password"
+              name="password"
+              type="password"
+              label="Password"
+              className={classes.textFieldWidth}
+              color="secondary"
+              helperText={errors.password}
+              error={errors.password ? true : false}
+              value={password}
+              onChange={this.props.handleChange}
+              fullWidth
+            />
+            <TextField
+              id="confirmPassword"
+              name="confirmPassword"
+              type="password"
+              label="Confirm Password"
+              className={classes.textFieldWidth}
+              color="secondary"
+              helperText={errors.confirmPassword}
+              error={errors.confirmPassword ? true : false}
+              value={confirmPassword}
+              onChange={this.props.handleChange}
+              fullWidth
+            />
             <TextField
               className={classes.textFieldWidth}
               id="firstName"
@@ -169,7 +206,6 @@ export class editPhotographerDetails extends Component {
                 disabled={!location_state}
                 MenuProps={{
                   getContentAnchorEl: () => null,
-
                   anchorOrigin: {
                     vertical: "bottom",
                     horizontal: "left",
@@ -273,7 +309,7 @@ export class editPhotographerDetails extends Component {
               id="instagramHandle"
               variant="filled"
               name="instagramHandle"
-              label="Instagram Handle"
+              label="Instagram Handle PHOTO"
               type="text"
               color="secondary"
               value={instagramHandle}

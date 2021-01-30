@@ -15,7 +15,7 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 // Pages
 import login from "./pages/login";
-import signup from "./pages/signup";
+import signup from "./pages/SignUp/signup";
 import resetPassword from "./pages/resetPassword";
 import changePassword from "./pages/changePassword";
 import resetPasswordSent from "./pages/resetPasswordSent";
@@ -46,7 +46,7 @@ import API from "./api";
 // Stripe
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import setUpProfile from "./pages/setUpProfile";
+// import setUpProfile from "./pages/setUpProfile";
 const stripePromise = loadStripe(
   "pk_test_51HEMVlLQ55OPNOhDWc6WmWpkBFB2u4jz4fIBnkc2BQ9ZufE2eGDj5LG3GUxUWDJKxh0WU964w2EafrUTXNO3E3P600sAgdBLPU"
 );
@@ -93,12 +93,12 @@ const theme = createMuiTheme({
       padding: "0 10px",
     },
     auth: {
-      maxWidth: "420px",
+      maxWidth: "500px",
       margin: "auto",
       textAlign: "center",
     },
     bottomAuth: {
-      maxWidth: "420px",
+      maxWidth: "500px",
       margin: "auto",
       padding: "15px 0px",
       marginTop: 15,
@@ -168,9 +168,6 @@ const theme = createMuiTheme({
     authHeader: {
       paddingBottom: 20,
       fontWeight: "bold",
-    },
-    customError: {
-      color: "red",
     },
     centerGrid: {
       textAlign: "center",
@@ -310,9 +307,9 @@ const App = () => {
 
               <Route exact path="/login" component={login} />
 
-              <Route exact path="/signup" component={signup} />
-
               <div className="container">
+                <Route exact path="/signup" component={signup} />
+
                 <Route
                   exact
                   path="/search"
@@ -321,11 +318,11 @@ const App = () => {
                   )}
                 />
 
-                <AuthRoute
+                {/* <AuthRoute
                   exact
                   path="/setupProfile"
                   component={setUpProfile}
-                />
+                /> */}
 
                 <Route exact path="/resetPassword" component={resetPassword} />
 
