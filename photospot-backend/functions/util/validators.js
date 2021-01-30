@@ -34,6 +34,20 @@ exports.validateSignUpData = (data) => {
     errors.lastName = "Must not be empty";
   }
 
+  if (data.photographer) {
+    if (isEmpty(data.location_city)) {
+      errors.city = "Must not be empty";
+    }
+
+    if (isEmpty(data.location_state)) {
+      errors.state = "Must not be empty";
+    }
+
+    if (data.categories.length === 0) {
+      errors.categories = "Must fill out categories";
+    }
+  }
+
   return {
     errors,
     valid: Object.keys(errors).length === 0 ? true : false,
