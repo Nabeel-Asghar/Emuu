@@ -22,7 +22,11 @@ export class feedback extends Component {
           severity={errors ? "warning" : "success"}
           style={!errors && { backgroundColor: theme.main }}
         >
-          {errors ? errors.message : "Your changes have been saved"}
+          {errors
+            ? errors.message
+              ? errors.message
+              : "Your changes have not been saved"
+            : "Your changes have been saved"}
         </Alert>
       </Snackbar>
     );

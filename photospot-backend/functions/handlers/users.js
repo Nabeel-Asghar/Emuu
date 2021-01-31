@@ -14,6 +14,7 @@ const {
   validateBio,
   validateResetPasswordData,
   reduceUserDetails,
+  validateProfileUpdate,
 } = require("../util/validators");
 
 // signup
@@ -532,6 +533,10 @@ exports.updateUserProfile = (req, res) => {
     location_city: req.body.location_city,
     location_state: req.body.location_state,
   };
+
+  const { valid, errors } = validateProfileUpdate(userDetails);
+
+  if (!valid) return res.status(400).json(errors);
 
   db.doc(`/users/${req.user.uid}`)
     .update(userDetails)

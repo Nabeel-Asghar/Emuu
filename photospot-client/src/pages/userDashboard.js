@@ -283,7 +283,7 @@ class userDashboard extends Component {
     }
 
     return (
-      <Grid container spacing={5}>
+      <Grid container spacing={5} style={{ overflow: "hidden" }}>
         {/* Left sidebar */}
         <Grid item md={4} sm={12} xs={12}>
           <ProfileCard
@@ -327,7 +327,7 @@ class userDashboard extends Component {
         <Success
           body={
             <Typography gutterBottom>
-              You refund is being process. This may take a few moments.
+              Your refund is being processed. This may take a few moments.
             </Typography>
           }
           open={this.state.openSuccess}

@@ -196,6 +196,12 @@ class photoVault extends Component {
         this.props.match.params.orderID,
         this.state.imagesToDelete
       );
+      if (this.state.imagesToUpload.length === 0) {
+        this.setState({
+          openProgress: false,
+          open: true,
+        });
+      }
     }
     if (this.state.imagesToUpload.length > 0) {
       const promises = [];

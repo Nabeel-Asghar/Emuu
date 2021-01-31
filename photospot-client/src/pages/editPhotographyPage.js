@@ -279,7 +279,7 @@ class editPhotographyPage extends Component {
     const { loading, classes } = this.props;
 
     return (
-      <div>
+      <div style={{ overflow: "hidden" }}>
         <Grid container>
           <Grid item xs={12}>
             <EditableUsercard

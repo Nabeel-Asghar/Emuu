@@ -10,8 +10,8 @@ import defaultPic from "../../images/defaultProfilePicture.png";
 const styles = (theme) => ({
   ...theme.spreadThis,
   profileAvatar: {
-    width: "250px",
-    height: "250px",
+    width: "300px",
+    height: "300px",
     borderRadius: "50%",
     objectFit: "cover",
   },

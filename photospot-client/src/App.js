@@ -22,7 +22,7 @@ import resetPasswordSent from "./pages/resetPasswordSent";
 import changePasswordSent from "./pages/changePasswordSent";
 import messaging from "./pages/messaging";
 import specificPhotographer from "./pages/specificPhotographer";
-import book from "./pages/book";
+import Book from "./pages/book";
 import profile from "./pages/profile";
 import Search from "./pages/Search/search";
 import editPhotographyPage from "./pages/editPhotographyPage";
@@ -244,13 +244,19 @@ const theme = createMuiTheme({
 
     mediumPaperContainer: {
       padding: 15,
-      maxWidth: 800,
+      maxWidth: 700,
       margin: "0 auto",
     },
     bookButton: {
       marginRight: "10px",
       marginLeft: "10px",
       marginTop: "12px",
+    },
+    dateContainer: {
+      maxWidth: 330,
+    },
+    timeContainer: {
+      maxWidth: 450,
     },
   },
 });
@@ -303,6 +309,7 @@ const App = () => {
                 exact
                 path="/yourPhotographyProfile"
                 component={editPhotographyPage}
+                fullScreen={halfScreen}
               />
 
               <Route exact path="/login" component={login} />
@@ -366,7 +373,12 @@ const App = () => {
                   component={photographerDashboard}
                 />
 
-                <AuthRoute exact path="/profile" component={profile} />
+                <AuthRoute
+                  exact
+                  path="/profile"
+                  component={profile}
+                  fullScreen={halfScreen}
+                />
 
                 <AuthRoute exact path="/messaging" component={messaging} />
 
@@ -401,7 +413,13 @@ const App = () => {
                 <Route
                   exact
                   path="/photographers/:photographerID/book"
-                  component={book}
+                  render={(props) => (
+                    <Book
+                      {...props}
+                      halfScreen={halfScreen}
+                      fullScreen={fullScreen}
+                    />
+                  )}
                 />
 
                 <Elements stripe={stripePromise}>
@@ -409,6 +427,7 @@ const App = () => {
                     exact
                     path="/photographers/:photographerID/book/checkout"
                     component={checkout}
+                    fullScreen={fullScreen}
                   />
                 </Elements>
               </div>
