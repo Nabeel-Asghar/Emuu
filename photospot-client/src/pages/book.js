@@ -19,7 +19,7 @@ import {
 } from "../redux/actions/dataActions";
 
 // Components
-import ProfileCard from "../components/booking/card";
+import MiniPhotographer from "../components/shared/miniPhotographer";
 import Date from "../components/booking/date";
 import equal from "fast-deep-equal";
 import Time from "../components/booking/time";
@@ -29,6 +29,8 @@ import Confirmation from "../components/shared/confirmation";
 import moment from "moment";
 import { timeConvert } from "../util/timeConvert";
 import { dateConvert } from "../util/dateConvert";
+import ProfileCard from "../components/booking/card";
+import GoBackButton from "../components/shared/goBackButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -52,6 +54,8 @@ class book extends Component {
       selectedTime: null,
       open: false,
       openSnack: false,
+      reviewCount: null,
+      totalRating: null,
     };
   }
 
@@ -141,16 +145,10 @@ class book extends Component {
     }
   };
 
-  handleRadioChange = (event) => {
-    this.setState({
-      selectedTime: event.target.value,
-    });
-  };
-
-  handleSubmit = (event) => {
-    event.preventDefault();
+  handleSubmit = (value) => {
     this.props.checkBookability().then((response) => {
       if (response) {
+        this.setState({ selectedTime: value });
         this.handleClickOpen();
       } else {
         this.setState({
@@ -181,6 +179,7 @@ class book extends Component {
       photographerFirstName: this.state.firstName,
       photographerLastName: this.state.lastName,
       photographerProfileImage: this.state.profileImage,
+      ratePerHour: this.state.ratePerHour,
     };
 
     this.props.history.push({
@@ -207,75 +206,106 @@ class book extends Component {
     const {
       classes,
       UI: { loadingAction, errors, loadingData },
+      halfScreen,
+      fullScreen,
     } = this.props;
     return (
-      <Grid container spacing={3}>
-        <Snackbar
-          anchorOrigin={{
-            vertical: "top",
-            horizontal: "center",
+      <>
+        <GoBackButton {...this.props} />
+        <Paper
+          style={{
+            padding: 15,
+            maxWidth: halfScreen ? (fullScreen ? 350 : 550) : 900,
+            margin: "0 auto",
           }}
-          open={this.state.openSnack}
-          onClose={this.handleClose}
         >
-          <Alert onClose={this.handleClose} severity={"warning"}>
-            You already have a pending order.
-          </Alert>
-        </Snackbar>
+          <Grid container direction="row" justify="center" spacing={2}>
+            <Snackbar
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "center",
+              }}
+              open={this.state.openSnack}
+              onClose={this.handleClose}
+            >
+              <Alert onClose={this.handleClose} severity={"warning"}>
+                You already have a pending order.
+              </Alert>
+            </Snackbar>
 
-        <Grid item md={1} xs={0} />
-        <Grid item md={10} xs={12}>
-          <ProfileCard
-            key={this.state.photographerID}
-            photographerID={this.state.photographerID}
-            firstName={this.state.firstName}
-            lastName={this.state.lastName}
-            profileImage={this.state.profileImage}
-          />
-        </Grid>
-        <Grid item md={1} xs={0} />
-        <Grid item md={1} xs={0} />
-        <Grid item md={7} xs={12}>
-          <Date
-            theDate={this.state.selectedDate}
-            parentCallback={this.handleDateChange}
-          />
-        </Grid>
-
-        <Grid item md={3} xs={12}>
-          <Paper style={{ width: "100%", height: "100%" }}>
-            {loadingData ? (
-              <CircularProgress
-                className={classes.progress}
-                color="secondary"
+            <Grid item md={4} sm={12} style={{ width: "100%" }}>
+              {halfScreen ? (
+                fullScreen ? (
+                  <MiniPhotographer
+                    firstName={this.state.firstName}
+                    lastName={this.state.lastName}
+                    profileImage={this.state.profileImage}
+                    location_city={this.state.location_city}
+                    location_state={this.state.location_state}
+                    price={this.state.ratePerHour}
+                  />
+                ) : (
+                  <ProfileCard
+                    firstName={this.state.firstName}
+                    lastName={this.state.lastName}
+                    profileImage={this.state.profileImage}
+                    location_city={this.state.location_city}
+                    location_state={this.state.location_state}
+                    price={this.state.ratePerHour}
+                  />
+                )
+              ) : (
+                <MiniPhotographer
+                  firstName={this.state.firstName}
+                  lastName={this.state.lastName}
+                  profileImage={this.state.profileImage}
+                  location_city={this.state.location_city}
+                  location_state={this.state.location_state}
+                  price={this.state.ratePerHour}
+                />
+              )}
+            </Grid>
+            <Grid item md={5} sm={8} xs={12} style={{ width: "100%" }}>
+              <Date
+                theDate={this.state.selectedDate}
+                parentCallback={this.handleDateChange}
+                fullScreen={fullScreen}
               />
-            ) : (
-              <Time
-                {...this.props}
-                key={this.state.timeslots}
-                authenticated={this.props.user.authenticated}
-                timeslots={this.state.timeslots}
-                handleSubmit={this.handleSubmit}
-                handleRadioChange={this.handleRadioChange}
-                time={this.state.selectedTime}
-              />
-            )}
-          </Paper>
-        </Grid>
+            </Grid>
 
-        <Confirmation
-          open={this.state.open}
-          secondaryConfirmation={false}
-          handleAgree={this.handleAgree}
-          handleDisagree={this.handleDisagree}
-          title="Confirm Booking"
-          text={`Would you like to confirm booking with ${this.state.firstName}
+            <Grid item md={3} sm={4} xs={12} style={{ width: "100%" }}>
+              {loadingData ? (
+                <CircularProgress
+                  className={classes.progress}
+                  color="secondary"
+                />
+              ) : (
+                <Time
+                  {...this.props}
+                  key={this.state.timeslots}
+                  authenticated={this.props.user.authenticated}
+                  timeslots={this.state.timeslots}
+                  handleSubmit={(time) => this.handleSubmit(time)}
+                  theDate={this.state.selectedDate}
+                />
+              )}
+            </Grid>
+
+            <Confirmation
+              open={this.state.open}
+              secondaryConfirmation={false}
+              handleAgree={this.handleAgree}
+              handleDisagree={this.handleDisagree}
+              title="Confirm Booking"
+              text={`Would you like to confirm booking with ${
+                this.state.firstName
+              }
           ${this.state.lastName} on ${dateConvert(this.state.formattedDate)} at 
           ${timeConvert(this.state.selectedTime)}?`}
-        />
-
-        <Grid item md={1} xs={0}></Grid>
-      </Grid>
+            />
+          </Grid>
+        </Paper>
+      </>
     );
   }
 }

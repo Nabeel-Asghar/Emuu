@@ -214,19 +214,19 @@ class SetYourSchedule extends Component {
         container
         spacing={1}
         justify="center"
-        style={{ maxWidth: 880, margin: "0 auto" }}
+        className={classes.mediumPaperContainer}
       >
         <Grid item xs={12}>
           <GoBackButton {...this.props} />
         </Grid>
-        <Grid item md={6} sm={12} style={{ maxWidth: 330 }}>
+        <Grid item md={6} sm={12} className={classes.dateContainer}>
           <DateView
             selectedDate={this.state.selectedDate}
             handleDateChange={this.handleDateChange}
             fullScreen={fullScreen}
           />
         </Grid>
-        <Grid item md={6} sm={12} style={{ maxWidth: 450 }}>
+        <Grid item md={6} sm={12} className={classes.timeContainer}>
           {loadingData ? (
             <CircularProgress className={classes.progress} color="secondary" />
           ) : (

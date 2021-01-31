@@ -1,11 +1,10 @@
 import React, { Component } from "react";
-
 import { DatePicker } from "@material-ui/pickers";
+import { KeyboardDatePicker } from "@material-ui/pickers";
 import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
-import moment from "moment";
 
 const defaultMaterialTheme = createMuiTheme({
   palette: {
@@ -20,27 +19,44 @@ const defaultMaterialTheme = createMuiTheme({
 
 class date extends Component {
   render() {
-    const { theDate } = this.props;
+    const { theDate, fullScreen } = this.props;
     var tomorrow = new Date();
     tomorrow.setDate(tomorrow.getDate() + 1);
 
     return (
-      <div>
+      <center>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <ThemeProvider theme={defaultMaterialTheme}>
-            <DatePicker
-              minDate={tomorrow}
-              autoOk
-              orientation="landscape"
-              variant="static"
-              openTo="date"
-              value={theDate}
-              onChange={this.props.parentCallback}
-              format="MM/dd/yyyy"
-            />
+            {console.log(fullScreen)}
+            {fullScreen ? (
+              <KeyboardDatePicker
+                minDate={tomorrow}
+                autoOk
+                variant="dialog"
+                inputVariant="outlined"
+                label="Pick a date"
+                openTo="date"
+                value={theDate}
+                onChange={this.props.parentCallback}
+                format="MM/dd/yyyy"
+                allowKeyboardControl={false}
+              />
+            ) : (
+              <DatePicker
+                minDate={tomorrow}
+                disableToolbar
+                autoOk
+                variant="static"
+                orientation="portrait"
+                openTo="date"
+                value={theDate}
+                onChange={this.props.parentCallback}
+                format="MM/dd/yyyy"
+              />
+            )}
           </ThemeProvider>
         </MuiPickersUtilsProvider>
-      </div>
+      </center>
     );
   }
 }

@@ -327,7 +327,7 @@ class userDashboard extends Component {
         <Success
           body={
             <Typography gutterBottom>
-              You refund is being process. This may take a few moments.
+              Your refund is being processed. This may take a few moments.
             </Typography>
           }
           open={this.state.openSuccess}

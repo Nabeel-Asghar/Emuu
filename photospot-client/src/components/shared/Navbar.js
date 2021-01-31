@@ -28,6 +28,7 @@ const useStyles = makeStyles((theme) => ({
   box: {
     padding: "0px",
     margin: "0px",
+    maxWidth: 500,
   },
   button: {
     marginTop: 23,

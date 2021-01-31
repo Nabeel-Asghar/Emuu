@@ -19,6 +19,9 @@ import Success from "../components/shared/success";
 import ProfileCard from "../components/booking/card";
 import { timeConvert } from "../util/timeConvert";
 import { dateConvert } from "../util/dateConvert";
+import { Grid } from "@material-ui/core";
+import MiniPhotographer from "../components/shared/miniPhotographer";
+import GoBackButton from "../components/shared/goBackButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -118,21 +121,38 @@ const Checkout = (props) => {
   };
 
   return (
-    <div>
-      {props.location.details && (
-        <Container maxWidth="sm" style={{ marginBottom: 20 }}>
-          <ProfileCard
-            firstName={props.location.details.photographerFirstName}
-            lastName={props.location.details.photographerLastName}
-            profileImage={props.location.details.photographerProfileImage}
-            date={dateConvert(props.location.details.date)}
-            time={timeConvert(props.location.details.time)}
-          />
-        </Container>
-      )}
-
-      <Container maxWidth="sm">
-        <Paper style={{ padding: 30 }}>
+    <Grid
+      container
+      style={{
+        maxWidth: props.fullScreen ? 350 : 650,
+        margin: "0 auto",
+      }}
+    >
+      <GoBackButton {...props} />
+      <Grid item xs={12}>
+        {props.location.details &&
+          (props.fullScreen ? (
+            <MiniPhotographer
+              firstName={props.location.details.photographerFirstName}
+              lastName={props.location.details.photographerLastName}
+              profileImage={props.location.details.photographerProfileImage}
+              date={dateConvert(props.location.details.date)}
+              time={timeConvert(props.location.details.time)}
+              price={props.location.details.ratePerHour}
+            />
+          ) : (
+            <ProfileCard
+              firstName={props.location.details.photographerFirstName}
+              lastName={props.location.details.photographerLastName}
+              profileImage={props.location.details.photographerProfileImage}
+              date={dateConvert(props.location.details.date)}
+              time={timeConvert(props.location.details.time)}
+              price={props.location.details.ratePerHour}
+            />
+          ))}
+      </Grid>
+      <Grid item xs={12}>
+        <Paper style={{ padding: 30, marginTop: 15 }}>
           <form onSubmit={handleSubmit}>
             <label>
               <CardElement options={CARD_ELEMENT_OPTIONS} />
@@ -154,7 +174,9 @@ const Checkout = (props) => {
               )}
             </Button>
             {error && (
-              <Typography style={{ paddingTop: 18, textAlign: "center" }}>
+              <Typography
+                style={{ paddingTop: 20, textAlign: "center", color: "red" }}
+              >
                 {error}
               </Typography>
             )}
@@ -178,8 +200,8 @@ const Checkout = (props) => {
             redirect="/userDashboard"
           />
         </Paper>
-      </Container>
-    </div>
+      </Grid>
+    </Grid>
   );
 };
 
