@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Backdrop from "@material-ui/core/Backdrop";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-class loadingPage extends Component {
+class LoadingPage extends Component {
   render() {
     return (
       <Backdrop
@@ -15,4 +15,4 @@ class loadingPage extends Component {
   }
 }
 
-export default loadingPage;
+export default LoadingPage;
