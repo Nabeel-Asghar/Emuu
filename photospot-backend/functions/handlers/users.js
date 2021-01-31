@@ -3,6 +3,7 @@ const config = require("../util/config");
 const storageBucketVar = config.storageBucket;
 const sharp = require("sharp");
 const path = require("path");
+const defaultProfilePicture = "defaultProfilePicture.png";
 
 const firebase = require("firebase");
 firebase.initializeApp(config);
@@ -18,22 +19,12 @@ const {
 
 // signup
 exports.signup = (req, res) => {
-  const newUser = {
-    email: req.body.email,
-    password: req.body.password,
-    confirmPassword: req.body.confirmPassword,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    photographer: req.body.photographer,
-  };
-
-  console.log("newuser: ", newUser);
-
+  const newUser = req.body;
   const { valid, errors } = validateSignUpData(newUser);
+  newUser.createdAt = new Date().toISOString();
+  newUser.profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultProfilePicture}?alt=media`;
 
-  if (!valid) return res.status(400).json(errors);
-
-  const defaultProfilePicture = "defaultProfilePicture.png";
+  if (!valid) return res.status(400).json(errors).end();
 
   let token, userId;
 
@@ -41,48 +32,21 @@ exports.signup = (req, res) => {
     .auth()
     .createUserWithEmailAndPassword(newUser.email, newUser.password)
     .then((data) => {
+      delete newUser.password;
+      delete newUser.confirmPassword;
       userId = data.user.uid;
-
       return data.user.getIdToken();
     })
     .then((tokenID) => {
       token = tokenID;
-      const userCredentials = {
-        email: newUser.email,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
-        photographer: newUser.photographer,
-        createdAt: new Date().toISOString(),
-        profileImage: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultProfilePicture}?alt=media`,
-      };
-
-      //  user details in photographer and users table when person is a photographer
-      if (userCredentials.photographer === true) {
-        db.doc(`/photographer/${userId}`)
-          .set(userCredentials)
-          .then(() => {
-            db.doc(`/users/${userId}`).set(userCredentials);
-            let algoliaCredentials = userCredentials;
-            algoliaCredentials.objectID = userId;
-            index.saveObject(algoliaCredentials).catch((err) => {
-              res.status(500).json({ error: err.code });
-              console.log(err);
-            });
-          })
-          .catch((err) => {
-            console.error(err);
-            return res.status(500).json({ error: err.code });
-          });
-      } else {
-        return db.doc(`/users/${userId}`).set(userCredentials);
-      }
+      return db.doc(`/users/${userId}`).set(newUser);
     })
     .then(() => {
-      return res.status(201).json({ token });
+      return res.status(201).json({ token }).end();
     })
     .catch((err) => {
       console.error(err);
-      return res.status(500).json({ general: err.message });
+      return res.status(500).json({ general: err.message }).end();
     });
 };
 

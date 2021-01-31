@@ -20,16 +20,6 @@ import {
 } from "../../redux/actions/userActions";
 import SetUpProfile from "./signupPhotographer";
 
-const CssTextField = withStyles({
-  root: {
-    "& .MuiOutlinedInput-root": {
-      "&:hover fieldset": {
-        borderColor: "#23ba8b",
-      },
-    },
-  },
-})(TextField);
-
 const styles = (theme) => ({
   ...theme.spreadThis,
   toggleButton: {
@@ -109,6 +99,13 @@ class signup extends Component {
       this.setState({ errors: nextProps.UI.errors });
     }
   }
+
+  handleShit = () => {
+    this.props.history.push({
+      pathname: "/login",
+      state: { success: true },
+    });
+  };
 
   handleSubmit = (event) => {
     event.preventDefault();
@@ -200,7 +197,7 @@ class signup extends Component {
                 <SetUpProfile history={this.props.history} />
               ) : (
                 <form noValidate onSubmit={this.handleSubmit}>
-                  <CssTextField
+                  <TextField
                     id="email"
                     name="email"
                     type="email"
@@ -214,7 +211,7 @@ class signup extends Component {
                     onChange={this.handleChange}
                     fullWidth
                   />
-                  <CssTextField
+                  <TextField
                     id="password"
                     name="password"
                     type="password"
@@ -228,7 +225,7 @@ class signup extends Component {
                     onChange={this.handleChange}
                     fullWidth
                   />
-                  <CssTextField
+                  <TextField
                     id="confirmPassword"
                     name="confirmPassword"
                     type="password"
@@ -242,7 +239,7 @@ class signup extends Component {
                     onChange={this.handleChange}
                     fullWidth
                   />
-                  <CssTextField
+                  <TextField
                     id="firstName"
                     name="firstName"
                     label="First Name"
@@ -256,7 +253,7 @@ class signup extends Component {
                     onChange={this.handleChange}
                     fullWidth
                   />
-                  <CssTextField
+                  <TextField
                     id="lastName"
                     name="lastName"
                     label="Last Name"
@@ -292,10 +289,16 @@ class signup extends Component {
                       />
                     )}
                   </Button>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => this.handleShit()}
+                  ></Button>
                 </form>
               )}
             </div>
           </Paper>
+
           <Paper className={classes.bottomAuth}>
             <Button
               component={Link}

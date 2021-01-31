@@ -25,7 +25,7 @@ export const signupUser = (newUserData, history) => (dispatch) => {
       // setAuthorizationHeader(res.data.token);
       // dispatch(getUserData());
       dispatch({ type: "CLEAR_ERRORS" });
-      history.push("/login");
+      history.push({ pathname: "/login", state: { success: true } });
     })
     .catch((err) => {
       dispatch({
@@ -44,7 +44,7 @@ export const signupPhotographer = (newPhotographerData, history) => (
       // setAuthorizationHeader(res.data.token);
       // dispatch(getUserData());
       dispatch({ type: "CLEAR_ERRORS" });
-      history.push("/login");
+      history.push({ pathname: "/login", state: { success: true } });
     })
     .catch((err) => {
       console.log(err);

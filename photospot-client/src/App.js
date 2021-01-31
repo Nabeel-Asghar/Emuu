@@ -83,6 +83,20 @@ const theme = createMuiTheme({
     },
   },
 
+  overrides: {
+    // Style sheet name ⚛️
+    MuiInput: {
+      // Name of the rule
+      root: {
+        "& .MuiOutlinedInput-root": {
+          "&:hover fieldset": {
+            borderColor: "#23ba8b",
+          },
+        },
+      },
+    },
+  },
+
   typography: {
     useNextVariants: true,
   },

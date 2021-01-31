@@ -1,21 +1,19 @@
-import React, { Component } from "react";
-import { Redirect, Link } from "react-router-dom";
-import withStyles from "@material-ui/core/styles/withStyles";
-import PropTypes from "prop-types";
-import AppIcon from "../images/logo.png";
-
-// MUI
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
+import { Snackbar } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
+// MUI
+import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Box from "@material-ui/core/Box";
-import { outerTheme, ThemeProvider } from "./Styling/externalColors";
-
+import withStyles from "@material-ui/core/styles/withStyles";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import Alert from "@material-ui/lab/Alert";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
 // Redux
 import { connect } from "react-redux";
+import { Link, Redirect } from "react-router-dom";
+import AppIcon from "../images/logo.png";
 import { loginUser } from "../redux/actions/userActions";
 
 const styles = (theme) => ({
@@ -29,7 +27,12 @@ class login extends Component {
       email: "",
       password: "",
       errors: {},
+      open: false,
     };
+  }
+
+  componentDidMount() {
+    this.setState({ open: this.props.location.state?.success });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -37,6 +40,10 @@ class login extends Component {
       this.setState({ errors: nextProps.UI.errors });
     }
   }
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
 
   handleSubmit = (event) => {
     event.preventDefault();
@@ -63,7 +70,7 @@ class login extends Component {
       classes,
       UI: { loading },
     } = this.props;
-    const { errors } = this.state;
+    const { errors, open } = this.state;
 
     return (
       <Grid
@@ -73,6 +80,31 @@ class login extends Component {
         direction="column"
         className={classes.authContainer}
       >
+        <Snackbar
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "center",
+          }}
+          open={open}
+          autoHideDuration={5000}
+          onClose={this.handleClose}
+        >
+          <Alert
+            variant="outlined"
+            onClose={this.handleClose}
+            severity="success"
+            style={{ backgroundColor: "#23ba8b", color: "white" }}
+            classes={{
+              icon: {
+                color: "white",
+                fill: "white",
+              },
+            }}
+          >
+            Successfully registered!
+          </Alert>
+        </Snackbar>
+
         <Grid item>
           <Paper className={classes.auth}>
             <div className={classes.authText}>
