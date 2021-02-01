@@ -107,13 +107,18 @@ export const getUserData = () => (dispatch) => {
 };
 
 export const uploadProfileImage = (formData) => (dispatch) => {
-  API.post("/user/profileimage", formData)
+  return API.post("/user/profileimage", formData)
     .then((res) => {
       console.log(res.data);
-      dispatch(getUserData());
-      dispatch({ type: "SET_RESPONSE", response: res.data });
+      dispatch({ type: "SET_UPDATE_RESPONESE", response: res.data.message });
     })
-    .catch((err) => console.log(err));
+    .catch((err) => {
+      console.log(err);
+      dispatch({
+        type: "SET_ERROR__UPDATE_RESPONSE",
+        response: err.response.message,
+      });
+    });
 };
 
 export const getYourPhotographyPage = () => (dispatch) => {
@@ -170,19 +175,19 @@ export const updatePhotographerPage = (details) => (dispatch) => {
     );
 };
 
-export const uploadBackgroundImage = (image) => (dispatch) => {
-  API.post("/editphotographypage/background", image)
+export const uploadBackgroundImage = (formData) => (dispatch) => {
+  return API.post("/editphotographypage/background", formData)
     .then((res) => {
       console.log(res.data);
-      console.log("Done");
-      dispatch({ type: "CLEAR_ERRORS" });
+      dispatch({ type: "SET_UPDATE_RESPONESE", response: res.data.message });
     })
-    .catch((err) =>
+    .catch((err) => {
+      console.log(err);
       dispatch({
-        type: "SET_ERRORS",
-        payload: err.response.data,
-      })
-    );
+        type: "SET_ERROR__UPDATE_RESPONSE",
+        response: err.response.message,
+      });
+    });
 };
 
 export const getPhotographerOrders = () => (dispatch) => {
@@ -286,6 +291,7 @@ export const updateUserProfile = (details) => (dispatch) => {
   dispatch({ type: "LOADING_POST_ACTION" });
   return API.post("/youruserprofile/edit", details)
     .then((res) => {
+      dispatch({ type: "CLEAR_ERRORS" });
       dispatch({ type: "SET_SUCCESS_RESPONSE" });
     })
     .catch((err) => {

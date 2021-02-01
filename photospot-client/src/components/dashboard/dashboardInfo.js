@@ -41,7 +41,7 @@ export class dashboardInfo extends Component {
               color="secondary"
               size="small"
               icon={<ArrowDropUpIcon />}
-              label="23%"
+              label={`${Math.round((this.props.views / 50) * 100)}%`}
             />
           </DashboardPaper>
         </Grid>

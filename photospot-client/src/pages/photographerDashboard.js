@@ -189,7 +189,11 @@ class photograhperDashboard extends Component {
 
     const { classes, fullScreen } = this.props;
     return (
-      <Grid container spacing={5}>
+      <Grid
+        container
+        spacing={2}
+        style={{ overflow: "hidden", maxWidth: "100%", margin: "0 auto" }}
+      >
         <Grid item md={4} sm={12} xs={12}>
           <ProfileCard
             profileImage={this.state.profileImage}

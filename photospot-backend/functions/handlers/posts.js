@@ -396,6 +396,8 @@ exports.getSpecificPhotographer = (req, res) => {
         background: doc.data().background,
         camera: doc.data().camera,
         headline: doc.data().headline,
+        reviewCount: doc.data().reviewCount,
+        totalRating: doc.data().totalRating,
       });
       return res.json(photographer);
     })

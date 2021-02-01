@@ -10,6 +10,7 @@ import Button from "@material-ui/core/Button";
 // Components
 import DateView from "../components/set-your-schedule/dateView";
 import TimeView from "../components/set-your-schedule/timeView";
+import GoBackButton from "../components/shared/goBackButton";
 
 // Redux
 import { connect } from "react-redux";
@@ -213,16 +214,19 @@ class SetYourSchedule extends Component {
         container
         spacing={1}
         justify="center"
-        style={{ maxWidth: 900, margin: "0 auto" }}
+        className={classes.mediumPaperContainer}
       >
-        <Grid item md={6} sm={12} style={{ maxWidth: 330 }}>
+        <Grid item xs={12}>
+          <GoBackButton {...this.props} />
+        </Grid>
+        <Grid item md={6} sm={12} className={classes.dateContainer}>
           <DateView
             selectedDate={this.state.selectedDate}
             handleDateChange={this.handleDateChange}
             fullScreen={fullScreen}
           />
         </Grid>
-        <Grid item md={6} sm={12} style={{ maxWidth: 450 }}>
+        <Grid item md={6} sm={12} className={classes.timeContainer}>
           {loadingData ? (
             <CircularProgress className={classes.progress} color="secondary" />
           ) : (

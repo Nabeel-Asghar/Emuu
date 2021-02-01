@@ -8,7 +8,7 @@ import ChatTextBoxComponent from "../components/messaging/chatTextBox";
 import ChatViewComponent from "../components/messaging/chatView";
 import NewChatComponent from "../components/messaging/newChat";
 import UserListComponent from "../components/messaging/userList";
-import firebase from "../firestore";
+import { firebase } from "../firestore";
 import { getUserData } from "../redux/actions/userActions";
 
 const styles = (theme) => ({

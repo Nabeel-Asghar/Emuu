@@ -15,6 +15,7 @@ const styles = {
   },
   image: {
     minWidth: 200,
+    minHeight: 200,
   },
 
   content: {
@@ -33,29 +34,48 @@ class ProfileCard extends Component {
       profileImage,
       date,
       time,
+      price,
+      location_city,
+      location_state,
     } = this.props;
 
     return (
-      <Card className={classes.card}>
+      <Card className={classes.card} style={{ marginBottom: 0 }}>
         <CardMedia
           className={classes.image}
           image={profileImage}
           title="Profile Image"
         />
-        <CardContent className={classes.content}>
-          <Typography variant="h5" gutterBottom>
+        <CardContent className={classes.content} gutterBottom>
+          <Typography variant="h5">
             Book with&nbsp;{firstName}&nbsp;{lastName}
           </Typography>
-          {date && (
-            <div>
+          <div>
+            {location_city && location_state && (
+              <Typography
+                variant="body1"
+                gutterBottom
+                style={{ marginBottom: 10 }}
+              >
+                {location_city}, {location_state}
+              </Typography>
+            )}
+            {date && (
               <Typography variant="body1" gutterBottom>
                 Date: {date}
               </Typography>
+            )}
+            {time && (
               <Typography variant="body1" gutterBottom>
                 Time: {time}
               </Typography>
-            </div>
-          )}
+            )}
+            {price && (
+              <Typography variant="body1" gutterBottom>
+                Price: <b>${price}.00</b>
+              </Typography>
+            )}
+          </div>
         </CardContent>
       </Card>
     );

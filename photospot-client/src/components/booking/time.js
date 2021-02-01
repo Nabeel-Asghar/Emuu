@@ -15,11 +15,41 @@ const styles = (theme) => ({
 });
 
 class time extends Component {
+  state = {
+    selectedTime: null,
+  };
+
+  componentDidUpdate(prevProps) {
+    if (this.props.theDate !== prevProps.theDate) {
+      this.setState({
+        selectedTime: null,
+      });
+    }
+  }
+
+  handleRadioChange = (value) => {
+    console.log(value);
+    this.setState({
+      selectedTime: value,
+    });
+  };
+
   render() {
     const { classes, timeslots } = this.props;
 
     let timesAvailable = [];
     let displayTimeslots = [];
+    let allTimes = [
+      { value: "09:00", label: "09:00 AM" },
+      { value: "10:00", label: "10:00 AM" },
+      { value: "11:00", label: "11:00 AM" },
+      { value: "12:00", label: "12:00 PM" },
+      { value: "13:00", label: "01:00 PM" },
+      { value: "14:00", label: "02:00 PM" },
+      { value: "15:00", label: "03:00 PM" },
+      { value: "16:00", label: "04:00 PM" },
+      { value: "17:00", label: "05:00 PM" },
+    ];
 
     if (timeslots && timeslots.length) {
       Object.entries(timeslots[0]).map(([key, value]) => {
@@ -30,143 +60,63 @@ class time extends Component {
         }
       });
 
-      if (timesAvailable.includes("09:00")) {
-        displayTimeslots.push(
-          <FormControlLabel
-            value="09:00"
-            control={<Radio />}
-            label="9:00 AM"
-            key={9}
-          />
-        );
-      }
-
-      if (timesAvailable.includes("10:00")) {
-        displayTimeslots.push(
-          <FormControlLabel
-            value="10:00"
-            control={<Radio />}
-            label="10:00 AM"
-            key={10}
-          />
-        );
-      }
-
-      if (timesAvailable.includes("11:00")) {
-        displayTimeslots.push(
-          <FormControlLabel
-            value="11:00"
-            control={<Radio />}
-            label="11:00 AM"
-            key={11}
-          />
-        );
-      }
-
-      if (timesAvailable.includes("12:00")) {
-        displayTimeslots.push(
-          <FormControlLabel
-            value="12:00"
-            control={<Radio />}
-            label="12:00 PM"
-            key={12}
-          />
-        );
-      }
-
-      if (timesAvailable.includes("13:00")) {
-        displayTimeslots.push(
-          <FormControlLabel
-            value="13:00"
-            control={<Radio />}
-            label="1:00 PM"
-            key={13}
-          />
-        );
-      }
-
-      if (timesAvailable.includes("14:00")) {
-        displayTimeslots.push(
-          <FormControlLabel
-            value="14:00"
-            control={<Radio />}
-            label="2:00 PM"
-            key={14}
-          />
-        );
-      }
-
-      if (timesAvailable.includes("15:00")) {
-        displayTimeslots.push(
-          <FormControlLabel
-            value="15:00"
-            control={<Radio />}
-            label="3:00 PM"
-            key={15}
-          />
-        );
-      }
-
-      if (timesAvailable.includes("16:00")) {
-        displayTimeslots.push(
-          <FormControlLabel
-            value="16:00"
-            control={<Radio />}
-            label="4:00 PM"
-            key={16}
-          />
-        );
-      }
-
-      if (timesAvailable.includes("17:00")) {
-        displayTimeslots.push(
-          <FormControlLabel
-            value="17:00"
-            control={<Radio />}
-            label="5:00 PM"
-            key={17}
-          />
-        );
-      }
+      allTimes.map((item, index) => {
+        if (timesAvailable.includes(item.value)) {
+          displayTimeslots.push(
+            <>
+              <Button
+                value={item.value}
+                onClick={() => this.handleRadioChange(item.value)}
+                variant={
+                  this.state.selectedTime === item.value
+                    ? "contained"
+                    : "outlined"
+                }
+                color="secondary"
+                fullWidth
+                style={{ margin: "5px 0" }}
+                key={9}
+              >
+                {item.label}
+              </Button>
+            </>
+          );
+        }
+      });
     }
 
     return (
-      <form
-        onSubmit={this.props.handleSubmit}
-        style={{ textAlign: "center", padding: "15px 15px 15px 15px" }}
-      >
+      <div>
         {displayTimeslots.length > 0 ? (
-          <FormControl component="fieldset" className={classes.form}>
-            <FormLabel
-              color="secondary"
-              component="legend"
-              style={{
-                textAlign: "center",
-                paddingBottom: "10px",
-              }}
-            >
-              Pick a time for your shoot
-            </FormLabel>
-            <RadioGroup
-              aria-label="Shoot time"
-              name="scheduletime"
-              value={this.props.selectedTime}
-              onChange={this.props.handleRadioChange}
-            >
-              {displayTimeslots}
-            </RadioGroup>
-            {this.props.time && (
+          <>
+            <Typography gutterBottom>Pick a time for your shoot</Typography>
+            {displayTimeslots}
+            {this.props.authenticated ? (
+              this.state.selectedTime && (
+                <Button
+                  onClick={() =>
+                    this.props.handleSubmit(this.state.selectedTime)
+                  }
+                  fullWidth
+                  variant="contained"
+                  color="secondary"
+                  style={{ marginTop: "15px" }}
+                >
+                  Submit
+                </Button>
+              )
+            ) : (
               <Button
-                type="submit"
+                onClick={() => this.props.history.push("/login")}
                 fullWidth
-                variant="outlined"
+                variant="contained"
                 color="secondary"
                 style={{ marginTop: "15px" }}
               >
                 Submit
               </Button>
             )}
-          </FormControl>
+          </>
         ) : (
           <Typography
             style={{
@@ -177,7 +127,7 @@ class time extends Component {
             No timeslots that day
           </Typography>
         )}
-      </form>
+      </div>
     );
   }
 }

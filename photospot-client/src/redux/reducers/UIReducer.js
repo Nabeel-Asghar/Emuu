@@ -10,6 +10,7 @@ const intialState = {
   theUploadImagesResponse: "",
   editBookingTimesResponse: "",
   generalError: false,
+  errors: {},
 };
 
 export default function (state = intialState, action) {

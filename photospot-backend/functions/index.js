@@ -1,18 +1,20 @@
 const functions = require("firebase-functions");
 const cors = require("cors");
 const helmet = require("helmet");
-const session = require("express-session");
+var cookieSession = require("cookie-session");
+const bodyParser = require("body-parser");
 const app = require("express")();
 require("dotenv").config();
-const express = require("express");
-app.use(express.json());
-app.use(cors({ origin: true }));
+app.use(bodyParser.json({ limit: "50mb" }));
+app.use(cors());
 app.use(helmet());
+const sessionkey1 = process.env.session_key_one;
+const sessionkey2 = process.env.session_key_two;
 app.use(
-  session({
-    secret: "Set this to a random string that is kept secure",
-    resave: false,
-    saveUninitialized: true,
+  cookieSession({
+    name: "session",
+    keys: [sessionkey1, sessionkey2],
+    maxAge: 24 * 60 * 60 * 1000,
   })
 );
 const { admin, db } = require("./util/admin");
@@ -145,11 +147,7 @@ app.post("/photographers/:photographerId/review", FBAuth, reviewPhotographer);
 app.get("/photographers/:photographerId/getReviews", getReviews);
 app.post("/userDashboard/editReview", FBAuth, editReview);
 app.post("/userDashboard/deleteReview", FBAuth, deleteReview);
-app.get(
-  "/photographers/:photographerId/bookingTimes",
-  FBAuth,
-  getPhotographerSchedule
-);
+app.get("/photographers/:photographerId/bookingTimes", getPhotographerSchedule);
 app.get("/search/:searchQuery", searchPhotographer);
 app.get("/filter/:type/:city/:state", filterPhotographers);
 app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);

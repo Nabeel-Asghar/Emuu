@@ -8,6 +8,7 @@ import Button from "@material-ui/core/Button";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import SaveIcon from "@material-ui/icons/Save";
 import CircularProgress from "@material-ui/core/CircularProgress";
+import { Typography } from "@material-ui/core";
 
 // Redux
 import { connect } from "react-redux";
@@ -90,13 +91,25 @@ class photographyPictures extends Component {
     } = this.props;
 
     return (
-      <Paper>
+      <Paper style={{ margin: "15px 0" }}>
         <ImageGrid
           images={this.state.images}
           deleteImage={this.deleteImage.bind(this)}
           access={"photographer"}
         />
         <Grid container spacing={2}>
+          {this.state.images.length < 6 && (
+            <Grid
+              item
+              xs={12}
+              className={classes.centerGrid}
+              style={{ paddingTop: 20 }}
+            >
+              <Typography className={classes.customError} variant="subtitle">
+                *You must have at least 6 images*
+              </Typography>
+            </Grid>
+          )}
           <Grid item xs={12} className={classes.centerGrid}>
             <div className={classes.root}>
               <GoBackButton {...this.props} />
@@ -120,7 +133,12 @@ class photographyPictures extends Component {
               <Button
                 variant="contained"
                 color="secondary"
-                disabled={loading}
+                disabled={
+                  loading ||
+                  this.state.images.length < 6 ||
+                  (this.state.imagesToUpload.length < 1 &&
+                    this.state.imagesToDelete.length < 1)
+                }
                 startIcon={<SaveIcon />}
                 onClick={() => this.handleSubmit()}
               >

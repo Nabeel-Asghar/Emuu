@@ -38,6 +38,9 @@ const styles = (theme) => ({
   homeContainer: {
     marginTop: "60px",
     backgroundColor: "white",
+    overflow: "hidden",
+    maxWidth: "100%",
+    height: "auto",
   },
 
   homeGrid: {
