@@ -148,7 +148,7 @@ const Navbar = (props) => {
             <Grid item xs={8} sm={6} align="center">
               <Box
                 width="100%"
-                border={1}
+                border={2}
                 borderRadius={25}
                 borderColor="secondary"
                 className={classes.box}

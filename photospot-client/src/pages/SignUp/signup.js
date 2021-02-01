@@ -19,6 +19,7 @@ import {
   uploadProfileImage,
 } from "../../redux/actions/userActions";
 import SetUpProfile from "./signupPhotographer";
+import OutlinedTextField from "../../components/shared/OutlinedTextField";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -197,75 +198,44 @@ class signup extends Component {
                 <SetUpProfile history={this.props.history} />
               ) : (
                 <form noValidate onSubmit={this.handleSubmit}>
-                  <TextField
-                    id="email"
+                  <OutlinedTextField
                     name="email"
-                    type="email"
                     label="Email"
-                    variant="outlined"
-                    className={classes.textField}
-                    color="secondary"
-                    helperText={errors.email}
-                    error={errors.email ? true : false}
+                    errors={errors?.email}
                     value={this.state.email}
-                    onChange={this.handleChange}
-                    fullWidth
+                    handleChange={this.handleChange}
                   />
-                  <TextField
-                    id="password"
+
+                  <OutlinedTextField
                     name="password"
-                    type="password"
                     label="Password"
-                    variant="outlined"
-                    className={classes.textField}
-                    color="secondary"
-                    helperText={errors.password}
-                    error={errors.password ? true : false}
+                    errors={errors?.password}
                     value={this.state.password}
-                    onChange={this.handleChange}
-                    fullWidth
+                    handleChange={this.handleChange}
                   />
-                  <TextField
-                    id="confirmPassword"
+
+                  <OutlinedTextField
                     name="confirmPassword"
-                    type="password"
                     label="Confirm Password"
-                    variant="outlined"
-                    className={classes.textField}
-                    color="secondary"
-                    helperText={errors.confirmPassword}
-                    error={errors.confirmPassword ? true : false}
+                    errors={errors?.confirmPassword}
                     value={this.state.confirmPassword}
-                    onChange={this.handleChange}
-                    fullWidth
+                    handleChange={this.handleChange}
                   />
-                  <TextField
-                    id="firstName"
+
+                  <OutlinedTextField
                     name="firstName"
                     label="First Name"
-                    type="text"
-                    variant="outlined"
-                    className={classes.textField}
-                    color="secondary"
-                    helperText={errors.firstName}
-                    error={errors.firstName ? true : false}
+                    errors={errors?.firstName}
                     value={this.state.firstName}
-                    onChange={this.handleChange}
-                    fullWidth
+                    handleChange={this.handleChange}
                   />
-                  <TextField
-                    id="lastName"
+
+                  <OutlinedTextField
                     name="lastName"
                     label="Last Name"
-                    type="text"
-                    variant="outlined"
-                    className={classes.textField}
-                    color="secondary"
-                    helperText={errors.lastName}
-                    error={errors.lastName ? true : false}
+                    errors={errors?.lastName}
                     value={this.state.lastName}
-                    onChange={this.handleChange}
-                    fullWidth
+                    handleChange={this.handleChange}
                   />
 
                   {errors.general && (
@@ -289,11 +259,6 @@ class signup extends Component {
                       />
                     )}
                   </Button>
-                  <Button
-                    variant="contained"
-                    color="secondary"
-                    onClick={() => this.handleShit()}
-                  ></Button>
                 </form>
               )}
             </div>

@@ -9,7 +9,6 @@ import Button from "@material-ui/core/Button";
 import Chip from "@material-ui/core/Chip";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import withStyles from "@material-ui/core/styles/withStyles";
-import TextField from "@material-ui/core/TextField";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import EditProfileImage from "../../components/user-profile/editProfileImage";
@@ -17,19 +16,10 @@ import {
   signupPhotographer,
   uploadProfileImage,
 } from "../../redux/actions/userActions";
+import OutlinedTextField from "../../components/shared/OutlinedTextField";
 import states from "./states";
 
 const names = ["Linkedin Portrait", "Instagram", "Personal Shoot"];
-
-const CssTextField = withStyles({
-  root: {
-    "& .MuiOutlinedInput-root": {
-      "&:hover fieldset": {
-        borderColor: "#23ba8b",
-      },
-    },
-  },
-})(TextField);
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -144,76 +134,45 @@ class setUpProfile extends Component {
         />
         <div style={{ textAlign: "center", padding: "0px 0px 10px 0px" }}>
           <form className={classes.root}>
-            <CssTextField
-              id="email"
+            <OutlinedTextField
               name="email"
-              type="email"
-              variant="outlined"
               label="Email"
-              className={classes.textFieldWidth}
-              color="secondary"
-              helperText={errors?.email}
-              error={errors?.email ? true : false}
+              errors={errors?.email}
               value={this.state.email}
-              onChange={this.handleChange}
-              fullWidth
+              handleChange={this.handleChange}
             />
 
-            <CssTextField
-              id="password"
+            <OutlinedTextField
               name="password"
-              type="password"
-              variant="outlined"
               label="Password"
-              className={classes.textFieldWidth}
-              color="secondary"
-              helperText={errors?.password}
-              error={errors?.password ? true : false}
+              errors={errors?.password}
               value={this.state.password}
-              onChange={this.handleChange}
-              fullWidth
+              handleChange={this.handleChange}
             />
 
-            <CssTextField
-              id="confirmPassword"
+            <OutlinedTextField
               name="confirmPassword"
-              type="password"
-              variant="outlined"
               label="Confirm Password"
-              className={classes.textFieldWidth}
-              color="secondary"
-              helperText={errors?.confirmPassword}
-              error={errors?.confirmPassword ? true : false}
+              type="password"
+              errors={errors?.confirmPassword}
               value={this.state.confirmPassword}
-              onChange={this.handleChange}
+              handleChange={this.handleChange}
             />
 
-            <CssTextField
-              className={classes.textFieldWidth}
-              id="firstName"
-              variant="outlined"
+            <OutlinedTextField
               name="firstName"
               label="First Name"
-              type="text"
-              color="secondary"
-              helperText={errors?.firstName}
-              error={errors?.firstName ? true : false}
+              errors={errors?.firstName}
               value={this.state.firstName}
-              onChange={this.handleChange}
+              handleChange={this.handleChange}
             />
 
-            <CssTextField
-              className={classes.textFieldWidth}
-              id="lastName"
-              variant="outlined"
+            <OutlinedTextField
               name="lastName"
               label="Last Name"
-              type="text"
-              color="secondary"
-              helperText={errors?.lastName}
-              error={errors?.lastName ? true : false}
+              errors={errors?.lastName}
               value={this.state.lastName}
-              onChange={this.handleChange}
+              handleChange={this.handleChange}
             />
 
             <FormControl

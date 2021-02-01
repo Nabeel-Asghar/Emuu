@@ -15,6 +15,7 @@ import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
 import AppIcon from "../images/logo.png";
 import { loginUser } from "../redux/actions/userActions";
+import OutlinedTextField from "../components/shared/OutlinedTextField";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -116,33 +117,20 @@ class login extends Component {
               </Typography>
 
               <form noValidate onSubmit={this.handleSubmit}>
-                <TextField
-                  id="email"
+                <OutlinedTextField
                   name="email"
-                  type="email"
                   label="Email"
-                  className={classes.textField}
-                  helperText={errors.email}
-                  error={errors.email ? true : false}
+                  errors={errors?.email}
                   value={this.state.email}
-                  onChange={this.handleChange}
-                  variant="outlined"
-                  color="secondary"
-                  fullWidth
+                  handleChange={this.handleChange}
                 />
-                <TextField
-                  id="password"
+
+                <OutlinedTextField
                   name="password"
-                  type="password"
                   label="Password"
-                  className={classes.textField}
-                  helperText={errors.password}
-                  error={errors.password ? true : false}
+                  errors={errors?.password}
                   value={this.state.password}
-                  onChange={this.handleChange}
-                  fullWidth
-                  variant="outlined"
-                  color="secondary"
+                  handleChange={this.handleChange}
                 />
 
                 {errors.general && (
