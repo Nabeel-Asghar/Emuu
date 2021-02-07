@@ -108,16 +108,20 @@ class UserListComponent extends Component {
                       }
                       secondary={
                         <React.Fragment>
-                          <Typography component="span" color="textPrimary">
-                            {_chat.messages[
-                              _chat.messages.length - 1
-                            ].message.substring(0, 30)}
-                          </Typography>
+                          {_chat.messages && (
+                            <Typography component="span" color="textPrimary">
+                              {`${userName}: `}
+                              {_chat.messages[
+                                _chat.messages.length - 1
+                              ].message.substring(0, 30)}
+                            </Typography>
+                          )}
                         </React.Fragment>
                       }
                     />
                   </Hidden>
-                  {_chat.receiverHasRead === false &&
+                  {_chat?.messages &&
+                  _chat.receiverHasRead === false &&
                   !this.userIsSender(_chat) ? (
                     <ListItemIcon>
                       <NotificationImportant
@@ -144,7 +148,7 @@ class UserListComponent extends Component {
   };
 
   userIsSender = (chat) =>
-    chat.messages[chat.messages.length - 1].sender === this.props.userEmail;
+    chat?.messages[chat?.messages?.length - 1]?.sender === this.props.userEmail;
 }
 
 export default connect()(withStyles(styles)(UserListComponent));
