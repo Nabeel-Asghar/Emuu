@@ -367,10 +367,15 @@ function processRefundFromPhotographer(paymentID) {
 }
 
 async function payOut(orderID, consumerID, photographerID) {
-  const { paymentID } = await getPaymentID(consumerID, orderID);
-  await transferToBank(paymentID, orderID, consumerID, photographerID);
-  console.log("Paid out photographer");
-  return true;
+  try {
+    const { paymentID } = await getPaymentID(consumerID, orderID);
+    await transferToBank(paymentID, orderID, consumerID, photographerID);
+    console.log("Paid out photographer");
+    return true;
+  } catch (err) {
+    console.log("Error paying out", err);
+    return err;
+  }
 }
 
 async function transferToBank(paymentID, orderID, consumerID, photographerID) {

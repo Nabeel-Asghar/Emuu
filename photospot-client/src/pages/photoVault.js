@@ -209,6 +209,9 @@ class photoVault extends Component {
 
       const totalSize = this.state.totalNewImagesSize;
       const that = this;
+      const metadata = {
+        contentType: "image/jpeg",
+      };
 
       this.state.imagesToUpload.forEach((image) => {
         const imageName = nanoid(10);
@@ -218,7 +221,7 @@ class photoVault extends Component {
           .storage()
           .ref(this.props.match.params.orderID)
           .child(imageName)
-          .put(image);
+          .put(image, metadata);
 
         promises.push(task);
 
@@ -319,7 +322,7 @@ class photoVault extends Component {
                         confirmedByCustomer={this.state.confirmedByCustomer}
                         downloadDisable={this.state.downloadDisable}
                         openFinalizeDialog={this.openFinalizeDialog.bind(this)}
-                        downloadImages={this.downloadImages}
+                        downloadImages={this.downloadImages.bind(this)}
                       />
                     </div>
                   )}
@@ -347,7 +350,7 @@ class photoVault extends Component {
                       confirmedByCustomer={this.state.confirmedByCustomer}
                       downloadDisable={this.state.downloadDisable}
                       openFinalizeDialog={this.openFinalizeDialog.bind(this)}
-                      downloadImages={this.downloadImages}
+                      downloadImages={this.downloadImages.bind(this)}
                     />
                   </Grid>
                 )}
@@ -423,6 +426,7 @@ class photoVault extends Component {
               {/* Notify customer that photos are finished */}
               <Confirmation
                 open={this.state.openDialog}
+                fullScreen={fullScreen}
                 secondaryConfirmation={false}
                 handleAgree={() => this.notifyCustomer()}
                 handleDisagree={() => this.closeFinalizeDialog("photographer")}
@@ -435,6 +439,7 @@ class photoVault extends Component {
               {/* Customer confirms pictures and photographer is paid */}
               <Confirmation
                 open={this.state.openCustomerFinal}
+                fullScreen={fullScreen}
                 secondaryConfirmation={true}
                 handleAgree={() => this.confirmPictures()}
                 handleDisagree={() => this.closeFinalizeDialog()}
