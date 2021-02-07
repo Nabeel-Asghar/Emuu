@@ -62,7 +62,6 @@ class searchPage extends Component {
   }
 
   handleSubmit = (event) => {
-    console.log("very gay");
     event.preventDefault();
 
     const searchQuery = this.state.searchQuery;

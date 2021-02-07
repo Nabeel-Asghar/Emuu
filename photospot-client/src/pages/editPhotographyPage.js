@@ -40,6 +40,7 @@ import EditBio from "../components/your-photography-page/editBio";
 import EditUserDetails from "../components/your-photography-page/editUserDetails";
 import PictureUploader from "../components/shared/pictureUploader";
 import Feedback from "../components/shared/feedback";
+import SnackbarAlert from "../components/shared/SnackbarAlert";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -81,6 +82,7 @@ class editPhotographyPage extends Component {
       openProfileEditor: false,
       croppedProfileImage: "",
       openFeedback: false,
+      openAlert: false,
     };
   }
 
@@ -107,6 +109,7 @@ class editPhotographyPage extends Component {
     this.props.getYourPhotographyPage().then(() => {
       this.assignValues(this.props.yourPhotographerPage);
     });
+    this.setState({ openAlert: this.props.location.state?.success });
   }
 
   componentDidUpdate(prevProps) {
@@ -265,6 +268,10 @@ class editPhotographyPage extends Component {
     console.log(this.state.categories);
   };
 
+  handleClose = () => {
+    this.setState({ openAlert: false });
+  };
+
   handleClickOpen = () => {
     this.setState({
       openDetails: true,
@@ -280,6 +287,14 @@ class editPhotographyPage extends Component {
 
     return (
       <div style={{ overflow: "hidden" }}>
+        <SnackbarAlert
+          open={this.state.openAlert}
+          severity={"success"}
+          handleClose={this.handleClose}
+          message={
+            "You're all set to go. This is your photography page where you can \n\nedit any existing details and change your background and profile picture"
+          }
+        />
         <Grid container>
           <Grid item xs={12}>
             <EditableUsercard

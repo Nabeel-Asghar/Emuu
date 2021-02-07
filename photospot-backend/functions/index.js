@@ -61,6 +61,7 @@ const {
   getYourUserProfile,
   getYourPhotographerOrders,
   getYourPhotographerPastOrders,
+  verifyRegistration,
 } = require("./handlers/users");
 
 const {

@@ -6,7 +6,7 @@ const OutlinedTextField = (props) => {
     <CSSTextField
       id={props.name}
       name={props.name}
-      type={props.type ? props.type : props.name}
+      type={props.name == "confirmPassword" ? "password" : props.name}
       label={props.label}
       variant="outlined"
       style={{
@@ -14,6 +14,7 @@ const OutlinedTextField = (props) => {
         width: "100%",
         textAlign: "left",
       }}
+      multiline={props.name == "bio" ? true : false}
       color="secondary"
       helperText={props.errors}
       error={props.errors ? true : false}

@@ -83,7 +83,7 @@ export class editPhotographerDetails extends Component {
       phoneNumber,
       headline,
       camera,
-      instagramHandle,
+      instagram,
       company,
       biography,
       categories,
@@ -306,13 +306,13 @@ export class editPhotographerDetails extends Component {
           <div className={classes.textField}>
             <TextField
               className={classes.textFieldWidth}
-              id="instagramHandle"
+              id="instagram"
               variant="filled"
-              name="instagramHandle"
+              name="instagram"
               label="Instagram Handle PHOTO"
               type="text"
               color="secondary"
-              value={instagramHandle}
+              value={instagram}
               onChange={this.props.handleChange}
             />
           </div>

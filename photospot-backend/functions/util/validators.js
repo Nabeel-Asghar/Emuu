@@ -42,10 +42,6 @@ exports.validateSignUpData = (data) => {
     if (isEmpty(data.location_state)) {
       errors.state = "Must not be empty";
     }
-
-    if (data.categories.length === 0) {
-      errors.categories = "Must fill out categories";
-    }
   }
 
   return {
@@ -84,18 +80,6 @@ exports.validateResetPasswordData = (data) => {
   };
 };
 
-exports.validateBio = (data) => {
-  let errors = {};
-
-  if (isEmpty(data.bio)) {
-    errors.bio = "Must not be empty";
-  }
-  return {
-    errors,
-    valid: Object.keys(errors).length === 0 ? true : false,
-  };
-};
-
 exports.validateReview = (data) => {
   let errors = {};
 
@@ -116,21 +100,33 @@ exports.validateReview = (data) => {
 exports.validatePhotographerPageData = (data) => {
   let errors = {};
 
-  if (isEmpty(data.bio)) {
-    errors.bio = "Must not be empty";
+  if (data.categories.length === 0) {
+    errors.categories = "Must fill out categories";
   }
 
-  if (isEmpty(data.location_city)) {
-    errors.location_city = "Must not be empty";
+  if (isEmpty(data.camera)) {
+    errors.camera = "Must not be empty";
   }
 
-  if (isEmpty(data.location_state)) {
-    errors.location_state = "Must not be empty";
+  if (isEmpty(data.headline) || data.headline.length < 10) {
+    errors.headline = "Must be longer than 10 characters";
   }
 
-  if (data.ratePerHour === null) {
-    errors.ratePerHour = "Must be a valid value";
+  if (isEmpty(data.instagram)) {
+    errors.instagram = "Must not be empty";
   }
+
+  if (isEmpty(data.company)) {
+    errors.company = "Must not be empty";
+  }
+
+  if (isEmpty(data.bio) || data.bio.length < 20) {
+    errors.bio = "Must be longer than 20 characters";
+  }
+
+  // if (data.ratePerHour === null) {
+  //   errors.ratePerHour = "Must be a valid value";
+  // }
 
   return {
     errors,

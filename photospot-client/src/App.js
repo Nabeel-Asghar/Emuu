@@ -35,6 +35,7 @@ import onboard from "./pages/onboard";
 import successPage from "./pages/successPage";
 import checkout from "./pages/checkout";
 import photoVault from "./pages/photoVault";
+import photographerPageSetup from "./pages/SignUp/PhotographerPageSetup";
 
 // Components
 import Navbar from "./components/shared/Navbar";
@@ -334,6 +335,12 @@ const App = () => {
                 <Route exact path="/resetPassword" component={resetPassword} />
 
                 <AuthRoute exact path="/onboard" component={onboard} />
+
+                <AuthRoute
+                  exact
+                  path="/photographerPageSetup"
+                  component={photographerPageSetup}
+                />
 
                 <AuthRoute
                   exact
