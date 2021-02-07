@@ -151,12 +151,16 @@ async function handlePayment(orderDetails, chargeAmount, paymentID) {
     shootStatus.inProgress
   );
 
-  await updateMainOrders(orderID, booking);
-  await updatePhotographerOrders(photographerID, orderID, booking);
-  await updateUserOrders(consumerID, orderID, booking);
-  await fillPhotographerTimeslot(photographerID, shootDate, shootTime);
-  await createPhotoVault(orderID, photographerID, consumerID);
-  await emailOrderDetails(booking);
+  let chat = await chatObject(orderDetails);
+  let chatName = `${orderDetails.photographerEmail}:${orderDetails.consumerEmail}`;
+
+  updateMainOrders(orderID, booking);
+  updatePhotographerOrders(photographerID, orderID, booking);
+  updateUserOrders(consumerID, orderID, booking);
+  fillPhotographerTimeslot(photographerID, shootDate, shootTime);
+  createPhotoVault(orderID, photographerID, consumerID);
+  emailOrderDetails(booking);
+  createChat(chatName, chat);
 }
 
 // helper functions
@@ -166,18 +170,6 @@ function bookingObject(orderID, orderDetails, chargeAmount, paymentID, status) {
   let amount = chargeAmount / 100;
   let shootDate = orderDetails.date;
   let shootTime = orderDetails.time;
-
-  let photographerFirstName = orderDetails.photographerFirstName;
-  let photographerLastName = orderDetails.photographerLastName;
-  let photographerProfileImage = orderDetails.photographerProfileImage;
-  let photographerID = orderDetails.photographerID;
-  let photographerEmail = orderDetails.photographerEmail;
-
-  let consumerFirstName = orderDetails.consumerFirstName;
-  let consumerLastName = orderDetails.consumerLastName;
-  let consumerProfileImage = orderDetails.consumerProfileImage;
-  let consumerID = orderDetails.consumerID;
-  let consumerEmail = orderDetails.consumerEmail;
 
   var myDate = shootDate.split("-");
   var newDate = myDate[2] + "," + myDate[0] + "," + myDate[1];
@@ -189,22 +181,43 @@ function bookingObject(orderID, orderDetails, chargeAmount, paymentID, status) {
     amount: amount,
     shootDate: shootDate,
     shootTime: shootTime,
-    photographerID: photographerID,
-    photographerEmail: photographerEmail,
-    photographerFirstName: photographerFirstName,
-    photographerLastName: photographerLastName,
-    photographerProfileImage: photographerProfileImage,
-    consumerID: consumerID,
-    consumerEmail: consumerEmail,
-    consumerFirstName: consumerFirstName,
-    consumerLastName: consumerLastName,
-    consumerProfileImage: consumerProfileImage,
+    photographerFirstName: orderDetails.photographerFirstName,
+    photographerLastName: orderDetails.photographerLastName,
+    photographerProfileImage: orderDetails.photographerProfileImage,
+    photographerID: orderDetails.photographerID,
+    photographerEmail: orderDetails.photographerEmail,
+    consumerFirstName: orderDetails.consumerFirstName,
+    consumerLastName: orderDetails.consumerLastName,
+    consumerProfileImage: orderDetails.consumerProfileImage,
+    consumerID: orderDetails.consumerID,
+    consumerEmail: orderDetails.consumerEmail,
     createdAt: new Date().toISOString(),
     formattedDate: formattedDate,
     status: status,
   };
 
   return booking;
+}
+
+// create chat object
+function chatObject(orderDetails) {
+  let photographerName = `${orderDetails.photographerFirstName} ${orderDetails.photographerLastName}`;
+  let consumerName = `${orderDetails.consumerFirstName} ${orderDetails.consumerLastName}`;
+
+  let photographerEmail = orderDetails.photographerEmail;
+  let consumerEmail = orderDetails.consumerEmail;
+
+  let photographerThumbnailImage = orderDetails.photographerThumbnailImage;
+  let consumerThumbnailImage = orderDetails.consumerThumbnailImage;
+
+  return {
+    names: [photographerName, consumerName],
+    [photographerEmail]: { profileImage: photographerThumbnailImage },
+    [consumerEmail]: { profileImage: consumerThumbnailImage },
+    receiverHasRead: false,
+    users: [photographerEmail, consumerEmail],
+    timestamp: Date.now(),
+  };
 }
 
 // create photo vault for this order
@@ -222,6 +235,35 @@ function createPhotoVault(orderID, photographerID, consumerID) {
     })
     .catch((err) => {
       console.log(err);
+      return false;
+    });
+}
+
+// create chat between consumer and photographer
+function createChat(chatName, chat) {
+  var docRef = db.collection("chats").doc(chatName);
+  docRef
+    .get()
+    .then((doc) => {
+      if (doc.exists) {
+        return;
+      } else {
+        docRef
+          .set(chat)
+          .then(() => {
+            return true;
+          })
+          .catch((err) => {
+            console.log(
+              "error creating chat between photographer and consumer",
+              err
+            );
+            return false;
+          });
+      }
+    })
+    .catch((err) => {
+      console.log("error creating chat between photographer and consumer", err);
       return false;
     });
 }

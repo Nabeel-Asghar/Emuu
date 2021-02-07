@@ -23,6 +23,7 @@ const Confirmation = (props) => {
   return (
     <Dialog
       maxWidth="xs"
+      fullScreen={props.fullScreen}
       open={props.open}
       onClose={props.handleClose}
       aria-labelledby="alert-dialog-title"

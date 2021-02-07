@@ -175,7 +175,11 @@ class messaging extends Component {
         (_usr) => _usr !== this.state.email
       )[0]
     );
-    if (this.clickedChatWhereNotSender(this.state.selectedChat)) {
+    console.log(this.state.chats);
+    if (
+      this.state.chats.messages &&
+      this.clickedChatWhereNotSender(this.state.selectedChat)
+    ) {
       firebase
         .firestore()
         .collection("chats")
@@ -232,12 +236,12 @@ class messaging extends Component {
         bigmad: true,
       });
     this.setState({ newChatFormVisible: false });
-    this.selectChat(this.state.chats.length - 1);
+    this.selectChat(this.state?.chats?.length - 1);
   };
 
   clickedChatWhereNotSender = (chatIndex) =>
-    this.state.chats[chatIndex].messages[
-      this.state.chats[chatIndex].messages.length - 1
+    this.state?.chats[chatIndex]?.messages[
+      this.state?.chats[chatIndex]?.messages?.length - 1
     ].sender !== this.state.email;
 
   selectChat = async (chatIndex) => {
