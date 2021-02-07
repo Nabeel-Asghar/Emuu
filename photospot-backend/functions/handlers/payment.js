@@ -119,12 +119,14 @@ exports.createPayment = (req, res) => {
                 photographerProfileImage: req.body.photographerProfileImage,
                 photographerID: req.body.photographerID,
                 photographerEmail: req.body.photographerEmail,
+                photographerThumbnailImage: req.body.photographerThumbnailImage,
 
                 consumerFirstName: req.body.consumerFirstName,
                 consumerLastName: req.body.consumerLastName,
                 consumerProfileImage: req.body.consumerProfileImage,
                 consumerID: req.body.consumerID,
                 consumerEmail: req.body.consumerEmail,
+                consumerThumbnailImage: req.body.consumerThumbnailImage,
               },
             })
             .then((paymentIntent) => {

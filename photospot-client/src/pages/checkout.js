@@ -67,6 +67,7 @@ const Checkout = (props) => {
       const { firstName } = userDetails[0];
       const { lastName } = userDetails[0];
       const { profileImage } = userDetails[0];
+      const { thumbnailImage } = userDetails[0];
 
       let theDetails = {
         consumerID: userID,
@@ -74,6 +75,7 @@ const Checkout = (props) => {
         consumerFirstName: firstName,
         consumerLastName: lastName,
         consumerProfileImage: profileImage,
+        consumerThumbnailImage: thumbnailImage,
       };
 
       const orderDetails = { ...theDetails, ...props.location.details };
@@ -184,15 +186,12 @@ const Checkout = (props) => {
           <Success
             body={
               <div>
-                <Typography variant="h3" gutterBottom>
+                <Typography variant="h5" gutterBottom>
                   Thanks for your order!
                 </Typography>
                 <Typography variant="body1" gutterBottom>
-                  You will recieve an email with all your order details.
-                </Typography>
-                <Typography variant="body1" gutterBottom>
-                  Contact your photographer to setup a shoot location and have
-                  fun!
+                  You will recieve an email with all your order details. Contact
+                  your photographer to setup a shoot location and have fun!
                 </Typography>
               </div>
             }
