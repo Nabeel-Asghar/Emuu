@@ -25,6 +25,8 @@ module.exports = (req, res, next) => {
       res.locals.firstName = doc.data().firstName;
       res.locals.lastName = doc.data().lastName;
       res.locals.profileImage = doc.data().profileImage;
+      res.locals.registration = doc.data().registration;
+
       return next();
     })
     .catch((err) => {

@@ -3,6 +3,7 @@ const config = require("../util/config");
 const storageBucketVar = config.storageBucket;
 const sharp = require("sharp");
 const path = require("path");
+const defaultProfilePicture = "defaultProfilePicture.png";
 
 const firebase = require("firebase");
 firebase.initializeApp(config);
@@ -19,22 +20,12 @@ const {
 
 // signup
 exports.signup = (req, res) => {
-  const newUser = {
-    email: req.body.email,
-    password: req.body.password,
-    confirmPassword: req.body.confirmPassword,
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    photographer: req.body.photographer,
-  };
-
-  console.log("newuser: ", newUser);
-
+  const newUser = req.body;
   const { valid, errors } = validateSignUpData(newUser);
+  newUser.createdAt = new Date().toISOString();
+  newUser.profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultProfilePicture}?alt=media`;
 
-  if (!valid) return res.status(400).json(errors);
-
-  const defaultProfilePicture = "defaultProfilePicture.png";
+  if (!valid) return res.status(400).json(errors).end();
 
   let token, userId;
 
@@ -42,48 +33,21 @@ exports.signup = (req, res) => {
     .auth()
     .createUserWithEmailAndPassword(newUser.email, newUser.password)
     .then((data) => {
+      delete newUser.password;
+      delete newUser.confirmPassword;
       userId = data.user.uid;
-
       return data.user.getIdToken();
     })
     .then((tokenID) => {
       token = tokenID;
-      const userCredentials = {
-        email: newUser.email,
-        firstName: newUser.firstName,
-        lastName: newUser.lastName,
-        photographer: newUser.photographer,
-        createdAt: new Date().toISOString(),
-        profileImage: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultProfilePicture}?alt=media`,
-      };
-
-      //  user details in photographer and users table when person is a photographer
-      if (userCredentials.photographer === true) {
-        db.doc(`/photographer/${userId}`)
-          .set(userCredentials)
-          .then(() => {
-            db.doc(`/users/${userId}`).set(userCredentials);
-            let algoliaCredentials = userCredentials;
-            algoliaCredentials.objectID = userId;
-            index.saveObject(algoliaCredentials).catch((err) => {
-              res.status(500).json({ error: err.code });
-              console.log(err);
-            });
-          })
-          .catch((err) => {
-            console.error(err);
-            return res.status(500).json({ error: err.code });
-          });
-      } else {
-        return db.doc(`/users/${userId}`).set(userCredentials);
-      }
+      return db.doc(`/users/${userId}`).set(newUser);
     })
     .then(() => {
-      return res.status(201).json({ token });
+      return res.status(201).json({ token }).end();
     })
     .catch((err) => {
       console.error(err);
-      return res.status(500).json({ general: err.message });
+      return res.status(500).json({ general: err.message }).end();
     });
 };
 
@@ -102,6 +66,7 @@ exports.signupPhotographer = (req, res) => {
     photographer: newPhotographer.photographer,
     createdAt: newPhotographer.createdAt,
     profileImage: newPhotographer.profileImage,
+    registration: false,
   };
 
   const { valid, errors } = validateSignUpData(newPhotographer);
@@ -129,10 +94,6 @@ exports.signupPhotographer = (req, res) => {
       delete newPhotographer.password;
       db.doc(`/photographer/${userId}`).set(newPhotographer);
       newPhotographer.objectID = userId;
-      index.saveObject(newPhotographer).catch((err) => {
-        res.status(500).json({ general: err.code });
-        console.log(err);
-      });
     })
     .then(() => {
       return res.status(201).json({ token });
@@ -162,7 +123,13 @@ exports.login = (req, res) => {
     })
     .then((token) => {
       var user = firebase.auth().currentUser;
-
+      console.log("First", res.locals);
+      if (res.locals.registration == "incomplete") {
+        console.log("Third", res.locals);
+        return res.status(400).json({
+          registration: "You must complete your photographer profile!",
+        });
+      }
       // if (!firebase.auth().currentUser.emailVerified) {
       //   user
       //     .sendEmailVerification()
@@ -312,40 +279,33 @@ exports.resetPassword = (req, res) => {
 
 // set details for your photography page
 exports.setYourPhotographyPage = (req, res) => {
-  const photographerPageDetails = {
-    bio: req.body.bio,
-    background: req.body.background,
-    images: req.body.images,
-    location_city: req.body.location_city,
-    location_state: req.body.location_state,
-    profileImage: req.body.profileImage,
-    company: req.body.company,
-    website: req.body.website,
-    instagram: req.body.instagram,
-    ratePerHour: req.body.ratePerHour,
-  };
+  const reqDetails = req.body;
 
-  const { valid, errors } = validatePhotographerPageData(
-    photographerPageDetails
-  );
+  const { valid, errors } = validatePhotographerPageData(reqDetails);
 
   if (!valid) return res.status(400).json(errors);
-
-  db.doc(`/photographer/${req.user.uid}`)
-    .update(photographerPageDetails)
+  db.collection("photographer")
+    .doc(req.user.uid)
+    .get()
+    .then((doc) => {
+      const photographerPageDetails = { ...reqDetails, ...doc.data() };
+      photographerPageDetails.registration = true;
+      photographerPageDetails.objectID = req.user.uid;
+      console.log(photographerPageDetails);
+      index.saveObject(photographerPageDetails).catch((err) => {
+        console.log(err);
+      });
+    })
     .then(() => {
-      index
-        .saveObjects(photographerPageDetails, { objectID: req.user.uid })
-        .then(() => {
-          console.log("Photographer page added.");
-          return res.json({
-            message: "Your photographer page has been updated.",
-          });
-        })
-        .catch((err) => {
-          console.log(err);
-          return res.status(500).json({ error: `something went wrong` });
-        });
+      db.doc(`/photographer/${req.user.uid}`).update(reqDetails);
+    })
+    .then(() => {
+      db.doc(`/users/${req.user.uid}`).update({ registration: true });
+    })
+    .then(() => {
+      return res
+        .status(200)
+        .json({ message: "Your photographer page has been updated." });
     })
     .catch((err) => {
       console.error(err);
@@ -635,7 +595,10 @@ exports.getYourUserProfile = (req, res) => {
         location_city: doc.data().location_city,
         location_state: doc.data().location_state,
         thumbnailImage: doc.data().thumbnailImage,
+        registration: doc.data().registration,
       });
+
+      console.log("PAGE:", page);
 
       return res.json(page);
     })

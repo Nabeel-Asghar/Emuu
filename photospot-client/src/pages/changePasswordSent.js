@@ -16,7 +16,6 @@ const styles = (theme) => ({
 
 class changePasswordSent extends Component {
   render() {
-    console.log("gay");
     const { classes } = this.props;
     return (
       <Grid container className={classes.form}>

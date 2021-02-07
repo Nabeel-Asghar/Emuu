@@ -1,22 +1,22 @@
-import React, { Component } from "react";
-import { Redirect, Link } from "react-router-dom";
-import withStyles from "@material-ui/core/styles/withStyles";
-import PropTypes from "prop-types";
-import AppIcon from "../images/logo.png";
-
-// MUI
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
+import { Slide, Snackbar } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import CircularProgress from "@material-ui/core/CircularProgress";
+// MUI
+import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Box from "@material-ui/core/Box";
-import { outerTheme, ThemeProvider } from "./Styling/externalColors";
-
+import withStyles from "@material-ui/core/styles/withStyles";
+import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
+import Alert from "@material-ui/lab/Alert";
+import PropTypes from "prop-types";
+import React, { Component } from "react";
 // Redux
 import { connect } from "react-redux";
+import { Link, Redirect } from "react-router-dom";
+import AppIcon from "../images/logo.png";
 import { loginUser } from "../redux/actions/userActions";
+import OutlinedTextField from "../components/shared/OutlinedTextField";
+import SnackbarAlert from "../components/shared/SnackbarAlert";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -29,7 +29,12 @@ class login extends Component {
       email: "",
       password: "",
       errors: {},
+      open: false,
     };
+  }
+
+  componentDidMount() {
+    this.setState({ open: this.props.location.state?.success });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -37,6 +42,10 @@ class login extends Component {
       this.setState({ errors: nextProps.UI.errors });
     }
   }
+
+  handleClose = () => {
+    this.setState({ open: false });
+  };
 
   handleSubmit = (event) => {
     event.preventDefault();
@@ -63,94 +72,90 @@ class login extends Component {
       classes,
       UI: { loading },
     } = this.props;
-    const { errors } = this.state;
+    const { errors, open } = this.state;
 
     return (
-      <Grid
-        container
-        align="center"
-        justify="center"
-        direction="column"
-        className={classes.authContainer}
-      >
-        <Grid item>
-          <Paper className={classes.auth}>
-            <div className={classes.authText}>
-              <a href="/">
-                <img src={AppIcon} alt="Logo" className={classes.brand} />
-              </a>
-              <Typography variant="h5" className={classes.authHeader}>
-                Welcome to PhotoSpot
-              </Typography>
+      <Slide direction="up" in={true} mountOnEnter unmountOnExit timeout={400}>
+        <Grid
+          container
+          align="center"
+          justify="center"
+          direction="column"
+          className={classes.authContainer}
+        >
+          <SnackbarAlert
+            open={this.state.open}
+            severity={"success"}
+            handleClose={this.handleClose}
+            message={"Successfully registered!"}
+          />
 
-              <form noValidate onSubmit={this.handleSubmit}>
-                <TextField
-                  id="email"
-                  name="email"
-                  type="email"
-                  label="Email"
-                  className={classes.textField}
-                  helperText={errors.email}
-                  error={errors.email ? true : false}
-                  value={this.state.email}
-                  onChange={this.handleChange}
-                  variant="outlined"
-                  color="secondary"
-                  fullWidth
-                />
-                <TextField
-                  id="password"
-                  name="password"
-                  type="password"
-                  label="Password"
-                  className={classes.textField}
-                  helperText={errors.password}
-                  error={errors.password ? true : false}
-                  value={this.state.password}
-                  onChange={this.handleChange}
-                  fullWidth
-                  variant="outlined"
-                  color="secondary"
-                />
+          <Grid item>
+            <Paper className={classes.auth}>
+              <div className={classes.authText}>
+                <a href="/">
+                  <img src={AppIcon} alt="Logo" className={classes.brand} />
+                </a>
+                <Typography variant="h5" className={classes.authHeader}>
+                  Welcome to PhotoSpot
+                </Typography>
 
-                {errors.general && (
-                  <Typography variant="body2" className={classes.customError}>
-                    {errors.general}
-                  </Typography>
-                )}
-                <Button
-                  type="submit"
-                  variant="contained"
-                  color="secondary"
-                  className={classes.button}
-                  disabled={loading}
-                  size="large"
-                  fullWidth
-                >
-                  Login
-                  {loading && (
-                    <CircularProgress
-                      color="secondary"
-                      className={classes.progress}
-                    />
+                <form noValidate onSubmit={this.handleSubmit}>
+                  <OutlinedTextField
+                    name="email"
+                    label="Email"
+                    errors={errors?.email}
+                    value={this.state.email}
+                    handleChange={this.handleChange}
+                  />
+
+                  <OutlinedTextField
+                    name="password"
+                    label="Password"
+                    errors={errors?.password}
+                    value={this.state.password}
+                    handleChange={this.handleChange}
+                  />
+
+                  {errors.general && (
+                    <Typography variant="body2" className={classes.customError}>
+                      {errors.general}
+                    </Typography>
                   )}
-                </Button>
-              </form>
-            </div>
-          </Paper>
+                  <Button
+                    type="submit"
+                    variant="contained"
+                    color="secondary"
+                    className={classes.button}
+                    disabled={loading}
+                    size="large"
+                    fullWidth
+                  >
+                    Login
+                    {loading && (
+                      <CircularProgress
+                        color="secondary"
+                        className={classes.progress}
+                      />
+                    )}
+                  </Button>
+                </form>
+              </div>
+            </Paper>
 
-          <Paper className={classes.bottomAuth}>
-            <Button
-              component={Link}
-              to="/signup"
-              style={{ textTransform: "none" }}
-            >
-              Don't have an account?{" "}
-              <span style={{ color: "#23ba8b" }}>&nbsp;Sign up</span>
-            </Button>
-          </Paper>
+            <Paper className={classes.bottomAuth}>
+              <Button
+                component={Link}
+                to="/signup"
+                style={{ textTransform: "none" }}
+              >
+                Don't have an account?{" "}
+                <span style={{ color: "#23ba8b" }}>&nbsp;Sign up</span>
+              </Button>
+            </Paper>
+          </Grid>
         </Grid>
-      </Grid>
+      </Slide>
     );
   }
 }

@@ -5,12 +5,13 @@ export const loginUser = (userData, history) => (dispatch) => {
   API.post("/login", userData)
     .then((res) => {
       setAuthorizationHeader(res.data.token);
-      dispatch(getUserData()).then(() => {
+      dispatch(getUserData(history)).then(() => {
         dispatch({ type: "CLEAR_ERRORS" });
       });
       history.push("/search");
     })
     .catch((err) => {
+      console.log(err);
       dispatch({
         type: "SET_ERRORS",
         payload: err.response.data,
@@ -25,7 +26,7 @@ export const signupUser = (newUserData, history) => (dispatch) => {
       // setAuthorizationHeader(res.data.token);
       // dispatch(getUserData());
       dispatch({ type: "CLEAR_ERRORS" });
-      history.push("/login");
+      history.push({ pathname: "/login", state: { success: true } });
     })
     .catch((err) => {
       dispatch({
@@ -44,7 +45,7 @@ export const signupPhotographer = (newPhotographerData, history) => (
       // setAuthorizationHeader(res.data.token);
       // dispatch(getUserData());
       dispatch({ type: "CLEAR_ERRORS" });
-      history.push("/login");
+      history.push({ pathname: "/login", state: { success: true } });
     })
     .catch((err) => {
       console.log(err);
@@ -55,6 +56,25 @@ export const signupPhotographer = (newPhotographerData, history) => (
     });
 };
 
+export const setPhotographerPage = (details, history) => (dispatch) => {
+  dispatch({ type: "LOADING_UI" });
+  API.post("/editphotographypage/", details)
+    .then((res) => {
+      console.log(res.data);
+      dispatch({ type: "CLEAR_ERRORS" });
+      history.push({
+        pathname: "/yourPhotographyProfile",
+        state: { success: true },
+      });
+    })
+    .catch((err) =>
+      dispatch({
+        type: "SET_ERRORS",
+        payload: err.response.data,
+      })
+    );
+};
+
 export const resetPasswordAction = (data, history) => (dispatch) => {
   dispatch({ type: "RESET_PASSWORD" });
   API.post("/resetPassword", data)
@@ -63,7 +83,6 @@ export const resetPasswordAction = (data, history) => (dispatch) => {
       history.push("/resetPasswordSent");
     })
     .catch((err) => {
-      console.log("super gay");
       console.log(err);
       dispatch({
         type: "SET_ERRORS",
@@ -95,15 +114,24 @@ export const logoutUser = () => (dispatch) => {
   dispatch({ type: "SET_UNAUTHENTICATED" });
 };
 
-export const getUserData = () => (dispatch) => {
+export const getUserData = (history) => (dispatch) => {
   return API.get("/youruserprofile")
     .then((res) => {
       dispatch({
         type: "SET_USER",
         payload: res.data,
       });
+      console.log(res.data);
+      if (!res.data[0].registration) {
+        history.push({
+          pathname: "/photographerPageSetup",
+          state: { success: false },
+        });
+      }
     })
-    .catch((err) => dispatch(logoutUser()));
+    .catch((err) => {
+      dispatch(logoutUser());
+    });
 };
 
 export const uploadProfileImage = (formData) => (dispatch) => {
