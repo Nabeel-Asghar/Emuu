@@ -17,7 +17,8 @@ app.use(
     maxAge: 24 * 60 * 60 * 1000,
   })
 );
-const { admin, db } = require("./util/admin");
+
+const { admin, db, index } = require("./util/admin");
 const payment = require("./handlers/payment");
 
 // TODO: alternate to request.session due to memory leak
@@ -195,6 +196,22 @@ exports.dailyJob = functions.pubsub
       })
       .catch((err) => {
         console.log("error in doing cronjob in payouts", err);
+      });
+  });
+
+exports.updateAlgoliaIndex = functions.firestore
+  .document("photographers/{userId}")
+  .onUpdate((change, context) => {
+    const newValue = change.after.data();
+    newValue.objectID = context.params.userId;
+    index
+      .saveObject(object)
+      .then(() => {
+        console.log("Object saved in Algolia: ", object.objectID);
+      })
+      .catch((err) => {
+        console.error(err);
+        return res.status(500).json({ error: err.code });
       });
   });
 
