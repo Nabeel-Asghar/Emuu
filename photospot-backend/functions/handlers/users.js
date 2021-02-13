@@ -1,4 +1,4 @@
-const { admin, db, index } = require("../util/admin");
+const { admin, db } = require("../util/admin");
 const config = require("../util/config");
 const storageBucketVar = config.storageBucket;
 const sharp = require("sharp");
@@ -9,10 +9,14 @@ const firebase = require("firebase");
 firebase.initializeApp(config);
 
 const {
+  saveObjectToAlgolia,
+  partialUpdateObjectToAlgolia,
+} = require("./algolia");
+
+const {
   validateSignUpData,
   validateLoginData,
   validatePhotographerPageData,
-  validateBio,
   validateResetPasswordData,
   reduceUserDetails,
   validateProfileUpdate,
@@ -160,30 +164,6 @@ exports.login = (req, res) => {
     });
 };
 
-// exports.addFirestoreDataToAlgolia = (req, res) => {
-//   db.collection("photographer")
-//     .get()
-//     .then((docs) => {
-//       let photographers = [];
-//       docs.forEach((doc) => {
-//         let user = doc.data();
-//         user.objectID = doc.id;
-//         photographers.push(user);
-//       });
-
-//       index
-//         .saveObjects(photographers)
-//         .then(() => {
-//           return res.status(400).json({
-//             message: "Contacts imported",
-//           });
-//         })
-//         .catch((error) => {
-//           console.error("Error when importing contact into Algolia", error);
-//         });
-//     });
-// };
-
 exports.reauthenticateUser = () => {
   var user = firebase.auth().currentUser;
   var credential = firebase.auth.EmailAuthProvider.credential(
@@ -278,67 +258,52 @@ exports.resetPassword = (req, res) => {
 };
 
 // set details for your photography page
-exports.setYourPhotographyPage = (req, res) => {
+exports.setYourPhotographyPage = async (req, res) => {
   const reqDetails = req.body;
 
   const { valid, errors } = validatePhotographerPageData(reqDetails);
 
   if (!valid) return res.status(400).json(errors);
-  db.collection("photographer")
-    .doc(req.user.uid)
-    .get()
-    .then((doc) => {
-      const photographerPageDetails = { ...reqDetails, ...doc.data() };
-      photographerPageDetails.registration = true;
-      photographerPageDetails.objectID = req.user.uid;
-      console.log(photographerPageDetails);
-      index.saveObject(photographerPageDetails).catch((err) => {
-        console.log(err);
-      });
-    })
-    .then(() => {
-      db.doc(`/photographer/${req.user.uid}`).update(reqDetails);
-    })
+
+  const photographer = await getPhotographer;
+
+  const algoliaObject = { ...reqDetails, ...photographer };
+  algoliaObject.registration = true;
+  algoliaObject.objectID = req.user.uid;
+  console.log(algoliaObject);
+
+  db.doc(`/photographer/${req.user.uid}`)
+    .update(reqDetails)
     .then(() => {
       db.doc(`/users/${req.user.uid}`).update({ registration: true });
     })
     .then(() => {
+      saveObjectToAlgolia(algoliaObject);
+    })
+    .then(() => {
       return res
         .status(200)
-        .json({ message: "Your photographer page has been updated." });
+        .json({ message: "Your photographer page has been updated." })
+        .end();
     })
     .catch((err) => {
       console.error(err);
-      return res.status(500).json({ error: err.code });
+      return res.status(500).json({ error: err.code }).end();
     });
 };
 
 // update your photographer page
 exports.updatePhotographerCategoriesAndBio = (req, res) => {
   const photographerPageDetails = req.body;
-  const categories = req.body.categories;
-
-  console.log(req.body);
 
   db.doc(`/photographer/${req.user.uid}`)
     .update(photographerPageDetails)
     .then(() => {
-      index
-        .partialUpdateObject({
-          instagram: req.body.instagram,
-          camera: req.body.camera,
-          company: req.body.company,
-          headline: req.body.headline,
-          categories: categories,
-          objectID: req.user.uid,
-        })
-        .catch((err) => {
-          console.error(err);
-          return res.status(500).json({ error: err.code });
-        });
+      photographerPageDetails.objectID = req.user.uid;
+      partialUpdateObjectToAlgolia(photographerPageDetails);
     })
     .then(() => {
-      return res.json({ message: "Your bio has been updated." });
+      return res.json({ message: "Your information has been updated." });
     })
     .catch((err) => {
       console.error(err);
@@ -507,7 +472,7 @@ exports.updateUserProfile = (req, res) => {
           .then(() => {
             let alogliaUserDetails = userDetails;
             alogliaUserDetails.objectID = req.user.uid;
-            index.partialUpdateObject(alogliaUserDetails);
+            partialUpdateObjectToAlgolia(alogliaUserDetails);
           })
           .then(() => {
             return res.json({ message: "Your user profile has been updated." });
@@ -917,15 +882,10 @@ exports.editBookingTimes = (req, res) => {
     .doc(date)
     .set(timeslots)
     .then(() => {
-      index
-        .partialUpdateObject({
-          dates: { _operation: "AddUnique", value: algoliaDates },
-          objectID: userid,
-        })
-        .catch((err) => {
-          console.log(err);
-          return res.status(500).json({ error: `something went wrong` });
-        });
+      partialUpdateObjectToAlgolia({
+        dates: { _operation: "AddUnique", value: algoliaDates },
+        objectID: userid,
+      });
     })
     .then(() => {
       return res.json({ message: "success" });
@@ -990,4 +950,16 @@ function updateProfileImage(database, id, imageFileName, thumbnail) {
     const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
     return db.doc(`/${database}/${id}`).update({ profileImage });
   }
+}
+
+function getPhotographer(userid) {
+  db.collection("photographer")
+    .doc(userid)
+    .get()
+    .then((doc) => {
+      return res.json(doc.data());
+    })
+    .catch((err) => {
+      return res.status(404).json({ error: err });
+    });
 }
