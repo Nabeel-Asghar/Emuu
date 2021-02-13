@@ -78,15 +78,11 @@ class photographer extends Component {
                 "No reviews yet"
               )}
             </Typography>
-            <Typography variant="h6" display="inline">
+            <Typography variant="h6" style={{ marginBottom: -5 }}>
               {firstName}&nbsp;{lastName}
             </Typography>
-            <Typography
-              variant="subtitle1"
-              color="textSecondary"
-              display="inline"
-            >
-              &nbsp;-&nbsp;{location_city},&nbsp;{location_state}
+            <Typography variant="subtitle1" color="textSecondary">
+              {location_city},&nbsp;{location_state}
             </Typography>
             <Typography variant="body1" className={classes.allText}>
               {headline}

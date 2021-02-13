@@ -179,6 +179,7 @@ class book extends Component {
       photographerFirstName: this.state.firstName,
       photographerLastName: this.state.lastName,
       photographerProfileImage: this.state.profileImage,
+      photographerThumbnailImage: this.state.thumbnailImage,
       ratePerHour: this.state.ratePerHour,
     };
 

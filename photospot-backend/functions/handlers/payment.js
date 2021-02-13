@@ -119,12 +119,14 @@ exports.createPayment = (req, res) => {
                 photographerProfileImage: req.body.photographerProfileImage,
                 photographerID: req.body.photographerID,
                 photographerEmail: req.body.photographerEmail,
+                photographerThumbnailImage: req.body.photographerThumbnailImage,
 
                 consumerFirstName: req.body.consumerFirstName,
                 consumerLastName: req.body.consumerLastName,
                 consumerProfileImage: req.body.consumerProfileImage,
                 consumerID: req.body.consumerID,
                 consumerEmail: req.body.consumerEmail,
+                consumerThumbnailImage: req.body.consumerThumbnailImage,
               },
             })
             .then((paymentIntent) => {
@@ -367,10 +369,15 @@ function processRefundFromPhotographer(paymentID) {
 }
 
 async function payOut(orderID, consumerID, photographerID) {
-  const { paymentID } = await getPaymentID(consumerID, orderID);
-  await transferToBank(paymentID, orderID, consumerID, photographerID);
-  console.log("Paid out photographer");
-  return true;
+  try {
+    const { paymentID } = await getPaymentID(consumerID, orderID);
+    await transferToBank(paymentID, orderID, consumerID, photographerID);
+    console.log("Paid out photographer");
+    return true;
+  } catch (err) {
+    console.log("Error paying out", err);
+    return err;
+  }
 }
 
 async function transferToBank(paymentID, orderID, consumerID, photographerID) {

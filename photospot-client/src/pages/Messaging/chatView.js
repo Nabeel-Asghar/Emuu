@@ -154,63 +154,64 @@ class ChatViewComponent extends Component {
       return (
         <div className={classes.root}>
           <div className={classes.chatHeader}>
-            {chat.names.filter((_usr) => _usr !== userName)[0]}
+            {chat.names && chat.names.filter((_usr) => _usr !== userName)[0]}
           </div>
           <main id="chatview-container" className={classes.chatViewContainer}>
-            {chat.messages.map((_msg, _index) => {
-              return (
-                <Box flexDirection="column" display="flex">
-                  <div>
-                    <Box
-                      display="flex"
-                      p={1}
-                      m={1}
-                      bgcolor="background.paper"
+            {chat.messages &&
+              chat.messages.map((_msg, _index) => {
+                return (
+                  <Box flexDirection="column" display="flex">
+                    <div>
+                      <Box
+                        display="flex"
+                        p={1}
+                        m={1}
+                        bgcolor="background.paper"
+                        className={
+                          _msg.sender === this.props.userEmail
+                            ? classes.userSentBox
+                            : classes.friendSentBox
+                        }
+                      >
+                        <Hidden xsDown>
+                          <Box p={1} className={classes.avatar}>
+                            <Avatar
+                              className={classes.userSentProfileImage}
+                              alt="Remy Sharp"
+                              src={chat[_msg.sender].profileImage}
+                            />
+                          </Box>
+                        </Hidden>
+                        <Box p={1} padding="8px 0px 0px 0px">
+                          <div
+                            key={_index}
+                            className={
+                              _msg.sender === this.props.userEmail
+                                ? classes.userSent
+                                : classes.friendSent
+                            }
+                          >
+                            {_msg.message}
+                          </div>
+                        </Box>
+                      </Box>
+                    </div>
+
+                    <div
+                      key={_index}
                       className={
                         _msg.sender === this.props.userEmail
-                          ? classes.userSentBox
-                          : classes.friendSentBox
+                          ? classes.userSentTimestamp
+                          : classes.friendSentTimestamp
                       }
                     >
-                      <Hidden xsDown>
-                        <Box p={1} className={classes.avatar}>
-                          <Avatar
-                            className={classes.userSentProfileImage}
-                            alt="Remy Sharp"
-                            src={chat[_msg.sender].profileImage}
-                          />
-                        </Box>
-                      </Hidden>
-                      <Box p={1} padding="8px 0px 0px 0px">
-                        <div
-                          key={_index}
-                          className={
-                            _msg.sender === this.props.userEmail
-                              ? classes.userSent
-                              : classes.friendSent
-                          }
-                        >
-                          {_msg.message}
-                        </div>
-                      </Box>
-                    </Box>
-                  </div>
-
-                  <div
-                    key={_index}
-                    className={
-                      _msg.sender === this.props.userEmail
-                        ? classes.userSentTimestamp
-                        : classes.friendSentTimestamp
-                    }
-                  >
-                    {Date.now() > _msg.timestamp + 28800000
-                      ? this.formatDate(_msg.timestamp)
-                      : this.formatDateOnlyTime(_msg.timestamp)}
-                  </div>
-                </Box>
-              );
-            })}
+                      {Date.now() > _msg.timestamp + 28800000
+                        ? this.formatDate(_msg.timestamp)
+                        : this.formatDateOnlyTime(_msg.timestamp)}
+                    </div>
+                  </Box>
+                );
+              })}
           </main>{" "}
         </div>
       );
