@@ -4,12 +4,12 @@ import equal from "fast-deep-equal";
 import React, { Component } from "react";
 // Redux
 import { connect } from "react-redux";
-import ChatTextBoxComponent from "../components/messaging/chatTextBox";
-import ChatViewComponent from "../components/messaging/chatView";
-import NewChatComponent from "../components/messaging/newChat";
-import UserListComponent from "../components/messaging/userList";
-import { firebase } from "../firestore";
-import { getUserData } from "../redux/actions/userActions";
+import ChatTextBoxComponent from "./chatTextBox";
+import ChatViewComponent from "./chatView";
+import NewChatComponent from "./newChat";
+import UserListComponent from "./userList";
+import { firebase } from "../../firestore";
+import { getUserData } from "../../redux/actions/userActions";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -81,6 +81,7 @@ class messaging extends Component {
         .collection("chats")
         .where("users", "array-contains", this.state.email)
         .onSnapshot((doc) => {
+          console.log("hi");
           const chats = doc.docs.map((_doc) => _doc.data());
           chats.sort(function (a, b) {
             return parseFloat(b.timestamp) - parseFloat(a.timestamp);

@@ -5,7 +5,7 @@ import Typography from "@material-ui/core/Typography";
 import Skeleton from "@material-ui/lab/Skeleton";
 import React, { Component } from "react";
 import { firebase } from "../../firestore";
-import NewChatComponent from "../messaging/newChat";
+import NewChatComponent from "../../pages/Messaging/newChat";
 import BookIcon from "@material-ui/icons/Book";
 import CallIcon from "@material-ui/icons/Call";
 
