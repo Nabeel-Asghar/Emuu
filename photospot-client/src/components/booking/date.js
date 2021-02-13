@@ -5,6 +5,8 @@ import { MuiPickersUtilsProvider } from "@material-ui/pickers";
 import MomentUtils from "@date-io/moment";
 import { createMuiTheme } from "@material-ui/core";
 import { ThemeProvider } from "@material-ui/styles";
+import moment from "moment";
+import { Badge } from "@material-ui/core";
 
 const defaultMaterialTheme = createMuiTheme({
   palette: {
@@ -27,7 +29,6 @@ class date extends Component {
       <center>
         <MuiPickersUtilsProvider utils={MomentUtils}>
           <ThemeProvider theme={defaultMaterialTheme}>
-            {console.log(fullScreen)}
             {fullScreen ? (
               <KeyboardDatePicker
                 minDate={tomorrow}
@@ -40,6 +41,39 @@ class date extends Component {
                 onChange={this.props.parentCallback}
                 format="MM/dd/yyyy"
                 allowKeyboardControl={false}
+                renderDay={(
+                  day,
+                  selectedDate,
+                  isInCurrentMonth,
+                  dayComponent
+                ) => {
+                  //const date = makeJSDateObject(day); // skip this step, it is required to support date libs
+                  var isSelected = false;
+                  if (day > new Date()) {
+                    const date = moment(day).format("MM-DD-YYYY");
+
+                    for (const [index, item] of this.props.allDates.entries()) {
+                      if (Object.keys(item)[0] === date) {
+                        const times = Object.values(item)[0];
+                        if (Object.values(times).includes(false)) {
+                          isSelected = true;
+                        }
+                        break;
+                      }
+                    }
+                  }
+
+                  // // You can also use our internal <Day /> component
+                  return (
+                    <Badge
+                      color="primary"
+                      variant="dot"
+                      invisible={!isSelected ? true : false}
+                    >
+                      {dayComponent}
+                    </Badge>
+                  );
+                }}
               />
             ) : (
               <DatePicker
@@ -51,7 +85,41 @@ class date extends Component {
                 openTo="date"
                 value={theDate}
                 onChange={this.props.parentCallback}
+                onMonthChange={this.handleMonthChange}
                 format="MM/dd/yyyy"
+                renderDay={(
+                  day,
+                  selectedDate,
+                  isInCurrentMonth,
+                  dayComponent
+                ) => {
+                  //const date = makeJSDateObject(day); // skip this step, it is required to support date libs
+                  var isSelected = false;
+                  if (day > new Date()) {
+                    const date = moment(day).format("MM-DD-YYYY");
+
+                    for (const [index, item] of this.props.allDates.entries()) {
+                      if (Object.keys(item)[0] === date) {
+                        const times = Object.values(item)[0];
+                        if (Object.values(times).includes(false)) {
+                          isSelected = true;
+                        }
+                        break;
+                      }
+                    }
+                  }
+
+                  // // You can also use our internal <Day /> component
+                  return (
+                    <Badge
+                      color="primary"
+                      variant="dot"
+                      invisible={!isSelected ? true : false}
+                    >
+                      {dayComponent}
+                    </Badge>
+                  );
+                }}
               />
             )}
           </ThemeProvider>
