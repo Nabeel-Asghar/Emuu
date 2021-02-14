@@ -20,7 +20,7 @@ import resetPassword from "./pages/resetPassword";
 import changePassword from "./pages/changePassword";
 import resetPasswordSent from "./pages/resetPasswordSent";
 import changePasswordSent from "./pages/changePasswordSent";
-import messaging from "./pages/messaging";
+import messaging from "./pages/Messaging/messaging";
 import specificPhotographer from "./pages/specificPhotographer";
 import Book from "./pages/book";
 import profile from "./pages/profile";

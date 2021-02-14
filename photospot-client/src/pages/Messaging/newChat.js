@@ -1,5 +1,4 @@
 import { Button, TextField } from "@material-ui/core";
-import Backdrop from "@material-ui/core/Backdrop";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -10,12 +9,9 @@ import IconButton from "@material-ui/core/IconButton";
 import Slide from "@material-ui/core/Slide";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
-import CheckCircleOutlineIcon from "@material-ui/icons/CheckCircleOutline";
 import CloseIcon from "@material-ui/icons/Close";
 import React, { Component } from "react";
-import "../your-photography-page/editBiocss.css";
-import StarRatings from "react-star-ratings";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import "../../components/your-photography-page/editBiocss.css";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
