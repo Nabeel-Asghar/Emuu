@@ -50,6 +50,7 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     alignItems: "center",
     margin: "0 auto",
+    backgroundColor: "rgb(235, 235, 235)",
   },
 }));
 
@@ -148,7 +149,6 @@ const Navbar = (props) => {
             <Grid item xs={8} sm={6} align="center">
               <Box
                 width="100%"
-                border={2}
                 borderRadius={25}
                 borderColor="secondary"
                 className={classes.box}
@@ -161,7 +161,7 @@ const Navbar = (props) => {
                       : "visible",
                 }}
               >
-                <Paper className={classes.searchBox}>
+                <Paper className={classes.searchBox} elevation={0}>
                   <InputBase
                     id="query"
                     className={classes.input}

@@ -269,6 +269,7 @@ class book extends Component {
             <Grid item md={5} sm={8} xs={12} style={{ width: "100%" }}>
               <Date
                 theDate={this.state.selectedDate}
+                allDates={this.state.availability}
                 parentCallback={this.handleDateChange}
                 fullScreen={fullScreen}
               />
