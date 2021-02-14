@@ -25,7 +25,7 @@ import specificPhotographer from "./pages/specificPhotographer";
 import Book from "./pages/book";
 import profile from "./pages/profile";
 import Search from "./pages/Search/search";
-import editPhotographyPage from "./pages/editPhotographyPage";
+import editPhotographyPage from "./pages/UserPhotographerPage/editPhotographyPage";
 import photographyPictures from "./pages/photographyPictures";
 import Home from "./pages/home";
 import setYourSchedule from "./pages/setYourSchedule";
