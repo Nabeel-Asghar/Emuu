@@ -202,8 +202,8 @@ exports.dailyJob = functions.pubsub
 exports.updateAlgoliaIndex = functions.firestore
   .document("photographers/{userId}")
   .onUpdate((change, context) => {
-    const newValue = change.after.data();
-    newValue.objectID = context.params.userId;
+    const object = change.after.data();
+    object.objectID = context.params.userId;
     index
       .saveObject(object)
       .then(() => {
