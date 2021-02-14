@@ -1,4 +1,6 @@
-const { db, db2, index, admin } = require("../util/admin");
+const { db, admin } = require("../util/admin");
+
+const { partialUpdateObjectToAlgolia } = require("./algolia");
 
 const { validateReview } = require("../util/validators");
 
@@ -165,23 +167,12 @@ exports.reviewPhotographer = async (req, res) => {
           console.log("totalRating: ", oldRatingTotal);
           console.log("avgRating: ", newAvgRating);
 
-          index
-            .partialUpdateObject({
-              reviewCount: newNumRatings,
-              totalRating: oldRatingTotal,
-              avgRating: newAvgRating,
-              objectID: photographerBeingReviewed,
-            })
-            .then(({ objectID }) => {
-              console.log("added review to user");
-              return res.json({
-                message: "Review added successfully!",
-              });
-            })
-            .catch((err) => {
-              console.log(err);
-              return res.status(500).json({ error: `something went wrong` });
-            });
+          partialUpdateObjectToAlgolia({
+            reviewCount: newNumRatings,
+            totalRating: oldRatingTotal,
+            avgRating: newAvgRating,
+            objectID: photographerBeingReviewed,
+          });
         });
       });
     })
@@ -269,21 +260,12 @@ exports.editReview = (req, res) => {
             avgRating: newAvgRating,
           });
 
-          index
-            .partialUpdateObject({
-              reviewCount: newNumRatings,
-              totalRating: oldRatingTotal,
-              avgRating: newAvgRating,
-              objectID: photographerBeingReviewed,
-            })
-            .then(({ objectID }) => {
-              console.log("reviewed edited");
-              return res.json({ message: "Review edited successfully!" });
-            })
-            .catch((err) => {
-              console.log(err);
-              return res.status(500).json({ error: `something went wrong` });
-            });
+          partialUpdateObjectToAlgolia({
+            reviewCount: newNumRatings,
+            totalRating: oldRatingTotal,
+            avgRating: newAvgRating,
+            objectID: photographerBeingReviewed,
+          });
         });
       });
     })
@@ -333,21 +315,12 @@ exports.deleteReview = (req, res) => {
             avgRating: newAvgRating,
           });
 
-          index
-            .partialUpdateObject({
-              reviewCount: newNumRatings,
-              totalRating: oldRatingTotal,
-              avgRating: newAvgRating,
-              objectID: photographerBeingReviewed,
-            })
-            .then(({ objectID }) => {
-              console.log("reviewed deleted");
-              return res.json({ message: "Review deleted successfully!" });
-            })
-            .catch((err) => {
-              console.log(err);
-              return res.status(500).json({ error: `something went wrong` });
-            });
+          partialUpdateObjectToAlgolia({
+            reviewCount: newNumRatings,
+            totalRating: oldRatingTotal,
+            avgRating: newAvgRating,
+            objectID: photographerBeingReviewed,
+          });
         });
       });
     })
