@@ -62,6 +62,23 @@ class NewChatComponent extends Component {
     };
   }
 
+  userTyping = (type, e) => {
+    switch (type) {
+      case "message":
+        this.setState({ message: e.target.value });
+        break;
+
+      default:
+        break;
+    }
+  };
+
+  createChat = () => {
+    this.props.newChatSubmitFn({
+      message: this.state.message,
+    });
+  };
+
   render() {
     const {
       classes,
@@ -148,23 +165,6 @@ class NewChatComponent extends Component {
       </Dialog>
     );
   }
-
-  userTyping = (type, e) => {
-    switch (type) {
-      case "message":
-        this.setState({ message: e.target.value });
-        break;
-
-      default:
-        break;
-    }
-  };
-
-  createChat = () => {
-    this.props.newChatSubmitFn({
-      message: this.state.message,
-    });
-  };
 }
 
 export default withStyles(styles)(NewChatComponent);

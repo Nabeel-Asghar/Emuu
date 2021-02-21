@@ -67,3 +67,4 @@ node_modules/
 .env
 stripe/stripe.exe
 stripe/stripe forward.txt
+photospot-client/src/api.js

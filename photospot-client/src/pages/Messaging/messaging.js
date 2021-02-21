@@ -2,14 +2,14 @@ import Grid from "@material-ui/core/Grid";
 import withStyles from "@material-ui/core/styles/withStyles";
 import equal from "fast-deep-equal";
 import React, { Component } from "react";
-// Redux
 import { connect } from "react-redux";
-import ChatTextBoxComponent from "./chatTextBox";
-import ChatViewComponent from "./chatView";
-import NewChatComponent from "./newChat";
-import UserListComponent from "./userList";
+import LoadingPage from "../../components/shared/loadingPage";
 import { firebase } from "../../firestore";
 import { getUserData } from "../../redux/actions/userActions";
+import ChatTextBoxComponent from "./chatTextBox";
+import ChatViewComponent from "./chatView";
+import EmptyChat from "./emptyChat";
+import UserListComponent from "./userList";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -19,9 +19,6 @@ const styles = (theme) => ({
     justify: "center",
     border: "1px",
   },
-
-  //Left Grid
-  UserList: {},
 
   //Right grid
   ChatList: {
@@ -33,8 +30,10 @@ const styles = (theme) => ({
     border: "2px solid #e6e6e6",
     [theme.breakpoints.down(600)]: {
       margin: "-16px -10px -10px -10px",
+      border: "0px",
     },
-    margin: "8px",
+    margin: "0px -10px 0px -10px",
+    padding: "0px",
   },
 });
 
@@ -48,11 +47,9 @@ class messaging extends Component {
       email: "",
       firstName: "",
       lastName: "",
-      bio: "",
       profileImage: "",
-      images: [],
-      ratePerHour: 0,
       chats: [],
+      noChats: true,
     };
     this.listMessage = [];
   }
@@ -81,76 +78,38 @@ class messaging extends Component {
         .collection("chats")
         .where("users", "array-contains", this.state.email)
         .onSnapshot((doc) => {
-          console.log("hi");
           const chats = doc.docs.map((_doc) => _doc.data());
           chats.sort(function (a, b) {
             return parseFloat(b.timestamp) - parseFloat(a.timestamp);
           });
-          this.setState({ chats: chats, selectedChat: 0 });
+          if (chats.length == 0) {
+            this.setState({
+              noChats: true,
+            });
+          } else {
+            this.setState({
+              chats: chats,
+              selectedChat: 0,
+              noChats: false,
+            });
+          }
         });
     });
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (!equal(this.props.credentials, prevProps.credentials)) {
       this.assignValues(this.props.credentials);
     }
   }
 
-  render() {
-    const { classes } = this.props;
-    if (!this.state.chats || this.state.chats?.length === 0) {
-      return <div>Message someone to start a conversation!</div>;
-    } else {
-      return (
-        <div className={classes.messagingContainer}>
-          <Grid container spacing={0} className={classes.messaging}>
-            <Grid item xs={2} sm={4} className={classes.UserList}>
-              <UserListComponent
-                history={this.props.history}
-                newChatBtnFunction={this.newChatBtnClicked}
-                selectChatFn={this.selectChat}
-                chat={this.state.chats}
-                userName={this.state.firstName + " " + this.state.lastName}
-                userEmail={this.state.email}
-                selectedChatIndex={this.state.selectedChat}
-              />
-            </Grid>
-            <Grid item xs={10} sm={8} className={classes.ChatList}>
-              {this.state.newChatFormVisible ? null : (
-                <ChatViewComponent
-                  userEmail={this.state.email}
-                  userName={this.state.firstName + " " + this.state.lastName}
-                  chat={this.state.chats[this.state.selectedChat]}
-                />
-              )}
-              {this.state.selectedChat !== null &&
-              !this.state.newChatFormVisible ? (
-                <ChatTextBoxComponent
-                  messageReadFn={this.messageRead}
-                  submitMessageFn={this.submitMessage}
-                />
-              ) : null}
-              {this.state.newChatFormVisible ? (
-                <NewChatComponent
-                  goToChatFn={this.goToChat}
-                  newChatSubmitFn={this.newChatSubmit}
-                />
-              ) : null}
-            </Grid>
-          </Grid>
-        </div>
-      );
-    }
-  }
-
   submitMessage = (msg) => {
+    const email = this.state.email;
     const docKey = this.buildDocKey(
-      this.state.chats[this.state.selectedChat].users.filter(
-        (_usr) => _usr !== this.state.email
+      this.state.chats[this.state.selectedChat]?.users.filter(
+        (user) => user !== email
       )[0]
     );
-    const sentMessage = { message: msg, email: this.state.email };
 
     firebase
       .firestore()
@@ -158,7 +117,7 @@ class messaging extends Component {
       .doc(docKey)
       .update({
         messages: firebase.firestore.FieldValue.arrayUnion({
-          sender: this.state.email,
+          sender: email,
           message: msg,
           timestamp: Date.now(),
         }),
@@ -172,7 +131,7 @@ class messaging extends Component {
 
   messageRead = () => {
     const docKey = this.buildDocKey(
-      this.state.chats[this.state.selectedChat].users.filter(
+      this.state.chats[this.state.selectedChat]?.users.filter(
         (_usr) => _usr !== this.state.email
       )[0]
     );
@@ -181,63 +140,13 @@ class messaging extends Component {
       this.state.chats.messages &&
       this.clickedChatWhereNotSender(this.state.selectedChat)
     ) {
+      console.log("read");
       firebase
         .firestore()
         .collection("chats")
         .doc(docKey)
         .update({ receiverHasRead: true });
     }
-  };
-
-  goToChat = async (docKey, msg) => {
-    const usersInChat = docKey.split(":");
-    const chat = this.state.chats.find((_chat) =>
-      usersInChat.every((_user) => _chat.users.includes(_user))
-    );
-    this.setState({ newChatFormVisible: false });
-    await this.selectChat(this.state.chats.indexOf(chat));
-    this.submitMessage(msg);
-  };
-
-  newChatSubmit = async (chatObject) => {
-    const docKey = this.buildDocKey(chatObject.sendTo);
-    var names = docKey.split(":");
-    var friend = names[0];
-    let friendProfile = "";
-    let friendName = "";
-    let userName = this.state.firstName + " " + this.state.lastName;
-    if (names[0] == this.state.email) {
-      friend = names[1];
-    }
-    await firebase
-      .firestore()
-      .collection("users")
-      .where("email", "==", friend)
-      .get()
-      .then((querySnapshot) => {
-        querySnapshot.forEach((doc) => {
-          friendProfile = doc.data()?.profileImage;
-          friendName = doc.data().firstName;
-          friendName += doc.data().lastName;
-        });
-      });
-
-    console.log(docKey);
-    await firebase
-      .firestore()
-      .collection("chats")
-      .doc(docKey)
-      .set({
-        receiverHasRead: false,
-        users: [this.state.email, chatObject.sendTo],
-        messages: [{ message: chatObject.message, sender: this.state.email }],
-        [this.state.email]: { profileImage: this.state.profileImage },
-        [friend]: { profileImage: friendProfile },
-        names: ["bob", "dad"],
-        bigmad: true,
-      });
-    this.setState({ newChatFormVisible: false });
-    this.selectChat(this.state?.chats?.length - 1);
   };
 
   clickedChatWhereNotSender = (chatIndex) =>
@@ -253,6 +162,51 @@ class messaging extends Component {
 
   newChatBtnClicked = () =>
     this.setState({ newChatFormVisible: true, selectChat: null });
+
+  render() {
+    const { classes } = this.props;
+    if (!this.state.chats || this.state.chats?.length === 0) {
+      return <LoadingPage />;
+    } else {
+      if (this.state.noChats) {
+        return <EmptyChat classes={classes} />;
+      } else {
+        return (
+          <div className={classes.messagingContainer}>
+            <Grid container spacing={0} className={classes.messaging}>
+              <Grid item xs={2} sm={4} className={classes.UserList}>
+                <UserListComponent
+                  history={this.props.history}
+                  newChatBtnFunction={this.newChatBtnClicked}
+                  selectChatFn={this.selectChat}
+                  chat={this.state.chats}
+                  userName={this.state.firstName + " " + this.state.lastName}
+                  userEmail={this.state.email}
+                  selectedChatIndex={this.state.selectedChat}
+                />
+              </Grid>
+              <Grid item xs={10} sm={8} className={classes.ChatList}>
+                {this.state.newChatFormVisible ? null : (
+                  <ChatViewComponent
+                    userEmail={this.state.email}
+                    userName={this.state.firstName + " " + this.state.lastName}
+                    chat={this.state.chats[this.state.selectedChat]}
+                  />
+                )}
+
+                {this.state.chats?.length === 0 ? null : (
+                  <ChatTextBoxComponent
+                    messageReadFn={this.messageRead}
+                    submitMessageFn={this.submitMessage}
+                  />
+                )}
+              </Grid>
+            </Grid>
+          </div>
+        );
+      }
+    }
+  }
 }
 
 const mapStateToProps = (state) => ({

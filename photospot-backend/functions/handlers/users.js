@@ -563,9 +563,7 @@ exports.getYourUserProfile = (req, res) => {
         registration: doc.data().registration,
       });
 
-      console.log("PAGE:", page);
-
-      return res.json(page);
+      return res.status(200).json(page);
     })
     .catch((err) => console.error(err));
 };

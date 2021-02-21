@@ -17,8 +17,8 @@ const styles = (theme) => ({
     marginBottom: "0px",
     boxSizing: "border-box",
     wordWrap: "break-word",
-    backgroundColor: "white",
-    color: "black",
+    backgroundColor: "#23ba8b",
+    color: "white",
     width: "240px",
     borderRadius: "30px",
   },
@@ -54,8 +54,8 @@ const styles = (theme) => ({
     boxSizing: "border-box",
     wordWrap: "break-word",
     marginBottom: "0px",
-    backgroundColor: "#23ba8b",
-    color: "white",
+    backgroundColor: "white",
+    color: "black",
     width: "240px",
     borderRadius: "30px",
   },
@@ -147,7 +147,6 @@ class ChatViewComponent extends Component {
 
   render() {
     const { classes, userName, chat } = this.props;
-    const { width } = this.props;
     if (chat === undefined) {
       return <main id="chatview-container" className={classes.content} />;
     } else {
