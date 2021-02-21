@@ -119,7 +119,6 @@ const PictureUploader = (props) => {
       fullWidth
       fullScreen={props.fullScreen}
     >
-      {console.log(props.image)}
       <DialogContent style={{ padding: "75px 20px" }}>
         <div
           style={{

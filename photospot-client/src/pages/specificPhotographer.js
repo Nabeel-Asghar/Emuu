@@ -17,6 +17,8 @@ import AddIcon from "@material-ui/icons/Add";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import equal from "fast-deep-equal";
+import defaultProfilePicture from "../images/defaultProfilePicture.png";
+import defaultBackground from "../images/defaultBackground.jpg";
 
 // Redux
 import { connect } from "react-redux";
@@ -260,7 +262,12 @@ class specificPhotographer extends Component {
     return (
       <div>
         <div style={{ margin: "65px auto 0px auto" }}>
-          <UserImage background={this.state.background} loading={loadingData} />
+          <UserImage
+            background={
+              this.state.background ? this.state.background : defaultBackground
+            }
+            loading={loadingData}
+          />
         </div>
         <div
           style={{
@@ -284,7 +291,11 @@ class specificPhotographer extends Component {
               userLastName={this.state.userLastName}
               email={this.state.email}
               userEmail={this.state.userEmail}
-              profileImage={this.state.profileImage}
+              profileImage={
+                this.state.profileImage
+                  ? this.state.profileImage
+                  : defaultProfilePicture
+              }
               loading={loadingData}
               photographer={this.state.photographer}
             />
