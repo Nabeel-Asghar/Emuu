@@ -909,9 +909,14 @@ function uploadToStorage(file) {
 function updateProfileImage(database, id, imageFileName, thumbnail) {
   if (thumbnail) {
     const thumbnailImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+
     return db.doc(`/${database}/${id}`).update({ thumbnailImage });
   } else {
     const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+    partialUpdateObjectToAlgolia({
+      profileImage: thumbnailImage,
+      objectID: id,
+    });
     return db.doc(`/${database}/${id}`).update({ profileImage });
   }
 }

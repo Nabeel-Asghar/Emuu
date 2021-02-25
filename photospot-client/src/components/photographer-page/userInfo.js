@@ -1,20 +1,13 @@
-import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
 import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import ListItemText from "@material-ui/core/ListItemText";
+import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
 import BusinessIcon from "@material-ui/icons/Business";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import Skeleton from "@material-ui/lab/Skeleton";
-import Paper from "@material-ui/core/Paper";
 import React, { Component } from "react";
-import firebase from "../../firestore";
-import NewChatComponent from "../messaging/newChat";
 
 const styles = (theme) => ({
   ...theme.spreadThis,

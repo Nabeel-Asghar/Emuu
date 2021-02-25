@@ -4,43 +4,34 @@
 3. Form fields must be pre-filled in if value for that field is already in database
 4. With any new changes, submit to backend 
 */
-import React, { Component } from "react";
-import { withRouter, Link } from "react-router-dom";
-
-// Material UI
-import withStyles from "@material-ui/core/styles/withStyles";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import TextField from "@material-ui/core/TextField";
+import { useMediaQuery } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
-import EditIcon from "@material-ui/icons/Edit";
-import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
+import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
-import IconButton from "@material-ui/core/IconButton";
-
-// Redux
+import Paper from "@material-ui/core/Paper";
+import withStyles from "@material-ui/core/styles/withStyles";
+import TextField from "@material-ui/core/TextField";
+import EditIcon from "@material-ui/icons/Edit";
+import equal from "fast-deep-equal";
+import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
+import PhotoSamples from "../../components/photographer-page/photoSamples";
+import Feedback from "../../components/shared/feedback";
+import PictureUploader from "../../components/shared/pictureUploader";
+import EditableUsercard from "../../components/your-photography-page/editableUsercard";
+import EditBio from "../../components/your-photography-page/editBio";
+import EditUserDetails from "../../components/your-photography-page/editUserDetails";
 import {
   getYourPhotographyPage,
   updatePhotographerPage,
-  uploadProfileImage,
   uploadBackgroundImage,
-} from "../redux/actions/userActions";
-
-import equal from "fast-deep-equal";
-
-// Components
-import EditableUsercard from "../components/your-photography-page/editableUsercard";
-import PhotoSamples from "../components/photographer-page/photoSamples";
-import EditBio from "../components/your-photography-page/editBio";
-import EditUserDetails from "../components/your-photography-page/editUserDetails";
-import PictureUploader from "../components/shared/pictureUploader";
-import Feedback from "../components/shared/feedback";
-import SnackbarAlert from "../components/shared/SnackbarAlert";
+  uploadProfileImage,
+} from "../../redux/actions/userActions";
+import RotatingCarousel from "./RotatingCarousel";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -287,14 +278,21 @@ class editPhotographyPage extends Component {
 
     return (
       <div style={{ overflow: "hidden" }}>
-        <SnackbarAlert
+        {/* <SnackbarAlert
           open={this.state.openAlert}
           severity={"success"}
           handleClose={this.handleClose}
           message={
             "You're all set to go. This is your photography page where you can \n\nedit any existing details and change your background and profile picture"
           }
+        /> */}
+
+        <RotatingCarousel
+          open={this.state.openAlert}
+          handleOpen={this.handleClose}
+          handleClose={this.handleClose}
         />
+
         <Grid container>
           <Grid item xs={12}>
             <EditableUsercard
