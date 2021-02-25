@@ -771,99 +771,63 @@ exports.getUserReviews = (req, res) => {
 // photographers can upload pictures for their page
 exports.uploadYourPhotographyImages = (req, res) => {
   let photographer = res.locals.photographer;
+  let userID = req.user.uid;
 
   if (!photographer) {
     return res.json({ message: "You are not a photographer." });
   }
 
-  const BusBoy = require("busboy");
-  const path = require("path");
-  const os = require("os");
-  const fs = require("fs");
+  const imageNames = req.body;
+  console.log(req.body);
+  let imageUrls = [];
 
-  const busboy = new BusBoy({ headers: req.headers });
-
-  let imageFileName;
-  let imageToAdd;
-  let imagesToUpload = [];
-
-  busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
-    if (!mimetype.includes("image")) {
-      return res.status(400).json({ error: "Please upload an image." });
-    }
-
-    const imageExtension = filename.split(".")[filename.split(".").length - 1];
-
-    imageFileName = `${Math.round(
-      Math.random() * 1000000000
-    )}.${imageExtension}`;
-
-    const filepath = path.join(os.tmpdir(), imageFileName);
-    imageToAdd = { imageFileName, filepath, mimetype };
-
-    file.pipe(fs.createWriteStream(filepath));
-    imagesToUpload.push(imageToAdd);
+  imageNames.forEach((image) => {
+    // Replace the "/" with "%2F" in the url since google storage does that for some dumbass reason if placing in folder
+    url = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${userID}%2F${image}?alt=media`;
+    imageUrls.push(url);
   });
 
-  busboy.on("finish", () => {
-    let promises = [];
-    let imageUrls = [];
-
-    imagesToUpload.forEach((imageToBeUploaded) => {
-      console.log(imageToBeUploaded.imageFileName);
-      url = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageToBeUploaded.imageFileName}?alt=media`;
-      imageUrls.push(url);
-      promises.push(
-        admin
-          .storage()
-          .bucket(config.storageBucket)
-          .upload(imageToBeUploaded.filepath, {
-            resumable: false,
-            metadata: {
-              metadata: {
-                contentType: imageToBeUploaded.mimetype,
-              },
-            },
-          })
-      );
+  db.doc(`/photographer/${userID}`)
+    .update({
+      images: admin.firestore.FieldValue.arrayUnion(...imageUrls),
+    })
+    .then(() => {
+      return res.json({ message: "Photos uploaded" });
+    })
+    .catch((err) => {
+      return res.status(400).json({ error: err });
     });
-
-    console.log("ImageURLS:", imageUrls);
-
-    imageUrls.forEach((image) => {
-      db.doc(`/photographer/${req.user.uid}`)
-        .update({
-          images: admin.firestore.FieldValue.arrayUnion(image),
-        })
-        .catch((err) => {
-          return res.json({ error: err });
-        });
-    });
-
-    res.writeHead(200, { Connection: "close" });
-    res.end("All images uploaded successfully.");
-  });
-
-  busboy.end(req.rawBody);
 };
 
-exports.deleteImages = (req, res) => {
+exports.deleteImages = async (req, res) => {
   let userid = req.user.uid;
   let theImagesToDelete = req.body;
   console.log("Here: ", theImagesToDelete);
 
   const docs = db.collection("photographer").doc(userid);
 
-  theImagesToDelete.forEach((image) => {
-    docs
-      .update({ images: admin.firestore.FieldValue.arrayRemove(image) })
-      .catch((err) => {
-        res.json({ error: err });
-      });
+  const promises = theImagesToDelete.forEach(async (image) => {
+    await deleteFromDatabase(image, userid);
   });
 
-  return res.json({ message: "Pictures deleted" });
+  await Promise.all([Promise.resolve(promises)]);
+  console.log("here");
+  return res.json({ response: "Image(s) deleted" });
 };
+
+function deleteFromDatabase(image, userID) {
+  return db
+    .collection("photographer")
+    .doc(`${userID}`)
+    .update({ images: admin.firestore.FieldValue.arrayRemove(image) })
+    .then((res) => {
+      console.log("deleted from database");
+      return true;
+    })
+    .catch((err) => {
+      return res.json({ error: err });
+    });
+}
 
 exports.editBookingTimes = (req, res) => {
   let date = req.body.date;

@@ -17,6 +17,8 @@ import Grid from "@material-ui/core/Grid";
 import Avatar from "@material-ui/core/Avatar";
 import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
+import defaultProfilePicture from "../../images/defaultProfilePicture.png";
+import defaultBackground from "../../images/defaultBackground.jpg";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -117,7 +119,10 @@ class editableUsercard extends Component {
               style={{ cursor: "pointer" }}
               onClick={this.props.handleEditBackground}
             >
-              <img className={classes.background} src={background} />
+              <img
+                className={classes.background}
+                src={background ? background : defaultBackground}
+              />
               <input
                 type="file"
                 id="imageInput"
@@ -146,7 +151,10 @@ class editableUsercard extends Component {
                 onMouseLeave={() => this.setState({ hoverProfile: false })}
                 style={{ cursor: "pointer" }}
               >
-                <img className={classes.avatar} src={profileImage} />
+                <img
+                  className={classes.avatar}
+                  src={profileImage ? profileImage : defaultProfilePicture}
+                />
                 <div
                   className={
                     this.state.hoverProfile

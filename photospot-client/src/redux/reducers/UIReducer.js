@@ -6,8 +6,8 @@ const intialState = {
   loadingAction: false,
   newReviewSucess: "",
   theResponse: "",
-  theDeleteImagesResponse: "",
-  theUploadImagesResponse: "",
+  deleteImagesResponse: null,
+  uploadImagesResponse: null,
   editBookingTimesResponse: "",
   generalError: false,
   errors: {},
@@ -81,12 +81,12 @@ export default function (state = intialState, action) {
     case "SET_RESPONSE_DELETE_IMAGES":
       return {
         ...state,
-        theDeleteImagesResponse: action.response,
+        deleteImagesResponse: action.response,
       };
     case "SET_RESPONSE_UPLOAD_IMAGES":
       return {
         ...state,
-        theUploadImagesResponse: action.response,
+        uploadImagesResponse: action.response,
       };
 
     case "SET_RESPONSE_NEW_REVIEW_ERROR":
