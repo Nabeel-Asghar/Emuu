@@ -263,9 +263,9 @@ exports.setYourPhotographyPage = async (req, res) => {
 
   if (!valid) return res.status(400).json(errors);
 
-  const photographer = await getPhotographer;
+  let photographer = await getPhotographer(req.user.uid);
 
-  const algoliaObject = { ...reqDetails, ...photographer };
+  let algoliaObject = { ...reqDetails, ...photographer };
   algoliaObject.registration = true;
   algoliaObject.objectID = req.user.uid;
 
@@ -556,7 +556,7 @@ exports.getYourUserProfile = (req, res) => {
         registration: doc.data().registration,
       });
 
-      return res.json(page);
+      return res.status(200).json(page);
     })
     .catch((err) => console.error(err));
 };
@@ -905,13 +905,15 @@ function updateProfileImage(database, id, imageFileName, thumbnail) {
 }
 
 function getPhotographer(userid) {
-  db.collection("photographer")
+  return db
+    .collection("photographer")
     .doc(userid)
     .get()
     .then((doc) => {
-      return res.json(doc.data());
+      return doc.data();
     })
     .catch((err) => {
-      return res.status(404).json({ error: err });
+      console.log("error", err);
+      return null;
     });
 }

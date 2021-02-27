@@ -38,8 +38,6 @@ const {
   deleteReview,
 } = require("./handlers/posts");
 
-const { getMessages, sendMessage } = require("./handlers/messages");
-
 const {
   signup,
   signupPhotographer,
@@ -136,10 +134,6 @@ app.post("/editphotographypage/background", FBAuth, uploadBackgroundPicture);
 app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
 app.post("/photographyimages/delete", FBAuth, deleteImages);
 app.post("/editphotographypage/bookingTimes", FBAuth, editBookingTimes);
-
-// messaging ==========================================
-app.get("/messages", FBAuth, getMessages);
-app.post("/chats/:docKey", FBAuth, sendMessage);
 
 //----------Consumer Routes---------------
 app.get("/photographers", getAllPhotographers);

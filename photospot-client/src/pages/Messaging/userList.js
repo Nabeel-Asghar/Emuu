@@ -1,21 +1,18 @@
-import React, { Component } from "react";
-import withStyles from "@material-ui/core/styles/withStyles";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import NotificationImportant from "@material-ui/icons/NotificationImportant";
-
-// Redux
-import { connect } from "react-redux";
 import {
-  ListItemAvatar,
   Avatar,
-  Button,
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
   Divider,
   Hidden,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Typography,
 } from "@material-ui/core";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import withStyles from "@material-ui/core/styles/withStyles";
+import FiberManualRecordIcon from "@material-ui/icons/FiberManualRecord";
+import React, { Component } from "react";
+import { connect } from "react-redux";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -46,10 +43,13 @@ const styles = (theme) => ({
   },
 
   unreadMessage: {
-    color: "red",
     position: "absolute",
     top: "0",
     right: "5px",
+    margin: "10px 10px 0 0",
+    [theme.breakpoints.down(600)]: {
+      margin: "0px",
+    },
   },
 
   listItemText: {
@@ -74,10 +74,13 @@ class UserListComponent extends Component {
           variant="subtitle1"
           align="center"
           className={classes.newChatBtn}
-        ></Typography>
+        >
+          Chats
+        </Typography>
+        <Divider />
 
         <List className={classes.theList}>
-          {chat.map((_chat, _index) => {
+          {chat?.map((_chat, _index) => {
             return (
               <div key={_index}>
                 <ListItem
@@ -93,7 +96,7 @@ class UserListComponent extends Component {
                       alt="remy Sharp"
                       src={
                         _chat[
-                          _chat.users.filter(
+                          _chat.users?.filter(
                             (_user) => _user !== this.props.userEmail
                           )[0]
                         ].profileImage
@@ -110,7 +113,6 @@ class UserListComponent extends Component {
                         <React.Fragment>
                           {_chat.messages && (
                             <Typography component="span" color="textPrimary">
-                              {`${userName}: `}
                               {_chat.messages[
                                 _chat.messages.length - 1
                               ].message.substring(0, 30)}
@@ -124,7 +126,8 @@ class UserListComponent extends Component {
                   _chat.receiverHasRead === false &&
                   !this.userIsSender(_chat) ? (
                     <ListItemIcon>
-                      <NotificationImportant
+                      <FiberManualRecordIcon
+                        color="secondary"
                         className={classes.unreadMessage}
                       />
                     </ListItemIcon>

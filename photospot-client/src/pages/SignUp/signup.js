@@ -175,7 +175,7 @@ class signup extends Component {
                       );
                     })}
 
-                    {errors.general && (
+                    {errors?.general && (
                       <Typography
                         variant="body2"
                         className={classes.customError}
