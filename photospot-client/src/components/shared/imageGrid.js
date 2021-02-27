@@ -58,7 +58,7 @@ export class imageGrid extends Component {
     var imageContainer = [];
     var lightboxImages = [];
 
-    for (var i = 0; i < images.length; i++) {
+    for (var i = 0; i < images?.length; i++) {
       var img = new Image();
       img.src = images[i];
       const id = i;

@@ -61,7 +61,6 @@ exports.signupPhotographer = (req, res) => {
   const newPhotographer = req.body;
   newPhotographer.createdAt = new Date().toISOString();
   newPhotographer.profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultProfilePicture}?alt=media`;
-  console.log(newPhotographer);
 
   const userCredentials = {
     email: newPhotographer.email,
@@ -127,9 +126,8 @@ exports.login = (req, res) => {
     })
     .then((token) => {
       var user = firebase.auth().currentUser;
-      console.log("First", res.locals);
+
       if (res.locals.registration == "incomplete") {
-        console.log("Third", res.locals);
         return res.status(400).json({
           registration: "You must complete your photographer profile!",
         });
@@ -270,7 +268,6 @@ exports.setYourPhotographyPage = async (req, res) => {
   const algoliaObject = { ...reqDetails, ...photographer };
   algoliaObject.registration = true;
   algoliaObject.objectID = req.user.uid;
-  console.log(algoliaObject);
 
   db.doc(`/photographer/${req.user.uid}`)
     .update(reqDetails)
@@ -330,8 +327,6 @@ exports.uploadProfilePicture = async (req, res) => {
     if (!mimetype.includes("image")) {
       return res.status(400).json({ error: "Please upload an image." });
     }
-
-    console.log(file);
 
     const imageExtension = filename.split(".")[filename.split(".").length - 1];
 
@@ -403,8 +398,6 @@ exports.uploadBackgroundPicture = (req, res) => {
     if (!mimetype.includes("image")) {
       return res.status(400).json({ error: "Please upload an image." });
     }
-
-    console.log(file);
 
     const imageExtension = filename.split(".")[filename.split(".").length - 1];
 
@@ -562,8 +555,6 @@ exports.getYourUserProfile = (req, res) => {
         thumbnailImage: doc.data().thumbnailImage,
         registration: doc.data().registration,
       });
-
-      console.log("PAGE:", page);
 
       return res.json(page);
     })
@@ -778,7 +769,6 @@ exports.uploadYourPhotographyImages = (req, res) => {
   }
 
   const imageNames = req.body;
-  console.log(req.body);
   let imageUrls = [];
 
   imageNames.forEach((image) => {
@@ -802,7 +792,6 @@ exports.uploadYourPhotographyImages = (req, res) => {
 exports.deleteImages = async (req, res) => {
   let userid = req.user.uid;
   let theImagesToDelete = req.body;
-  console.log("Here: ", theImagesToDelete);
 
   const docs = db.collection("photographer").doc(userid);
 
@@ -811,7 +800,6 @@ exports.deleteImages = async (req, res) => {
   });
 
   await Promise.all([Promise.resolve(promises)]);
-  console.log("here");
   return res.json({ response: "Image(s) deleted" });
 };
 
@@ -833,12 +821,7 @@ exports.editBookingTimes = (req, res) => {
   let date = req.body.date;
   let timeslots = req.body.time;
   let algoliaDates = req.body.algoliaDates;
-  console.log(algoliaDates);
   let userid = req.user.uid;
-
-  console.log("Date: ", date);
-  console.log("Timeslots: ", timeslots);
-  console.log("Algoliatimeslot: ", algoliaDates);
 
   db.collection("photographer")
     .doc(userid)
@@ -869,7 +852,6 @@ function uploadProfileImage(
   thumbnail,
   photographer
 ) {
-  console.log(fileName, image.imagePath);
   sharp(originalImage.tempPath)
     .resize(size, size)
     .toFile(image.imagePath)
@@ -910,14 +892,15 @@ function updateProfileImage(database, id, imageFileName, thumbnail) {
   if (thumbnail) {
     const thumbnailImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
 
-    return db.doc(`/${database}/${id}`).update({ thumbnailImage });
+    return db.collection(database).doc(id).update({ thumbnailImage });
   } else {
     const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
     partialUpdateObjectToAlgolia({
-      profileImage: thumbnailImage,
+      profileImage: profileImage,
       objectID: id,
     });
-    return db.doc(`/${database}/${id}`).update({ profileImage });
+    console.log("profile image: ", profileImage);
+    return db.collection(database).doc(id).update({ profileImage });
   }
 }
 
