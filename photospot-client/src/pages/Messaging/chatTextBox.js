@@ -44,8 +44,28 @@ class ChatTextBoxComponent extends Component {
     };
   }
 
+  userTyping = (e) =>
+    e.keyCode === 13
+      ? this.submitMessage()
+      : this.setState({ chatText: e.target.value });
+
+  messageValid = (txt) => txt && txt.replace(/\s/g, "").length;
+
+  submitMessage = () => {
+    console.log(this.state.chatText);
+    if (this.messageValid(this.state.chatText)) {
+      this.props.submitMessageFn(this.state.chatText);
+      document.getElementById("chattextbox").value = "";
+      this.setState({ chatText: "" });
+    }
+  };
+
+  userClickedInput = () => {
+    this.props.messageReadFn();
+  };
+
   render() {
-    const { classes, submitMessageFn } = this.props;
+    const { classes } = this.props;
 
     return (
       <div className={classes.root}>
@@ -92,25 +112,6 @@ class ChatTextBoxComponent extends Component {
       </div>
     );
   }
-
-  userTyping = (e) =>
-    e.keyCode === 13
-      ? this.submitMessage()
-      : this.setState({ chatText: e.target.value });
-
-  messageValid = (txt) => txt && txt.replace(/\s/g, "").length;
-
-  submitMessage = () => {
-    console.log(this.state.chatText);
-    if (this.messageValid(this.state.chatText)) {
-      this.props.submitMessageFn(this.state.chatText);
-      document.getElementById("chattextbox").value = "";
-    }
-  };
-
-  userClickedInput = () => {
-    this.props.messageReadFn();
-  };
 }
 
 export default connect()(withStyles(styles)(ChatTextBoxComponent));
