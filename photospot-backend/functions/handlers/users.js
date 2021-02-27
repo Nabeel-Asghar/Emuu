@@ -265,12 +265,13 @@ exports.setYourPhotographyPage = async (req, res) => {
 
   if (!valid) return res.status(400).json(errors);
 
-  const photographer = await getPhotographer;
+  let photographer = await getPhotographer(req.user.uid);
 
-  const algoliaObject = { ...reqDetails, ...photographer };
+  let algoliaObject = { ...reqDetails, ...photographer };
   algoliaObject.registration = true;
   algoliaObject.objectID = req.user.uid;
-  console.log(algoliaObject);
+  console.log("photogtapher:", photographer);
+  console.log("algolia:", algoliaObject);
 
   db.doc(`/photographer/${req.user.uid}`)
     .update(reqDetails)
@@ -948,7 +949,7 @@ function updateProfileImage(database, id, imageFileName, thumbnail) {
   } else {
     const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
     partialUpdateObjectToAlgolia({
-      profileImage: thumbnailImage,
+      profileImage: profileImage,
       objectID: id,
     });
     return db.doc(`/${database}/${id}`).update({ profileImage });
@@ -956,13 +957,15 @@ function updateProfileImage(database, id, imageFileName, thumbnail) {
 }
 
 function getPhotographer(userid) {
-  db.collection("photographer")
+  return db
+    .collection("photographer")
     .doc(userid)
     .get()
     .then((doc) => {
-      return res.json(doc.data());
+      return doc.data();
     })
     .catch((err) => {
-      return res.status(404).json({ error: err });
+      console.log("error", err);
+      return null;
     });
 }
