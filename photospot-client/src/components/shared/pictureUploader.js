@@ -4,7 +4,8 @@ import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import { Typography } from "@material-ui/core";
+import { DialogActions, Grid, Typography } from "@material-ui/core";
+import SliderComponent from "./SliderComponent";
 
 const createImage = (url) =>
   new Promise((resolve, reject) => {
@@ -19,7 +20,7 @@ function getRadianAngle(degreeValue) {
   return (degreeValue * Math.PI) / 180;
 }
 
-async function getCroppedImg(imageSrc, pixelCrop, rotation = 0, name) {
+async function getCroppedImg(imageSrc, pixelCrop, rotation, name) {
   try {
     const image = await createImage(imageSrc);
     const canvas = document.createElement("canvas");
@@ -74,6 +75,8 @@ async function getCroppedImg(imageSrc, pixelCrop, rotation = 0, name) {
 
 const PictureUploader = (props) => {
   const [crop, setCrop] = useState({ x: 0, y: 0 });
+  const [zoom, setZoom] = useState(1);
+  const [rotation, setRotation] = useState(0);
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
   const [disabled, setDisabled] = useState(false);
@@ -86,17 +89,15 @@ const PictureUploader = (props) => {
   const finalize = useCallback(async () => {
     setDisabled(true);
     try {
-      console.log("here");
       const croppedImage = await getCroppedImg(
         props.image,
         croppedAreaPixels,
-        0,
+        rotation,
         props.name
       );
       if (!croppedImage) {
         setError("Error, please upload an image");
       } else {
-        console.log("donee", { croppedImage });
         setCroppedImage(croppedImage);
         await props.savePicture(croppedImage);
         setDisabled(false);
@@ -104,7 +105,7 @@ const PictureUploader = (props) => {
     } catch (e) {
       console.error(e);
     }
-  }, [props.image, croppedAreaPixels, 0]);
+  }, [props.image, croppedAreaPixels, rotation]);
 
   const closeEditor = () => {
     setDisabled(false);
@@ -119,7 +120,7 @@ const PictureUploader = (props) => {
       fullWidth
       fullScreen={props.fullScreen}
     >
-      <DialogContent style={{ padding: "75px 20px" }}>
+      <DialogContent style={{ padding: " 20px" }}>
         <div
           style={{
             position: "relative",
@@ -132,10 +133,12 @@ const PictureUploader = (props) => {
           <Cropper
             image={props.image}
             crop={crop}
-            rotation={0}
-            zoom={1}
+            zoom={zoom}
+            rotation={rotation}
             aspect={props.aspect}
+            onZoomChange={setZoom}
             onCropChange={setCrop}
+            onRotationChange={setRotation}
             onCropComplete={onCropComplete}
           />
         </div>
@@ -146,33 +149,57 @@ const PictureUploader = (props) => {
             </Typography>
           </div>
         )}
-        <div style={{ marginTop: 20, textAlign: "right" }}>
-          <Button
-            variant="outlined"
-            color="secondary"
-            onClick={() => closeEditor()}
-            style={{ marginRight: 10 }}
-            size="large"
-          >
-            Exit
-          </Button>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => finalize()}
-            disabled={disabled}
-            size="large"
-          >
-            {disabled && (
-              <CircularProgress
-                color="secondary"
-                className={props.classes.progress}
-              />
-            )}
-            Upload
-          </Button>
-        </div>
+        <Grid container>
+          <Grid item xs={12} sm={6}>
+            {" "}
+            <SliderComponent
+              label={"Zoom"}
+              value={zoom}
+              min={1}
+              max={3}
+              step={0.1}
+              setValue={setZoom}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6}>
+            {" "}
+            <SliderComponent
+              label={"Rotation"}
+              value={rotation}
+              min={0}
+              max={360}
+              step={1}
+              setValue={setRotation}
+            />
+          </Grid>
+        </Grid>
       </DialogContent>
+      <DialogActions>
+        <Button
+          variant="outlined"
+          color="secondary"
+          onClick={() => closeEditor()}
+          style={{ marginRight: 10 }}
+          size="large"
+        >
+          Exit
+        </Button>
+        <Button
+          variant="contained"
+          color="secondary"
+          onClick={() => finalize()}
+          disabled={disabled}
+          size="large"
+        >
+          {disabled && (
+            <CircularProgress
+              color="secondary"
+              className={props.classes.progress}
+            />
+          )}
+          Upload
+        </Button>
+      </DialogActions>
     </Dialog>
   );
 };

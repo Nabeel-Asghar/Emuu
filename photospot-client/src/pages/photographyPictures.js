@@ -213,6 +213,16 @@ class photographyPictures extends Component {
           access={"photographer"}
         />
         <Grid container spacing={2}>
+          {!this.state.images && (
+            <Grid
+              item
+              xs={12}
+              className={classes.centerGrid}
+              style={{ paddingTop: 20, height: 100, marginTop: 100 }}
+            >
+              <Typography variant="subtitle">No images uploaded.</Typography>
+            </Grid>
+          )}
           {this.state.images && this.state.images.length < 6 && (
             <Grid
               item

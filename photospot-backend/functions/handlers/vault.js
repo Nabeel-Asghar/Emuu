@@ -6,7 +6,7 @@ const imageToBase64 = require("image-to-base64");
 const email = require("./email");
 const payment = require("./payment");
 const { TIME_TO_PAYOUT } = require("../util/constants");
-const { logToFile } = require("../util/log");
+//const { logToFile } = require("../util/log");
 
 exports.getVault = async (req, res) => {
   let vaultID = req.params.vaultID;
@@ -190,7 +190,7 @@ async function zipImages(images) {
   const promises = images.map(async (image) => {
     const url = await getUrl(image);
     const imageFile = await getImage(url);
-    logToFile(image);
+    //logToFile(image);
     return zip.file(`${image.name}.jpg`, imageFile, { base64: true });
   });
 

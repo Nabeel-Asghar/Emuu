@@ -15,7 +15,6 @@ const db2 = admin.firestore;
 
 const storage = admin.storage();
 
-module.exports = { admin, db, db2, storage };
 const APP_ID = "SYUBAMS440";
 const ADMIN_KEY = "441365132c4d965b7da318d6c8439c18";
 

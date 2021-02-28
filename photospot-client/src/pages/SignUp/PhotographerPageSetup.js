@@ -17,6 +17,7 @@ import {
 import Categories from "./Categories";
 import textFields from "./textFields";
 import SnackbarAlert from "../../components/shared/SnackbarAlert";
+import PictureUploader from "../../components/shared/pictureUploader";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -51,7 +52,6 @@ class photographerPageSetup extends Component {
   constructor() {
     super();
     this.state = {
-      profileImage: "",
       categories: [],
       camera: "",
       headline: "",
@@ -81,30 +81,44 @@ class photographerPageSetup extends Component {
       loading: true,
     });
 
-    const additionalData = this.state;
-    delete additionalData.loading;
-    delete additionalData.errors;
-    delete additionalData.open;
-
-    console.log(additionalData);
-
+    const additionalData = {
+      bio: this.state.bio,
+      camera: this.state.camera,
+      categories: this.state.categories,
+      company: this.state.company,
+      headline: this.state.headline,
+      instagram: this.state.instagram,
+    };
     this.props.setPhotographerPage(additionalData, this.props.history);
   };
 
   handleProfileImageChange = (event) => {
     const image = event.target.files[0];
-    console.log(image);
     {
-      image && this.setState({ profileImage: URL.createObjectURL(image) });
+      image &&
+        this.setState({
+          openEditor: true,
+          profileImageName: image.name,
+          croppedProfileImage: URL.createObjectURL(image),
+        });
     }
-    const formData = new FormData();
-    formData.append("image", image, image.name);
-    this.props.uploadProfileImage(formData);
   };
 
   handleEditProfileImage = () => {
     const fileInput = document.getElementById("profileImageInput");
     fileInput.click();
+  };
+
+  saveProfileImage = (image) => {
+    const formData = new FormData();
+    formData.append("image", image, image.name);
+    this.props.uploadProfileImage(formData).then(() =>
+      this.setState({
+        openEditor: false,
+        openSnack: true,
+        profileImage: URL.createObjectURL(image),
+      })
+    );
   };
 
   handleChange = (event) => {
@@ -145,10 +159,17 @@ class photographerPageSetup extends Component {
 
                   <EditProfileImage
                     profileImage={this.state.profileImage}
-                    handleProfileImageChange={
-                      this.props.handleProfileImageChange
-                    }
+                    handleProfileImageChange={this.handleProfileImageChange}
                     handleEditProfileImage={this.handleEditProfileImage}
+                  />
+                  <PictureUploader
+                    {...this.props}
+                    image={this.state.croppedProfileImage}
+                    name={this.state.profileImageName}
+                    open={this.state.openEditor}
+                    closeEditor={() => this.setState({ openEditor: false })}
+                    savePicture={(image) => this.saveProfileImage(image)}
+                    aspect={1}
                   />
                 </div>
                 <form noValidate onSubmit={this.handleSubmit}>

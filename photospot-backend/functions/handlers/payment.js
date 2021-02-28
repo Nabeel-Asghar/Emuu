@@ -27,8 +27,6 @@ exports.onboardUser = async (req, res) => {
       },
     });
 
-    req.session.accountID = account.id;
-
     const origin = "http://localhost:3000/";
     generateAccountLink(account.id, origin).then((accountLinkURL) => {
       let stripeDetails = {
@@ -55,7 +53,7 @@ exports.onboardUser = async (req, res) => {
 exports.onboardUserRefresh = async (req, res) => {
   try {
     const origin = "http://localhost:3000/";
-    const { accountID } = req.session;
+    const accountID = await getPhotographerStripeID(req.user.uid);
     const accountLinkURL = await generateAccountLink(accountID, origin);
     return res.json({ url: accountLinkURL });
   } catch (err) {

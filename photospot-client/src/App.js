@@ -31,7 +31,8 @@ import Home from "./pages/home";
 import setYourSchedule from "./pages/setYourSchedule";
 import userDashboard from "./pages/userDashboard";
 import photographerDashboard from "./pages/photographerDashboard";
-import onboard from "./pages/onboard";
+import onboard from "./pages/onboardStripe/onboard";
+import refresh from "./pages/onboardStripe/refresh";
 import successPage from "./pages/successPage";
 import checkout from "./pages/checkout";
 import photoVault from "./pages/photoVault";
@@ -335,6 +336,8 @@ const App = () => {
                 <Route exact path="/resetPassword" component={resetPassword} />
 
                 <AuthRoute exact path="/onboard" component={onboard} />
+
+                <AuthRoute exact path="/onboard/refresh" component={refresh} />
 
                 <AuthRoute
                   exact

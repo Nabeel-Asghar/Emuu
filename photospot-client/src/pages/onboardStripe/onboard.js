@@ -10,9 +10,9 @@ import { Redirect, Link } from "react-router-dom";
 import {
   onboardStripe,
   getStripeStatus,
-} from "../redux/actions/paymentActions";
+} from "../../redux/actions/paymentActions";
 
-import { getUserData } from "../redux/actions/userActions";
+import { getUserData } from "../../redux/actions/userActions";
 
 const styles = (theme) => ({
   ...theme.spreadThis,

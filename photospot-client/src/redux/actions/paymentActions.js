@@ -11,6 +11,17 @@ export const onboardStripe = () => (dispatch) => {
     });
 };
 
+export const refreshStripe = () => (dispatch) => {
+  dispatch({ type: "LOADING_UI" });
+  API.get("/onboard-user/refresh")
+    .then((res) => {
+      window.location.assign(`${res.data.url}`);
+    })
+    .catch((err) => {
+      return false;
+    });
+};
+
 export const customerPayment = (photographerID, bookingDetails) => (
   dispatch
 ) => {
