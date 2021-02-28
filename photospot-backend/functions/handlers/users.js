@@ -4,6 +4,9 @@ const storageBucketVar = config.storageBucket;
 const sharp = require("sharp");
 const path = require("path");
 const defaultProfilePicture = "defaultProfilePicture.png";
+const BusBoy = require("busboy");
+const os = require("os");
+const fs = require("fs");
 
 const firebase = require("firebase");
 firebase.initializeApp(config);
@@ -310,10 +313,6 @@ exports.updatePhotographerCategoriesAndBio = (req, res) => {
 
 // upload profile image for user
 exports.uploadProfilePicture = async (req, res) => {
-  const BusBoy = require("busboy");
-  const os = require("os");
-  const fs = require("fs");
-
   const busboy = new BusBoy({ headers: req.headers });
 
   let imageFileName;
@@ -322,6 +321,10 @@ exports.uploadProfilePicture = async (req, res) => {
   let imageToBeUploaded = {};
   let profileImageToBeUploaded = {};
   let thumbnailToBeUploaded = {};
+
+  let tempPath = null;
+  let imagePath = null;
+  let thumbnailPath = null;
 
   busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
     if (!mimetype.includes("image")) {
@@ -340,22 +343,22 @@ exports.uploadProfilePicture = async (req, res) => {
       Math.random() * 1000000000
     )}.${imageExtension}`;
 
-    const tempPath = path.join(os.tmpdir(), source);
-    const imagePath = path.join(os.tmpdir(), imageFileName);
-    const thumbnailPath = path.join(os.tmpdir(), thumbnailName);
+    tempPath = path.join(os.tmpdir(), source);
+    imagePath = path.join(os.tmpdir(), imageFileName);
+    thumbnailPath = path.join(os.tmpdir(), thumbnailName);
 
     imageToBeUploaded = { tempPath, mimetype };
     profileImageToBeUploaded = { imagePath: imagePath, mimetype };
     thumbnailToBeUploaded = { imagePath: thumbnailPath, mimetype };
-
+    // console.log(imagePath);
     file.pipe(fs.createWriteStream(tempPath));
-    file.pipe(fs.createWriteStream(imagePath));
-    file.pipe(fs.createWriteStream(thumbnailPath));
+    // file.pipe(fs.createWriteStream(imagePath));
+    // file.pipe(fs.createWriteStream(thumbnailPath));
   });
 
-  busboy.on("finish", () => {
+  busboy.on("finish", async () => {
     try {
-      uploadProfileImage(
+      await uploadProfileImage(
         imageToBeUploaded,
         profileImageToBeUploaded,
         imageFileName,
@@ -364,7 +367,7 @@ exports.uploadProfilePicture = async (req, res) => {
         false,
         res.locals.photographer
       );
-      uploadProfileImage(
+      await uploadProfileImage(
         imageToBeUploaded,
         thumbnailToBeUploaded,
         thumbnailName,
@@ -378,7 +381,9 @@ exports.uploadProfilePicture = async (req, res) => {
       return res.status(400).json({ message: "Something went wrong." });
     }
   });
+
   busboy.end(req.rawBody);
+
   return res.json({ message: "Profile image updated" });
 };
 
@@ -843,7 +848,7 @@ exports.editBookingTimes = (req, res) => {
     });
 };
 
-function uploadProfileImage(
+async function uploadProfileImage(
   originalImage,
   image,
   fileName,
@@ -855,13 +860,24 @@ function uploadProfileImage(
   sharp(originalImage.tempPath)
     .resize(size, size)
     .toFile(image.imagePath)
-    .then(() => {
-      uploadToStorage(image);
-      updateProfileImage("users", userID, fileName, thumbnail);
+    .then(async () => {
+      await uploadToStorage(image);
+      await updateProfileImage("users", userID, fileName, thumbnail);
       photographer &&
-        updateProfileImage("photographer", userID, fileName, thumbnail);
+        (await updateProfileImage("photographer", userID, fileName, thumbnail));
+      if (thumbnail) {
+        fs.unlinkSync(originalImage.tempPath);
+      }
       return true;
     })
+    // .then(() => {
+    //   console.log(image.imagePath);
+    //   try {
+    //     fs.unlinkSync(image.imagePath);
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // })
     .catch((err) => {
       console.log(err);
       return false;
@@ -869,7 +885,7 @@ function uploadProfileImage(
 }
 
 function uploadToStorage(file) {
-  admin
+  return admin
     .storage()
     .bucket(config.storageBucket)
     .upload(file.imagePath, {
