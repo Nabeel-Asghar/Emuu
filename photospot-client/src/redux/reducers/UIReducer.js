@@ -25,12 +25,18 @@ export default function (state = intialState, action) {
 
     case "CLEAR_ERRORS":
       return {
-        ...state,
         loading: false,
         loadingData: false,
         loadingReviews: false,
         loadingReviewAction: false,
-        errors: null,
+        loadingAction: false,
+        newReviewSucess: "",
+        theResponse: "",
+        deleteImagesResponse: null,
+        uploadImagesResponse: null,
+        editBookingTimesResponse: "",
+        generalError: false,
+        errors: {},
       };
 
     case "LOADING_UI":

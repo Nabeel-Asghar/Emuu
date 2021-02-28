@@ -99,13 +99,15 @@ export class imageGrid extends Component {
       <div>
         <Grid container spacing={2}>
           <Grid item xs={12} className={this.props.classes.centerGrid}>
-            <Button
-              style={{ marginTop: 15 }}
-              color="secondary"
-              onClick={() => this.toggleLightBox()}
-            >
-              OPEN IMAGES
-            </Button>
+            {this.props.images && (
+              <Button
+                style={{ marginTop: 15 }}
+                color="secondary"
+                onClick={() => this.toggleLightBox()}
+              >
+                OPEN IMAGES
+              </Button>
+            )}
           </Grid>
           {imageContainer}
           {this.state.open && (
