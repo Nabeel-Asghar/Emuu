@@ -423,9 +423,6 @@ class editPhotographyPage extends Component {
                   style={{ margin: "10px" }}
                   to={{
                     pathname: "/uploadPhotographyPictures",
-                    state: {
-                      images: this.state.images,
-                    },
                   }}
                 >
                   Edit Pictures

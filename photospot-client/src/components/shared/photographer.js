@@ -13,6 +13,7 @@ import CardContent from "@material-ui/core/CardContent";
 import Grid from "@material-ui/core/Grid";
 import PhotoCameraIcon from "@material-ui/icons/PhotoCamera";
 import IconButton from "@material-ui/core/IconButton";
+import defaultProfilePicture from "../../images/defaultProfilePicture.png";
 
 const styles = {
   root: {
@@ -66,7 +67,7 @@ class photographer extends Component {
           >
             <CardMedia
               className={classes.media}
-              image={profileImage}
+              image={profileImage ? profileImage : defaultProfilePicture}
               title="Profile Image"
             />
           </Link>

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import Lightbox from "react-awesome-lightbox";
@@ -59,7 +58,7 @@ export class imageGrid extends Component {
     var imageContainer = [];
     var lightboxImages = [];
 
-    for (var i = 0; i < images.length; i++) {
+    for (var i = 0; i < images?.length; i++) {
       var img = new Image();
       img.src = images[i];
       const id = i;
@@ -100,13 +99,15 @@ export class imageGrid extends Component {
       <div>
         <Grid container spacing={2}>
           <Grid item xs={12} className={this.props.classes.centerGrid}>
-            <Button
-              style={{ marginTop: 15 }}
-              color="secondary"
-              onClick={() => this.toggleLightBox()}
-            >
-              OPEN IMAGES
-            </Button>
+            {this.props.images && (
+              <Button
+                style={{ marginTop: 15 }}
+                color="secondary"
+                onClick={() => this.toggleLightBox()}
+              >
+                OPEN IMAGES
+              </Button>
+            )}
           </Grid>
           {imageContainer}
           {this.state.open && (

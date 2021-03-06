@@ -121,7 +121,6 @@ export const getUserData = (history) => (dispatch) => {
         type: "SET_USER",
         payload: res.data,
       });
-      console.log(res.data);
       if (!res.data[0].registration) {
         history.push({
           pathname: "/photographerPageSetup",
@@ -161,32 +160,29 @@ export const getYourPhotographyPage = () => (dispatch) => {
 };
 
 export const deleteImages = (images) => (dispatch) => {
-  dispatch({ type: "LOADING_UI" });
-  API.post("/photographyimages/delete", images)
-    .then((res) => {
-      console.log(res.data);
+  return API.post("/photographyimages/delete", images)
+    .then(() => {
+      return true;
     })
-    .catch((err) =>
-      dispatch({
-        type: "SET_ERRORS",
-        payload: err.response.data,
-      })
-    );
+    .catch((err) => {
+      return false;
+    });
 };
 
 export const uploadImages = (images) => (dispatch) => {
-  dispatch({ type: "LOADING_UI" });
   API.post("/photographyimages", images)
     .then((res) => {
-      console.log(res.data);
-      dispatch({ type: "CLEAR_ERRORS" });
-    })
-    .catch((err) =>
       dispatch({
-        type: "SET_ERRORS",
-        payload: err.response.data,
-      })
-    );
+        type: "SET_RESPONSE_UPLOAD_IMAGES",
+        payload: true,
+      });
+    })
+    .catch((err) => {
+      dispatch({
+        type: "SET_RESPONSE_UPLOAD_IMAGES",
+        payload: false,
+      });
+    });
 };
 
 export const updatePhotographerPage = (details) => (dispatch) => {

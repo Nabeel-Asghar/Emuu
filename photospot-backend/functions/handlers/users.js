@@ -4,6 +4,9 @@ const storageBucketVar = config.storageBucket;
 const sharp = require("sharp");
 const path = require("path");
 const defaultProfilePicture = "defaultProfilePicture.png";
+const BusBoy = require("busboy");
+const os = require("os");
+const fs = require("fs");
 
 const firebase = require("firebase");
 firebase.initializeApp(config);
@@ -60,7 +63,6 @@ exports.signupPhotographer = (req, res) => {
   const newPhotographer = req.body;
   newPhotographer.createdAt = new Date().toISOString();
   newPhotographer.profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultProfilePicture}?alt=media`;
-  console.log(newPhotographer);
 
   const userCredentials = {
     email: newPhotographer.email,
@@ -123,6 +125,10 @@ exports.login = (req, res) => {
     })
     .then((token) => {
       var user = firebase.auth().currentUser;
+<<<<<<< HEAD
+=======
+
+>>>>>>> a20ba65013b4f20d14716c193ae29076fa94a666
       if (res.locals.registration == "incomplete") {
         return res.status(400).json({
           registration: "You must complete your photographer profile!",
@@ -263,10 +269,6 @@ exports.updatePhotographerCategoriesAndBio = (req, res) => {
 
 // Upload profile image for user
 exports.uploadProfilePicture = async (req, res) => {
-  const BusBoy = require("busboy");
-  const os = require("os");
-  const fs = require("fs");
-
   const busboy = new BusBoy({ headers: req.headers });
 
   let imageFileName;
@@ -276,12 +278,14 @@ exports.uploadProfilePicture = async (req, res) => {
   let profileImageToBeUploaded = {};
   let thumbnailToBeUploaded = {};
 
+  let tempPath = null;
+  let imagePath = null;
+  let thumbnailPath = null;
+
   busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
     if (!mimetype.includes("image")) {
       return res.status(400).json({ error: "Please upload an image." });
     }
-
-    console.log(file);
 
     const imageExtension = filename.split(".")[filename.split(".").length - 1];
 
@@ -291,22 +295,22 @@ exports.uploadProfilePicture = async (req, res) => {
 
     thumbnailName = `${Math.round(Math.random() * 1000000000)}.${imageExtension}`;
 
-    const tempPath = path.join(os.tmpdir(), source);
-    const imagePath = path.join(os.tmpdir(), imageFileName);
-    const thumbnailPath = path.join(os.tmpdir(), thumbnailName);
+    tempPath = path.join(os.tmpdir(), source);
+    imagePath = path.join(os.tmpdir(), imageFileName);
+    thumbnailPath = path.join(os.tmpdir(), thumbnailName);
 
     imageToBeUploaded = { tempPath, mimetype };
     profileImageToBeUploaded = { imagePath: imagePath, mimetype };
     thumbnailToBeUploaded = { imagePath: thumbnailPath, mimetype };
-
+    // console.log(imagePath);
     file.pipe(fs.createWriteStream(tempPath));
-    file.pipe(fs.createWriteStream(imagePath));
-    file.pipe(fs.createWriteStream(thumbnailPath));
+    // file.pipe(fs.createWriteStream(imagePath));
+    // file.pipe(fs.createWriteStream(thumbnailPath));
   });
 
-  busboy.on("finish", () => {
+  busboy.on("finish", async () => {
     try {
-      uploadProfileImage(
+      await uploadProfileImage(
         imageToBeUploaded,
         profileImageToBeUploaded,
         imageFileName,
@@ -315,7 +319,7 @@ exports.uploadProfilePicture = async (req, res) => {
         false,
         res.locals.photographer
       );
-      uploadProfileImage(
+      await uploadProfileImage(
         imageToBeUploaded,
         thumbnailToBeUploaded,
         thumbnailName,
@@ -329,7 +333,9 @@ exports.uploadProfilePicture = async (req, res) => {
       return res.status(400).json({ message: "Something went wrong." });
     }
   });
+
   busboy.end(req.rawBody);
+
   return res.json({ message: "Profile image updated" });
 };
 
@@ -349,8 +355,6 @@ exports.uploadBackgroundPicture = (req, res) => {
     if (!mimetype.includes("image")) {
       return res.status(400).json({ error: "Please upload an image." });
     }
-
-    console.log(file);
 
     const imageExtension = filename.split(".")[filename.split(".").length - 1];
 
@@ -620,107 +624,117 @@ exports.editBookingTimes = (req, res) => {
 // photographers can upload pictures for their page
 exports.uploadYourPhotographyImages = (req, res) => {
   let photographer = res.locals.photographer;
+  let userID = req.user.uid;
 
   if (!photographer) {
     return res.status(403).json({ message: "You are not a photographer." });
   }
 
-  const BusBoy = require("busboy");
-  const path = require("path");
-  const os = require("os");
-  const fs = require("fs");
+  const imageNames = req.body;
+  let imageUrls = [];
 
-  const busboy = new BusBoy({ headers: req.headers });
-
-  let imageFileName;
-  let imageToAdd;
-  let imagesToUpload = [];
-
-  busboy.on("file", (fieldname, file, filename, encoding, mimetype) => {
-    if (!mimetype.includes("image")) {
-      return res.status(400).json({ error: "Please upload an image." });
-    }
-
-    const imageExtension = filename.split(".")[filename.split(".").length - 1];
-
-    imageFileName = `${Math.round(Math.random() * 1000000000)}.${imageExtension}`;
-
-    const filepath = path.join(os.tmpdir(), imageFileName);
-    imageToAdd = { imageFileName, filepath, mimetype };
-
-    file.pipe(fs.createWriteStream(filepath));
-    imagesToUpload.push(imageToAdd);
+  imageNames.forEach((image) => {
+    // Replace the "/" with "%2F" in the url since google storage does that for some dumbass reason if placing in folder
+    url = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${userID}%2F${image}?alt=media`;
+    imageUrls.push(url);
   });
 
-  busboy.on("finish", () => {
-    let promises = [];
-    let imageUrls = [];
-
-    imagesToUpload.forEach((imageToBeUploaded) => {
-      console.log(imageToBeUploaded.imageFileName);
-      url = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageToBeUploaded.imageFileName}?alt=media`;
-      imageUrls.push(url);
-      promises.push(
-        admin
-          .storage()
-          .bucket(config.storageBucket)
-          .upload(imageToBeUploaded.filepath, {
-            resumable: false,
-            metadata: {
-              metadata: {
-                contentType: imageToBeUploaded.mimetype,
-              },
-            },
-          })
-      );
+  db.doc(`/photographer/${userID}`)
+    .update({
+      images: admin.firestore.FieldValue.arrayUnion(...imageUrls),
+    })
+    .then(() => {
+      return res.json({ message: "Photos uploaded" });
+    })
+    .catch((err) => {
+      return res.status(400).json({ error: err });
     });
-
-    console.log("ImageURLS:", imageUrls);
-
-    imageUrls.forEach((image) => {
-      db.doc(`/photographer/${req.user.uid}`)
-        .update({
-          images: admin.firestore.FieldValue.arrayUnion(image),
-        })
-        .catch((err) => {
-          return res.status(500).json({ error: err });
-        });
-    });
-
-    res.writeHead(200, { Connection: "close" });
-    res.end("All images uploaded successfully.");
-  });
-
-  busboy.end(req.rawBody);
 };
 
-exports.deleteImages = (req, res) => {
+exports.deleteImages = async (req, res) => {
   let userid = req.user.uid;
   let theImagesToDelete = req.body;
-  console.log("Here: ", theImagesToDelete);
 
   const docs = db.collection("photographer").doc(userid);
 
-  theImagesToDelete.forEach((image) => {
-    docs.update({ images: admin.firestore.FieldValue.arrayRemove(image) }).catch((err) => {
-      res.status(500).json({ error: err });
-    });
+  const promises = theImagesToDelete.forEach(async (image) => {
+    await deleteFromDatabase(image, userid);
   });
 
-  return res.status(200).json({ message: "Pictures deleted" });
+  await Promise.all([Promise.resolve(promises)]);
+  return res.json({ response: "Image(s) deleted" });
 };
 
-function uploadProfileImage(originalImage, image, fileName, userID, size, thumbnail, photographer) {
-  console.log(fileName, image.imagePath);
+function deleteFromDatabase(image, userID) {
+  return db
+    .collection("photographer")
+    .doc(`${userID}`)
+    .update({ images: admin.firestore.FieldValue.arrayRemove(image) })
+    .then((res) => {
+      console.log("deleted from database");
+      return true;
+    })
+    .catch((err) => {
+      return res.json({ error: err });
+    });
+}
+
+exports.editBookingTimes = (req, res) => {
+  let date = req.body.date;
+  let timeslots = req.body.time;
+  let algoliaDates = req.body.algoliaDates;
+  let userid = req.user.uid;
+
+  db.collection("photographer")
+    .doc(userid)
+    .collection("bookings")
+    .doc(date)
+    .set(timeslots)
+    .then(() => {
+      partialUpdateObjectToAlgolia({
+        dates: { _operation: "AddUnique", value: algoliaDates },
+        objectID: userid,
+      });
+    })
+    .then(() => {
+      return res.json({ message: "success" });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.json({ error: err });
+    });
+};
+
+async function uploadProfileImage(
+  originalImage,
+  image,
+  fileName,
+  userID,
+  size,
+  thumbnail,
+  photographer
+) {
   sharp(originalImage.tempPath)
     .resize(size, size)
     .toFile(image.imagePath)
-    .then(() => {
-      uploadToStorage(image);
-      updateProfileImage("users", userID, fileName, thumbnail);
-      photographer && updateProfileImage("photographer", userID, fileName, thumbnail);
+    .then(async () => {
+      await uploadToStorage(image);
+      await updateProfileImage("users", userID, fileName, thumbnail);
+      photographer &&
+        (await updateProfileImage("photographer", userID, fileName, thumbnail));
+      if (thumbnail) {
+        fs.unlinkSync(originalImage.tempPath);
+      }
       return true;
     })
+    // .then(() => {
+    //   console.log(image.imagePath);
+    //   try {
+    //     fs.unlinkSync(image.imagePath);
+    //   } catch (e) {
+    //     console.log(e);
+    //   }
+    // })
     .catch((err) => {
       console.log(err);
       return false;
@@ -728,7 +742,7 @@ function uploadProfileImage(originalImage, image, fileName, userID, size, thumbn
 }
 
 function uploadToStorage(file) {
-  admin
+  return admin
     .storage()
     .bucket(config.storageBucket)
     .upload(file.imagePath, {
@@ -751,14 +765,15 @@ function updateProfileImage(database, id, imageFileName, thumbnail) {
   if (thumbnail) {
     const thumbnailImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
 
-    return db.doc(`/${database}/${id}`).update({ thumbnailImage });
+    return db.collection(database).doc(id).update({ thumbnailImage });
   } else {
     const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
     partialUpdateObjectToAlgolia({
       profileImage: profileImage,
       objectID: id,
     });
-    return db.doc(`/${database}/${id}`).update({ profileImage });
+    console.log("profile image: ", profileImage);
+    return db.collection(database).doc(id).update({ profileImage });
   }
 }
 

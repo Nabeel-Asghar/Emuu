@@ -63,17 +63,16 @@ class miniPhotographer extends Component {
           />
 
           <CardContent className={classes.root}>
-            <Typography variant="h6" display="inline">
+            <Typography variant="h6">
               {firstName}&nbsp;{lastName}
             </Typography>
             {location_city && location_state && (
               <Typography
                 variant="subtitle1"
                 color="textSecondary"
-                display="inline"
                 gutterBottom
               >
-                &nbsp;-&nbsp;{location_city},&nbsp;{location_state}
+                {location_city},&nbsp;{location_state}
               </Typography>
             )}
             {date && (
@@ -86,7 +85,7 @@ class miniPhotographer extends Component {
                 Time: {time}
               </Typography>
             )}
-            {price && (
+            {!!price && (
               <Typography variant="body1" gutterBottom>
                 Price: <b>${price}.00</b>
               </Typography>
