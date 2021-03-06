@@ -116,23 +116,6 @@ export const checkBookability = () => (dispatch) => {
   });
 };
 
-export const bookPhotographer = (photographerID, bookingDetails) => (
-  dispatch
-) => {
-  return API.post(`/photographers/${photographerID}/book`, bookingDetails)
-    .then((res) => {
-      console.log(res.data);
-      dispatch({ type: "BOOK_PHOTOGRAPHER", payload: res.data });
-      dispatch({ type: "SET_SUCCESS_RESPONSE" });
-    })
-    .catch((err) => {
-      dispatch({
-        type: "SET_ERRORS",
-        payload: err.response.data,
-      });
-    });
-};
-
 export const getReviews = (photographerID) => (dispatch) => {
   dispatch({
     type: "LOADING_REVIEWS",

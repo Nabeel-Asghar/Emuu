@@ -66,7 +66,7 @@ class specificPhotographer extends Component {
       checked: false,
       overallRating: 0,
       reviewCount: 0,
-      trueOverall: 0,
+      avgRating: 0,
       title: "",
       newReviewRating: 1,
       description: "",
@@ -128,6 +128,13 @@ class specificPhotographer extends Component {
 
     if (!equal(this.props.credentials, prevProps.credentials)) {
       if (this.props.credentials) {
+        if (this.props.credentials[0]?.photographer) {
+          this.setState({
+            photographer: true,
+          });
+        } else {
+          this.setState({ photographer: false });
+        }
         this.setState({
           userEmail: this.props.credentials[0]?.email,
           userProfileImage: this.props.credentials[0]?.profileImage,
@@ -164,10 +171,7 @@ class specificPhotographer extends Component {
       photographerProfile: this.state.profileImage,
     };
 
-    this.props.reviewPhotographer(
-      this.props.match.params.photographerID,
-      details
-    );
+    this.props.reviewPhotographer(this.props.match.params.photographerID, details);
   };
 
   handleCheck() {
@@ -214,30 +218,19 @@ class specificPhotographer extends Component {
   };
 
   handleCount(allReviews) {
+    let overallRating = 0;
+    let reviewCount = 0;
+
     for (let i = 0; i < allReviews.length; i++) {
-      let rating = allReviews[i].rating;
-
-      this.handleRatingCount();
-      this.handleRatingChange(rating);
+      overallRating += allReviews[i].rating;
+      reviewCount += 1;
     }
+    this.setState({
+      reviewCount: reviewCount,
+      overallRating: overallRating,
+      avgRating: overallRating / reviewCount || 0,
+    });
   }
-
-  handleRatingCount = () => {
-    let count = this.state.reviewCount;
-    this.setState({
-      reviewCount: count + 1,
-    });
-  };
-
-  handleRatingChange = (rating) => {
-    let overall = this.state.overallRating + rating;
-    this.setState({
-      overallRating: overall,
-    });
-    this.setState({
-      trueOverall: this.state.overallRating / this.state.reviewCount,
-    });
-  };
 
   render() {
     const {
@@ -249,10 +242,7 @@ class specificPhotographer extends Component {
     for (var key = 0; key < this.state.allReviews.length; key++) {
       allReviews.push(
         <div>
-          <PhotographerReviews
-            review={this.state.allReviews[key]}
-            index={key}
-          />
+          <PhotographerReviews review={this.state.allReviews[key]} index={key} />
         </div>
       );
     }
@@ -267,14 +257,8 @@ class specificPhotographer extends Component {
             maxWidth: 1000,
             margin: "-350px auto 0 auto",
             paddingBottom: "20px",
-          }}
-        >
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justify="center"
-          >
+          }}>
+          <Grid container direction="column" alignItems="center" justify="center">
             <Usercard
               authenticated={this.props.user.authenticated}
               history={this.props.history}
@@ -304,12 +288,7 @@ class specificPhotographer extends Component {
           </Grid>
 
           <Paper elevation={3} className={classes.paperComponent}>
-            <Grid
-              container
-              direction="row"
-              alignItems="center"
-              justify="flex-start"
-            >
+            <Grid container direction="row" alignItems="center" justify="flex-start">
               <Grid item sm={12}>
                 <Bio
                   {...this.props}
@@ -331,7 +310,7 @@ class specificPhotographer extends Component {
                         <div style={{ marginTop: "2px" }}>
                           <Typography variant="subtitle2" display="inline">
                             <StarRatings
-                              rating={this.state.trueOverall}
+                              rating={this.state.avgRating}
                               numberOfStars={5}
                               name="rating"
                               starDimension="20px"
@@ -355,11 +334,7 @@ class specificPhotographer extends Component {
                     />
                     <ListItemSecondaryAction>
                       <IconButton edge="end" onClick={() => this.handleCheck()}>
-                        {this.state.checked ? (
-                          <KeyboardArrowDownIcon />
-                        ) : (
-                          <KeyboardArrowLeftIcon />
-                        )}
+                        {this.state.checked ? <KeyboardArrowDownIcon /> : <KeyboardArrowLeftIcon />}
                       </IconButton>
                     </ListItemSecondaryAction>
                   </ListItem>
@@ -377,12 +352,9 @@ class specificPhotographer extends Component {
                   color="secondary"
                   aria-label="add"
                   style={{ margin: "10px 0 20px 0", float: "right" }}
-                  onClick={() => this.handleReviewOpenState()}
-                >
+                  onClick={() => this.handleReviewOpenState()}>
                   <AddIcon className={classes.extendedIcon} />
-                  <Typography style={{ fontWeight: "bold" }}>
-                    ADD REVIEW
-                  </Typography>
+                  <Typography style={{ fontWeight: "bold" }}>ADD REVIEW</Typography>
                 </Fab>
               )}
 
@@ -410,12 +382,7 @@ class specificPhotographer extends Component {
           </Collapse>
 
           <Paper elevation={3}>
-            <Grid
-              container
-              direction="column"
-              alignItems="center"
-              justify="center"
-            >
+            <Grid container direction="column" alignItems="center" justify="center">
               <Grid item xs={12} className={classes.centerGrid}>
                 <PhotoSamples
                   key={this.state.images}
