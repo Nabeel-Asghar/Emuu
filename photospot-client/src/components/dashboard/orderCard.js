@@ -13,8 +13,7 @@ import ListItemText from "@material-ui/core/ListItemText";
 import { red } from "@material-ui/core/colors";
 
 // util
-import { timeConvert } from "../../util/timeConvert";
-import { dateConvert } from "../../util/dateConvert";
+import { timeConvert, dateConvert } from "../../util/UtilFunctions";
 import { showVault, showCancel } from "../../util/constants";
 
 const styles = (theme) => ({

@@ -24,7 +24,7 @@ import defaultBackground from "../images/defaultBackground.jpg";
 import { connect } from "react-redux";
 import StarRatings from "react-star-ratings";
 import { getPhotographerPage, getReviews } from "../redux/actions/dataActions";
-import { reviewPhotographer } from "../redux/actions/userActions";
+import { reviewPhotographer, getUserData } from "../redux/actions/userActions";
 
 // Components
 import Bio from "../components/photographer-page/bio";
@@ -34,6 +34,7 @@ import Usercard from "../components/photographer-page/usercard";
 import PhotographerReviews from "../components/shared/photographerReviews";
 import UserImage from "../components/photographer-page/userImage";
 import UserInfo from "../components/photographer-page/userInfo";
+import Pricing from "../components/photographer-page/Pricing";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -72,6 +73,7 @@ class specificPhotographer extends Component {
       title: "",
       newReviewRating: 1,
       description: "",
+      pricing: null,
       errors: {},
       openReview: false,
       openBackdrop: false,
@@ -95,6 +97,7 @@ class specificPhotographer extends Component {
   }
 
   componentDidMount() {
+    console.log("running");
     const photographerID = this.props.match.params.photographerID;
     this.props.getPhotographerPage(photographerID);
     const photoDetails = this.props.photographerDetails;
@@ -105,22 +108,17 @@ class specificPhotographer extends Component {
       });
       this.handleCount(this.state.allReviews);
     });
-    if (this.props.credentials) {
-      if (this.props.credentials[0]?.photographer) {
+    this.props.getUserData().then(() => {
+      this.props.credentials &&
         this.setState({
-          photographer: true,
+          openBackdrop: false,
+          userEmail: this.props.credentials[0]?.email,
+          userFirstName: this.props.credentials[0]?.firstName,
+          userLastName: this.props.credentials[0]?.lastName,
+          userProfileImage: this.props.credentials[0]?.profileImage,
+          photographer: this.props.credentials[0]?.photographer,
         });
-      } else {
-        this.setState({ photographer: false });
-      }
-      this.setState({
-        openBackdrop: false,
-        userEmail: this.props.credentials[0]?.email,
-        userFirstName: this.props.credentials[0]?.firstName,
-        userLastName: this.props.credentials[0]?.lastName,
-        userProfileImage: this.props.credentials[0]?.profileImage,
-      });
-    }
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -129,8 +127,11 @@ class specificPhotographer extends Component {
     }
 
     if (!equal(this.props.credentials, prevProps.credentials)) {
+      console.log("updating");
+
       if (this.props.credentials) {
         this.setState({
+          photographer: this.props.credentials[0]?.photographer,
           userEmail: this.props.credentials[0]?.email,
           userProfileImage: this.props.credentials[0]?.profileImage,
         });
@@ -245,6 +246,7 @@ class specificPhotographer extends Component {
     const {
       classes,
       UI: { loadingData, loadingReviewAction, newReviewSucess },
+      fullScreen,
     } = this.props;
 
     let allReviews = [];
@@ -312,9 +314,15 @@ class specificPhotographer extends Component {
               headline={this.state.headline}
               camera={this.state.camera}
             />
+
+            <Pricing pricing={this.state.pricing} fullScreen={fullScreen} />
           </Grid>
 
-          <Paper elevation={3} className={classes.paperComponent}>
+          <Paper
+            elevation={3}
+            className={classes.paperComponent}
+            style={{ marginTop: 0 }}
+          >
             <Grid
               container
               direction="row"
@@ -455,6 +463,7 @@ const mapActionsToProps = {
   getPhotographerPage,
   getReviews,
   reviewPhotographer,
+  getUserData,
 };
 
 export default connect(

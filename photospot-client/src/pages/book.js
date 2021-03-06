@@ -27,10 +27,11 @@ import Confirmation from "../components/shared/confirmation";
 
 // Date format
 import moment from "moment";
-import { timeConvert } from "../util/timeConvert";
-import { dateConvert } from "../util/dateConvert";
+import { dateConvert, timeConvert } from "../util/UtilFunctions";
 import ProfileCard from "../components/booking/card";
 import GoBackButton from "../components/shared/goBackButton";
+import Pricing from "../components/photographer-page/Pricing";
+import { Typography } from "@material-ui/core";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -56,6 +57,8 @@ class book extends Component {
       openSnack: false,
       reviewCount: null,
       totalRating: null,
+      pricing: null,
+      selectedShoot: null,
     };
   }
 
@@ -180,7 +183,7 @@ class book extends Component {
       photographerLastName: this.state.lastName,
       photographerProfileImage: this.state.profileImage,
       photographerThumbnailImage: this.state.thumbnailImage,
-      ratePerHour: this.state.ratePerHour,
+      selectedShoot: this.state.selectedShoot,
     };
 
     this.props.history.push({
@@ -195,6 +198,10 @@ class book extends Component {
     }
 
     this.setState({ openSnack: false });
+  };
+
+  handleSelect = (shootType) => {
+    this.setState({ selectedShoot: shootType });
   };
 
   render() {
@@ -213,100 +220,129 @@ class book extends Component {
     return (
       <>
         <GoBackButton {...this.props} />
-        <Paper
+        <div
           style={{
-            padding: 15,
-            maxWidth: halfScreen ? (fullScreen ? 350 : 550) : 900,
+            maxWidth: halfScreen ? (fullScreen ? 425 : 550) : 900,
             margin: "0 auto",
           }}
         >
           <Grid container direction="row" justify="center" spacing={2}>
-            <Snackbar
-              anchorOrigin={{
-                vertical: "top",
-                horizontal: "center",
-              }}
-              open={this.state.openSnack}
-              onClose={this.handleClose}
-            >
-              <Alert onClose={this.handleClose} severity={"warning"}>
-                You already have a pending order.
-              </Alert>
-            </Snackbar>
-
-            <Grid item md={4} sm={12} style={{ width: "100%" }}>
-              {halfScreen ? (
-                fullScreen ? (
-                  <MiniPhotographer
-                    firstName={this.state.firstName}
-                    lastName={this.state.lastName}
-                    profileImage={this.state.profileImage}
-                    location_city={this.state.location_city}
-                    location_state={this.state.location_state}
-                    price={this.state.ratePerHour}
-                  />
-                ) : (
-                  <ProfileCard
-                    firstName={this.state.firstName}
-                    lastName={this.state.lastName}
-                    profileImage={this.state.profileImage}
-                    location_city={this.state.location_city}
-                    location_state={this.state.location_state}
-                    price={this.state.ratePerHour}
-                  />
-                )
-              ) : (
-                <MiniPhotographer
-                  firstName={this.state.firstName}
-                  lastName={this.state.lastName}
-                  profileImage={this.state.profileImage}
-                  location_city={this.state.location_city}
-                  location_state={this.state.location_state}
-                  price={this.state.ratePerHour}
-                />
-              )}
-            </Grid>
-            <Grid item md={5} sm={8} xs={12} style={{ width: "100%" }}>
-              <Date
-                theDate={this.state.selectedDate}
-                allDates={this.state.availability}
-                parentCallback={this.handleDateChange}
-                fullScreen={fullScreen}
-              />
-            </Grid>
-
-            <Grid item md={3} sm={4} xs={12} style={{ width: "100%" }}>
+            <Grid item xs={12} style={{ width: "100%" }}>
+              <Typography>Select a shoot type</Typography>
               {loadingData ? (
                 <CircularProgress
                   className={classes.progress}
                   color="secondary"
                 />
               ) : (
-                <Time
-                  {...this.props}
-                  key={this.state.timeslots}
-                  authenticated={this.props.user.authenticated}
-                  timeslots={this.state.timeslots}
-                  handleSubmit={(time) => this.handleSubmit(time)}
-                  theDate={this.state.selectedDate}
+                <Pricing
+                  pricing={this.state.pricing}
+                  fullScreen={fullScreen}
+                  handleSelect={(selected) => this.handleSelect(selected)}
                 />
               )}
             </Grid>
+          </Grid>
 
-            <Confirmation
-              open={this.state.open}
-              secondaryConfirmation={false}
-              handleAgree={this.handleAgree}
-              handleDisagree={this.handleDisagree}
-              title="Confirm Booking"
-              text={`Would you like to confirm booking with ${
-                this.state.firstName
-              }
+          {this.state.selectedShoot && (
+            <Paper
+              style={{
+                padding: 15,
+              }}
+            >
+              <Grid container direction="row" justify="center" spacing={2}>
+                <Snackbar
+                  anchorOrigin={{
+                    vertical: "top",
+                    horizontal: "center",
+                  }}
+                  open={this.state.openSnack}
+                  onClose={this.handleClose}
+                >
+                  <Alert onClose={this.handleClose} severity={"warning"}>
+                    You already have a pending order.
+                  </Alert>
+                </Snackbar>
+
+                <Grid item md={4} sm={12} style={{ width: "100%" }}>
+                  {halfScreen ? (
+                    fullScreen ? (
+                      <MiniPhotographer
+                        firstName={this.state.firstName}
+                        lastName={this.state.lastName}
+                        profileImage={this.state.profileImage}
+                        location_city={this.state.location_city}
+                        location_state={this.state.location_state}
+                        type={this.state.selectedShoot?.name}
+                        price={this.state.selectedShoot?.price}
+                      />
+                    ) : (
+                      <ProfileCard
+                        firstName={this.state.firstName}
+                        lastName={this.state.lastName}
+                        profileImage={this.state.profileImage}
+                        location_city={this.state.location_city}
+                        location_state={this.state.location_state}
+                        type={this.state.selectedShoot?.name}
+                        price={this.state.selectedShoot?.price}
+                      />
+                    )
+                  ) : (
+                    <MiniPhotographer
+                      firstName={this.state.firstName}
+                      lastName={this.state.lastName}
+                      profileImage={this.state.profileImage}
+                      location_city={this.state.location_city}
+                      location_state={this.state.location_state}
+                      price={this.state.ratePerHour}
+                      type={this.state.selectedShoot?.name}
+                      price={this.state.selectedShoot?.price}
+                    />
+                  )}
+                </Grid>
+                <Grid item md={5} sm={8} xs={12} style={{ width: "100%" }}>
+                  <Date
+                    theDate={this.state.selectedDate}
+                    allDates={this.state.availability}
+                    parentCallback={this.handleDateChange}
+                    fullScreen={fullScreen}
+                  />
+                </Grid>
+
+                <Grid item md={3} sm={4} xs={12} style={{ width: "100%" }}>
+                  {loadingData ? (
+                    <CircularProgress
+                      className={classes.progress}
+                      color="secondary"
+                    />
+                  ) : (
+                    <Time
+                      {...this.props}
+                      key={this.state.timeslots}
+                      authenticated={this.props.user.authenticated}
+                      timeslots={this.state.timeslots}
+                      handleSubmit={(time) => this.handleSubmit(time)}
+                      theDate={this.state.selectedDate}
+                    />
+                  )}
+                </Grid>
+
+                <Confirmation
+                  open={this.state.open}
+                  secondaryConfirmation={false}
+                  handleAgree={this.handleAgree}
+                  handleDisagree={this.handleDisagree}
+                  title="Confirm Booking"
+                  text={`Would you like to confirm booking with ${
+                    this.state.firstName
+                  }
           ${this.state.lastName} on ${dateConvert(this.state.formattedDate)} at 
           ${timeConvert(this.state.selectedTime)}?`}
-            />
-          </Grid>
-        </Paper>
+                />
+              </Grid>
+            </Paper>
+          )}
+        </div>
       </>
     );
   }
