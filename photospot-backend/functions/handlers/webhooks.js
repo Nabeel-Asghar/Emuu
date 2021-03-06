@@ -78,6 +78,7 @@ async function handlePayout(orderDetails, amount, payoutID) {
 // handle successful refunds intiated by customer
 async function handleRefund(orderDetails, chargeAmount, paymentID) {
   let orderID = orderDetails.orderID;
+  let shootType = orderDetails.shootType;
   let photographerID = orderDetails.photographerID;
   let consumerID = orderDetails.consumerID;
   let shootDate = orderDetails.date;
@@ -85,6 +86,7 @@ async function handleRefund(orderDetails, chargeAmount, paymentID) {
 
   let booking = await bookingObject(
     orderID,
+    shootType,
     orderDetails,
     chargeAmount,
     paymentID,
@@ -110,6 +112,7 @@ async function handleRefundByPhotographer(
   paymentID
 ) {
   let orderID = orderDetails.orderID;
+  let shootType = orderDetails.shootType;
   let photographerID = orderDetails.photographerID;
   let consumerID = orderDetails.consumerID;
   let shootDate = orderDetails.date;
@@ -117,6 +120,7 @@ async function handleRefundByPhotographer(
 
   let booking = await bookingObject(
     orderID,
+    shootType,
     orderDetails,
     chargeAmount,
     paymentID,
@@ -138,6 +142,7 @@ async function handleRefundByPhotographer(
 // handle successful payments
 async function handlePayment(orderDetails, chargeAmount, paymentID) {
   let orderID = orderDetails.orderID;
+  let shootType = orderDetails.shootType;
   let shootDate = orderDetails.date;
   let shootTime = orderDetails.time;
   let photographerID = orderDetails.photographerID;
@@ -145,6 +150,7 @@ async function handlePayment(orderDetails, chargeAmount, paymentID) {
 
   let booking = await bookingObject(
     orderID,
+    shootType,
     orderDetails,
     chargeAmount,
     paymentID,
@@ -166,7 +172,14 @@ async function handlePayment(orderDetails, chargeAmount, paymentID) {
 // helper functions
 //
 // create booking object
-function bookingObject(orderID, orderDetails, chargeAmount, paymentID, status) {
+function bookingObject(
+  orderID,
+  shootType,
+  orderDetails,
+  chargeAmount,
+  paymentID,
+  status
+) {
   let amount = chargeAmount / 100;
   let shootDate = orderDetails.date;
   let shootTime = orderDetails.time;
@@ -177,6 +190,7 @@ function bookingObject(orderID, orderDetails, chargeAmount, paymentID, status) {
 
   let booking = {
     id: orderID,
+    shootType: shootType,
     paymentID: paymentID,
     amount: amount,
     shootDate: shootDate,
