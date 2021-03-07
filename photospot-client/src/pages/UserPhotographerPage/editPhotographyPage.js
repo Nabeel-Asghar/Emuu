@@ -31,7 +31,7 @@ import {
   uploadBackgroundImage,
   uploadProfileImage,
 } from "../../redux/actions/userActions";
-import RotatingCarousel from "./RotatingCarousel";
+import RotatingCarousel from "../../components/your-photography-page/RotatingCarousel";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
