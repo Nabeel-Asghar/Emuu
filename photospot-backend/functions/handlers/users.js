@@ -125,10 +125,6 @@ exports.login = (req, res) => {
     })
     .then((token) => {
       var user = firebase.auth().currentUser;
-<<<<<<< HEAD
-=======
-
->>>>>>> a20ba65013b4f20d14716c193ae29076fa94a666
       if (res.locals.registration == "incomplete") {
         return res.status(400).json({
           registration: "You must complete your photographer profile!",
