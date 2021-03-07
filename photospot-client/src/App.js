@@ -141,6 +141,7 @@ const theme = createMuiTheme({
     },
     margin: {
       margin: "10px 0px",
+      padding: 10,
     },
     image: {
       margin: "20px auto 20px auto",

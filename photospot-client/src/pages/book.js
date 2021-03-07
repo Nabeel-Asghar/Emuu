@@ -238,6 +238,7 @@ class book extends Component {
                   pricing={this.state.pricing}
                   fullScreen={fullScreen}
                   handleSelect={(selected) => this.handleSelect(selected)}
+                  selectable={true}
                 />
               )}
             </Grid>

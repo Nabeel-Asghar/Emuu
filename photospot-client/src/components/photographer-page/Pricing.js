@@ -11,11 +11,12 @@ import ListItemText from "@material-ui/core/ListItemText";
 import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
 import React, { useState, useCallback } from "react";
-import { Typography } from "@material-ui/core";
+import { Button, Typography } from "@material-ui/core";
 
 // Components
 import GetIcon from "../shared/GetIcon";
 import { formatMoney } from "../../util/UtilFunctions";
+import EditButton from "../shared/Buttons/EditButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -26,10 +27,11 @@ const styles = (theme) => ({
 });
 
 const Pricing = (props) => {
-  const { classes, fullScreen } = props;
+  const { classes, fullScreen, editable, selectable } = props;
   const [selected, setSelected] = useState(null);
 
   const pricing = props.pricing?.sort((a, b) => a.price - b.price);
+  const padding = editable ? 10 : 0;
 
   function handleClick(event, index) {
     setSelected(index);
@@ -40,9 +42,10 @@ const Pricing = (props) => {
     <Paper
       className={classes.paperComponent}
       elevation={3}
-      style={{ padding: 0 }}
+      style={{ padding: padding }}
     >
       <Grid container>
+        {editable && <EditButton onClick={props.onClick} text="Edit Pricing" />}
         <Grid xs={12}>
           {pricing &&
             pricing.map((item, index) => {
@@ -50,7 +53,9 @@ const Pricing = (props) => {
                 <>
                   <List
                     onClick={(e) => handleClick(e, index)}
-                    className={selected === index && classes.selected}
+                    className={
+                      selectable && selected === index && classes.selected
+                    }
                   >
                     <ListItem>
                       <ListItemIcon style={{ minWidth: 40 }}>
@@ -72,7 +77,7 @@ const Pricing = (props) => {
                       </ListItemSecondaryAction>
                     </ListItem>
                   </List>
-                  <Divider />
+                  {index < pricing.length - 1 && <Divider />}
                 </>
               );
             })}

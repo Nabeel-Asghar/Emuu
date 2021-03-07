@@ -12,7 +12,7 @@ const categories = {
 };
 
 const GetIcon = (props) => {
-  return categories[props.name];
+  return <GroupIcon color="secondary" />;
 };
 
 export default GetIcon;

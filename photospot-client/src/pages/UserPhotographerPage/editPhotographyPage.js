@@ -32,6 +32,9 @@ import {
   uploadProfileImage,
 } from "../../redux/actions/userActions";
 import RotatingCarousel from "../../components/your-photography-page/RotatingCarousel";
+import EditButton from "../../components/shared/Buttons/EditButton";
+import Pricing from "../../components/photographer-page/Pricing";
+import PricingEditor from "../../components/your-photography-page/PricingEditor";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -74,6 +77,7 @@ class editPhotographyPage extends Component {
       croppedProfileImage: "",
       openFeedback: false,
       openAlert: false,
+      pricing: null,
     };
   }
 
@@ -176,6 +180,23 @@ class editPhotographyPage extends Component {
       open: true,
       fakeBio: this.state.bio,
       tempCategories: x,
+    });
+  };
+
+  handlePricingOpen = () => {
+    this.setState({
+      openPricing: true,
+    });
+  };
+
+  handlePricingAgree = () => {
+    this.setState({
+      openPricing: false,
+    });
+  };
+  handlePricingClose = () => {
+    this.setState({
+      openPricing: false,
     });
   };
 
@@ -360,11 +381,28 @@ class editPhotographyPage extends Component {
             paddingBottom: "20px",
           }}
         >
+          <Grid container>
+            <Pricing
+              pricing={this.state.pricing}
+              handleSelect={() => {}}
+              onClick={this.handlePricingOpen}
+              editable={true}
+              selectable={false}
+            />
+            <PricingEditor
+              open={this.state.openPricing}
+              pricing={this.state.pricing}
+              categories={this.state.categories}
+              handleAgree={this.handlePricingAgree}
+              handleClose={this.handlePricingClose}
+            />
+          </Grid>
+
           <Paper elevation={3} className={classes.margin}>
             <Grid container>
-              <Grid item xs={11}>
+              <EditButton onClick={this.handleBioClickOpen} text="Edit Bio" />
+              <Grid item xs={12}>
                 <TextField
-                  className={classes.textGrid}
                   disabled
                   id="standard-full-width"
                   name="bio"
@@ -392,20 +430,6 @@ class editPhotographyPage extends Component {
                 bio={this.state.fakeBio}
                 categories={this.state.tempCategories}
               />
-              <Grid item xs={1}>
-                <List style={{ marginTop: "10px" }}>
-                  <ListItem>
-                    <ListItemSecondaryAction>
-                      <IconButton edge="end" aria-label="icon">
-                        <EditIcon
-                          color="secondary"
-                          onClick={this.handleBioClickOpen}
-                        />
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                </List>
-              </Grid>
             </Grid>
           </Paper>
           <Paper elevation={3} className={classes.margin}>

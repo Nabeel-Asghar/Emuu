@@ -311,7 +311,12 @@ class specificPhotographer extends Component {
               camera={this.state.camera}
             />
 
-            <Pricing pricing={this.state.pricing} fullScreen={fullScreen} />
+            <Pricing
+              pricing={this.state.pricing}
+              fullScreen={fullScreen}
+              selectable={false}
+              handleSelect={() => {}}
+            />
           </Grid>
 
           <Paper

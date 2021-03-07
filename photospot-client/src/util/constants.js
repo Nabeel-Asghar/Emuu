@@ -7,3 +7,9 @@ export const shootStatus = {
 
 export const showVault = ["In Progress", "Completed"];
 export const showCancel = ["In Progress"];
+
+export const PROFESSIONAL = "Professional";
+export const PERSONAL = "Personal";
+export const HEADSHOT = "Headshot";
+export const BABY_SHOWER = "Baby Shower";
+export const WEDDING = "Wedding";
