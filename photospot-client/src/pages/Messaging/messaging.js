@@ -84,7 +84,8 @@ class messaging extends Component {
           });
           if (chats.length == 0) {
             this.setState({
-              noChats: true,
+              noChats: false,
+              chats: [],
             });
           } else {
             this.setState({
@@ -165,10 +166,10 @@ class messaging extends Component {
 
   render() {
     const { classes } = this.props;
-    if (!this.state.chats || this.state.chats?.length === 0) {
+    if (this.state.noChats == true) {
       return <LoadingPage />;
     } else {
-      if (this.state.noChats) {
+      if (this.state.chats?.length === 0) {
         return <EmptyChat classes={classes} />;
       } else {
         return (
