@@ -45,9 +45,9 @@ class orderCard extends Component {
         orderID,
         paymentID,
         photographerID,
-        firstName,
-        lastName,
-        profileImage,
+        consumerFirstName,
+        consumerLastName,
+        consumerProfileImage,
         shootDate,
         shootTime,
         amount,
@@ -62,7 +62,7 @@ class orderCard extends Component {
             <Grid container justify="center" alignItems="center">
               <Grid item md={4} sm={5} xs={12} style={{ textAlign: "center" }}>
                 <img
-                  src={profileImage}
+                  src={consumerProfileImage}
                   style={{
                     maxWidth: "90%",
                     padding: 10,
@@ -73,22 +73,13 @@ class orderCard extends Component {
               </Grid>
 
               <Grid item md={8} sm={7} xs={12}>
-                <Grid
-                  container
-                  direction="column"
-                  spacing={1}
-                  style={{ padding: 10 }}
-                >
+                <Grid container direction="column" spacing={1} style={{ padding: 10 }}>
                   <Grid item xs={12}>
                     <Paper style={{ padding: 15 }} variant="outlined">
                       <Typography variant="h6" gutterBottom>
-                        Photo shoot with {firstName} {lastName}
+                        Photo shoot with {consumerFirstName} {consumerLastName}
                       </Typography>
-                      <Typography
-                        variant="h5"
-                        gutterBottom
-                        style={{ fontWeight: "bold" }}
-                      >
+                      <Typography variant="h5" gutterBottom style={{ fontWeight: "bold" }}>
                         {timeConvert(shootTime)} on {dateConvert(shootDate)}
                       </Typography>
                     </Paper>
@@ -98,15 +89,11 @@ class orderCard extends Component {
                       <List dense="true">
                         <ListItem>
                           <ListItemText
-                            primary={
-                              <Typography variant="h6">Order Total</Typography>
-                            }
+                            primary={<Typography variant="h6">Order Total</Typography>}
                             style={{ textAlign: "left" }}
                           />
                           <ListItemText
-                            primary={
-                              <Typography variant="h6">${amount}.00</Typography>
-                            }
+                            primary={<Typography variant="h6">${amount}.00</Typography>}
                             style={{ textAlign: "right" }}
                           />
                         </ListItem>
@@ -119,11 +106,8 @@ class orderCard extends Component {
                         <Button
                           variant="contained"
                           color="secondary"
-                          onClick={() =>
-                            this.props.history.push(`vault/${orderID}`)
-                          }
-                          className={classes.buttonSpacing}
-                        >
+                          onClick={() => this.props.history.push(`vault/${orderID}`)}
+                          className={classes.buttonSpacing}>
                           Photo Vault
                         </Button>
                       )}
@@ -132,8 +116,7 @@ class orderCard extends Component {
                           variant="contained"
                           color="secondary"
                           onClick={() => this.props.handleRefund(orderID)}
-                          className={classes.buttonSpacing}
-                        >
+                          className={classes.buttonSpacing}>
                           Cancel
                         </ColorButton>
                       )}

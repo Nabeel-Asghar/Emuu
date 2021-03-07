@@ -24,10 +24,6 @@ const payment = require("./handlers/payment");
 // TODO: alternate to request.session due to memory leak
 // TODO: find fix for raw-body limit, currently hard coded in C:\Users\nabee\AppData\Roaming\npm\node_modules\firebase-tools\node_modules\raw-body\index.js
 const {
-  getAllPhotographers,
-  createPost,
-  searchPhotographer,
-  filterPhotographers,
   getSpecificPhotographer,
   checkBookAbility,
   getReviews,
@@ -60,7 +56,6 @@ const {
   getYourUserProfile,
   getYourPhotographerOrders,
   getYourPhotographerPastOrders,
-  verifyRegistration,
 } = require("./handlers/users");
 
 const {
@@ -125,18 +120,13 @@ app.post("/photographer/refund", FBAuth, refundFromPhotographer);
 
 // photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
-app.post(
-  "/editphotographypage/edit",
-  FBAuth,
-  updatePhotographerCategoriesAndBio
-);
+app.post("/editphotographypage/edit", FBAuth, updatePhotographerCategoriesAndBio);
 app.post("/editphotographypage/background", FBAuth, uploadBackgroundPicture);
 app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
 app.post("/photographyimages/delete", FBAuth, deleteImages);
 app.post("/editphotographypage/bookingTimes", FBAuth, editBookingTimes);
 
 //----------Consumer Routes---------------
-app.get("/photographers", getAllPhotographers);
 app.get("/photographers/:photographerId", getSpecificPhotographer);
 app.get("/checkUserOrders", FBAuth, checkBookAbility);
 app.post("/photographers/:photographerId/review", FBAuth, reviewPhotographer);
@@ -144,8 +134,6 @@ app.get("/photographers/:photographerId/getReviews", getReviews);
 app.post("/userDashboard/editReview", FBAuth, editReview);
 app.post("/userDashboard/deleteReview", FBAuth, deleteReview);
 app.get("/photographers/:photographerId/bookingTimes", getPhotographerSchedule);
-app.get("/search/:searchQuery", searchPhotographer);
-app.get("/filter/:type/:city/:state", filterPhotographers);
 app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);
 
 // Administrator
@@ -166,32 +154,26 @@ app.post("/vault/:vaultID/finalize", FBAuth, finalizeVault);
 // Testing
 app.post("/test", testFunction);
 
-exports.dailyJob = functions.pubsub
-  .schedule(`*/15 * * * *`)
-  .onRun(async (context) => {
-    const now = admin.firestore.Timestamp.now();
-    db.collection("scheduler")
-      .where("performAt", "<=", now)
-      .where("status", "==", "scheduled")
-      .get()
-      .then(function (querySnapshot) {
-        if (querySnapshot.size > 0) {
-          querySnapshot.forEach(async function (doc) {
-            payment.payOut(
-              doc.id,
-              doc.data().data.consumerID,
-              doc.data().data.photographerID
-            );
-          });
-          console.log("Job done");
-        } else {
-          console.log("No jobs to do");
-        }
-      })
-      .catch((err) => {
-        console.log("error in doing cronjob in payouts", err);
-      });
-  });
+exports.dailyJob = functions.pubsub.schedule(`*/15 * * * *`).onRun(async (context) => {
+  const now = admin.firestore.Timestamp.now();
+  db.collection("scheduler")
+    .where("performAt", "<=", now)
+    .where("status", "==", "scheduled")
+    .get()
+    .then(function (querySnapshot) {
+      if (querySnapshot.size > 0) {
+        querySnapshot.forEach(async function (doc) {
+          payment.payOut(doc.id, doc.data().data.consumerID, doc.data().data.photographerID);
+        });
+        console.log("Job done");
+      } else {
+        console.log("No jobs to do");
+      }
+    })
+    .catch((err) => {
+      console.log("error in doing cronjob in payouts", err);
+    });
+});
 
 exports.updateAlgoliaIndex = functions.firestore
   .document("photographers/{userId}")

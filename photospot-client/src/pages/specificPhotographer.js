@@ -69,7 +69,7 @@ class specificPhotographer extends Component {
       checked: false,
       overallRating: 0,
       reviewCount: 0,
-      trueOverall: 0,
+      avgRating: 0,
       title: "",
       newReviewRating: 1,
       description: "",
@@ -130,6 +130,13 @@ class specificPhotographer extends Component {
       console.log("updating");
 
       if (this.props.credentials) {
+        if (this.props.credentials[0]?.photographer) {
+          this.setState({
+            photographer: true,
+          });
+        } else {
+          this.setState({ photographer: false });
+        }
         this.setState({
           photographer: this.props.credentials[0]?.photographer,
           userEmail: this.props.credentials[0]?.email,
@@ -217,30 +224,19 @@ class specificPhotographer extends Component {
   };
 
   handleCount(allReviews) {
+    let overallRating = 0;
+    let reviewCount = 0;
+
     for (let i = 0; i < allReviews.length; i++) {
-      let rating = allReviews[i].rating;
-
-      this.handleRatingCount();
-      this.handleRatingChange(rating);
+      overallRating += allReviews[i].rating;
+      reviewCount += 1;
     }
+    this.setState({
+      reviewCount: reviewCount,
+      overallRating: overallRating,
+      avgRating: overallRating / reviewCount || 0,
+    });
   }
-
-  handleRatingCount = () => {
-    let count = this.state.reviewCount;
-    this.setState({
-      reviewCount: count + 1,
-    });
-  };
-
-  handleRatingChange = (rating) => {
-    let overall = this.state.overallRating + rating;
-    this.setState({
-      overallRating: overall,
-    });
-    this.setState({
-      trueOverall: this.state.overallRating / this.state.reviewCount,
-    });
-  };
 
   render() {
     const {
@@ -350,7 +346,7 @@ class specificPhotographer extends Component {
                         <div style={{ marginTop: "2px" }}>
                           <Typography variant="subtitle2" display="inline">
                             <StarRatings
-                              rating={this.state.trueOverall}
+                              rating={this.state.avgRating}
                               numberOfStars={5}
                               name="rating"
                               starDimension="20px"

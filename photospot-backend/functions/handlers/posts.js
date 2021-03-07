@@ -1,39 +1,6 @@
 const { db, admin } = require("../util/admin");
-
 const { partialUpdateObjectToAlgolia } = require("./algolia");
-
 const { validateReview } = require("../util/validators");
-
-exports.getAllPhotographers = (req, res) => {
-  db.collection("photographer")
-    .orderBy("createdAt", "desc")
-    .get()
-    .then((data) => {
-      let posts = [];
-
-      data.forEach((doc) => {
-        posts.push({
-          photographerID: doc.id,
-          email: doc.data().email,
-          firstName: doc.data().firstName,
-          lastName: doc.data().lastName,
-          location_city: doc.data().location_city,
-          location_state: doc.data().location_state,
-          profileImage: doc.data().profileImage,
-          images: doc.data().images,
-          createdAt: doc.data().createdAt,
-          headline: doc.data().headline,
-          camera: doc.data().camera,
-          instagram: doc.data().instagram,
-          company: doc.data().company,
-          reviewCount: doc.data().reviewCount,
-          totalRating: doc.data().totalRating,
-        });
-      });
-      return res.json(posts);
-    })
-    .catch((err) => console.error(err));
-};
 
 exports.getReviews = (req, res) => {
   let photographerID = req.params.photographerId;
@@ -47,155 +14,88 @@ exports.getReviews = (req, res) => {
       let reviews = [];
 
       data.forEach((doc) => {
-        reviews.push({
-          title: doc.data().title,
-          description: doc.data().description,
-          rating: doc.data().rating,
-          userID: doc.data().userID,
-          photographerID: doc.data().photographerBeingReviewed,
-          firstName: doc.data().firstName,
-          lastName: doc.data().lastName,
-          createdAt: doc.data().createdAt,
-        });
+        reviews.push(doc.data());
       });
 
-      return res.json(reviews);
+      return res.json(reviews).end();
     })
     .catch((err) => {
-      return res.json({ error: err });
+      return res.json({ error: err }).end();
     });
 };
 
 exports.reviewPhotographer = async (req, res) => {
-  let description = req.body.description || "";
-  let title = req.body.title || "";
-  let userid = req.user.uid;
-  let reviewID = req.user.uid;
-  let photographerBeingReviewed = req.params.photographerId;
-  let photographerFirstName = req.body.photographerFirstName;
-  let photographerLastName = req.body.photographerLastName;
-  let photographerProfile = req.body.photographerProfile;
+  const userID = req.user.uid;
+  const photographerBeingReviewedID = req.params.photographerId;
 
   const newReview = {
-    description: req.body.description,
-    rating: req.body.rating,
-    title: req.body.title,
-    userID: userid,
-    photographerID: photographerBeingReviewed,
+    ...req.body,
+    userID: userID,
+    photographerID: photographerBeingReviewedID,
     firstName: res.locals.firstName,
     lastName: res.locals.lastName,
-    photographerFirstName: photographerFirstName,
-    photographerLastName: photographerLastName,
-    photographerProfile: photographerProfile,
     createdAt: new Date().toISOString(),
   };
 
-  if (reviewID === photographerBeingReviewed) {
-    return res.status(400).json({ error: "You cannot review yourself." });
-  }
-
-  if (title.isEmpty || title.length < 5) {
-    return res.status(400).json({
-      title: "The title of your review must be longer than 5 characters.",
-    });
-  }
-
-  if (description.isEmpty || description.length < 10) {
-    return res.status(400).json({
-      description:
-        "The description of your review must be longer than 10 characters.",
-    });
-  }
-
   const { valid, errors } = validateReview(newReview);
   console.log("errors: ", errors);
+  if (!valid) return res.status(400).json(errors).end();
 
-  let existingReview = await checkReviewExists(
-    photographerBeingReviewed,
-    userid
-  );
+  let existingReview = await checkReviewExists(photographerBeingReviewedID, userID);
   if (existingReview) {
-    return res
-      .status(400)
-      .json({ error: "You cannot review someone twice." })
-      .end();
+    return res.status(400).json({ error: "You cannot review someone twice." }).end();
   }
-  if (!valid) return res.status(400).json(errors);
 
   // Add review to that photographer document
   db.collection("photographer")
-    .doc(photographerBeingReviewed)
+    .doc(photographerBeingReviewedID)
     .collection("reviews")
-    .doc(userid)
+    .doc(userID)
     .set(newReview)
-
     .then(() => {
       db.collection("users")
-        .doc(userid)
+        .doc(userID)
         .collection("reviews")
-        .doc(photographerBeingReviewed)
+        .doc(photographerBeingReviewedID)
         .set(newReview);
     })
     .then(() => {
-      const pRef = db.collection("photographer").doc(photographerBeingReviewed);
+      const pRef = db.collection("photographer").doc(photographerBeingReviewedID);
 
       return db.runTransaction((transaction) => {
-        return transaction.get(pRef).then((document) => {
-          if (!document.exists) {
+        return transaction.get(pRef).then((doc) => {
+          if (!doc.exists) {
             throw "Document does not exist!";
           }
 
-          // Compute new number of ratings
-          var newNumRatings = (document.data().reviewCount || 0) + 1;
-
-          console.log("old totalRating: ", document.data().totalRating);
-
-          // Compute new average rating
-          var oldRatingTotal =
-            (document.data().totalRating || 0) + req.body.rating;
-          var newAvgRating = oldRatingTotal / newNumRatings;
+          const totalRating = (doc.data().totalRating || 0) + req.body.rating;
+          const reviewCount = (doc.data().reviewCount || 0) + 1;
+          const averageRating = totalRating / reviewCount;
 
           // Commit to Firestore
           transaction.update(pRef, {
-            reviewCount: newNumRatings,
-            totalRating: oldRatingTotal,
-            avgRating: newAvgRating,
+            totalRating: totalRating,
+            reviewCount: reviewCount,
+            averageRating: averageRating,
           });
 
-          console.log();
-          console.log("reviewCount: ", newNumRatings);
-          console.log("totalRating: ", oldRatingTotal);
-          console.log("avgRating: ", newAvgRating);
-
           partialUpdateObjectToAlgolia({
-            reviewCount: newNumRatings,
-            totalRating: oldRatingTotal,
-            avgRating: newAvgRating,
-            objectID: photographerBeingReviewed,
+            totalRating: totalRating,
+            reviewCount: reviewCount,
+            averageRating: averageRating,
+            objectID: photographerBeingReviewedID,
           });
         });
       });
     })
+    .then(() => {
+      return res.status(200).json({ message: "Your review has been posted." }).end();
+    })
     .catch((err) => {
       console.log(err);
-      return res.status(500).json({ error: `something went wrong` });
+      return res.status(500).json({ error: `something went wrong` }).end();
     });
 };
-
-function checkReviewExists(photographerBeingReviewed, userID) {
-  return db
-    .collection("photographer")
-    .doc(photographerBeingReviewed)
-    .collection("reviews")
-    .doc(userID)
-    .get()
-    .then((doc) => {
-      if (doc.exists) {
-        console.log("cannot review twice");
-        return true;
-      } else return false;
-    });
-}
 
 exports.editReview = (req, res) => {
   let description = req.body.description || "";
@@ -205,24 +105,14 @@ exports.editReview = (req, res) => {
   let photographerBeingReviewed = req.body.photographerID;
   let oldRating = req.body.oldRating;
 
-  if (title.isEmpty || title.length < 5) {
-    return res.status(400).json({
-      title: "The title of your review must be longer than 5 characters.",
-    });
-  }
-
-  if (description.isEmpty || description.length < 10) {
-    return res.status(400).json({
-      description:
-        "The description of your review must be longer than 10 characters.",
-    });
-  }
-
   const updateReview = {
     description: description,
     rating: rating,
     title: title,
   };
+
+  const { valid, errors } = validateReview(newReview);
+  if (!valid) return res.status(400).json(errors).end();
 
   db.collection("photographer")
     .doc(photographerBeingReviewed)
@@ -245,33 +135,31 @@ exports.editReview = (req, res) => {
             throw "Document does not exist!";
           }
 
-          // Compute new number of ratings
-          var newNumRatings = document.data().reviewCount;
+          var reviewCount = document.data().reviewCount;
+          var totalRating = document.data().totalRating - oldRating + rating;
+          var averageRating = oldRatingTotal / newNumRatings;
 
-          // Compute new average rating
-          var oldRatingTotal =
-            document.data().totalRating - oldRating + req.body.rating;
-          var newAvgRating = oldRatingTotal / newNumRatings;
-
-          // Commit to Firestore
           transaction.update(pRef, {
-            reviewCount: newNumRatings,
-            totalRating: oldRatingTotal,
-            avgRating: newAvgRating,
+            reviewCount: reviewCount,
+            totalRating: totalRating,
+            averageRating: averageRating,
           });
 
           partialUpdateObjectToAlgolia({
-            reviewCount: newNumRatings,
-            totalRating: oldRatingTotal,
-            avgRating: newAvgRating,
+            reviewCount: reviewCount,
+            totalRating: totalRating,
+            averageRating: averageRating,
             objectID: photographerBeingReviewed,
           });
         });
       });
     })
+    .then(() => {
+      return res.status(200).json({ message: "Your review has been edited." }).end();
+    })
     .catch((err) => {
       console.log(err);
-      return res.status(500).json({ error: `something went wrong` });
+      return res.status(500).json({ error: `something went wrong` }).end();
     });
 };
 
@@ -301,28 +189,28 @@ exports.deleteReview = (req, res) => {
             throw "Document does not exist!";
           }
 
-          // Compute new number of ratings
-          var newNumRatings = document.data().reviewCount - 1;
-
-          // Compute new average rating
-          var oldRatingTotal = document.data().totalRating - oldRating;
-          var newAvgRating = oldRatingTotal / newNumRatings;
+          const totalRating = document.data().totalRating - oldRating;
+          const reviewCount = document.data().reviewCount - 1;
+          const averageRating = totalRating / reviewCount;
 
           // Commit to Firestore
           transaction.update(pRef, {
-            reviewCount: newNumRatings,
-            totalRating: oldRatingTotal,
-            avgRating: newAvgRating,
+            reviewCount: reviewCount,
+            totalRating: totalRating,
+            averageRating: averageRating,
           });
 
           partialUpdateObjectToAlgolia({
-            reviewCount: newNumRatings,
-            totalRating: oldRatingTotal,
-            avgRating: newAvgRating,
+            reviewCount: reviewCount,
+            totalRating: totalRating,
+            averageRating: averageRating,
             objectID: photographerBeingReviewed,
           });
         });
       });
+    })
+    .then(() => {
+      return res.status(200).json({ message: "Your review has been deleted." }).end();
     })
     .catch((err) => {
       console.log(err);
@@ -332,6 +220,7 @@ exports.deleteReview = (req, res) => {
 
 exports.getSpecificPhotographer = (req, res) => {
   let photographerIdOfPageClicked = req.params.photographerId;
+  let photographer = [];
 
   var dbRef = db.collection("photographer").doc(photographerIdOfPageClicked);
 
@@ -343,40 +232,17 @@ exports.getSpecificPhotographer = (req, res) => {
     .get()
     .then((doc) => {
       if (!doc.exists) {
-        return res.json({ message: "Page not found." });
+        return res.json({ message: "Page not found." }).end();
       }
-
-      let photographer = [];
 
       photographer.push({
         photographerID: photographerIdOfPageClicked,
-        email: doc.data().email,
-        firstName: doc.data().firstName,
-        lastName: doc.data().lastName,
-        profileImage: doc.data().profileImage,
-        images: doc.data().images,
-        company: doc.data().company,
-        bio: doc.data().bio,
-        instagram: doc.data().instagram,
-        location_city: doc.data().location_city,
-        location_state: doc.data().location_state,
-        ratePerHour: doc.data().ratePerHour,
-        tags: doc.data().tags,
-        website: doc.data().website,
-        videography: doc.data().videography,
-        willingnessToTravel: doc.data().willingnessToTravel,
-        createdAt: doc.data().createdAt,
-        background: doc.data().background,
-        camera: doc.data().camera,
-        headline: doc.data().headline,
-        reviewCount: doc.data().reviewCount,
-        totalRating: doc.data().totalRating,
-        thumbnailImage: doc.data().thumbnailImage,
+        ...doc.data(),
       });
-      return res.json(photographer);
+      return res.json(photographer).end();
     })
     .catch((err) => {
-      res.status(500).json({ error: `Something went wrong.` });
+      res.status(500).json({ error: `Something went wrong.` }).end();
     });
 };
 
@@ -388,11 +254,11 @@ exports.getPricing = (req, res) => {
     .doc("pricing")
     .get()
     .then((doc) => {
-      return res.json(doc.data());
+      return res.status(200).json(doc.data()).end();
     })
     .catch((err) => {
       console.log(err);
-      return res.json("No pricing available for this photographer.");
+      return res.json("No pricing available for this photographer.").end();
     });
 };
 
@@ -412,72 +278,12 @@ exports.getPhotographerSchedule = (req, res) => {
         timings.push(timingsForEachDay);
       });
 
-      return res.json(timings);
+      return res.status(200).json(timings).end();
     })
     .catch(() => {
       console.log("Error getting documents", err);
-      return res.json("No book times available.");
+      return res.json("No book times available.").end();
     });
-};
-
-exports.searchPhotographer = (req, res) => {
-  var query = req.params.searchQuery;
-
-  db.collection("photographer")
-    .orderBy("firstName")
-    .where("firstName", ">=", query.toUpperCase())
-    .where("firstName", "<=", query.toLowerCase() + "\uf8ff")
-    .get()
-    .then((data) => {
-      let posts = [];
-
-      data.forEach((doc) => {
-        posts.push({
-          photographerID: doc.id,
-          email: doc.data().email,
-          firstName: doc.data().firstName,
-          lastName: doc.data().lastName,
-          location_city: doc.data().location_city,
-          location_state: doc.data().location_state,
-          profileImage: doc.data().profileImage,
-          images: doc.data().images,
-          createdAt: doc.data().createdAt,
-        });
-      });
-      return res.json(posts);
-    })
-    .catch((err) => console.error(err));
-};
-
-exports.filterPhotographers = (req, res) => {
-  const type = req.params.type;
-  const city = req.params.city;
-  const state = req.params.state;
-
-  db.collection(`photographer/`)
-    .where("categories", "array-contains", type)
-    .where("location_city", "==", city)
-    .where("location_state", "==", state)
-    .get()
-    .then((data) => {
-      let photographers = [];
-
-      data.forEach((doc) => {
-        photographers.push({
-          photographerID: doc.id,
-          email: doc.data().email,
-          firstName: doc.data().firstName,
-          lastName: doc.data().lastName,
-          location_city: doc.data().location_city,
-          location_state: doc.data().location_state,
-          profileImage: doc.data().profileImage,
-          images: doc.data().images,
-          createdAt: doc.data().createdAt,
-        });
-      });
-      return res.json(photographers);
-    })
-    .catch((err) => console.error(err));
 };
 
 exports.checkBookAbility = (req, res) => {
@@ -487,9 +293,22 @@ exports.checkBookAbility = (req, res) => {
     .get()
     .then((sub) => {
       if (sub.docs.length > 0) {
-        return res.json({ message: false });
+        return res.json({ message: false }).end();
       } else {
-        return res.json({ message: true });
+        return res.json({ message: true }).end();
       }
     });
 };
+
+function checkReviewExists(photographerBeingReviewed, userID) {
+  return db
+    .collection("photographer")
+    .doc(photographerBeingReviewed)
+    .collection("reviews")
+    .doc(userID)
+    .get()
+    .then((doc) => {
+      if (doc.exists) return true;
+      else return false;
+    });
+}

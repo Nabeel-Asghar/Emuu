@@ -14,7 +14,6 @@ import { connect } from "react-redux";
 import {
   getPhotographerPage,
   getBookingTimes,
-  bookPhotographer,
   checkBookability,
 } from "../redux/actions/dataActions";
 
@@ -358,7 +357,6 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = {
   getPhotographerPage,
   getBookingTimes,
-  bookPhotographer,
   checkBookability,
 };
 

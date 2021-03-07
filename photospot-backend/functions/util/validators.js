@@ -80,15 +80,40 @@ exports.validateResetPasswordData = (data) => {
   };
 };
 
+exports.validateChangePassword = (data) => {
+  let errors = {};
+
+  if (data.newPassword === data.oldPassword) {
+    errors.similar = "Your new password can't be the same as the old one.";
+  }
+
+  if (isEmpty(data.newPassword) || isEmpty(data.oldPassword)) {
+    errors.matching = "Must not be empty";
+  }
+
+  if (data.newPassword !== data.newPasswordConfirm) {
+    errors.matching = "Passwords don't match.";
+  }
+
+  return {
+    errors,
+    valid: Object.keys(errors).length === 0 ? true : false,
+  };
+};
+
 exports.validateReview = (data) => {
   let errors = {};
 
-  if (isEmpty(data.title)) {
-    errors.title = "Must not be empty";
+  if (isEmpty(data.title) | (data.title.length < 5)) {
+    errors.title = "The title of your review must be longer than 5 characters.";
   }
 
-  if (isEmpty(data.description)) {
-    errors.description = "Must not be empty";
+  if (isEmpty(data.description) || data.description.length < 10) {
+    errors.description = "The description of your review must be longer than 10 characters.";
+  }
+
+  if (data.reviewID === data.photographerID) {
+    errors = "You cannot review yourself.";
   }
 
   return {
