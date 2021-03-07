@@ -11,7 +11,10 @@ const fs = require("fs");
 const firebase = require("firebase");
 firebase.initializeApp(config);
 
-const { saveObjectToAlgolia, partialUpdateObjectToAlgolia } = require("./algolia");
+const {
+  saveObjectToAlgolia,
+  partialUpdateObjectToAlgolia,
+} = require("./algolia");
 
 const {
   validateSignUpData,
@@ -82,7 +85,10 @@ exports.signupPhotographer = (req, res) => {
 
   firebase
     .auth()
-    .createUserWithEmailAndPassword(newPhotographer.email, newPhotographer.password)
+    .createUserWithEmailAndPassword(
+      newPhotographer.email,
+      newPhotographer.password
+    )
     .then((data) => {
       userId = data.user.uid;
       return data.user.getIdToken();
@@ -125,29 +131,34 @@ exports.login = (req, res) => {
     })
     .then((token) => {
       var user = firebase.auth().currentUser;
+
+      if (!firebase.auth().currentUser.emailVerified) {
+        user
+          .sendEmailVerification()
+          .then(function () {
+            return res.status(400).json({
+              general: "You must verify your email to log in",
+            });
+          })
+          .catch(function (error) {
+            // An error happened.
+          });
+      } else {
+        return res.json({ token });
+      }
+
       if (res.locals.registration == "incomplete") {
         return res.status(400).json({
           registration: "You must complete your photographer profile!",
         });
       }
-      // if (!firebase.auth().currentUser.emailVerified) {
-      //   user
-      //     .sendEmailVerification()
-      //     .then(function () {
-      //       return res.status(400).json({
-      //         general: "You must verify your email to log in",
-      //       });
-      //     })
-      //     .catch(function (error) {
-      //       // An error happened.
-      //     });
-      // } else {
-      return res.json({ token });
-      // }
     })
     .catch((err) => {
       console.error(err);
-      if ((err.code = "auth/email-already-in-use") || (err.code = "auth/wrong-password")) {
+      if (
+        (err.code = "auth/email-already-in-use") ||
+        (err.code = "auth/wrong-password")
+      ) {
         return res.status(400).json({
           general: "Your login or password was incorrect. Please try again",
         });
@@ -179,9 +190,13 @@ exports.changePassword = (req, res) => {
 
     .catch(function (err) {
       if ((err.code = "auth/weak-password")) {
-        return res.status(400).json({ matching: "Password is not strong enough." });
+        return res
+          .status(400)
+          .json({ matching: "Password is not strong enough." });
       } else if ((err.code = "auth/requires-recent-login")) {
-        return res.status(400).json({ general: "Must have recently logged in." });
+        return res
+          .status(400)
+          .json({ general: "Must have recently logged in." });
       } else if ((err.code = "auth/weak-password")) {
         return res.status(400).json({ login: "Wrong password." });
       } else {
@@ -205,9 +220,9 @@ exports.resetPassword = (req, res) => {
     })
     .catch((err) => {
       if ((err.code = "auth/user-not-found")) {
-        return res
-          .status(400)
-          .json({ general: "There is no user corresponding to the email address" });
+        return res.status(400).json({
+          general: "There is no user corresponding to the email address",
+        });
       } else {
         return res.status(500).json({ error: err.code });
       }
@@ -236,7 +251,9 @@ exports.setYourPhotographyPage = async (req, res) => {
       saveObjectToAlgolia(algoliaObject);
     })
     .then(() => {
-      return res.status(200).json({ message: "Your photographer page has been updated." });
+      return res
+        .status(200)
+        .json({ message: "Your photographer page has been updated." });
     })
     .catch((err) => {
       console.error(err);
@@ -287,9 +304,13 @@ exports.uploadProfilePicture = async (req, res) => {
 
     const source = `source.${imageExtension}`;
 
-    imageFileName = `${Math.round(Math.random() * 1000000000)}.${imageExtension}`;
+    imageFileName = `${Math.round(
+      Math.random() * 1000000000
+    )}.${imageExtension}`;
 
-    thumbnailName = `${Math.round(Math.random() * 1000000000)}.${imageExtension}`;
+    thumbnailName = `${Math.round(
+      Math.random() * 1000000000
+    )}.${imageExtension}`;
 
     tempPath = path.join(os.tmpdir(), source);
     imagePath = path.join(os.tmpdir(), imageFileName);
@@ -354,7 +375,9 @@ exports.uploadBackgroundPicture = (req, res) => {
 
     const imageExtension = filename.split(".")[filename.split(".").length - 1];
 
-    imageFileName = `${Math.round(Math.random() * 1000000000)}.${imageExtension}`;
+    imageFileName = `${Math.round(
+      Math.random() * 1000000000
+    )}.${imageExtension}`;
 
     const filepath = path.join(os.tmpdir(), imageFileName);
     imageToBeUploaded = { filepath, mimetype };

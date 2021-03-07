@@ -17,8 +17,7 @@ import Typography from "@material-ui/core/Typography";
 // Components
 import Success from "../components/shared/success";
 import ProfileCard from "../components/booking/card";
-import { timeConvert } from "../util/timeConvert";
-import { dateConvert } from "../util/dateConvert";
+import { dateConvert, timeConvert } from "../util/UtilFunctions";
 import { Grid } from "@material-ui/core";
 import MiniPhotographer from "../components/shared/miniPhotographer";
 import GoBackButton from "../components/shared/goBackButton";
@@ -123,84 +122,89 @@ const Checkout = (props) => {
   };
 
   return (
-    <Grid
-      container
-      style={{
-        maxWidth: props.fullScreen ? 350 : 650,
-        margin: "0 auto",
-      }}
-    >
+    <>
       <GoBackButton {...props} />
-      <Grid item xs={12}>
-        {props.location.details &&
-          (props.fullScreen ? (
-            <MiniPhotographer
-              firstName={props.location.details.photographerFirstName}
-              lastName={props.location.details.photographerLastName}
-              profileImage={props.location.details.photographerProfileImage}
-              date={dateConvert(props.location.details.date)}
-              time={timeConvert(props.location.details.time)}
-              price={props.location.details.ratePerHour}
-            />
-          ) : (
-            <ProfileCard
-              firstName={props.location.details.photographerFirstName}
-              lastName={props.location.details.photographerLastName}
-              profileImage={props.location.details.photographerProfileImage}
-              date={dateConvert(props.location.details.date)}
-              time={timeConvert(props.location.details.time)}
-              price={props.location.details.ratePerHour}
-            />
-          ))}
-      </Grid>
-      <Grid item xs={12}>
-        <Paper style={{ padding: 30, marginTop: 15 }}>
-          <form onSubmit={handleSubmit}>
-            <label>
-              <CardElement options={CARD_ELEMENT_OPTIONS} />
-            </label>
-            <Button
-              style={{ marginTop: 10 }}
-              fullWidth
-              variant="contained"
-              color="secondary"
-              type="submit"
-              disabled={!stripe || loading}
-            >
-              Pay
-              {loading && (
-                <CircularProgress
-                  color="secondary"
-                  style={{ position: "absolute" }}
-                />
-              )}
-            </Button>
-            {error && (
-              <Typography
-                style={{ paddingTop: 20, textAlign: "center", color: "red" }}
+      <Grid
+        container
+        style={{
+          maxWidth: props.fullScreen ? 350 : 650,
+          margin: "0 auto",
+        }}
+      >
+        <Grid item xs={12}>
+          {props.location.details &&
+            (props.fullScreen ? (
+              <MiniPhotographer
+                firstName={props.location.details.photographerFirstName}
+                lastName={props.location.details.photographerLastName}
+                profileImage={props.location.details.photographerProfileImage}
+                date={dateConvert(props.location.details.date)}
+                time={timeConvert(props.location.details.time)}
+                type={props.location.details.selectedShoot.name}
+                price={props.location.details.selectedShoot.price}
+              />
+            ) : (
+              <ProfileCard
+                firstName={props.location.details.photographerFirstName}
+                lastName={props.location.details.photographerLastName}
+                profileImage={props.location.details.photographerProfileImage}
+                date={dateConvert(props.location.details.date)}
+                time={timeConvert(props.location.details.time)}
+                type={props.location.details.selectedShoot.name}
+                price={props.location.details.selectedShoot.price}
+              />
+            ))}
+        </Grid>
+        <Grid item xs={12}>
+          <Paper style={{ padding: 30, marginTop: 15 }}>
+            <form onSubmit={handleSubmit}>
+              <label>
+                <CardElement options={CARD_ELEMENT_OPTIONS} />
+              </label>
+              <Button
+                style={{ marginTop: 10 }}
+                fullWidth
+                variant="contained"
+                color="secondary"
+                type="submit"
+                disabled={!stripe || loading}
               >
-                {error}
-              </Typography>
-            )}
-          </form>
-          <Success
-            body={
-              <div>
-                <Typography variant="h5" gutterBottom>
-                  Thanks for your order!
+                Pay
+                {loading && (
+                  <CircularProgress
+                    color="secondary"
+                    style={{ position: "absolute" }}
+                  />
+                )}
+              </Button>
+              {error && (
+                <Typography
+                  style={{ paddingTop: 20, textAlign: "center", color: "red" }}
+                >
+                  {error}
                 </Typography>
-                <Typography variant="body1" gutterBottom>
-                  You will recieve an email with all your order details. Contact
-                  your photographer to setup a shoot location and have fun!
-                </Typography>
-              </div>
-            }
-            open={success}
-            redirect="/userDashboard"
-          />
-        </Paper>
+              )}
+            </form>
+            <Success
+              body={
+                <div>
+                  <Typography variant="h5" gutterBottom>
+                    Thanks for your order!
+                  </Typography>
+                  <Typography variant="body1" gutterBottom>
+                    You will recieve an email with all your order details.
+                    Contact your photographer to setup a shoot location and have
+                    fun!
+                  </Typography>
+                </div>
+              }
+              open={success}
+              redirect="/userDashboard"
+            />
+          </Paper>
+        </Grid>
       </Grid>
-    </Grid>
+    </>
   );
 };
 

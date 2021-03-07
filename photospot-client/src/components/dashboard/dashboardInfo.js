@@ -36,13 +36,6 @@ export class dashboardInfo extends Component {
               Page Views
             </Typography>
             <Typography gutterBottom />
-            <Chip
-              variant="outlined"
-              color="secondary"
-              size="small"
-              icon={<ArrowDropUpIcon />}
-              label={`${Math.round((this.props.views / 50) * 100)}%`}
-            />
           </DashboardPaper>
         </Grid>
         <Grid item sm={4} xs={6} style={{ textAlign: "center" }}>
@@ -54,13 +47,6 @@ export class dashboardInfo extends Component {
               Total Bookings
             </Typography>
             <Typography gutterBottom />
-            <Chip
-              variant="outlined"
-              color="secondary"
-              size="small"
-              icon={<ArrowDropUpIcon />}
-              label="13%"
-            />
           </DashboardPaper>
         </Grid>
         <Grid item sm={4} xs={12} style={{ textAlign: "center" }}>
@@ -72,12 +58,6 @@ export class dashboardInfo extends Component {
               Est. Revenue
             </Typography>
             <Typography gutterBottom />
-            <Chip
-              variant="outlined"
-              size="small"
-              icon={<ArrowDropDownIcon />}
-              label="14%"
-            />
           </DashboardPaper>
         </Grid>
       </Grid>

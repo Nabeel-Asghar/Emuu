@@ -142,7 +142,8 @@ class photograhperDashboard extends Component {
         <OrderCard
           {...this.props}
           key={key}
-          photographer={userOrders[key]}
+          orderDetails={userOrders[key]}
+          consumer={false}
           handleRefund={this.handleRefundDialog.bind(this)}
         />
       </div>
@@ -155,7 +156,8 @@ class photograhperDashboard extends Component {
         <OrderCard
           {...this.props}
           key={key}
-          photographer={userPastOrders[key]}
+          orderDetails={userPastOrders[key]}
+          consumer={false}
         />
       </div>
     ));

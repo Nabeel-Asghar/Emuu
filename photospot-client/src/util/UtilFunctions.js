@@ -1,3 +1,10 @@
+import moment from "moment";
+
+export function dateConvert(date) {
+  let convertedDate = moment(date, "MM/DD/YYYY").format("dddd, MMMM Do");
+  return convertedDate;
+}
+
 export function timeConvert(time) {
   // Check correct time format and split into components
   if (time) {
@@ -11,4 +18,12 @@ export function timeConvert(time) {
     }
     return time.join(""); // return adjusted time or original string
   }
+}
+
+export function formatMoney(value) {
+  return parseFloat(value).toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    style: "currency",
+    currency: "USD",
+  });
 }

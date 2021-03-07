@@ -33,6 +33,7 @@ class ProfileCard extends Component {
       lastName,
       profileImage,
       date,
+      type,
       time,
       price,
       location_city,
@@ -52,11 +53,7 @@ class ProfileCard extends Component {
           </Typography>
           <div>
             {location_city && location_state && (
-              <Typography
-                variant="body1"
-                gutterBottom
-                style={{ marginBottom: 10 }}
-              >
+              <Typography variant="body1" gutterBottom>
                 {location_city}, {location_state}
               </Typography>
             )}
@@ -68,6 +65,11 @@ class ProfileCard extends Component {
             {time && (
               <Typography variant="body1" gutterBottom>
                 Time: {time}
+              </Typography>
+            )}
+            {type && (
+              <Typography variant="body1" gutterBottom>
+                Type: {type}
               </Typography>
             )}
             {price && (

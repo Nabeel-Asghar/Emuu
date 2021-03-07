@@ -21,7 +21,7 @@ import changePassword from "./pages/changePassword";
 import resetPasswordSent from "./pages/resetPasswordSent";
 import changePasswordSent from "./pages/changePasswordSent";
 import messaging from "./pages/Messaging/messaging";
-import specificPhotographer from "./pages/specificPhotographer";
+import SpecificPhotographer from "./pages/specificPhotographer";
 import Book from "./pages/book";
 import profile from "./pages/profile";
 import Search from "./pages/Search/search";
@@ -141,6 +141,7 @@ const theme = createMuiTheme({
     },
     margin: {
       margin: "10px 0px",
+      padding: 10,
     },
     image: {
       margin: "20px auto 20px auto",
@@ -233,7 +234,7 @@ const theme = createMuiTheme({
     },
 
     textGrid: {
-      marginLeft: "25px",
+      margin: "0px 20px",
     },
 
     rightGrid: {
@@ -304,7 +305,9 @@ const App = () => {
               <Route
                 exact
                 path="/photographers/:photographerID"
-                component={specificPhotographer}
+                render={(props) => (
+                  <SpecificPhotographer {...props} fullScreen={fullScreen} />
+                )}
               />
 
               <AuthRoute

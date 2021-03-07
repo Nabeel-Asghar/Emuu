@@ -24,7 +24,7 @@ import defaultBackground from "../images/defaultBackground.jpg";
 import { connect } from "react-redux";
 import StarRatings from "react-star-ratings";
 import { getPhotographerPage, getReviews } from "../redux/actions/dataActions";
-import { reviewPhotographer } from "../redux/actions/userActions";
+import { reviewPhotographer, getUserData } from "../redux/actions/userActions";
 
 // Components
 import Bio from "../components/photographer-page/bio";
@@ -34,6 +34,7 @@ import Usercard from "../components/photographer-page/usercard";
 import PhotographerReviews from "../components/shared/photographerReviews";
 import UserImage from "../components/photographer-page/userImage";
 import UserInfo from "../components/photographer-page/userInfo";
+import Pricing from "../components/photographer-page/Pricing";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -72,6 +73,7 @@ class specificPhotographer extends Component {
       title: "",
       newReviewRating: 1,
       description: "",
+      pricing: null,
       errors: {},
       openReview: false,
       openBackdrop: false,
@@ -95,6 +97,7 @@ class specificPhotographer extends Component {
   }
 
   componentDidMount() {
+    console.log("running");
     const photographerID = this.props.match.params.photographerID;
     this.props.getPhotographerPage(photographerID);
     const photoDetails = this.props.photographerDetails;
@@ -105,22 +108,17 @@ class specificPhotographer extends Component {
       });
       this.handleCount(this.state.allReviews);
     });
-    if (this.props.credentials) {
-      if (this.props.credentials[0]?.photographer) {
+    this.props.getUserData().then(() => {
+      this.props.credentials &&
         this.setState({
-          photographer: true,
+          openBackdrop: false,
+          userEmail: this.props.credentials[0]?.email,
+          userFirstName: this.props.credentials[0]?.firstName,
+          userLastName: this.props.credentials[0]?.lastName,
+          userProfileImage: this.props.credentials[0]?.profileImage,
+          photographer: this.props.credentials[0]?.photographer,
         });
-      } else {
-        this.setState({ photographer: false });
-      }
-      this.setState({
-        openBackdrop: false,
-        userEmail: this.props.credentials[0]?.email,
-        userFirstName: this.props.credentials[0]?.firstName,
-        userLastName: this.props.credentials[0]?.lastName,
-        userProfileImage: this.props.credentials[0]?.profileImage,
-      });
-    }
+    });
   }
 
   componentDidUpdate(prevProps) {
@@ -129,6 +127,8 @@ class specificPhotographer extends Component {
     }
 
     if (!equal(this.props.credentials, prevProps.credentials)) {
+      console.log("updating");
+
       if (this.props.credentials) {
         if (this.props.credentials[0]?.photographer) {
           this.setState({
@@ -138,6 +138,7 @@ class specificPhotographer extends Component {
           this.setState({ photographer: false });
         }
         this.setState({
+          photographer: this.props.credentials[0]?.photographer,
           userEmail: this.props.credentials[0]?.email,
           userProfileImage: this.props.credentials[0]?.profileImage,
         });
@@ -173,7 +174,10 @@ class specificPhotographer extends Component {
       photographerProfile: this.state.profileImage,
     };
 
-    this.props.reviewPhotographer(this.props.match.params.photographerID, details);
+    this.props.reviewPhotographer(
+      this.props.match.params.photographerID,
+      details
+    );
   };
 
   handleCheck() {
@@ -238,13 +242,17 @@ class specificPhotographer extends Component {
     const {
       classes,
       UI: { loadingData, loadingReviewAction, newReviewSucess },
+      fullScreen,
     } = this.props;
 
     let allReviews = [];
     for (var key = 0; key < this.state.allReviews.length; key++) {
       allReviews.push(
         <div>
-          <PhotographerReviews review={this.state.allReviews[key]} index={key} />
+          <PhotographerReviews
+            review={this.state.allReviews[key]}
+            index={key}
+          />
         </div>
       );
     }
@@ -264,8 +272,14 @@ class specificPhotographer extends Component {
             maxWidth: 1000,
             margin: "-350px auto 0 auto",
             paddingBottom: "20px",
-          }}>
-          <Grid container direction="column" alignItems="center" justify="center">
+          }}
+        >
+          <Grid
+            container
+            direction="column"
+            alignItems="center"
+            justify="center"
+          >
             <Usercard
               authenticated={this.props.user.authenticated}
               history={this.props.history}
@@ -296,10 +310,26 @@ class specificPhotographer extends Component {
               headline={this.state.headline}
               camera={this.state.camera}
             />
+
+            <Pricing
+              pricing={this.state.pricing}
+              fullScreen={fullScreen}
+              selectable={false}
+              handleSelect={() => {}}
+            />
           </Grid>
 
-          <Paper elevation={3} className={classes.paperComponent}>
-            <Grid container direction="row" alignItems="center" justify="flex-start">
+          <Paper
+            elevation={3}
+            className={classes.paperComponent}
+            style={{ marginTop: 0 }}
+          >
+            <Grid
+              container
+              direction="row"
+              alignItems="center"
+              justify="flex-start"
+            >
               <Grid item sm={12}>
                 <Bio
                   {...this.props}
@@ -345,7 +375,11 @@ class specificPhotographer extends Component {
                     />
                     <ListItemSecondaryAction>
                       <IconButton edge="end" onClick={() => this.handleCheck()}>
-                        {this.state.checked ? <KeyboardArrowDownIcon /> : <KeyboardArrowLeftIcon />}
+                        {this.state.checked ? (
+                          <KeyboardArrowDownIcon />
+                        ) : (
+                          <KeyboardArrowLeftIcon />
+                        )}
                       </IconButton>
                     </ListItemSecondaryAction>
                   </ListItem>
@@ -363,9 +397,12 @@ class specificPhotographer extends Component {
                   color="secondary"
                   aria-label="add"
                   style={{ margin: "10px 0 20px 0", float: "right" }}
-                  onClick={() => this.handleReviewOpenState()}>
+                  onClick={() => this.handleReviewOpenState()}
+                >
                   <AddIcon className={classes.extendedIcon} />
-                  <Typography style={{ fontWeight: "bold" }}>ADD REVIEW</Typography>
+                  <Typography style={{ fontWeight: "bold" }}>
+                    ADD REVIEW
+                  </Typography>
                 </Fab>
               )}
 
@@ -393,7 +430,12 @@ class specificPhotographer extends Component {
           </Collapse>
 
           <Paper elevation={3}>
-            <Grid container direction="column" alignItems="center" justify="center">
+            <Grid
+              container
+              direction="column"
+              alignItems="center"
+              justify="center"
+            >
               <Grid item xs={12} className={classes.centerGrid}>
                 <PhotoSamples
                   key={this.state.images}
@@ -422,6 +464,7 @@ const mapActionsToProps = {
   getPhotographerPage,
   getReviews,
   reviewPhotographer,
+  getUserData,
 };
 
 export default connect(
