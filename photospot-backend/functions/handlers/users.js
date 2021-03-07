@@ -11,26 +11,24 @@ const fs = require("fs");
 const firebase = require("firebase");
 firebase.initializeApp(config);
 
-const {
-  saveObjectToAlgolia,
-  partialUpdateObjectToAlgolia,
-} = require("./algolia");
+const { saveObjectToAlgolia, partialUpdateObjectToAlgolia } = require("./algolia");
 
 const {
   validateSignUpData,
   validateLoginData,
   validatePhotographerPageData,
   validateResetPasswordData,
-  reduceUserDetails,
   validateProfileUpdate,
 } = require("../util/validators");
 
-// signup
+// Sign up normal users
 exports.signup = (req, res) => {
-  const newUser = req.body;
+  const newUser = {
+    ...req.body,
+    createdAt: new Date().toISOString(),
+    profileImage: `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultProfilePicture}?alt=media`,
+  };
   const { valid, errors } = validateSignUpData(newUser);
-  newUser.createdAt = new Date().toISOString();
-  newUser.profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${defaultProfilePicture}?alt=media`;
 
   if (!valid) return res.status(400).json(errors).end();
 
@@ -50,7 +48,7 @@ exports.signup = (req, res) => {
       return db.doc(`/users/${userId}`).set(newUser);
     })
     .then(() => {
-      return res.status(201).json({ token }).end();
+      return res.status(201).json({ token });
     })
     .catch((err) => {
       console.error(err);
@@ -58,6 +56,7 @@ exports.signup = (req, res) => {
     });
 };
 
+// Sign up Photographers
 exports.signupPhotographer = (req, res) => {
   const defaultProfilePicture = "defaultProfilePicture.png";
 
@@ -83,10 +82,7 @@ exports.signupPhotographer = (req, res) => {
 
   firebase
     .auth()
-    .createUserWithEmailAndPassword(
-      newPhotographer.email,
-      newPhotographer.password
-    )
+    .createUserWithEmailAndPassword(newPhotographer.email, newPhotographer.password)
     .then((data) => {
       userId = data.user.uid;
       return data.user.getIdToken();
@@ -110,7 +106,7 @@ exports.signupPhotographer = (req, res) => {
     });
 };
 
-// login
+// Login for both users and photographers
 exports.login = (req, res) => {
   const user = {
     email: req.body.email,
@@ -129,7 +125,10 @@ exports.login = (req, res) => {
     })
     .then((token) => {
       var user = firebase.auth().currentUser;
+<<<<<<< HEAD
+=======
 
+>>>>>>> a20ba65013b4f20d14716c193ae29076fa94a666
       if (res.locals.registration == "incomplete") {
         return res.status(400).json({
           registration: "You must complete your photographer profile!",
@@ -152,10 +151,7 @@ exports.login = (req, res) => {
     })
     .catch((err) => {
       console.error(err);
-      if (
-        (err.code = "auth/email-already-in-use") ||
-        (err.code = "auth/wrong-password")
-      ) {
+      if ((err.code = "auth/email-already-in-use") || (err.code = "auth/wrong-password")) {
         return res.status(400).json({
           general: "Your login or password was incorrect. Please try again",
         });
@@ -165,105 +161,68 @@ exports.login = (req, res) => {
     });
 };
 
-exports.reauthenticateUser = () => {
-  var user = firebase.auth().currentUser;
-  var credential = firebase.auth.EmailAuthProvider.credential(
-    "adeelasghgar1001@gmail.com",
-    "bigman123"
-  );
-
-  return user.reauthenticateWithCredential(credential);
-};
-
-// change your account password
+// Change your account password
 exports.changePassword = (req, res) => {
   var email = req.body.email;
   var oldPassword = req.body.oldPassword;
   var newPassword = req.body.newPassword;
-  var newPasswordConfirm = req.body.newPasswordConfirm;
 
-  if (newPassword === oldPassword) {
-    return res.status(400).json({
-      similar: "Your new password can't be the same as the old one.",
-    });
-  }
-
-  if (newPassword !== newPasswordConfirm) {
-    return res.status(400).json({
-      matching: "Passwords don't match.",
-    });
-  }
+  const { valid, errors } = validateChangePassword(req.body);
+  if (!valid) return res.status(400).json(errors);
 
   firebase
     .auth()
     .signInWithEmailAndPassword(email, oldPassword)
     .then(() => {
       var user = firebase.auth().currentUser;
-
-      user
-        .updatePassword(newPassword)
-        .then(function () {
-          return res.json({ message: "Password changed!" });
-        })
-        .catch(function (err) {
-          if ((err.code = "auth/weak-password")) {
-            return res.status(400).json({
-              matching: "Password is not strong enough.",
-            });
-          } else if ((err.code = "auth/requires-recent-login")) {
-            return res.status(400).json({
-              general: "Must have recently logged in.",
-            });
-          } else {
-            return res.status(500).json({ error: err.code });
-          }
-        });
+      user.updatePassword(newPassword);
     })
+    .then(() => {
+      return res.json({ message: "Password changed!" });
+    })
+
     .catch(function (err) {
       if ((err.code = "auth/weak-password")) {
-        return res.status(400).json({
-          login: "Wrong password.",
-        });
+        return res.status(400).json({ matching: "Password is not strong enough." });
+      } else if ((err.code = "auth/requires-recent-login")) {
+        return res.status(400).json({ general: "Must have recently logged in." });
+      } else if ((err.code = "auth/weak-password")) {
+        return res.status(400).json({ login: "Wrong password." });
       } else {
         return res.status(500).json({ error: err.code });
       }
     });
 };
 
-// send reset password email
+// Send reset password email
 exports.resetPassword = (req, res) => {
   var emailAddress = req.body.email;
 
   const { valid, errors } = validateResetPasswordData(emailAddress);
-
   if (!valid) return res.status(400).json(errors);
 
-  //
   firebase
     .auth()
     .sendPasswordResetEmail(emailAddress)
     .then(() => {
-      return res.json({
-        message: "Password reset email sent!",
-      });
+      return res.json({ message: "Password reset email sent!" });
     })
     .catch((err) => {
       if ((err.code = "auth/user-not-found")) {
-        return res.status(400).json({
-          general: "There is no user corresponding to the email address",
-        });
+        return res
+          .status(400)
+          .json({ general: "There is no user corresponding to the email address" });
       } else {
         return res.status(500).json({ error: err.code });
       }
     });
 };
 
-// set details for your photography page
+// Set details for your photography page
 exports.setYourPhotographyPage = async (req, res) => {
   const reqDetails = req.body;
 
   const { valid, errors } = validatePhotographerPageData(reqDetails);
-
   if (!valid) return res.status(400).json(errors);
 
   let photographer = await getPhotographer(req.user.uid);
@@ -281,18 +240,15 @@ exports.setYourPhotographyPage = async (req, res) => {
       saveObjectToAlgolia(algoliaObject);
     })
     .then(() => {
-      return res
-        .status(200)
-        .json({ message: "Your photographer page has been updated." })
-        .end();
+      return res.status(200).json({ message: "Your photographer page has been updated." });
     })
     .catch((err) => {
       console.error(err);
-      return res.status(500).json({ error: err.code }).end();
+      return res.status(500).json({ error: err.code });
     });
 };
 
-// update your photographer page
+// Update your photographer page
 exports.updatePhotographerCategoriesAndBio = (req, res) => {
   const photographerPageDetails = req.body;
 
@@ -311,7 +267,7 @@ exports.updatePhotographerCategoriesAndBio = (req, res) => {
     });
 };
 
-// upload profile image for user
+// Upload profile image for user
 exports.uploadProfilePicture = async (req, res) => {
   const busboy = new BusBoy({ headers: req.headers });
 
@@ -335,13 +291,9 @@ exports.uploadProfilePicture = async (req, res) => {
 
     const source = `source.${imageExtension}`;
 
-    imageFileName = `${Math.round(
-      Math.random() * 1000000000
-    )}.${imageExtension}`;
+    imageFileName = `${Math.round(Math.random() * 1000000000)}.${imageExtension}`;
 
-    thumbnailName = `${Math.round(
-      Math.random() * 1000000000
-    )}.${imageExtension}`;
+    thumbnailName = `${Math.round(Math.random() * 1000000000)}.${imageExtension}`;
 
     tempPath = path.join(os.tmpdir(), source);
     imagePath = path.join(os.tmpdir(), imageFileName);
@@ -387,7 +339,7 @@ exports.uploadProfilePicture = async (req, res) => {
   return res.json({ message: "Profile image updated" });
 };
 
-// upload your background picture for your page
+// Upload your background picture for your page
 exports.uploadBackgroundPicture = (req, res) => {
   const BusBoy = require("busboy");
   const path = require("path");
@@ -406,9 +358,7 @@ exports.uploadBackgroundPicture = (req, res) => {
 
     const imageExtension = filename.split(".")[filename.split(".").length - 1];
 
-    imageFileName = `${Math.round(
-      Math.random() * 1000000000
-    )}.${imageExtension}`;
+    imageFileName = `${Math.round(Math.random() * 1000000000)}.${imageExtension}`;
 
     const filepath = path.join(os.tmpdir(), imageFileName);
     imageToBeUploaded = { filepath, mimetype };
@@ -446,19 +396,13 @@ exports.uploadBackgroundPicture = (req, res) => {
   return res.json({ message: "Background image updated" });
 };
 
-// update users profile details
+// Update users profile details
 exports.updateUserProfile = (req, res) => {
   let photographer = res.locals.photographer;
 
-  const userDetails = {
-    firstName: req.body.firstName,
-    lastName: req.body.lastName,
-    location_city: req.body.location_city,
-    location_state: req.body.location_state,
-  };
+  const userDetails = req.body;
 
   const { valid, errors } = validateProfileUpdate(userDetails);
-
   if (!valid) return res.status(400).json(errors);
 
   db.doc(`/users/${req.user.uid}`)
@@ -471,17 +415,13 @@ exports.updateUserProfile = (req, res) => {
             let alogliaUserDetails = userDetails;
             alogliaUserDetails.objectID = req.user.uid;
             partialUpdateObjectToAlgolia(alogliaUserDetails);
-          })
-          .then(() => {
-            return res.json({ message: "Your user profile has been updated." });
-          })
-          .catch((err) => {
-            console.log(err);
-            return res.status(500).json({ error: err.code });
           });
       } else {
         return res.json({ message: "Your user profile has been updated." });
       }
+    })
+    .then(() => {
+      return res.json({ message: "Your user profile has been updated." });
     })
     .catch((err) => {
       console.log(err);
@@ -489,56 +429,32 @@ exports.updateUserProfile = (req, res) => {
     });
 };
 
-// getting the current user photography page
+// Getting the current user photography page
 exports.getYourPhotographerPage = (req, res) => {
-  let userid = req.user.uid;
   let photographer = res.locals.photographer;
 
   if (!photographer) {
     return res.json({ message: "You are not a photographer." });
   }
 
-  db.collection("photographer")
-    .doc(userid)
+  db.doc(`photographer/${req.user.uid}`)
     .get()
     .then((doc) => {
       let page = [];
+      page.push(doc.data());
 
-      page.push({
-        firstName: doc.data().firstName,
-        lastName: doc.data().lastName,
-        email: doc.data().email,
-        bio: doc.data().bio,
-        background: doc.data().background,
-        images: doc.data().images,
-        createdAt: doc.data().createdAt,
-        location_city: doc.data().location_city,
-        location_state: doc.data().location_state,
-        profileImage: doc.data().profileImage,
-        company: doc.data().company,
-        website: doc.data().website,
-        instagram: doc.data().instagram,
-        ratePerHour: doc.data().ratePerHour,
-        camera: doc.data().camera,
-        headline: doc.data().headline,
-        categories: doc.data().categories,
-        views: doc.data().views,
-        totalCompletedOrders: doc.data().totalCompletedOrders,
-      });
-
-      return res.json(page);
+      return res.status(200).json(page);
     })
     .catch((err) => {
       return res.status(403).json({ error: err });
     });
 };
 
-// getting the current user profile page
+// Getting the current user profile page
 exports.getYourUserProfile = (req, res) => {
   let userid = req.user.uid;
 
-  db.collection("users")
-    .doc(userid)
+  db.doc(`users/${userid}`)
     .get()
     .then((doc) => {
       if (!doc.exists) {
@@ -549,79 +465,48 @@ exports.getYourUserProfile = (req, res) => {
 
       page.push({
         userID: userid,
-        email: doc.data().email,
-        firstName: doc.data().firstName,
-        lastName: doc.data().lastName,
-        photographer: doc.data().photographer,
-        profileImage: doc.data().profileImage,
-        createdAt: doc.data().createdAt,
-        location_city: doc.data().location_city,
-        location_state: doc.data().location_state,
-        thumbnailImage: doc.data().thumbnailImage,
-        registration: doc.data().registration,
+        ...doc.data(),
       });
+
+      console.log(page);
 
       return res.status(200).json(page);
     })
     .catch((err) => console.error(err));
 };
 
+/*TODO: Edit doc data function later*/
 exports.getYourPhotographerOrders = (req, res) => {
   let photographerID = req.user.uid;
 
-  db.collection("photographer")
-    .doc(photographerID)
-    .collection("orders")
+  db.collection(`photographer/${photographerID}/orders`)
     .orderBy("formattedDate", "desc")
     .get()
     .then((snapshot) => {
       let orders = [];
 
       snapshot.forEach((doc) => {
-        orders.push({
-          orderID: doc.data().id,
-          consumerID: doc.data().consumerID,
-          photographerID: doc.data().photographerID,
-          firstName: doc.data().consumerFirstName,
-          lastName: doc.data().consumerLastName,
-          profileImage: doc.data().consumerProfileImage,
-          shootDate: doc.data().shootDate,
-          shootTime: doc.data().shootTime,
-          formattedDate: doc.data().formattedDate,
-          amount: doc.data().amount,
-          paymentID: doc.data().paymentID,
-          status: doc.data().status,
-        });
+        orders.push({ orderID: doc.data().id, ...doc.data() });
       });
-      return res.json(orders);
+      return res.status(200).json(orders);
     })
     .catch((err) => {
-      return res.json({ error: err });
+      return res.status(500).json({ error: err });
     });
 };
 
+/*TODO: Edit doc data function later*/
 exports.getYourPhotographerReviews = (req, res) => {
   let photographerID = req.user.uid;
 
-  db.collection("photographer")
-    .doc(photographerID)
-    .collection("reviews")
+  db.collection(`photographer/${photographerID}/reviews`)
     .orderBy("createdAt", "desc")
     .get()
     .then((data) => {
       let reviews = [];
 
       data.forEach((doc) => {
-        reviews.push({
-          title: doc.data().title,
-          description: doc.data().description,
-          rating: doc.data().rating,
-          userID: doc.data().userID,
-          photographerID: doc.data().photographerBeingReviewed,
-          firstName: doc.data().firstName,
-          lastName: doc.data().lastName,
-          createdAt: doc.data().createdAt,
-        });
+        reviews.push(doc.data());
       });
 
       return res.json(reviews);
@@ -631,31 +516,18 @@ exports.getYourPhotographerReviews = (req, res) => {
     });
 };
 
+/*TODO: Edit doc data function later*/
 exports.getYourPhotographerPastOrders = (req, res) => {
-  let photograhperID = req.user.uid;
+  let photographerID = req.user.uid;
 
-  db.collection("photographer")
-    .doc(photograhperID)
-    .collection("completedOrders")
+  db.collection(`photographer/${photographerID}/completedOrders`)
     .orderBy("formattedDate", "desc")
     .get()
     .then((snapshot) => {
       let allPastOrders = [];
 
       snapshot.forEach((doc) => {
-        allPastOrders.push({
-          orderID: doc.data().id,
-          consumerID: doc.data().consumerID,
-          photographerID: doc.data().photographerID,
-          firstName: doc.data().consumerFirstName,
-          lastName: doc.data().consumerLastName,
-          profileImage: doc.data().consumerProfileImage,
-          shootDate: doc.data().shootDate,
-          shootTime: doc.data().shootTime,
-          formattedDate: doc.data().formattedDate,
-          status: doc.data().status,
-          amount: doc.data().amount,
-        });
+        allPastOrders.push({ orderID: doc.data().id, ...doc.data() });
       });
       return res.json(allPastOrders);
     })
@@ -668,28 +540,13 @@ exports.getYourPhotographerPastOrders = (req, res) => {
 exports.getUsersOrders = (req, res) => {
   let userid = req.user.uid;
 
-  db.collection("users")
-    .doc(userid)
-    .collection("orders")
+  db.collection(`users/${userid}/orders`)
     .get()
     .then((data) => {
       let orders = [];
 
       data.forEach((doc) => {
-        orders.push({
-          orderID: doc.data().id,
-          amount: doc.data().amount,
-          paymentID: doc.data().paymentID,
-          consumerID: doc.data().consumerID,
-          photographerID: doc.data().photographerID,
-          firstName: doc.data().photographerFirstName,
-          lastName: doc.data().photographerLastName,
-          profileImage: doc.data().photographerProfileImage,
-          shootDate: doc.data().shootDate,
-          shootTime: doc.data().shootTime,
-          formattedDate: doc.data().formattedDate,
-          status: doc.data().status,
-        });
+        orders.push({ orderID: doc.data().id, ...doc.data() });
       });
       return res.json(orders);
     })
@@ -700,28 +557,14 @@ exports.getUsersOrders = (req, res) => {
 exports.getUsersPastOrders = (req, res) => {
   let userid = req.user.uid;
 
-  db.collection("users")
-    .doc(userid)
-    .collection("completedOrders")
+  db.collection(`users/${userid}/completedOrders`)
     .orderBy("formattedDate", "desc")
     .get()
     .then((snapshot) => {
       let allPastOrders = [];
 
       snapshot.forEach((doc) => {
-        allPastOrders.push({
-          orderID: doc.data().id,
-          consumerID: doc.data().consumerID,
-          photographerID: doc.data().photographerID,
-          firstName: doc.data().photographerFirstName,
-          lastName: doc.data().photographerLastName,
-          profileImage: doc.data().photographerProfileImage,
-          shootDate: doc.data().shootDate,
-          shootTime: doc.data().shootTime,
-          formattedDate: doc.data().formattedDate,
-          status: doc.data().status,
-          amount: doc.data().amount,
-        });
+        allPastOrders.push({ orderID: doc.data().id, ...doc.data() });
       });
 
       return res.json(allPastOrders);
@@ -729,38 +572,52 @@ exports.getUsersPastOrders = (req, res) => {
     .catch((err) => console.error(err));
 };
 
+// Gets all reviews done by user
 exports.getUserReviews = (req, res) => {
   let userid = req.user.uid;
 
-  db.collection("users")
-    .doc(userid)
-    .collection("reviews")
+  db.collection(`users/${userid}/reviews`)
     .orderBy("createdAt", "desc")
     .get()
     .then((snapshot) => {
       let reviews = [];
 
       snapshot.forEach((doc) => {
-        reviews.push({
-          title: doc.data().title,
-          description: doc.data().description,
-          rating: doc.data().rating,
-          userID: doc.data().userID,
-          photographerID: doc.data().photographerBeingReviewed,
-          firstName: doc.data().firstName,
-          lastName: doc.data().lastName,
-          createdAt: doc.data().createdAt,
-          photographerLastName: doc.data().photographerLastName,
-          photographerFirstName: doc.data().photographerFirstName,
-          photographerProfile: doc.data().photographerProfile,
-          photographerID: doc.data().photographerID,
-        });
+        reviews.push(doc.data());
       });
 
-      return res.json(reviews);
+      return res.status(200).json(reviews);
     })
     .catch((err) => {
-      return res.json({ error: err });
+      return res.status(500).json({ error: err });
+    });
+};
+
+exports.editBookingTimes = (req, res) => {
+  let date = req.body.date;
+  let timeslots = req.body.time;
+  let algoliaDates = req.body.algoliaDates;
+  let userid = req.user.uid;
+
+  console.log("Date: ", date);
+  console.log("Timeslots: ", timeslots);
+  console.log("Algoliatimeslot: ", algoliaDates);
+
+  db.collection(`photographer/${userid}/bookings`)
+    .doc(date)
+    .set(timeslots)
+    .then(() => {
+      partialUpdateObjectToAlgolia({
+        dates: { _operation: "AddUnique", value: algoliaDates },
+        objectID: userid,
+      });
+    })
+    .then(() => {
+      return res.status(200).json({ message: "success" });
+    })
+    .catch((err) => {
+      console.log(err);
+      return res.status(500).json({ error: err });
     });
 };
 
@@ -770,7 +627,7 @@ exports.uploadYourPhotographyImages = (req, res) => {
   let userID = req.user.uid;
 
   if (!photographer) {
-    return res.json({ message: "You are not a photographer." });
+    return res.status(403).json({ message: "You are not a photographer." });
   }
 
   const imageNames = req.body;
@@ -922,8 +779,7 @@ function updateProfileImage(database, id, imageFileName, thumbnail) {
 
 function getPhotographer(userid) {
   return db
-    .collection("photographer")
-    .doc(userid)
+    .doc(`photographer/${userid}`)
     .get()
     .then((doc) => {
       return doc.data();

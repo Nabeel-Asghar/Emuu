@@ -14,7 +14,6 @@ import { connect } from "react-redux";
 import {
   getPhotographerPage,
   getBookingTimes,
-  bookPhotographer,
   checkBookability,
 } from "../redux/actions/dataActions";
 
@@ -218,8 +217,7 @@ class book extends Component {
             padding: 15,
             maxWidth: halfScreen ? (fullScreen ? 350 : 550) : 900,
             margin: "0 auto",
-          }}
-        >
+          }}>
           <Grid container direction="row" justify="center" spacing={2}>
             <Snackbar
               anchorOrigin={{
@@ -227,8 +225,7 @@ class book extends Component {
                 horizontal: "center",
               }}
               open={this.state.openSnack}
-              onClose={this.handleClose}
-            >
+              onClose={this.handleClose}>
               <Alert onClose={this.handleClose} severity={"warning"}>
                 You already have a pending order.
               </Alert>
@@ -277,10 +274,7 @@ class book extends Component {
 
             <Grid item md={3} sm={4} xs={12} style={{ width: "100%" }}>
               {loadingData ? (
-                <CircularProgress
-                  className={classes.progress}
-                  color="secondary"
-                />
+                <CircularProgress className={classes.progress} color="secondary" />
               ) : (
                 <Time
                   {...this.props}
@@ -299,9 +293,7 @@ class book extends Component {
               handleAgree={this.handleAgree}
               handleDisagree={this.handleDisagree}
               title="Confirm Booking"
-              text={`Would you like to confirm booking with ${
-                this.state.firstName
-              }
+              text={`Would you like to confirm booking with ${this.state.firstName}
           ${this.state.lastName} on ${dateConvert(this.state.formattedDate)} at 
           ${timeConvert(this.state.selectedTime)}?`}
             />
@@ -322,11 +314,7 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = {
   getPhotographerPage,
   getBookingTimes,
-  bookPhotographer,
   checkBookability,
 };
 
-export default connect(
-  mapStateToProps,
-  mapActionsToProps
-)(withStyles(styles)(book));
+export default connect(mapStateToProps, mapActionsToProps)(withStyles(styles)(book));

@@ -79,6 +79,7 @@ class usercard extends Component {
             </Skeleton>
           ) : (
             <div>
+              {console.log("Photographer:", photographer)}
               <Button
                 className={classes.spacedButton}
                 startIcon={<BookIcon />}
@@ -87,11 +88,8 @@ class usercard extends Component {
                 color="secondary"
                 size="large"
                 onClick={() =>
-                  this.props.history.push(
-                    `${this.props.history.location.pathname}/book`
-                  )
-                }
-              >
+                  this.props.history.push(`${this.props.history.location.pathname}/book`)
+                }>
                 <Typography style={{ fontWeight: "bold" }}>Book</Typography>
               </Button>
               <Button
@@ -102,8 +100,7 @@ class usercard extends Component {
                 disableElevation
                 size="large"
                 onClick={this.handleContactClickOpen}
-                disabled={loading || photographer || !this.props.authenticated}
-              >
+                disabled={loading || photographer || !this.props.authenticated}>
                 <Typography style={{ fontWeight: "bold" }}>Contact</Typography>
               </Button>
               <NewChatComponent
