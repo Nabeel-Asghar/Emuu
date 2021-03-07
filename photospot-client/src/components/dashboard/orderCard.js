@@ -38,31 +38,30 @@ const ColorButton = withStyles((theme) => ({
 }))(Button);
 
 class orderCard extends Component {
+  getName = () => {
+    const { consumer, orderDetails } = this.props;
+
+    const firstName = consumer
+      ? orderDetails.photographerFirstName
+      : orderDetails.consumer;
+    const lastName = consumer
+      ? orderDetails.photographerLastName
+      : orderDetails.consumerLastName;
+
+    return `${firstName} ${lastName}`;
+  };
+
   render() {
-    const {
-      classes,
-      photographer: {
-        orderID,
-        paymentID,
-        photographerID,
-        consumerFirstName,
-        consumerLastName,
-        consumerProfileImage,
-        shootDate,
-        shootTime,
-        amount,
-        status,
-      },
-    } = this.props;
+    const { classes, consumer, orderDetails } = this.props;
 
     return (
       <div style={{ marginBottom: 15 }}>
-        {photographerID && (
+        {orderDetails.photographerID && (
           <Paper>
             <Grid container justify="center" alignItems="center">
               <Grid item md={4} sm={5} xs={12} style={{ textAlign: "center" }}>
                 <img
-                  src={consumerProfileImage}
+                  src={orderDetails.consumerProfileImage}
                   style={{
                     maxWidth: "90%",
                     padding: 10,
@@ -73,14 +72,24 @@ class orderCard extends Component {
               </Grid>
 
               <Grid item md={8} sm={7} xs={12}>
-                <Grid container direction="column" spacing={1} style={{ padding: 10 }}>
+                <Grid
+                  container
+                  direction="column"
+                  spacing={1}
+                  style={{ padding: 10 }}
+                >
                   <Grid item xs={12}>
                     <Paper style={{ padding: 15 }} variant="outlined">
                       <Typography variant="h6" gutterBottom>
-                        Photo shoot with {consumerFirstName} {consumerLastName}
+                        Photo shoot with {this.getName()}
                       </Typography>
-                      <Typography variant="h5" gutterBottom style={{ fontWeight: "bold" }}>
-                        {timeConvert(shootTime)} on {dateConvert(shootDate)}
+                      <Typography
+                        variant="h5"
+                        gutterBottom
+                        style={{ fontWeight: "bold" }}
+                      >
+                        {timeConvert(orderDetails.shootTime)} on{" "}
+                        {dateConvert(orderDetails.shootDate)}
                       </Typography>
                     </Paper>
                   </Grid>
@@ -89,11 +98,17 @@ class orderCard extends Component {
                       <List dense="true">
                         <ListItem>
                           <ListItemText
-                            primary={<Typography variant="h6">Order Total</Typography>}
+                            primary={
+                              <Typography variant="h6">Order Total</Typography>
+                            }
                             style={{ textAlign: "left" }}
                           />
                           <ListItemText
-                            primary={<Typography variant="h6">${amount}.00</Typography>}
+                            primary={
+                              <Typography variant="h6">
+                                ${orderDetails.amount}.00
+                              </Typography>
+                            }
                             style={{ textAlign: "right" }}
                           />
                         </ListItem>
@@ -102,21 +117,29 @@ class orderCard extends Component {
                   </Grid>
                   <Grid item xs={12} style={{ textAlign: "right" }}>
                     <>
-                      {showVault.includes(status) && (
+                      {showVault.includes(orderDetails.status) && (
                         <Button
                           variant="contained"
                           color="secondary"
-                          onClick={() => this.props.history.push(`vault/${orderID}`)}
-                          className={classes.buttonSpacing}>
+                          onClick={() =>
+                            this.props.history.push(
+                              `vault/${orderDetails.orderID}`
+                            )
+                          }
+                          className={classes.buttonSpacing}
+                        >
                           Photo Vault
                         </Button>
                       )}
-                      {showCancel.includes(status) && (
+                      {showCancel.includes(orderDetails.status) && (
                         <ColorButton
                           variant="contained"
                           color="secondary"
-                          onClick={() => this.props.handleRefund(orderID)}
-                          className={classes.buttonSpacing}>
+                          onClick={() =>
+                            this.props.handleRefund(orderDetails.orderID)
+                          }
+                          className={classes.buttonSpacing}
+                        >
                           Cancel
                         </ColorButton>
                       )}
@@ -124,7 +147,7 @@ class orderCard extends Component {
                   </Grid>
                   <Grid item xs={12} style={{ textAlign: "right" }}>
                     <Typography>
-                      Status: <b>{status}</b>
+                      Status: <b>{orderDetails.status}</b>
                     </Typography>
                   </Grid>
                 </Grid>

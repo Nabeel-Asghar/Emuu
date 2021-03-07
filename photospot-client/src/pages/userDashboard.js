@@ -206,7 +206,8 @@ class userDashboard extends Component {
         <OrderCard
           {...this.props}
           key={key}
-          photographer={userOrders[key]}
+          orderDetails={userOrders[key]}
+          consumer={true}
           refundStatus={true}
           handleRefund={this.handleRefundDialog.bind(this)}
         />
@@ -221,7 +222,8 @@ class userDashboard extends Component {
         <OrderCard
           {...this.props}
           key={key}
-          photographer={userPastOrders[key]}
+          orderDetails={userPastOrders[key]}
+          consumer={true}
           refundStatus={false}
         />
       </div>
