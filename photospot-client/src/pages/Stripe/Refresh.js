@@ -4,7 +4,7 @@ import { Redirect, Link } from "react-router-dom";
 
 import { refreshStripe } from "../../redux/actions/paymentActions";
 
-export class refresh extends Component {
+export class Refresh extends Component {
   componentDidMount() {
     this.props.refreshStripe();
   }
@@ -20,4 +20,4 @@ const mapActionsToProps = {
   refreshStripe,
 };
 
-export default connect(mapStateToProps, mapActionsToProps)(refresh);
+export default connect(mapStateToProps, mapActionsToProps)(Refresh);

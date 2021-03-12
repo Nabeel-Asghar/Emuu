@@ -23,7 +23,7 @@ class StripeCard extends Component {
           <Tooltip title="You must connect your Stripe to be booked!">
             <Button
               component={Link}
-              to="/onboard"
+              to="/stripe"
               color="secondary"
               variant="contained"
               classes={{

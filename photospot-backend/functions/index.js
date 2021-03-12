@@ -65,6 +65,7 @@ const {
   getStripeOnboardStatus,
   refund,
   refundFromPhotographer,
+  getDashboardLink,
 } = require("./handlers/payment");
 
 const { completedOrders } = require("./handlers/administrator");
@@ -114,13 +115,18 @@ app.post("/user/profileimage", FBAuth, uploadProfilePicture);
 app.get("/onboard-status", FBAuth, getStripeOnboardStatus);
 app.post("/onboard-user", FBAuth, onboardUser);
 app.get("/onboard-user/refresh", FBAuth, onboardUserRefresh);
+app.get("/get-stripe-dashboard", FBAuth, getDashboardLink);
 app.post("/photographers/:photographerId/book/checkout", FBAuth, createPayment);
 app.post("/user/refund", FBAuth, refund);
 app.post("/photographer/refund", FBAuth, refundFromPhotographer);
 
 // photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
-app.post("/editphotographypage/edit", FBAuth, updatePhotographerCategoriesAndBio);
+app.post(
+  "/editphotographypage/edit",
+  FBAuth,
+  updatePhotographerCategoriesAndBio
+);
 app.post("/editphotographypage/background", FBAuth, uploadBackgroundPicture);
 app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
 app.post("/photographyimages/delete", FBAuth, deleteImages);
@@ -154,26 +160,32 @@ app.post("/vault/:vaultID/finalize", FBAuth, finalizeVault);
 // Testing
 app.post("/test", testFunction);
 
-exports.dailyJob = functions.pubsub.schedule(`*/15 * * * *`).onRun(async (context) => {
-  const now = admin.firestore.Timestamp.now();
-  db.collection("scheduler")
-    .where("performAt", "<=", now)
-    .where("status", "==", "scheduled")
-    .get()
-    .then(function (querySnapshot) {
-      if (querySnapshot.size > 0) {
-        querySnapshot.forEach(async function (doc) {
-          payment.payOut(doc.id, doc.data().data.consumerID, doc.data().data.photographerID);
-        });
-        console.log("Job done");
-      } else {
-        console.log("No jobs to do");
-      }
-    })
-    .catch((err) => {
-      console.log("error in doing cronjob in payouts", err);
-    });
-});
+exports.dailyJob = functions.pubsub
+  .schedule(`*/15 * * * *`)
+  .onRun(async (context) => {
+    const now = admin.firestore.Timestamp.now();
+    db.collection("scheduler")
+      .where("performAt", "<=", now)
+      .where("status", "==", "scheduled")
+      .get()
+      .then(function (querySnapshot) {
+        if (querySnapshot.size > 0) {
+          querySnapshot.forEach(async function (doc) {
+            payment.payOut(
+              doc.id,
+              doc.data().data.consumerID,
+              doc.data().data.photographerID
+            );
+          });
+          console.log("Job done");
+        } else {
+          console.log("No jobs to do");
+        }
+      })
+      .catch((err) => {
+        console.log("error in doing cronjob in payouts", err);
+      });
+  });
 
 exports.updateAlgoliaIndex = functions.firestore
   .document("photographers/{userId}")
