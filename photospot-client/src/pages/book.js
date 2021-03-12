@@ -28,9 +28,9 @@ import Confirmation from "../components/shared/confirmation";
 import moment from "moment";
 import { dateConvert, timeConvert } from "../util/UtilFunctions";
 import ProfileCard from "../components/booking/card";
-import GoBackButton from "../components/shared/goBackButton";
 import Pricing from "../components/photographer-page/Pricing";
 import { Typography } from "@material-ui/core";
+import GoBackButton from "../components/shared/Buttons/GoBackButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,

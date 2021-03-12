@@ -20,7 +20,7 @@ import ProfileCard from "../components/booking/card";
 import { dateConvert, timeConvert } from "../util/UtilFunctions";
 import { Grid } from "@material-ui/core";
 import MiniPhotographer from "../components/shared/miniPhotographer";
-import GoBackButton from "../components/shared/goBackButton";
+import GoBackButton from "../components/shared/Buttons/GoBackButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,

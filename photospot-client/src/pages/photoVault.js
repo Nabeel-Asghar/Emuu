@@ -27,13 +27,13 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 // Components
 import ImageGrid from "../components/shared/imageGrid";
-import GoBackButton from "../components/shared/goBackButton";
 import ProgressBar from "../components/photo-vault/progressBar";
 import Success from "../components/shared/success";
 import Progress from "../components/shared/progress";
 import Confirmation from "../components/shared/confirmation";
 import LoadingPage from "../components/shared/loadingPage";
 import DownloadOrNotify from "../components/photo-vault/downloadOrNotify";
+import GoBackButton from "../components/shared/Buttons/GoBackButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,

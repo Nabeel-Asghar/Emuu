@@ -22,10 +22,10 @@ import {
 
 // Components
 import ImageGrid from "../components/shared/imageGrid";
-import GoBackButton from "../components/shared/goBackButton";
 import Success from "../components/shared/success";
 import Progress from "../components/shared/progress";
 import FailureFeedback from "../components/shared/FailureFeedback";
+import GoBackButton from "../components/shared/Buttons/GoBackButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
