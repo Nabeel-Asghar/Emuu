@@ -43,7 +43,7 @@ class orderCard extends Component {
 
     const firstName = consumer
       ? orderDetails.photographerFirstName
-      : orderDetails.consumer;
+      : orderDetails.consumerFirstName;
     const lastName = consumer
       ? orderDetails.photographerLastName
       : orderDetails.consumerLastName;
@@ -61,7 +61,11 @@ class orderCard extends Component {
             <Grid container justify="center" alignItems="center">
               <Grid item md={4} sm={5} xs={12} style={{ textAlign: "center" }}>
                 <img
-                  src={orderDetails.consumerProfileImage}
+                  src={
+                    consumer
+                      ? orderDetails.photographerProfileImage
+                      : orderDetails.consumerProfileImage
+                  }
                   style={{
                     maxWidth: "90%",
                     padding: 10,
