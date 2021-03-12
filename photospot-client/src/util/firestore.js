@@ -1,5 +1,4 @@
 import firebase from "firebase";
-import * as vaultFirebase from "firebase";
 
 const config = {
   apiKey: "AIzaSyA3fvrnPCpwgyqaRSvylay5aeyM57h1IJA",
@@ -12,18 +11,6 @@ const config = {
   measurementId: "G-FSEHN9YLHE",
 };
 
-const vaultConfig = {
-  apiKey: "AIzaSyA3fvrnPCpwgyqaRSvylay5aeyM57h1IJA",
-  authDomain: "photospot-5f554.firebaseapp.com",
-  databaseURL: "https://photospot-5f554.firebaseio.com",
-  projectId: "photospot-5f554",
-  storageBucket: "photospot_photo_vault",
-  messagingSenderId: "379618039684",
-  appId: "1:379618039684:web:0bcdd297aaf8d3b65f6fd1",
-  measurementId: "G-FSEHN9YLHE",
-};
-
-vaultFirebase.initializeApp(vaultConfig);
 firebase.initializeApp(config);
 
-export { firebase, vaultFirebase };
+export { firebase };
