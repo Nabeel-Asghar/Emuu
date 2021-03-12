@@ -194,9 +194,7 @@ exports.updateAlgoliaIndex = functions.firestore
     object.objectID = context.params.userId;
     index
       .saveObject(object)
-      .then(() => {
-        console.log("Object saved in Algolia: ", object.objectID);
-      })
+      .then(() => {})
       .catch((err) => {
         console.error(err);
         return res.status(500).json({ error: err.code });

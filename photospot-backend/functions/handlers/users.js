@@ -302,7 +302,9 @@ exports.uploadProfilePicture = async (req, res) => {
 
     const imageExtension = filename.split(".")[filename.split(".").length - 1];
 
-    const source = `source.${imageExtension}`;
+    const source = `${Math.round(
+      Math.random() * 1000000000
+    )}.${imageExtension}`;
 
     imageFileName = `${Math.round(
       Math.random() * 1000000000
@@ -319,10 +321,8 @@ exports.uploadProfilePicture = async (req, res) => {
     imageToBeUploaded = { tempPath, mimetype };
     profileImageToBeUploaded = { imagePath: imagePath, mimetype };
     thumbnailToBeUploaded = { imagePath: thumbnailPath, mimetype };
-    // console.log(imagePath);
+
     file.pipe(fs.createWriteStream(tempPath));
-    // file.pipe(fs.createWriteStream(imagePath));
-    // file.pipe(fs.createWriteStream(thumbnailPath));
   });
 
   busboy.on("finish", async () => {
@@ -487,8 +487,6 @@ exports.getYourUserProfile = (req, res) => {
         ...doc.data(),
       });
 
-      console.log(page);
-
       return res.status(200).json(page);
     })
     .catch((err) => console.error(err));
@@ -617,10 +615,6 @@ exports.editBookingTimes = (req, res) => {
   let timeslots = req.body.time;
   let algoliaDates = req.body.algoliaDates;
   let userid = req.user.uid;
-
-  console.log("Date: ", date);
-  console.log("Timeslots: ", timeslots);
-  console.log("Algoliatimeslot: ", algoliaDates);
 
   db.collection(`photographer/${userid}/bookings`)
     .doc(date)

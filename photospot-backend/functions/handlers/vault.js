@@ -47,7 +47,6 @@ exports.uploadToVault = async (req, res) => {
   try {
     const vaultID = req.params.vaultID;
     const imageNames = req.body;
-    console.log(req.body);
     let imageUrls = [];
 
     imageNames.forEach((image) => {
