@@ -731,7 +731,7 @@ async function uploadProfileImage(
     .resize(size, size)
     .toFile(image.imagePath)
     .then(async () => {
-      await uploadToStorage(image);
+      await uploadToStorage(image, userID, fileName);
       await updateProfileImage("users", userID, fileName, thumbnail);
       photographer &&
         (await updateProfileImage("photographer", userID, fileName, thumbnail));
@@ -740,26 +740,19 @@ async function uploadProfileImage(
       }
       return true;
     })
-    // .then(() => {
-    //   console.log(image.imagePath);
-    //   try {
-    //     fs.unlinkSync(image.imagePath);
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // })
     .catch((err) => {
       console.log(err);
       return false;
     });
 }
 
-function uploadToStorage(file) {
+function uploadToStorage(file, folder, filename) {
   return admin
     .storage()
     .bucket(config.storageBucket)
     .upload(file.imagePath, {
       resumable: false,
+      destination: `${folder}/${filename}`,
       metadata: {
         metadata: {
           contentType: file.mimetype,
@@ -776,11 +769,11 @@ function uploadToStorage(file) {
 
 function updateProfileImage(database, id, imageFileName, thumbnail) {
   if (thumbnail) {
-    const thumbnailImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+    const thumbnailImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${id}%2F${imageFileName}?alt=media`;
 
     return db.collection(database).doc(id).update({ thumbnailImage });
   } else {
-    const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+    const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${id}%2F${imageFileName}?alt=media`;
     partialUpdateObjectToAlgolia({
       profileImage: profileImage,
       objectID: id,
