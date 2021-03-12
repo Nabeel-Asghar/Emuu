@@ -4,7 +4,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
 import Skeleton from "@material-ui/lab/Skeleton";
 import React, { Component } from "react";
-import { firebase } from "../../firestore";
+import { firebase } from "../../util/firestore";
 import NewChatComponent from "../../pages/Messaging/newChat";
 import BookIcon from "@material-ui/icons/Book";
 import CallIcon from "@material-ui/icons/Call";
@@ -88,8 +88,11 @@ class usercard extends Component {
                 color="secondary"
                 size="large"
                 onClick={() =>
-                  this.props.history.push(`${this.props.history.location.pathname}/book`)
-                }>
+                  this.props.history.push(
+                    `${this.props.history.location.pathname}/book`
+                  )
+                }
+              >
                 <Typography style={{ fontWeight: "bold" }}>Book</Typography>
               </Button>
               <Button
@@ -100,7 +103,8 @@ class usercard extends Component {
                 disableElevation
                 size="large"
                 onClick={this.handleContactClickOpen}
-                disabled={loading || photographer || !this.props.authenticated}>
+                disabled={loading || photographer || !this.props.authenticated}
+              >
                 <Typography style={{ fontWeight: "bold" }}>Contact</Typography>
               </Button>
               <NewChatComponent

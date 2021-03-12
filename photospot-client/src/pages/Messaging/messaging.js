@@ -4,7 +4,7 @@ import equal from "fast-deep-equal";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import LoadingPage from "../../components/shared/loadingPage";
-import { firebase } from "../../firestore";
+import { firebase } from "../../util/firestore";
 import { getUserData } from "../../redux/actions/userActions";
 import ChatTextBoxComponent from "./chatTextBox";
 import ChatViewComponent from "./chatView";

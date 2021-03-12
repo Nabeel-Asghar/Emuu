@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { storage } from "../firestore";
+import { firebase } from "../util/firestore";
 import { nanoid } from "nanoid";
 
 // Material UI
@@ -156,7 +156,8 @@ class photographyPictures extends Component {
         const imageName = nanoid(10);
         imageNames.push(imageName);
 
-        var task = storage
+        var task = firebase
+          .storage()
           .ref(this.props.userID)
           .child(imageName)
           .put(image, metadata);

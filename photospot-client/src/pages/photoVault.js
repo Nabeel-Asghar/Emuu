@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Redirect } from "react-router-dom";
-import { storage, firebase } from "../firestore";
 import { nanoid } from "nanoid";
 
 // Redux
@@ -34,6 +33,7 @@ import Confirmation from "../components/shared/confirmation";
 import LoadingPage from "../components/shared/loadingPage";
 import DownloadOrNotify from "../components/photo-vault/downloadOrNotify";
 import GoBackButton from "../components/shared/Buttons/GoBackButton";
+import { firebase } from "../util/firestore";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
