@@ -131,6 +131,8 @@ class specificPhotographer extends Component {
 
       if (this.props.credentials) {
         if (this.props.credentials[0]?.photographer) {
+          console.log(this.props.credentials[0]?.photographer);
+
           this.setState({
             photographer: true,
           });

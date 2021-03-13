@@ -79,7 +79,10 @@ class photographer extends Component {
                 "No reviews yet"
               )}
             </Typography>
-            <Typography variant="h6" style={{ marginBottom: -5 }}>
+            <Typography
+              variant="h6"
+              style={{ marginBottom: -5, fontWeight: "bold" }}
+            >
               {firstName}&nbsp;{lastName}
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">

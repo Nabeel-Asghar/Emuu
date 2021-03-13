@@ -731,6 +731,7 @@ async function uploadProfileImage(
   userID,
   size,
   thumbnail,
+
   photographer
 ) {
   sharp(originalImage.tempPath)
