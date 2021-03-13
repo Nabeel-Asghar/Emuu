@@ -158,8 +158,8 @@ class photographyPictures extends Component {
 
         var task = firebase
           .storage()
-          .ref(this.props.userID)
-          .child(imageName)
+          .ref()
+          .child(`users/${this.props.userID}/${imageName}`)
           .put(image, metadata);
 
         promises.push(task);

@@ -84,21 +84,22 @@ class photoVault extends Component {
         confirmedByCustomer: this.props.vault.vaultData.confirmedByCustomer,
       });
     });
-    this.state.images &&
-      (await this.props.getSize(this.props.match.params.orderID).then(() => {
-        this.setState(
-          {
-            imageSizes: Object.values(this.props.vault.vaultSize),
-          },
-          this.setSize()
-        );
-      }));
+
     if (this.state.access) {
       this.setState({
         intialImagesLength:
           this.props.vault.vaultData.images &&
           this.props.vault.vaultData.images.length,
       });
+      this.state.images &&
+        (await this.props.getSize(this.props.match.params.orderID).then(() => {
+          this.setState(
+            {
+              imageSizes: Object.values(this.props.vault.vaultSize),
+            },
+            this.setSize()
+          );
+        }));
     }
   }
 
@@ -220,8 +221,8 @@ class photoVault extends Component {
 
         var task = firebase
           .storage()
-          .ref(this.props.match.params.orderID)
-          .child(imageName)
+          .ref()
+          .child(`vaults/${this.props.match.params.orderID}/${imageName}`)
           .put(image, metadata);
 
         promises.push(task);

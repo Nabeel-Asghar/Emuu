@@ -1,6 +1,6 @@
 const { admin, db, storage } = require("../util/admin");
 const config = require("../util/config");
-const storageBucketVar = config.photoVault;
+const storageBucketVar = config.storageBucket;
 var JSZip = require("jszip");
 const imageToBase64 = require("image-to-base64");
 const email = require("./email");
@@ -51,7 +51,7 @@ exports.uploadToVault = async (req, res) => {
 
     imageNames.forEach((image) => {
       // Replace the "/" with "%2F" in the url since google storage does that for some dumbass reason if placing in folder
-      url = `https://firebasestorage.googleapis.com/v0/b/${storageBucketVar}/o/${vaultID}%2F${image}?alt=media`;
+      url = `https://firebasestorage.googleapis.com/v0/b/${storageBucketVar}/o/vaults%2F${vaultID}%2F${image}?alt=media`;
       imageUrls.push(url);
     });
 
@@ -184,9 +184,10 @@ function checkID(vaultID, id) {
 }
 
 function getFiles(vaultID) {
-  return storage
+  return admin
+    .storage()
     .bucket(storageBucketVar)
-    .getFiles({ prefix: `${vaultID}/` })
+    .getFiles({ prefix: `vaults/${vaultID}/` })
     .then((files) => {
       return files;
     })
@@ -240,7 +241,8 @@ function getImage(url) {
 }
 
 function deleteFromStorage(imageLocation) {
-  storage
+  admin
+    .storage()
     .bucket(storageBucketVar)
     .deleteFiles({ prefix: imageLocation })
     .then((res) => {
@@ -269,7 +271,7 @@ function getImageLocation(image, vaultID) {
   let urlSplit = image.split("%2F");
   let partWeWant = urlSplit[1];
   let imageName = partWeWant.split("?");
-  let imageLocation = `${vaultID}/${imageName[0]}`;
+  let imageLocation = `vaults/${vaultID}/${imageName[0]}`;
   return imageLocation;
 }
 

@@ -648,7 +648,7 @@ exports.uploadYourPhotographyImages = (req, res) => {
 
   imageNames.forEach((image) => {
     // Replace the "/" with "%2F" in the url since google storage does that for some dumbass reason if placing in folder
-    url = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${userID}%2F${image}?alt=media`;
+    url = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/users%2F${userID}%2F${image}?alt=media`;
     imageUrls.push(url);
   });
 
@@ -752,7 +752,7 @@ function uploadToStorage(file, folder, filename) {
     .bucket(config.storageBucket)
     .upload(file.imagePath, {
       resumable: false,
-      destination: `${folder}/${filename}`,
+      destination: `users/${folder}/${filename}`,
       metadata: {
         metadata: {
           contentType: file.mimetype,
@@ -760,6 +760,7 @@ function uploadToStorage(file, folder, filename) {
       },
     })
     .then(() => {
+      console.log();
       return true;
     })
     .catch(() => {
@@ -769,11 +770,11 @@ function uploadToStorage(file, folder, filename) {
 
 function updateProfileImage(database, id, imageFileName, thumbnail) {
   if (thumbnail) {
-    const thumbnailImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${id}%2F${imageFileName}?alt=media`;
+    const thumbnailImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/users%2F${id}%2F${imageFileName}?alt=media`;
 
     return db.collection(database).doc(id).update({ thumbnailImage });
   } else {
-    const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${id}%2F${imageFileName}?alt=media`;
+    const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/users%2F${id}%2F${imageFileName}?alt=media`;
     partialUpdateObjectToAlgolia({
       profileImage: profileImage,
       objectID: id,
