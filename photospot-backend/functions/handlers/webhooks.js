@@ -70,8 +70,6 @@ async function handlePayout(orderDetails, amount, payoutID) {
   await addToUserCompletedOrders(consumerID, orderID, booking);
   await addToPhotographersCompletedOrders(photographerID, orderID, booking);
 
-  await confirmedByCustomer(orderID);
-
   await email.emailPayout(booking);
 }
 
@@ -466,23 +464,6 @@ function getOrderDetails(orderID) {
     })
     .catch((err) => {
       console.log("error getting order details: ", err);
-      return false;
-    });
-}
-
-// set field to confirm customer approved photos
-function confirmedByCustomer(orderID) {
-  db.collection("photoVault")
-    .doc(orderID)
-    .update({ confirmedByCustomer: true })
-    .then(() => {
-      return true;
-    })
-    .catch((err) => {
-      console.log(
-        "error updating field to confirm customer approved photos: ",
-        err
-      );
       return false;
     });
 }

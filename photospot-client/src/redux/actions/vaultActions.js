@@ -64,7 +64,7 @@ export const getSize = (vaultID) => (dispatch) => {
 
 export const notifyCustomer = (vaultID) => (dispatch) => {
   dispatch({ type: "VAULT_LOADING" });
-  return API.get(`/vault/${vaultID}/notifyCustomer`, vaultID)
+  return API.get(`/vault/${vaultID}/notifyCustomer`)
     .then((res) => {
       return true;
     })

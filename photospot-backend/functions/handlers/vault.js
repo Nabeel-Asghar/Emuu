@@ -123,10 +123,9 @@ exports.notifyCustomer = async (req, res) => {
 };
 
 exports.finalizeVault = async (req, res) => {
+  const orderID = req.params.vaultID;
   try {
-    const orderID = req.params.vaultID;
-    const { consumerID, photographerID } = await getVaultOwners(orderID);
-    await payment.payOut(orderID, consumerID, photographerID);
+    await confirmedByCustomer(orderID);
     return res.json({
       response: "You've confirmed your photos. You may now download them!",
     });
@@ -332,4 +331,22 @@ function getDateToPayout() {
   let theDate = new Date();
   theDate.setDate(theDate.getDate() + TIME_TO_PAYOUT);
   return theDate;
+}
+
+// set field to confirm customer approved photos
+function confirmedByCustomer(orderID) {
+  return db
+    .collection("photoVault")
+    .doc(orderID)
+    .update({ confirmedByCustomer: true })
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(
+        "error updating field to confirm customer approved photos: ",
+        err
+      );
+      return false;
+    });
 }
