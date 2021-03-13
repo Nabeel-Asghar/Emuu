@@ -19,6 +19,7 @@ import IconButton from "@material-ui/core/IconButton";
 import EditIcon from "@material-ui/icons/Edit";
 import defaultProfilePicture from "../../images/defaultProfilePicture.png";
 import defaultBackground from "../../images/defaultBackground.jpg";
+import EditButton from "../shared/Buttons/EditButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -199,15 +200,10 @@ class editableUsercard extends Component {
 
           <Paper elevation={3} className={classes.margin}>
             <Grid container>
-              <Grid item xs={12} className={classes.rightGrid}>
-                <br />
-                <IconButton style={{ marginTop: "5px", marginBottom: "-5px" }}>
-                  <EditIcon
-                    color="secondary"
-                    onClick={() => this.props.handleOpenEdit()}
-                  />
-                </IconButton>
-              </Grid>
+              <EditButton
+                onClick={this.props.handleOpenEdit}
+                text="Edit User Info"
+              />
 
               <Grid item sm={8} xs={12}>
                 <div className={classes.textGrid}>

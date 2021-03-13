@@ -50,6 +50,7 @@ class messaging extends Component {
       profileImage: "",
       chats: [],
       noChats: true,
+      loading: true,
     };
     this.listMessage = [];
   }
@@ -72,6 +73,7 @@ class messaging extends Component {
 
   componentDidMount() {
     this.props.getUserData().then(() => {
+      this.setState({ loading: true });
       this.assignValues(this.props.credentials);
       firebase
         .firestore()
@@ -92,6 +94,7 @@ class messaging extends Component {
               chats: chats,
               selectedChat: 0,
               noChats: false,
+              loading: false,
             });
           }
         });

@@ -50,6 +50,7 @@ class miniPhotographer extends Component {
       location_state,
       date,
       time,
+      type,
       price,
     } = this.props;
 
@@ -85,7 +86,12 @@ class miniPhotographer extends Component {
                 Time: {time}
               </Typography>
             )}
-            {!!price && (
+            {type && (
+              <Typography variant="body1" gutterBottom>
+                Type: {type}
+              </Typography>
+            )}
+            {price && (
               <Typography variant="body1" gutterBottom>
                 Price: <b>${price}.00</b>
               </Typography>

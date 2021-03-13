@@ -84,14 +84,15 @@ class photoVault extends Component {
         confirmedByCustomer: this.props.vault.vaultData.confirmedByCustomer,
       });
     });
-    await this.props.getSize(this.props.match.params.orderID).then(() => {
-      this.setState(
-        {
-          imageSizes: Object.values(this.props.vault.vaultSize),
-        },
-        this.setSize()
-      );
-    });
+    this.state.images &&
+      (await this.props.getSize(this.props.match.params.orderID).then(() => {
+        this.setState(
+          {
+            imageSizes: Object.values(this.props.vault.vaultSize),
+          },
+          this.setSize()
+        );
+      }));
     if (this.state.access) {
       this.setState({
         intialImagesLength:

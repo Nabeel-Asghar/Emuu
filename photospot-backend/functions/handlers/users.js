@@ -131,25 +131,27 @@ exports.login = (req, res) => {
     })
     .then((token) => {
       var user = firebase.auth().currentUser;
+
+      if (!firebase.auth().currentUser.emailVerified) {
+        user
+          .sendEmailVerification()
+          .then(function () {
+            return res.status(400).json({
+              general: "You must verify your email to log in",
+            });
+          })
+          .catch(function (error) {
+            // An error happened.
+          });
+      } else {
+        return res.json({ token });
+      }
+
       if (res.locals.registration == "incomplete") {
         return res.status(400).json({
           registration: "You must complete your photographer profile!",
         });
       }
-      // if (!firebase.auth().currentUser.emailVerified) {
-      //   user
-      //     .sendEmailVerification()
-      //     .then(function () {
-      //       return res.status(400).json({
-      //         general: "You must verify your email to log in",
-      //       });
-      //     })
-      //     .catch(function (error) {
-      //       // An error happened.
-      //     });
-      // } else {
-      return res.json({ token });
-      // }
     })
     .catch((err) => {
       console.error(err);
