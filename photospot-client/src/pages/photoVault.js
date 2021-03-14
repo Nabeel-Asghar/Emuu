@@ -339,6 +339,8 @@ class photoVault extends Component {
                   <ProgressBar
                     totalSize={this.state.totalSize}
                     setSize={this.setSize.bind(this)}
+                    notifiedCustomer={this.state.notifiedCustomer}
+                    confirmedByCustomer={this.state.confirmedByCustomer}
                   />
                 </Grid>
 

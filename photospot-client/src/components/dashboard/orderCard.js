@@ -102,15 +102,31 @@ class orderCard extends Component {
                       <List dense="true">
                         <ListItem>
                           <ListItemText
-                            primary={
-                              <Typography variant="h6">Order Total</Typography>
-                            }
+                            primary={<Typography>Shoot Type</Typography>}
                             style={{ textAlign: "left" }}
                           />
                           <ListItemText
                             primary={
-                              <Typography variant="h6">
-                                ${orderDetails.amount}.00
+                              <Typography>
+                                <b>{orderDetails.shootType}</b>
+                              </Typography>
+                            }
+                            style={{ textAlign: "right" }}
+                          />
+                        </ListItem>
+                      </List>
+                    </Paper>
+                    <Paper variant="outlined" style={{ marginTop: 8 }}>
+                      <List dense="true">
+                        <ListItem>
+                          <ListItemText
+                            primary={<Typography>Order Total</Typography>}
+                            style={{ textAlign: "left" }}
+                          />
+                          <ListItemText
+                            primary={
+                              <Typography>
+                                <b>${orderDetails.amount}.00</b>
                               </Typography>
                             }
                             style={{ textAlign: "right" }}

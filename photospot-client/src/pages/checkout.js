@@ -111,12 +111,6 @@ const Checkout = (props) => {
       if (result.paymentIntent.status === "succeeded") {
         setLoading(false);
         setSuccess(true);
-        // Show a success message to your customer
-        // There's a risk of the customer closing the window before callback
-        // execution. Set up a webhook or plugin to listen for the
-        // payment_intent.succeeded event that handles any business critical
-        // post-payment actions.
-        console.log("YESS");
       }
     }
   };
