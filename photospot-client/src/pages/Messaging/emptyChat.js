@@ -1,4 +1,4 @@
-import { Grid, Hidden, Typography } from "@material-ui/core";
+import { Divider, Grid, Hidden, Typography } from "@material-ui/core";
 import QuestionAnswerIcon from "@material-ui/icons/QuestionAnswer";
 import { Slide } from "material-auto-rotating-carousel";
 import React from "react";
@@ -43,6 +43,7 @@ const emptyChat = (props) => {
           >
             Messages
           </Typography>
+          <Divider />
           <Typography variant="subtitle1" style={{ marginLeft: "16px" }}>
             You have no messages...
           </Typography>

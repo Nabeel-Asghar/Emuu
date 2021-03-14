@@ -41,9 +41,15 @@ exports.reviewPhotographer = async (req, res) => {
   console.log("errors: ", errors);
   if (!valid) return res.status(400).json(errors).end();
 
-  let existingReview = await checkReviewExists(photographerBeingReviewedID, userID);
+  let existingReview = await checkReviewExists(
+    photographerBeingReviewedID,
+    userID
+  );
   if (existingReview) {
-    return res.status(400).json({ error: "You cannot review someone twice." }).end();
+    return res
+      .status(400)
+      .json({ error: "You cannot review someone twice." })
+      .end();
   }
 
   // Add review to that photographer document
@@ -60,7 +66,9 @@ exports.reviewPhotographer = async (req, res) => {
         .set(newReview);
     })
     .then(() => {
-      const pRef = db.collection("photographer").doc(photographerBeingReviewedID);
+      const pRef = db
+        .collection("photographer")
+        .doc(photographerBeingReviewedID);
 
       return db.runTransaction((transaction) => {
         return transaction.get(pRef).then((doc) => {
@@ -89,7 +97,10 @@ exports.reviewPhotographer = async (req, res) => {
       });
     })
     .then(() => {
-      return res.status(200).json({ message: "Your review has been posted." }).end();
+      return res
+        .status(200)
+        .json({ message: "Your review has been posted." })
+        .end();
     })
     .catch((err) => {
       console.log(err);
@@ -155,7 +166,10 @@ exports.editReview = (req, res) => {
       });
     })
     .then(() => {
-      return res.status(200).json({ message: "Your review has been edited." }).end();
+      return res
+        .status(200)
+        .json({ message: "Your review has been edited." })
+        .end();
     })
     .catch((err) => {
       console.log(err);
@@ -210,7 +224,10 @@ exports.deleteReview = (req, res) => {
       });
     })
     .then(() => {
-      return res.status(200).json({ message: "Your review has been deleted." }).end();
+      return res
+        .status(200)
+        .json({ message: "Your review has been deleted." })
+        .end();
     })
     .catch((err) => {
       console.log(err);
