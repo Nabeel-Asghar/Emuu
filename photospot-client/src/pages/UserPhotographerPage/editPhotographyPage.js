@@ -107,15 +107,15 @@ class editPhotographyPage extends Component {
     this.setState({ openAlert: this.props.location.state?.success });
   }
 
-  componentDidUpdate(prevProps) {
-    if (
-      !equal(this.props.yourPhotographerPage, prevProps.yourPhotographerPage)
-    ) {
-      this.props.getYourPhotographyPage().then(() => {
-        this.assignValues(this.props.yourPhotographerPage);
-      });
-    }
-  }
+  // componentDidUpdate(prevProps) {
+  //   if (
+  //     !equal(this.props.yourPhotographerPage, prevProps.yourPhotographerPage)
+  //   ) {
+  //     this.props.getYourPhotographyPage().then(() => {
+  //       this.assignValues(this.props.yourPhotographerPage);
+  //     });
+  //   }
+  // }
 
   handleBackgroundChange = (event) => {
     const image = event.target.files[0];

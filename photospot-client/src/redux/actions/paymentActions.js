@@ -15,7 +15,17 @@ export const refreshStripe = () => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
   API.get("/onboard-user/refresh")
     .then((res) => {
-      window.location.assign(`${res.data.url}`);
+      window.open(`${res.data.url}`, "_blank");
+    })
+    .catch((err) => {
+      return false;
+    });
+};
+
+export const getStripeDashboard = () => (dispatch) => {
+  API.get("/get-stripe-dashboard")
+    .then((res) => {
+      window.open(`${res.data.url}`, "_blank");
     })
     .catch((err) => {
       return false;

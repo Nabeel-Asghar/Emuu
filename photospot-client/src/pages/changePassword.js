@@ -9,9 +9,9 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import TextField from "@material-ui/core/TextField";
 import Typography from "@material-ui/core/Typography";
 import React, { Component } from "react";
+
 // Redux
 import { connect } from "react-redux";
-import firebase from "../firestore";
 import { Redirect } from "react-router-dom";
 import AppIcon from "../images/logo.png";
 import { changePasswordAction } from "../redux/actions/userActions";

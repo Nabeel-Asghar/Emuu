@@ -14,10 +14,7 @@ import {
   getPhotographerReviews,
 } from "../redux/actions/userActions";
 
-import {
-  getStripeStatus,
-  refundFromPhotographer,
-} from "../redux/actions/paymentActions";
+import { refundFromPhotographer } from "../redux/actions/paymentActions";
 
 // Material UI
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -30,7 +27,7 @@ import OrderCard from "../components/dashboard/orderCard";
 import ProfileCard from "../components/dashboard/profileCard";
 import ContactCard from "../components/dashboard/contactCard";
 import SettingsCard from "../components/dashboard/settingsCard";
-import StripeCard from "../components/dashboard/stripeCard";
+import StripeCard from "../components/dashboard/StripeCard";
 import PhotographerReviews from "../components/shared/photographerReviews";
 import CollapseItems from "../components/shared/collapse";
 import Confirmation from "../components/shared/confirmation";
@@ -65,7 +62,6 @@ class photograhperDashboard extends Component {
       views: 0,
       ratePerHour: 0,
       totalCompletedOrders: 0,
-      stripeStatus: true,
     };
   }
 
@@ -92,11 +88,6 @@ class photograhperDashboard extends Component {
     this.props.getPhotographerPastOrders();
     this.props.getYourPhotographyPage().then(() => {
       this.assignValues(this.props.credentials);
-    });
-    this.props.getStripeStatus().then(() => {
-      if (!this.props.stripeStatus) {
-        this.setState({ stripeStatus: false });
-      }
     });
     this.props.getPhotographerReviews();
     this.setState({
@@ -210,7 +201,7 @@ class photograhperDashboard extends Component {
             email={this.state.email}
           />
 
-          {!this.state.stripeStatus && <StripeCard />}
+          <StripeCard />
 
           <SettingsCard />
         </Grid>
@@ -271,7 +262,6 @@ const mapStateToProps = (state) => ({
   credentials: state.user.yourPhotographyPageDetails,
   userOrders: state.user.userOrders,
   userPastOrders: state.user.userPastOrders,
-  stripeStatus: state.payment.stripeStatus,
   userReviews: state.user.userReviews,
 });
 
@@ -281,7 +271,6 @@ const mapActionsToProps = {
   getPhotographerOrders,
   getPhotographerPastOrders,
   updateUserProfile,
-  getStripeStatus,
   getPhotographerReviews,
   refundFromPhotographer,
 };

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import Box from "@material-ui/core/Box";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import IconButton from "@material-ui/core/IconButton";
+import { Typography } from "@material-ui/core";
 
 const containerStyles = {
   height: 20,
@@ -48,6 +49,17 @@ class progressBar extends Component {
             }}
           />
         </div>
+        {this.props.confirmedByCustomer ? (
+          <Typography variant="subtitle2">
+            Status: <b>Confirmed By Customer</b>
+          </Typography>
+        ) : this.props.notifiedCustomer ? (
+          <Typography variant="subtitle2">
+            Status: <b>Notified Customer</b>
+          </Typography>
+        ) : (
+          ""
+        )}
       </Box>
     );
   }

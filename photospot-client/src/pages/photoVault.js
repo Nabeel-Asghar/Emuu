@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import withStyles from "@material-ui/core/styles/withStyles";
 import { Redirect } from "react-router-dom";
-import { storage, firebase } from "../firestore";
 import { nanoid } from "nanoid";
 
 // Redux
@@ -27,13 +26,14 @@ import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 
 // Components
 import ImageGrid from "../components/shared/imageGrid";
-import GoBackButton from "../components/shared/goBackButton";
 import ProgressBar from "../components/photo-vault/progressBar";
 import Success from "../components/shared/success";
 import Progress from "../components/shared/progress";
 import Confirmation from "../components/shared/confirmation";
 import LoadingPage from "../components/shared/loadingPage";
 import DownloadOrNotify from "../components/photo-vault/downloadOrNotify";
+import GoBackButton from "../components/shared/Buttons/GoBackButton";
+import { firebase } from "../util/firestore";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -84,21 +84,22 @@ class photoVault extends Component {
         confirmedByCustomer: this.props.vault.vaultData.confirmedByCustomer,
       });
     });
-    this.state.images &&
-      (await this.props.getSize(this.props.match.params.orderID).then(() => {
-        this.setState(
-          {
-            imageSizes: Object.values(this.props.vault.vaultSize),
-          },
-          this.setSize()
-        );
-      }));
+
     if (this.state.access) {
       this.setState({
         intialImagesLength:
           this.props.vault.vaultData.images &&
           this.props.vault.vaultData.images.length,
       });
+      this.state.images &&
+        (await this.props.getSize(this.props.match.params.orderID).then(() => {
+          this.setState(
+            {
+              imageSizes: Object.values(this.props.vault.vaultSize),
+            },
+            this.setSize()
+          );
+        }));
     }
   }
 
@@ -220,8 +221,8 @@ class photoVault extends Component {
 
         var task = firebase
           .storage()
-          .ref(this.props.match.params.orderID)
-          .child(imageName)
+          .ref()
+          .child(`vaults/${this.props.match.params.orderID}/${imageName}`)
           .put(image, metadata);
 
         promises.push(task);
@@ -338,6 +339,8 @@ class photoVault extends Component {
                   <ProgressBar
                     totalSize={this.state.totalSize}
                     setSize={this.setSize.bind(this)}
+                    notifiedCustomer={this.state.notifiedCustomer}
+                    confirmedByCustomer={this.state.confirmedByCustomer}
                   />
                 </Grid>
 

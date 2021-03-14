@@ -31,12 +31,12 @@ import Home from "./pages/home";
 import setYourSchedule from "./pages/setYourSchedule";
 import userDashboard from "./pages/userDashboard";
 import photographerDashboard from "./pages/photographerDashboard";
-import onboard from "./pages/onboardStripe/onboard";
-import refresh from "./pages/onboardStripe/refresh";
 import successPage from "./pages/successPage";
 import checkout from "./pages/checkout";
 import photoVault from "./pages/photoVault";
 import photographerPageSetup from "./pages/SignUp/PhotographerPageSetup";
+import StripeDashboard from "./pages/Stripe/StripeDashboard";
+import Refresh from "./pages/Stripe/Refresh";
 
 // Components
 import Navbar from "./components/shared/Navbar";
@@ -338,9 +338,9 @@ const App = () => {
 
                 <Route exact path="/resetPassword" component={resetPassword} />
 
-                <AuthRoute exact path="/onboard" component={onboard} />
+                <AuthRoute exact path="/stripe" component={StripeDashboard} />
 
-                <AuthRoute exact path="/onboard/refresh" component={refresh} />
+                <AuthRoute exact path="/stripe/refresh" component={Refresh} />
 
                 <AuthRoute
                   exact
@@ -350,11 +350,9 @@ const App = () => {
 
                 <AuthRoute
                   exact
-                  path="/onboard/success"
+                  path="/stripe/success"
                   component={successPage}
                 />
-
-                <AuthRoute exact path="/onboard/refresh" component={onboard} />
 
                 <Route
                   exact

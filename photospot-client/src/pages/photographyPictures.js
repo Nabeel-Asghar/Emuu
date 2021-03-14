@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { storage } from "../firestore";
+import { firebase } from "../util/firestore";
 import { nanoid } from "nanoid";
 
 // Material UI
@@ -22,10 +22,10 @@ import {
 
 // Components
 import ImageGrid from "../components/shared/imageGrid";
-import GoBackButton from "../components/shared/goBackButton";
 import Success from "../components/shared/success";
 import Progress from "../components/shared/progress";
 import FailureFeedback from "../components/shared/FailureFeedback";
+import GoBackButton from "../components/shared/Buttons/GoBackButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -156,9 +156,10 @@ class photographyPictures extends Component {
         const imageName = nanoid(10);
         imageNames.push(imageName);
 
-        var task = storage
-          .ref(this.props.userID)
-          .child(imageName)
+        var task = firebase
+          .storage()
+          .ref()
+          .child(`users/${this.props.userID}/${imageName}`)
           .put(image, metadata);
 
         promises.push(task);

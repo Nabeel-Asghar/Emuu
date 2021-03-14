@@ -80,6 +80,14 @@ exports.getStripeOnboardStatus = (req, res) => {
     });
 };
 
+// Get dashboard link for photographer
+exports.getDashboardLink = async (req, res) => {
+  let userID = req.user.uid;
+  const stripeID = await getPhotographerStripeID(userID);
+  const dashboardLink = await stripe.accounts.createLoginLink(stripeID);
+  return res.json({ url: dashboardLink.url });
+};
+
 // Customer Routes
 //
 // Create charge when customer is booking photographer

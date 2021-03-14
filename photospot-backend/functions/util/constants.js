@@ -5,4 +5,4 @@ exports.shootStatus = {
   completed: "Completed",
 };
 
-exports.TIME_TO_PAYOUT = 5;
+exports.TIME_TO_PAYOUT = 2;

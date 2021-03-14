@@ -10,15 +10,17 @@ import { Redirect, Link } from "react-router-dom";
 import {
   onboardStripe,
   getStripeStatus,
+  getStripeDashboard,
 } from "../../redux/actions/paymentActions";
 
 import { getUserData } from "../../redux/actions/userActions";
+import GoBackButton from "../../components/shared/Buttons/GoBackButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
 });
 
-export class onboard extends Component {
+export class StripeDashboard extends Component {
   constructor() {
     super();
     this.state = {
@@ -59,33 +61,61 @@ export class onboard extends Component {
   handleClick() {
     this.props.onboardStripe();
   }
+
+  handleDashboard() {
+    this.props.getStripeDashboard();
+  }
+
   render() {
     if (this.state.photographer === false) {
       return <Redirect to="/" />;
     }
     return (
-      <Container maxWidth="sm">
-        <Paper style={{ padding: "20px", marginBottom: "12px" }}>
-          <Typography>
-            Stripe Status:{" "}
-            {this.state.stripe ? (
-              <span style={{ color: "#23ba8b" }}>Connected</span>
-            ) : (
-              <span style={{ color: "red" }}>Not Connected</span>
-            )}
-          </Typography>
-        </Paper>
-        <Paper style={{ textAlign: "center", padding: "20px" }}>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => this.handleClick()}
-            disabled={this.state.stripe}
-          >
-            Setup payouts with Stripe
-          </Button>
-        </Paper>
-      </Container>
+      <>
+        <GoBackButton {...this.props} />
+        <Container maxWidth="sm">
+          <Paper style={{ padding: "20px", marginBottom: "12px" }}>
+            <Typography>
+              Stripe Status:{" "}
+              {this.state.stripe ? (
+                <span style={{ color: "#23ba8b" }}>Connected</span>
+              ) : (
+                <span style={{ color: "red" }}>Not Connected</span>
+              )}
+            </Typography>
+          </Paper>
+          {!this.state.stripe && (
+            <Paper style={{ textAlign: "center", padding: "20px" }}>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => this.handleClick()}
+                disabled={this.state.stripe}
+              >
+                Setup payouts with Stripe
+              </Button>
+            </Paper>
+          )}
+          {this.state.stripe && (
+            <Paper
+              style={{
+                textAlign: "center",
+                padding: "20px",
+                margin: "10px 0px",
+              }}
+            >
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => this.handleDashboard()}
+                disabled={!this.state.stripe}
+              >
+                Stripe Dashboard
+              </Button>
+            </Paper>
+          )}
+        </Container>
+      </>
     );
   }
 }
@@ -101,9 +131,10 @@ const mapActionsToProps = {
   getStripeStatus,
   onboardStripe,
   getUserData,
+  getStripeDashboard,
 };
 
 export default connect(
   mapStateToProps,
   mapActionsToProps
-)(withStyles(styles)(onboard));
+)(withStyles(styles)(StripeDashboard));

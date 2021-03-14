@@ -65,6 +65,7 @@ const {
   getStripeOnboardStatus,
   refund,
   refundFromPhotographer,
+  getDashboardLink,
 } = require("./handlers/payment");
 
 const { completedOrders } = require("./handlers/administrator");
@@ -86,9 +87,9 @@ const { testFunction } = require("./handlers/test");
 const FBAuth = require("./util/FBAuth");
 
 //--------User Routes-----------------
+app.post("/login", login);
 app.post("/signup", signup);
 app.post("/signupPhotographer", signupPhotographer);
-app.post("/login", login);
 app.post("/resetPassword", resetPassword);
 app.post("/changePassword", changePassword);
 
@@ -103,8 +104,6 @@ app.get("/youruserprofile", FBAuth, getYourUserProfile);
 app.get("/youruserprofile/orders", FBAuth, getUsersOrders);
 app.get("/youruserprofile/pastorders", FBAuth, getUsersPastOrders);
 app.get("/youruserprofile/userReviews", FBAuth, getUserReviews);
-
-// update user profile
 app.post("/youruserprofile/edit", FBAuth, updateUserProfile);
 
 // upload profile image
@@ -114,25 +113,30 @@ app.post("/user/profileimage", FBAuth, uploadProfilePicture);
 app.get("/onboard-status", FBAuth, getStripeOnboardStatus);
 app.post("/onboard-user", FBAuth, onboardUser);
 app.get("/onboard-user/refresh", FBAuth, onboardUserRefresh);
+app.get("/get-stripe-dashboard", FBAuth, getDashboardLink);
 app.post("/photographers/:photographerId/book/checkout", FBAuth, createPayment);
 app.post("/user/refund", FBAuth, refund);
 app.post("/photographer/refund", FBAuth, refundFromPhotographer);
 
 // photography page
 app.post("/editphotographypage", FBAuth, setYourPhotographyPage);
-app.post("/editphotographypage/edit", FBAuth, updatePhotographerCategoriesAndBio);
+app.post(
+  "/editphotographypage/edit",
+  FBAuth,
+  updatePhotographerCategoriesAndBio
+);
 app.post("/editphotographypage/background", FBAuth, uploadBackgroundPicture);
+app.post("/editphotographypage/bookingTimes", FBAuth, editBookingTimes);
 app.post("/photographyimages", FBAuth, uploadYourPhotographyImages);
 app.post("/photographyimages/delete", FBAuth, deleteImages);
-app.post("/editphotographypage/bookingTimes", FBAuth, editBookingTimes);
 
 //----------Consumer Routes---------------
-app.get("/photographers/:photographerId", getSpecificPhotographer);
-app.get("/checkUserOrders", FBAuth, checkBookAbility);
-app.post("/photographers/:photographerId/review", FBAuth, reviewPhotographer);
-app.get("/photographers/:photographerId/getReviews", getReviews);
 app.post("/userDashboard/editReview", FBAuth, editReview);
 app.post("/userDashboard/deleteReview", FBAuth, deleteReview);
+app.get("/checkUserOrders", FBAuth, checkBookAbility);
+app.get("/photographers/:photographerId", getSpecificPhotographer);
+app.post("/photographers/:photographerId/review", FBAuth, reviewPhotographer);
+app.get("/photographers/:photographerId/getReviews", getReviews);
 app.get("/photographers/:photographerId/bookingTimes", getPhotographerSchedule);
 app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);
 
@@ -154,26 +158,34 @@ app.post("/vault/:vaultID/finalize", FBAuth, finalizeVault);
 // Testing
 app.post("/test", testFunction);
 
-exports.dailyJob = functions.pubsub.schedule(`*/15 * * * *`).onRun(async (context) => {
-  const now = admin.firestore.Timestamp.now();
-  db.collection("scheduler")
-    .where("performAt", "<=", now)
-    .where("status", "==", "scheduled")
-    .get()
-    .then(function (querySnapshot) {
-      if (querySnapshot.size > 0) {
-        querySnapshot.forEach(async function (doc) {
-          payment.payOut(doc.id, doc.data().data.consumerID, doc.data().data.photographerID);
-        });
-        console.log("Job done");
-      } else {
-        console.log("No jobs to do");
-      }
-    })
-    .catch((err) => {
-      console.log("error in doing cronjob in payouts", err);
-    });
-});
+exports.dailyJob = functions.pubsub
+  .schedule(`*/15 * * * *`)
+  .onRun(async (context) => {
+    const now = admin.firestore.Timestamp.now();
+    db.collection("scheduler")
+      .where("performAt", "<=", now)
+      .where("status", "==", "scheduled")
+      .get()
+      .then(function (querySnapshot) {
+        if (querySnapshot.size > 0) {
+          querySnapshot.forEach(async function (doc) {
+            payment.payOut(
+              doc.id,
+              doc.data().data.consumerID,
+              doc.data().data.photographerID
+            );
+          });
+        } else {
+          console.log("No jobs to do");
+        }
+      })
+      .catch((err) => {
+        console.log("error in doing cronjob in payouts", err);
+      })
+      .finally(() => {
+        console.log("Finished cron job");
+      });
+  });
 
 exports.updateAlgoliaIndex = functions.firestore
   .document("photographers/{userId}")
@@ -182,9 +194,7 @@ exports.updateAlgoliaIndex = functions.firestore
     object.objectID = context.params.userId;
     index
       .saveObject(object)
-      .then(() => {
-        console.log("Object saved in Algolia: ", object.objectID);
-      })
+      .then(() => {})
       .catch((err) => {
         console.error(err);
         return res.status(500).json({ error: err.code });
