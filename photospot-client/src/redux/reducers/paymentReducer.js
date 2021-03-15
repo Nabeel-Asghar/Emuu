@@ -1,6 +1,7 @@
 const intialState = {
   client_secret: "",
   refundError: "",
+  balance: 0,
   stripeStatus: null,
 };
 
@@ -16,6 +17,12 @@ export default function (state = intialState, action) {
       return {
         ...state,
         stripeStatus: action.payload,
+      };
+
+    case "SET_BALANCE":
+      return {
+        ...state,
+        balance: action.payload,
       };
 
     default:
