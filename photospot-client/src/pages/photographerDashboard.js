@@ -35,7 +35,7 @@ import PhotographerReviews from "../components/shared/photographerReviews";
 import CollapseItems from "../components/shared/collapse";
 import Confirmation from "../components/shared/confirmation";
 import Success from "../components/shared/success";
-import LoadingPage from "../components/shared/loadingPage";
+import LoadingPage from "../components/shared/LoadingPage";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
