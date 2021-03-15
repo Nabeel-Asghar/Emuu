@@ -268,7 +268,7 @@ function deleteFromDatabase(image, vaultID) {
 
 function getImageLocation(image, vaultID) {
   let urlSplit = image.split("%2F");
-  let partWeWant = urlSplit[1];
+  let partWeWant = urlSplit[2];
   let imageName = partWeWant.split("?");
   let imageLocation = `vaults/${vaultID}/${imageName[0]}`;
   return imageLocation;
