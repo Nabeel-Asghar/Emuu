@@ -2,7 +2,8 @@ import React, { Component } from "react";
 import Box from "@material-ui/core/Box";
 import RefreshIcon from "@material-ui/icons/Refresh";
 import IconButton from "@material-ui/core/IconButton";
-import { Typography } from "@material-ui/core";
+import { Tooltip, Typography } from "@material-ui/core";
+import InfoIcon from "@material-ui/icons/Info";
 
 const containerStyles = {
   height: 20,
@@ -52,10 +53,39 @@ class progressBar extends Component {
         {this.props.confirmedByCustomer ? (
           <Typography variant="subtitle2">
             Status: <b>Confirmed By Customer</b>
+            <Tooltip
+              title={
+                <Typography style={{ padding: 7 }}>
+                  The customer has confirmed the photos. You will be paid within
+                  2 days or 7 days if this is your first booking.
+                </Typography>
+              }
+            >
+              <InfoIcon
+                fontSize="small"
+                color="secondary"
+                style={{ padding: "0px 5px" }}
+              />
+            </Tooltip>
           </Typography>
         ) : this.props.notifiedCustomer ? (
           <Typography variant="subtitle2">
             Status: <b>Notified Customer</b>
+            <Tooltip
+              title={
+                <Typography style={{ padding: 7 }}>
+                  You have notified the customer. They will have two days to
+                  inspect the images. You will be paid after two days unless
+                  they open up a dispute.
+                </Typography>
+              }
+            >
+              <InfoIcon
+                fontSize="small"
+                color="secondary"
+                style={{ padding: "0px 5px" }}
+              />
+            </Tooltip>
           </Typography>
         ) : (
           ""

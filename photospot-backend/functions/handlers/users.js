@@ -23,6 +23,7 @@ const {
   validateResetPasswordData,
   validateProfileUpdate,
 } = require("../util/validators");
+const { deleteFromStorage } = require("./vault");
 
 // Sign up normal users
 exports.signup = (req, res) => {
@@ -671,12 +672,22 @@ exports.deleteImages = async (req, res) => {
   const docs = db.collection("photographer").doc(userid);
 
   const promises = theImagesToDelete.forEach(async (image) => {
+    let imageLocation = getImageLocation(image, userid);
     await deleteFromDatabase(image, userid);
+    deleteFromStorage(imageLocation);
   });
 
   await Promise.all([Promise.resolve(promises)]);
   return res.json({ response: "Image(s) deleted" });
 };
+
+function getImageLocation(image, userID) {
+  let urlSplit = image.split("%2F");
+  let partWeWant = urlSplit[2];
+  let imageName = partWeWant.split("?");
+  let imageLocation = `users/${userID}/${imageName[0]}`;
+  return imageLocation;
+}
 
 function deleteFromDatabase(image, userID) {
   return db

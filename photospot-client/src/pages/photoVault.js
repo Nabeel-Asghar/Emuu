@@ -30,7 +30,7 @@ import ProgressBar from "../components/photo-vault/progressBar";
 import Success from "../components/shared/success";
 import Progress from "../components/shared/progress";
 import Confirmation from "../components/shared/confirmation";
-import LoadingPage from "../components/shared/loadingPage";
+import LoadingPage from "../components/shared/LoadingPage";
 import DownloadOrNotify from "../components/photo-vault/downloadOrNotify";
 import GoBackButton from "../components/shared/Buttons/GoBackButton";
 import { firebase } from "../util/firestore";
@@ -231,9 +231,11 @@ class photoVault extends Component {
           "state_changed",
           function progress(snapshot) {
             var percentage = (snapshot.bytesTransferred / totalSize) * 100;
-            that.setState({
-              uploadProgress: percentage,
-            });
+            if (percentage > that.state.uploadProgress) {
+              that.setState({
+                uploadProgress: percentage,
+              });
+            }
           },
           function error(err) {
             that.setState({

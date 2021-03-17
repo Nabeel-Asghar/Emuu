@@ -66,6 +66,7 @@ const {
   refund,
   refundFromPhotographer,
   getDashboardLink,
+  getBalance,
 } = require("./handlers/payment");
 
 const { completedOrders } = require("./handlers/administrator");
@@ -114,6 +115,7 @@ app.get("/onboard-status", FBAuth, getStripeOnboardStatus);
 app.post("/onboard-user", FBAuth, onboardUser);
 app.get("/onboard-user/refresh", FBAuth, onboardUserRefresh);
 app.get("/get-stripe-dashboard", FBAuth, getDashboardLink);
+app.get("/get-your-balance", FBAuth, getBalance);
 app.post("/photographers/:photographerId/book/checkout", FBAuth, createPayment);
 app.post("/user/refund", FBAuth, refund);
 app.post("/photographer/refund", FBAuth, refundFromPhotographer);

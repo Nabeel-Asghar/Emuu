@@ -58,7 +58,20 @@ class orderCard extends Component {
       <div style={{ marginBottom: 15 }}>
         {orderDetails.photographerID && (
           <Paper>
-            <Grid container justify="center" alignItems="center">
+            <Grid container justify="center">
+              <Grid
+                item
+                xs={12}
+                style={{
+                  textAlign: "right",
+                  padding: "2px 10px 0px 0px",
+                  marginBottom: "-8px",
+                }}
+              >
+                <Typography variant="overline">
+                  ORDER ID: <b>{orderDetails.id}</b>
+                </Typography>
+              </Grid>
               <Grid item md={4} sm={5} xs={12} style={{ textAlign: "center" }}>
                 <img
                   src={

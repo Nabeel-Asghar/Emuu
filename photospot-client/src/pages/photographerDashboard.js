@@ -14,7 +14,10 @@ import {
   getPhotographerReviews,
 } from "../redux/actions/userActions";
 
-import { refundFromPhotographer } from "../redux/actions/paymentActions";
+import {
+  refundFromPhotographer,
+  getBalance,
+} from "../redux/actions/paymentActions";
 
 // Material UI
 import withStyles from "@material-ui/core/styles/withStyles";
@@ -32,6 +35,7 @@ import PhotographerReviews from "../components/shared/photographerReviews";
 import CollapseItems from "../components/shared/collapse";
 import Confirmation from "../components/shared/confirmation";
 import Success from "../components/shared/success";
+import LoadingPage from "../components/shared/LoadingPage";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -62,6 +66,8 @@ class photograhperDashboard extends Component {
       views: 0,
       ratePerHour: 0,
       totalCompletedOrders: 0,
+      bookings: 0,
+      intialLoading: true,
     };
   }
 
@@ -83,15 +89,20 @@ class photograhperDashboard extends Component {
     }
   }
 
-  componentDidMount() {
-    this.props.getPhotographerOrders();
-    this.props.getPhotographerPastOrders();
+  async componentDidMount() {
+    await this.props.getPhotographerOrders();
+    await this.props.getPhotographerPastOrders();
     this.props.getYourPhotographyPage().then(() => {
       this.assignValues(this.props.credentials);
+      this.getBookingCount();
     });
-    this.props.getPhotographerReviews();
+    await this.props.getPhotographerReviews();
     this.setState({
       allReviews: Object.values(this.props.userReviews || {}),
+    });
+    this.props.getBalance();
+    this.setState({
+      intialLoading: false,
     });
   }
 
@@ -100,6 +111,7 @@ class photograhperDashboard extends Component {
       this.setState({
         allReviews: Object.values(this.props.userReviews),
       });
+      this.getBookingCount();
     }
   }
 
@@ -118,6 +130,28 @@ class photograhperDashboard extends Component {
     console.log("dialog:", orderID);
     this.setState({ orderID: orderID });
     this.setState({ openRefundDialog: true });
+  }
+
+  getBookingCount() {
+    let bookings = 0;
+
+    console.log(this.props.userOrders, this.props.userPastOrders);
+
+    this.props.userOrders &&
+      Object.keys(this.props.userOrders).map((key) => {
+        if (!this.props.userOrders[key].status.includes("Cancel")) {
+          bookings += 1;
+        }
+      });
+
+    this.props.userPastOrders &&
+      Object.keys(this.props.userPastOrders).map((key) => {
+        if (!this.props.userPastOrders[key].status.includes("Cancel")) {
+          bookings += 1;
+        }
+      });
+
+    this.setState({ bookings });
   }
 
   render() {
@@ -182,78 +216,82 @@ class photograhperDashboard extends Component {
 
     const { classes, fullScreen } = this.props;
     return (
-      <Grid
-        container
-        spacing={2}
-        style={{ overflow: "hidden", maxWidth: "100%", margin: "0 auto" }}
-      >
-        <Grid item md={4} sm={12} xs={12}>
-          <ProfileCard
-            profileImage={this.state.profileImage}
-            firstName={this.state.firstName}
-            lastName={this.state.lastName}
-            formattedDate={moment(this.state.createdAt).format("LL")}
-          />
+      <>
+        {this.state.intialLoading ? (
+          <LoadingPage />
+        ) : (
+          <Grid
+            container
+            spacing={2}
+            style={{ overflow: "hidden", maxWidth: "100%", margin: "0 auto" }}
+          >
+            <Grid item md={4} sm={12} xs={12}>
+              <ProfileCard
+                profileImage={this.state.profileImage}
+                firstName={this.state.firstName}
+                lastName={this.state.lastName}
+                formattedDate={moment(this.state.createdAt).format("LL")}
+              />
 
-          <ContactCard
-            location_city={this.state.location_city}
-            location_state={this.state.location_state}
-            email={this.state.email}
-          />
+              <ContactCard
+                location_city={this.state.location_city}
+                location_state={this.state.location_state}
+                email={this.state.email}
+              />
 
-          <StripeCard />
+              <StripeCard />
 
-          <SettingsCard />
-        </Grid>
+              <SettingsCard />
+            </Grid>
 
-        <Grid item md={8} sm={12} xs={12}>
-          <DashboardInfo
-            views={this.state.views}
-            totalOrders={this.state.totalCompletedOrders}
-            totalRevenue={
-              this.state.totalCompletedOrders * this.state.ratePerHour
-            }
-          />
-          <CollapseItems items={theUserOrders} text="Upcoming Shoots" />
+            <Grid item md={8} sm={12} xs={12}>
+              <DashboardInfo
+                views={this.state.views}
+                totalOrders={this.state.bookings}
+                totalRevenue={this.props.balance}
+              />
+              <CollapseItems items={theUserOrders} text="Upcoming Shoots" />
 
-          <CollapseItems items={theUserPastOrders} text="Past Shoots" />
+              <CollapseItems items={theUserPastOrders} text="Past Shoots" />
 
-          <CollapseItems items={gridImages} text="Your Reviews" />
+              <CollapseItems items={gridImages} text="Your Reviews" />
 
-          {/* Confirmation for refund */}
-          <Confirmation
-            open={this.state.openRefundDialog}
-            secondaryConfirmation={true}
-            handleAgree={this.handleRefundAgree.bind(this)}
-            handleDisagree={this.handleRefundDisagree.bind(this)}
-            loading={this.props.loading}
-            title="Confirm Cancellation of Order"
-            text={
-              <div>
-                <Typography gutterBottom style={{ paddingBottom: "10px" }}>
-                  Are you sure you want to cancel this order?
-                </Typography>
+              {/* Confirmation for refund */}
+              <Confirmation
+                open={this.state.openRefundDialog}
+                secondaryConfirmation={true}
+                handleAgree={this.handleRefundAgree.bind(this)}
+                handleDisagree={this.handleRefundDisagree.bind(this)}
+                loading={this.props.loading}
+                title="Confirm Cancellation of Order"
+                text={
+                  <div>
+                    <Typography gutterBottom style={{ paddingBottom: "10px" }}>
+                      Are you sure you want to cancel this order?
+                    </Typography>
 
-                <Typography gutterBottom style={{ paddingBottom: "10px" }}>
-                  You account will refund the cost of the photo shoot. This
-                  cannot be undone.
-                </Typography>
-              </div>
-            }
-            label="I understand I want to cancel the order"
-          />
-          {/* Success after refund */}
-          <Success
-            body={
-              <Typography gutterBottom>
-                You refund is being process. This may take a few moments.
-              </Typography>
-            }
-            open={this.state.openSuccess}
-            reload={true}
-          />
-        </Grid>
-      </Grid>
+                    <Typography gutterBottom style={{ paddingBottom: "10px" }}>
+                      You account will refund the cost of the photo shoot. This
+                      cannot be undone.
+                    </Typography>
+                  </div>
+                }
+                label="I understand I want to cancel the order"
+              />
+              {/* Success after refund */}
+              <Success
+                body={
+                  <Typography gutterBottom>
+                    You refund is being process. This may take a few moments.
+                  </Typography>
+                }
+                open={this.state.openSuccess}
+                reload={true}
+              />
+            </Grid>
+          </Grid>
+        )}
+      </>
     );
   }
 }
@@ -263,6 +301,7 @@ const mapStateToProps = (state) => ({
   userOrders: state.user.userOrders,
   userPastOrders: state.user.userPastOrders,
   userReviews: state.user.userReviews,
+  balance: state.payment.balance,
 });
 
 const mapActionsToProps = {
@@ -273,6 +312,7 @@ const mapActionsToProps = {
   updateUserProfile,
   getPhotographerReviews,
   refundFromPhotographer,
+  getBalance,
 };
 
 export default connect(

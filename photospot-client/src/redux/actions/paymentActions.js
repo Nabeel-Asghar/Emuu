@@ -84,3 +84,13 @@ export const refundFromPhotographer = (orderID) => (dispatch) => {
       return false;
     });
 };
+
+export const getBalance = () => (dispatch) => {
+  return API.get("/get-your-balance")
+    .then((res) => {
+      dispatch({ type: "SET_BALANCE", payload: res.data.balance });
+    })
+    .catch((err) => {
+      dispatch({ type: "SET_BALANCE", payload: 0 });
+    });
+};

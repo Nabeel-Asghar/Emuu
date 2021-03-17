@@ -77,7 +77,7 @@ exports.deleteFromVault = async (req, res) => {
 
     const promises = images.map(async (image) => {
       let imageLocation = getImageLocation(image, vaultID);
-      await deleteFromStorage(imageLocation);
+      await this.deleteFromStorage(imageLocation);
       await deleteFromDatabase(image, vaultID);
     });
 
@@ -239,7 +239,7 @@ function getImage(url) {
   });
 }
 
-function deleteFromStorage(imageLocation) {
+exports.deleteFromStorage = (imageLocation) => {
   admin
     .storage()
     .bucket(storageBucketVar)
@@ -251,7 +251,7 @@ function deleteFromStorage(imageLocation) {
     .catch((err) => {
       console.log(err);
     });
-}
+};
 
 function deleteFromDatabase(image, vaultID) {
   const docs = db.collection("photoVault").doc(`${vaultID}`);
@@ -268,7 +268,7 @@ function deleteFromDatabase(image, vaultID) {
 
 function getImageLocation(image, vaultID) {
   let urlSplit = image.split("%2F");
-  let partWeWant = urlSplit[1];
+  let partWeWant = urlSplit[2];
   let imageName = partWeWant.split("?");
   let imageLocation = `vaults/${vaultID}/${imageName[0]}`;
   return imageLocation;
