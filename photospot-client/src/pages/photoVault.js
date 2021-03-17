@@ -231,9 +231,11 @@ class photoVault extends Component {
           "state_changed",
           function progress(snapshot) {
             var percentage = (snapshot.bytesTransferred / totalSize) * 100;
-            that.setState({
-              uploadProgress: percentage,
-            });
+            if (percentage > that.state.uploadProgress) {
+              that.setState({
+                uploadProgress: percentage,
+              });
+            }
           },
           function error(err) {
             that.setState({

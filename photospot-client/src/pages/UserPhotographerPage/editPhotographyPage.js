@@ -445,24 +445,14 @@ class editPhotographyPage extends Component {
                 </Grid>
               </Paper>
               <Paper elevation={3} className={classes.margin}>
-                <Grid
-                  container
-                  direction="column"
-                  alignItems="center"
-                  justify="center"
-                >
+                <Grid container direction="column" justify="center">
                   <Grid item xs={12} className={classes.centerGrid}>
-                    <Button
-                      variant="contained"
-                      color="secondary"
-                      component={Link}
-                      style={{ margin: "10px" }}
-                      to={{
-                        pathname: "/uploadPhotographyPictures",
+                    <EditButton
+                      onClick={() => {
+                        this.props.history.push("/uploadPhotographyPictures");
                       }}
-                    >
-                      Edit Pictures
-                    </Button>
+                      text="Edit Pictures"
+                    />
                   </Grid>
                   <Grid item xs={12} className={classes.centerGrid}>
                     <PhotoSamples

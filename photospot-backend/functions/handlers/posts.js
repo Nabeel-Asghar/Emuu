@@ -236,14 +236,18 @@ exports.deleteReview = (req, res) => {
 };
 
 exports.getSpecificPhotographer = (req, res) => {
-  let photographerIdOfPageClicked = req.params.photographerId;
+  const photographerIdOfPageClicked = req.params.photographerId;
+  const userID = req.user ? req.user.uid : null;
+
   let photographer = [];
 
   var dbRef = db.collection("photographer").doc(photographerIdOfPageClicked);
 
-  dbRef.update({
-    views: admin.firestore.FieldValue.increment(1),
-  });
+  if (userID !== photographerIdOfPageClicked) {
+    dbRef.update({
+      views: admin.firestore.FieldValue.increment(1),
+    });
+  }
 
   dbRef
     .get()
