@@ -21,3 +21,11 @@ cd ./photospot-client
 ```
 npm start
 ```
+
+**To forward webhooks to your local backend, navigate to the Stripe folder in the root directory then run:**
+```
+start stripe.exe
+```
+```
+stripe listen --forward-to http://localhost:{YOUR_PORT}/photospot-5f554/us-central1/api/webhooks
+```
