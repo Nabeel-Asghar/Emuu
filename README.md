@@ -10,16 +10,14 @@ Once you clone the project, make sure to install all dependencies with npm.
 ```
 cd ./photospot-backend
 ```
-then
 ```
 firebase serve
 ```
 
-**To run the front end locally run: **
+**To run the front end locally run:**
 ```
 cd ./photospot-client
 ```
-then
 ```
 npm start
 ```
