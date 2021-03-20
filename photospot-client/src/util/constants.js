@@ -13,3 +13,11 @@ export const PERSONAL = "Personal";
 export const HEADSHOT = "Headshot";
 export const BABY_SHOWER = "Baby Shower";
 export const WEDDING = "Wedding";
+
+export const CATEGORIES_LIST = [
+  PROFESSIONAL,
+  PERSONAL,
+  HEADSHOT,
+  BABY_SHOWER,
+  WEDDING,
+];

@@ -1,40 +1,28 @@
-/*
-1. Get users current details - ✓
-2. Have form to fill in those details
-3. Form fields must be pre-filled in if value for that field is already in database
-4. With any new changes, submit to backend 
-*/
-import { useMediaQuery } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
 import TextField from "@material-ui/core/TextField";
-import EditIcon from "@material-ui/icons/Edit";
 import equal from "fast-deep-equal";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import PhotoSamples from "../../components/photographer-page/photoSamples";
+import Pricing from "../../components/photographer-page/Pricing";
+import EditButton from "../../components/shared/Buttons/EditButton";
 import Feedback from "../../components/shared/feedback";
 import PictureUploader from "../../components/shared/pictureUploader";
 import EditableUsercard from "../../components/your-photography-page/editableUsercard";
 import EditBio from "../../components/your-photography-page/editBio";
 import EditUserDetails from "../../components/your-photography-page/editUserDetails";
+import PricingEditor from "../../components/your-photography-page/PricingEditor";
+import RotatingCarousel from "../../components/your-photography-page/RotatingCarousel";
 import {
   getYourPhotographyPage,
   updatePhotographerPage,
   uploadBackgroundImage,
   uploadProfileImage,
 } from "../../redux/actions/userActions";
-import RotatingCarousel from "../../components/your-photography-page/RotatingCarousel";
-import EditButton from "../../components/shared/Buttons/EditButton";
-import Pricing from "../../components/photographer-page/Pricing";
-import PricingEditor from "../../components/your-photography-page/PricingEditor";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -44,9 +32,15 @@ class editPhotographyPage extends Component {
   constructor() {
     super();
     this.state = {
-      tempCategories: [],
-      categories: [],
       disableTextField: true,
+      openBio: false,
+      openDetails: false,
+      openBackgroundEditor: false,
+      openProfileEditor: false,
+      openFeedback: false,
+      openAlert: true,
+      categories: [],
+      pricingMap: new Map(),
       firstName: "",
       lastName: "",
       email: "",
@@ -60,24 +54,18 @@ class editPhotographyPage extends Component {
       instagram: "",
       website: "",
       ratePerHour: "",
-      open: false,
-      openDetails: false,
-      fakeBio: "",
       headline: "",
       camera: "",
-      fakeInstagram: "",
-      fakeCamera: "",
-      fakeCompany: "",
-      fakeHeadline: "",
       backgroundImageName: "",
-      openBackgroundEditor: false,
       backgroundImage: "",
       profileImageName: "",
-      openProfileEditor: false,
       croppedProfileImage: "",
-      openFeedback: false,
-      openAlert: false,
-      pricing: null,
+      tempCategories: [],
+      tempBio: "",
+      tempInstagram: "",
+      tempCamera: "",
+      tempCompany: "",
+      tempheadline: "",
     };
   }
 
@@ -98,6 +86,10 @@ class editPhotographyPage extends Component {
       );
     }
   }
+
+  resetForm = () => {
+    this.setState({ openPricing: false });
+  };
 
   componentDidMount() {
     // Get the users current details
@@ -175,54 +167,59 @@ class editPhotographyPage extends Component {
   };
 
   handleBioClickOpen = () => {
-    let x = Object.assign([], this.state.categories);
     this.setState({
-      open: true,
-      fakeBio: this.state.bio,
-      tempCategories: x,
+      openBio: true,
+      tempBio: this.state.bio,
     });
   };
 
   handlePricingOpen = () => {
+    let tempCategories = Object.assign([], this.state.categories);
     this.setState({
       openPricing: true,
+      tempCategories: tempCategories,
     });
   };
 
-  handlePricingAgree = () => {
+  handleClickOpen = () => {
     this.setState({
-      openPricing: false,
+      openDetails: true,
+      tempInstagram: this.state.instagram,
+      tempCamera: this.state.camera,
+      tempCompany: this.state.company,
+      tempheadline: this.state.headline,
     });
   };
-  handlePricingClose = () => {
+
+  handlePricingAgree = (tempCategories, tempPricingMap) => {
+    console.log(tempCategories);
+    console.log(tempPricingMap);
     this.setState({
       openPricing: false,
+      categories: tempCategories,
+      pricingMap: tempPricingMap,
     });
+
+    const details = {
+      categories: tempCategories,
+      pricingMap: tempPricingMap,
+    };
+
+    console.log(details);
+
+    // this.props.updatePhotographerPage(details);
   };
 
   handleBioChange = (event) => {
-    this.setState({
-      fakeBio: event.target.value,
-    });
-  };
-
-  handleBioDisagree = () => {
-    this.setState({
-      open: false,
-      tempCategories: this.state.categories,
-    });
+    this.setState({ tempBio: event.target.value });
   };
 
   handleBioAgree = (event) => {
     this.setState({
       open: false,
-      bio: this.state.fakeBio,
-      categories: this.state.tempCategories,
+      bio: this.state.tempBio,
     });
-    const details = {
-      bio: this.state.fakeBio,
-      categories: this.state.tempCategories,
-    };
+    const details = { bio: this.state.tempBio };
 
     this.props.updatePhotographerPage(details);
   };
@@ -235,63 +232,31 @@ class editPhotographyPage extends Component {
     });
   };
 
-  handleCategoryChange = (event) => {
-    let categoryArray = this.state.tempCategories;
-    if (categoryArray.includes(event.target.name)) {
-      const index = categoryArray.indexOf(event.target.name);
-      if (index > -1) {
-        categoryArray.splice(index, 1);
-      }
-    } else {
-      categoryArray.push(event.target.name);
-    }
-
-    this.setState({
-      tempCategories: categoryArray,
-    });
-  };
-
-  handleDisagree = () => {
-    this.setState({
-      openDetails: false,
-    });
-  };
-
   handleAgree = (event) => {
     this.setState({
       openDetails: false,
-      instagram: this.state.fakeInstagram,
-      camera: this.state.fakeCamera,
-      company: this.state.fakeCompany,
-      headline: this.state.fakeHeadline,
+      instagram: this.state.tempInstagram,
+      camera: this.state.tempCamera,
+      company: this.state.tempCompany,
+      headline: this.state.tempheadline,
     });
 
     const details = {
-      instagram: this.state.fakeInstagram,
-      camera: this.state.fakeCamera,
-      company: this.state.fakeCompany,
-      headline: this.state.fakeHeadline,
+      instagram: this.state.tempInstagram,
+      camera: this.state.tempCamera,
+      company: this.state.tempCompany,
+      headline: this.state.tempheadline,
     };
 
     this.props.updatePhotographerPage(details);
   };
 
-  changeCatergories = () => {
-    console.log(this.state.categories);
+  handleClose = (dialogName) => {
+    this.setState({ [dialogName]: false });
   };
 
-  handleClose = () => {
+  handleAlertClose = () => {
     this.setState({ openAlert: false });
-  };
-
-  handleClickOpen = () => {
-    this.setState({
-      openDetails: true,
-      fakeInstagram: this.state.instagram,
-      fakeCamera: this.state.camera,
-      fakeCompany: this.state.company,
-      fakeHeadline: this.state.headline,
-    });
   };
 
   render() {
@@ -310,8 +275,8 @@ class editPhotographyPage extends Component {
 
         <RotatingCarousel
           open={this.state.openAlert}
-          handleOpen={this.handleClose}
-          handleClose={this.handleClose}
+          handleOpen={this.handleAlertClose}
+          handleClose={this.handleAlertClose}
         />
 
         <Grid container>
@@ -367,12 +332,12 @@ class editPhotographyPage extends Component {
         <EditUserDetails
           open={this.state.openDetails}
           handleAgree={this.handleAgree}
-          handleDisagree={this.handleDisagree}
+          handleClose={this.handleClose}
           handleChange={this.handleChange}
-          instagram={this.state.fakeInstagram}
-          camera={this.state.fakeCamera}
-          company={this.state.fakeCompany}
-          headline={this.state.fakeHeadline}
+          instagram={this.state.tempInstagram}
+          camera={this.state.tempCamera}
+          company={this.state.tempCompany}
+          headline={this.state.tempheadline}
         />
         <div
           style={{
@@ -383,7 +348,6 @@ class editPhotographyPage extends Component {
         >
           <Grid container>
             <Pricing
-              pricing={this.state.pricing}
               handleSelect={() => {}}
               onClick={this.handlePricingOpen}
               editable={true}
@@ -391,10 +355,10 @@ class editPhotographyPage extends Component {
             />
             <PricingEditor
               open={this.state.openPricing}
-              pricing={this.state.pricing}
+              pricingMap={this.state.pricingMap}
               categories={this.state.categories}
-              handleAgree={this.handlePricingAgree}
-              handleClose={this.handlePricingClose}
+              handlePricingAgree={this.handlePricingAgree}
+              handleClose={this.handleClose}
             />
           </Grid>
 
@@ -422,13 +386,11 @@ class editPhotographyPage extends Component {
                 />
               </Grid>
               <EditBio
-                open={this.state.open}
+                open={this.state.openBio}
                 handleAgree={this.handleBioAgree}
-                handleDisagree={this.handleBioDisagree}
+                handleClose={this.handleClose}
                 handleChange={this.handleBioChange}
-                handleCatChange={this.handleCategoryChange}
-                bio={this.state.fakeBio}
-                categories={this.state.tempCategories}
+                bio={this.state.tempBio}
               />
             </Grid>
           </Paper>
