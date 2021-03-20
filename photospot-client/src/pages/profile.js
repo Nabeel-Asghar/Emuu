@@ -18,6 +18,8 @@ import EditProfileImage from "../components/user-profile/editProfileImage";
 import EditUserDetails from "../components/user-profile/editUserDetails";
 import Feedback from "../components/shared/feedback";
 import PictureUploader from "../components/shared/pictureUploader";
+import LoadingPage from "../components/shared/LoadingPage";
+import GoBackButton from "../components/shared/Buttons/GoBackButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -38,6 +40,8 @@ class profileImage extends Component {
       openEditor: false,
       profileImageName: "",
       croppedProfileImage: "",
+      disabled: true,
+      intialLoading: true,
     };
   }
 
@@ -59,10 +63,11 @@ class profileImage extends Component {
     }
   }
 
-  componentDidMount() {
-    this.props.getUserData().then(() => {
+  async componentDidMount() {
+    await this.props.getUserData().then(() => {
       this.assignValues(this.props.credentials);
     });
+    this.setState({ intialLoading: false });
   }
 
   handleProfileImageChange = (event) => {
@@ -97,6 +102,7 @@ class profileImage extends Component {
   handleChange = (event) => {
     this.setState({
       [event.target.name]: event.target.value,
+      disabled: false,
     });
   };
 
@@ -128,56 +134,71 @@ class profileImage extends Component {
       classes,
       UI: { loadingAction, errors },
     } = this.props;
+
     return (
-      <Grid container spacing={1} style={{ maxWidth: 500, margin: "0 auto" }}>
-        <Feedback
-          errors={
-            errors?.firstName ||
-            errors?.lastName ||
-            this.props?.user?.uploadErrorResponse
-          }
-          open={this.state.openSnack}
-          handleClose={this.handleSnackbarClose}
-        />
+      <>
+        {this.state.intialLoading ? (
+          <LoadingPage />
+        ) : (
+          <>
+            <GoBackButton {...this.props} />
+            <Grid
+              container
+              spacing={1}
+              style={{ maxWidth: 500, margin: "0 auto" }}
+            >
+              <Feedback
+                errors={
+                  errors?.firstName ||
+                  errors?.lastName ||
+                  this.props?.user?.uploadErrorResponse
+                }
+                open={this.state.openSnack}
+                handleClose={this.handleSnackbarClose}
+              />
 
-        <Grid item sm={12} xs={12} className={classes.centerGrid}>
-          <Paper>
-            <EditProfileImage
-              profileImage={this.state.profileImage}
-              handleProfileImageChange={this.handleProfileImageChange}
-              handleEditProfileImage={this.handleEditProfileImage}
-            />
-          </Paper>
-        </Grid>
+              <Grid item sm={12} xs={12} className={classes.centerGrid}>
+                <Paper>
+                  <EditProfileImage
+                    profileImage={this.state.profileImage}
+                    handleProfileImageChange={this.handleProfileImageChange}
+                    handleEditProfileImage={this.handleEditProfileImage}
+                  />
+                </Paper>
+              </Grid>
 
-        <PictureUploader
-          {...this.props}
-          image={this.state.croppedProfileImage}
-          name={this.state.profileImageName}
-          open={this.state.openEditor}
-          closeEditor={() => this.setState({ openEditor: false })}
-          savePicture={(image) => this.saveProfileImage(image)}
-          aspect={1}
-        />
+              <PictureUploader
+                {...this.props}
+                image={this.state.croppedProfileImage}
+                name={this.state.profileImageName}
+                open={this.state.openEditor}
+                closeEditor={() => this.setState({ openEditor: false })}
+                savePicture={(image) => this.saveProfileImage(image)}
+                aspect={1}
+              />
 
-        <Grid item sm={12} xs={12}>
-          <Paper>
-            <EditUserDetails
-              firstName={this.state.firstName}
-              lastName={this.state.lastName}
-              location_city={this.state.location_city}
-              location_state={this.state.location_state}
-              phoneNumber={this.state.phoneNumber}
-              handleChange={this.handleChange}
-              handleAgree={this.handleAgree}
-              errors={this.props.UI.errors}
-              loading={loadingAction}
-            />
-          </Paper>
-        </Grid>
+              <Grid item sm={12} xs={12}>
+                <Paper>
+                  <EditUserDetails
+                    firstName={this.state.firstName}
+                    lastName={this.state.lastName}
+                    location_city={this.state.location_city}
+                    location_state={this.state.location_state}
+                    phoneNumber={this.state.phoneNumber}
+                    handleChange={this.handleChange}
+                    handleAgree={this.handleAgree}
+                    errors={this.props.UI.errors}
+                    loading={loadingAction}
+                    disabled={this.state.disabled}
+                  />
+                </Paper>
+              </Grid>
 
-        <Grid item sm={1} xs={0} />
-      </Grid>
+              <Grid item sm={1} xs={0} />
+            </Grid>
+          </>
+        )}
+      </>
     );
   }
 }

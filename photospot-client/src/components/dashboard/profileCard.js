@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
+import defaultProfilePicture from "../../images/defaultProfilePicture.png";
 
 // Material UI
 import Paper from "@material-ui/core/Paper";
@@ -30,7 +31,10 @@ class profileCard extends Component {
     return (
       <Paper style={{ paddingBottom: "20px" }}>
         <div style={{ textAlign: "center" }}>
-          <img className={classes.profileAvatar} src={profileImage} />
+          <img
+            className={classes.profileAvatar}
+            src={profileImage ? profileImage : defaultProfilePicture}
+          />
           <Typography variant="h5">
             {firstName} {lastName}
           </Typography>
@@ -44,7 +48,7 @@ class profileCard extends Component {
             component={Link}
             to="/profile"
             color="secondary"
-            variant="contained"
+            variant="outlined"
           >
             Edit Profile
           </Button>

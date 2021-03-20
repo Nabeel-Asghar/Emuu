@@ -23,6 +23,7 @@ const {
   validateResetPasswordData,
   validateProfileUpdate,
 } = require("../util/validators");
+const { deleteFromStorage } = require("./vault");
 
 // Sign up normal users
 exports.signup = (req, res) => {
@@ -302,7 +303,9 @@ exports.uploadProfilePicture = async (req, res) => {
 
     const imageExtension = filename.split(".")[filename.split(".").length - 1];
 
-    const source = `source.${imageExtension}`;
+    const source = `${Math.round(
+      Math.random() * 1000000000
+    )}.${imageExtension}`;
 
     imageFileName = `${Math.round(
       Math.random() * 1000000000
@@ -319,10 +322,8 @@ exports.uploadProfilePicture = async (req, res) => {
     imageToBeUploaded = { tempPath, mimetype };
     profileImageToBeUploaded = { imagePath: imagePath, mimetype };
     thumbnailToBeUploaded = { imagePath: thumbnailPath, mimetype };
-    // console.log(imagePath);
+
     file.pipe(fs.createWriteStream(tempPath));
-    // file.pipe(fs.createWriteStream(imagePath));
-    // file.pipe(fs.createWriteStream(thumbnailPath));
   });
 
   busboy.on("finish", async () => {
@@ -487,8 +488,6 @@ exports.getYourUserProfile = (req, res) => {
         ...doc.data(),
       });
 
-      console.log(page);
-
       return res.status(200).json(page);
     })
     .catch((err) => console.error(err));
@@ -618,10 +617,6 @@ exports.editBookingTimes = (req, res) => {
   let algoliaDates = req.body.algoliaDates;
   let userid = req.user.uid;
 
-  console.log("Date: ", date);
-  console.log("Timeslots: ", timeslots);
-  console.log("Algoliatimeslot: ", algoliaDates);
-
   db.collection(`photographer/${userid}/bookings`)
     .doc(date)
     .set(timeslots)
@@ -654,7 +649,7 @@ exports.uploadYourPhotographyImages = (req, res) => {
 
   imageNames.forEach((image) => {
     // Replace the "/" with "%2F" in the url since google storage does that for some dumbass reason if placing in folder
-    url = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${userID}%2F${image}?alt=media`;
+    url = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/users%2F${userID}%2F${image}?alt=media`;
     imageUrls.push(url);
   });
 
@@ -677,12 +672,22 @@ exports.deleteImages = async (req, res) => {
   const docs = db.collection("photographer").doc(userid);
 
   const promises = theImagesToDelete.forEach(async (image) => {
+    let imageLocation = getImageLocation(image, userid);
     await deleteFromDatabase(image, userid);
+    deleteFromStorage(imageLocation);
   });
 
   await Promise.all([Promise.resolve(promises)]);
   return res.json({ response: "Image(s) deleted" });
 };
+
+function getImageLocation(image, userID) {
+  let urlSplit = image.split("%2F");
+  let partWeWant = urlSplit[2];
+  let imageName = partWeWant.split("?");
+  let imageLocation = `users/${userID}/${imageName[0]}`;
+  return imageLocation;
+}
 
 function deleteFromDatabase(image, userID) {
   return db
@@ -738,7 +743,7 @@ async function uploadProfileImage(
     .resize(size, size)
     .toFile(image.imagePath)
     .then(async () => {
-      await uploadToStorage(image);
+      await uploadToStorage(image, userID, fileName);
       await updateProfileImage("users", userID, fileName, thumbnail);
       photographer &&
         (await updateProfileImage("photographer", userID, fileName, thumbnail));
@@ -747,26 +752,19 @@ async function uploadProfileImage(
       }
       return true;
     })
-    // .then(() => {
-    //   console.log(image.imagePath);
-    //   try {
-    //     fs.unlinkSync(image.imagePath);
-    //   } catch (e) {
-    //     console.log(e);
-    //   }
-    // })
     .catch((err) => {
       console.log(err);
       return false;
     });
 }
 
-function uploadToStorage(file) {
+function uploadToStorage(file, folder, filename) {
   return admin
     .storage()
     .bucket(config.storageBucket)
     .upload(file.imagePath, {
       resumable: false,
+      destination: `users/${folder}/${filename}`,
       metadata: {
         metadata: {
           contentType: file.mimetype,
@@ -774,6 +772,7 @@ function uploadToStorage(file) {
       },
     })
     .then(() => {
+      console.log();
       return true;
     })
     .catch(() => {
@@ -783,11 +782,11 @@ function uploadToStorage(file) {
 
 function updateProfileImage(database, id, imageFileName, thumbnail) {
   if (thumbnail) {
-    const thumbnailImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+    const thumbnailImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/users%2F${id}%2F${imageFileName}?alt=media`;
 
     return db.collection(database).doc(id).update({ thumbnailImage });
   } else {
-    const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/${imageFileName}?alt=media`;
+    const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/users%2F${id}%2F${imageFileName}?alt=media`;
     partialUpdateObjectToAlgolia({
       profileImage: profileImage,
       objectID: id,

@@ -80,6 +80,32 @@ exports.getStripeOnboardStatus = (req, res) => {
     });
 };
 
+// Get dashboard link for photographer
+exports.getDashboardLink = async (req, res) => {
+  let userID = req.user.uid;
+  const stripeID = await getPhotographerStripeID(userID);
+  const dashboardLink = await stripe.accounts.createLoginLink(stripeID);
+  return res.json({ url: dashboardLink.url });
+};
+
+exports.getBalance = async (req, res) => {
+  let userID = req.user.uid;
+
+  try {
+    const stripeID = await getPhotographerStripeID(userID);
+    let balanceObject = await stripe.balance.retrieve({
+      stripeAccount: stripeID,
+    });
+
+    const balance =
+      balanceObject.available[0].amount + balanceObject.pending[0].amount / 100;
+
+    return res.json({ balance: balance });
+  } catch (e) {
+    return res.json({ balance: 0 });
+  }
+};
+
 // Customer Routes
 //
 // Create charge when customer is booking photographer

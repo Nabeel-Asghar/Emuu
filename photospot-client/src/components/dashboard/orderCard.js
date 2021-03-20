@@ -43,7 +43,7 @@ class orderCard extends Component {
 
     const firstName = consumer
       ? orderDetails.photographerFirstName
-      : orderDetails.consumer;
+      : orderDetails.consumerFirstName;
     const lastName = consumer
       ? orderDetails.photographerLastName
       : orderDetails.consumerLastName;
@@ -58,10 +58,27 @@ class orderCard extends Component {
       <div style={{ marginBottom: 15 }}>
         {orderDetails.photographerID && (
           <Paper>
-            <Grid container justify="center" alignItems="center">
+            <Grid container justify="center">
+              <Grid
+                item
+                xs={12}
+                style={{
+                  textAlign: "right",
+                  padding: "2px 10px 0px 0px",
+                  marginBottom: "-8px",
+                }}
+              >
+                <Typography variant="overline">
+                  ORDER ID: <b>{orderDetails.id}</b>
+                </Typography>
+              </Grid>
               <Grid item md={4} sm={5} xs={12} style={{ textAlign: "center" }}>
                 <img
-                  src={orderDetails.consumerProfileImage}
+                  src={
+                    consumer
+                      ? orderDetails.photographerProfileImage
+                      : orderDetails.consumerProfileImage
+                  }
                   style={{
                     maxWidth: "90%",
                     padding: 10,
@@ -98,15 +115,31 @@ class orderCard extends Component {
                       <List dense="true">
                         <ListItem>
                           <ListItemText
-                            primary={
-                              <Typography variant="h6">Order Total</Typography>
-                            }
+                            primary={<Typography>Shoot Type</Typography>}
                             style={{ textAlign: "left" }}
                           />
                           <ListItemText
                             primary={
-                              <Typography variant="h6">
-                                ${orderDetails.amount}.00
+                              <Typography>
+                                <b>{orderDetails.shootType}</b>
+                              </Typography>
+                            }
+                            style={{ textAlign: "right" }}
+                          />
+                        </ListItem>
+                      </List>
+                    </Paper>
+                    <Paper variant="outlined" style={{ marginTop: 8 }}>
+                      <List dense="true">
+                        <ListItem>
+                          <ListItemText
+                            primary={<Typography>Order Total</Typography>}
+                            style={{ textAlign: "left" }}
+                          />
+                          <ListItemText
+                            primary={
+                              <Typography>
+                                <b>${orderDetails.amount}.00</b>
                               </Typography>
                             }
                             style={{ textAlign: "right" }}

@@ -30,7 +30,7 @@ export class editUserDetails extends Component {
         <form className={classes.root}>
           <TextField
             id="firstName"
-            variant="filled"
+            variant="outlined"
             name="firstName"
             label="First Name"
             type="text"
@@ -44,7 +44,7 @@ export class editUserDetails extends Component {
 
           <TextField
             id="lastName"
-            variant="filled"
+            variant="outlined"
             name="lastName"
             label="Last Name"
             type="text"
@@ -58,7 +58,7 @@ export class editUserDetails extends Component {
 
           <TextField
             id="location_city"
-            variant="filled"
+            variant="outlined"
             name="location_city"
             label="City"
             type="text"
@@ -70,7 +70,7 @@ export class editUserDetails extends Component {
 
           <TextField
             id="location_state"
-            variant="filled"
+            variant="outlined"
             name="location_state"
             label="State"
             type="text"
@@ -84,7 +84,7 @@ export class editUserDetails extends Component {
           color="secondary"
           variant="contained"
           onClick={this.props.handleAgree}
-          disabled={this.props.loading}
+          disabled={this.props.loading || this.props.disabled}
         >
           Save Changes
           {this.props.loading && (

@@ -10,7 +10,7 @@ import Button from "@material-ui/core/Button";
 // Components
 import DateView from "../components/set-your-schedule/dateView";
 import TimeView from "../components/set-your-schedule/timeView";
-import GoBackButton from "../components/shared/goBackButton";
+import GoBackButton from "../components/shared/Buttons/GoBackButton";
 
 // Redux
 import { connect } from "react-redux";

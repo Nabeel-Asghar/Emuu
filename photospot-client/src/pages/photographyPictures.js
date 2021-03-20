@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { storage } from "../firestore";
+import { firebase } from "../util/firestore";
 import { nanoid } from "nanoid";
 
 // Material UI
@@ -22,10 +22,11 @@ import {
 
 // Components
 import ImageGrid from "../components/shared/imageGrid";
-import GoBackButton from "../components/shared/goBackButton";
 import Success from "../components/shared/success";
 import Progress from "../components/shared/progress";
 import FailureFeedback from "../components/shared/FailureFeedback";
+import GoBackButton from "../components/shared/Buttons/GoBackButton";
+import LoadingPage from "../components/shared/LoadingPage";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -53,6 +54,7 @@ class photographyPictures extends Component {
       deleteResponse: null,
       success: false,
       failure: false,
+      intialLoading: true,
     };
   }
 
@@ -61,6 +63,7 @@ class photographyPictures extends Component {
       this.setState({
         images: this.props.yourPhotographerPage[0].images,
         intialImagesLength: this.props.yourPhotographerPage[0]?.images?.length,
+        intialLoading: false,
       });
     });
   }
@@ -156,9 +159,10 @@ class photographyPictures extends Component {
         const imageName = nanoid(10);
         imageNames.push(imageName);
 
-        var task = storage
-          .ref(this.props.userID)
-          .child(imageName)
+        var task = firebase
+          .storage()
+          .ref()
+          .child(`users/${this.props.userID}/${imageName}`)
           .put(image, metadata);
 
         promises.push(task);
@@ -206,99 +210,110 @@ class photographyPictures extends Component {
     } = this.props;
 
     return (
-      <Paper style={{ margin: "15px 0", padding: 10 }}>
-        <ImageGrid
-          images={this.state.images}
-          deleteImage={this.deleteImage.bind(this)}
-          access={"photographer"}
-        />
-        <Grid container spacing={2}>
-          {!this.state.images && (
-            <Grid
-              item
-              xs={12}
-              className={classes.centerGrid}
-              style={{ paddingTop: 20, height: 100, marginTop: 100 }}
-            >
-              <Typography variant="subtitle">No images uploaded.</Typography>
-            </Grid>
-          )}
-          {this.state.images && this.state.images.length < 6 && (
-            <Grid
-              item
-              xs={12}
-              className={classes.centerGrid}
-              style={{ paddingTop: 20 }}
-            >
-              <Typography className={classes.customError} variant="subtitle">
-                *You must have at least 6 images*
-              </Typography>
-            </Grid>
-          )}
-          <Grid item xs={12} className={classes.centerGrid}>
-            <div className={classes.root}>
-              <GoBackButton {...this.props} />
-              <Button
-                variant="outlined"
-                color="secondary"
-                disabled={loading}
-                startIcon={<CloudUploadIcon />}
-                onClick={this.handleEditPicture}
-              >
-                <input
-                  type="file"
-                  id="addImage"
-                  accept="image/*"
-                  onChange={this.handleImageAdd}
-                  hidden
-                  multiple
-                />
-                Upload
-              </Button>
-
-              <Button
-                variant="contained"
-                color="secondary"
-                disabled={
-                  loading ||
-                  this.state?.images?.length < 6 ||
-                  (this.state.imagesToUpload.length < 1 &&
-                    this.state.imagesToDelete.length < 1)
-                }
-                startIcon={<SaveIcon />}
-                onClick={() => this.handleSubmit()}
-              >
-                Save Changes
-                {loading && (
-                  <CircularProgress
-                    className={classes.progress}
+      <>
+        {this.state.intialLoading ? (
+          <LoadingPage />
+        ) : (
+          <Paper style={{ margin: "15px 0", padding: 10 }}>
+            <ImageGrid
+              images={this.state.images}
+              deleteImage={this.deleteImage.bind(this)}
+              access={"photographer"}
+            />
+            <Grid container spacing={2}>
+              {!this.state.images && (
+                <Grid
+                  item
+                  xs={12}
+                  className={classes.centerGrid}
+                  style={{ paddingTop: 20, height: 100, marginTop: 100 }}
+                >
+                  <Typography variant="subtitle">
+                    No images uploaded.
+                  </Typography>
+                </Grid>
+              )}
+              {this.state.images && this.state.images.length < 6 && (
+                <Grid
+                  item
+                  xs={12}
+                  className={classes.centerGrid}
+                  style={{ paddingTop: 20 }}
+                >
+                  <Typography
+                    className={classes.customError}
+                    variant="subtitle"
+                  >
+                    *You must have at least 6 images*
+                  </Typography>
+                </Grid>
+              )}
+              <Grid item xs={12} className={classes.centerGrid}>
+                <div className={classes.root}>
+                  <GoBackButton {...this.props} />
+                  <Button
+                    variant="outlined"
                     color="secondary"
-                  />
-                )}
-              </Button>
-            </div>
-          </Grid>
+                    disabled={loading}
+                    startIcon={<CloudUploadIcon />}
+                    onClick={this.handleEditPicture}
+                  >
+                    <input
+                      type="file"
+                      id="addImage"
+                      accept="image/*"
+                      onChange={this.handleImageAdd}
+                      hidden
+                      multiple
+                    />
+                    Upload
+                  </Button>
 
-          <Progress
-            open={this.state.openProgress}
-            value={Number.parseFloat(this.state.uploadProgress).toFixed(0)}
-          />
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    disabled={
+                      loading ||
+                      this.state?.images?.length < 6 ||
+                      (this.state.imagesToUpload.length < 1 &&
+                        this.state.imagesToDelete.length < 1)
+                    }
+                    startIcon={<SaveIcon />}
+                    onClick={() => this.handleSubmit()}
+                  >
+                    Save Changes
+                    {loading && (
+                      <CircularProgress
+                        className={classes.progress}
+                        color="secondary"
+                      />
+                    )}
+                  </Button>
+                </div>
+              </Grid>
 
-          <Success
-            open={this.state.success}
-            headline="Success!"
-            body="Your changes have been saved."
-            reload={true}
-          />
+              <Progress
+                open={this.state.openProgress}
+                value={Number.parseFloat(this.state.uploadProgress).toFixed(0)}
+              />
 
-          <FailureFeedback
-            open={this.state.failure}
-            headline="Uh Oh!"
-            body="Something went wrong. Please try again."
-            reload={true}
-          />
-        </Grid>
-      </Paper>
+              <Success
+                open={this.state.success}
+                headline="Success!"
+                body="Your changes have been saved."
+                reload={true}
+              />
+
+              <FailureFeedback
+                open={this.state.failure}
+                headline="Uh Oh!"
+                body="Something went wrong. Please try again."
+                reload={true}
+              />
+            </Grid>
+          </Paper>
+        )}
+      </>
     );
   }
 }

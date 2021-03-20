@@ -15,7 +15,17 @@ export const refreshStripe = () => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
   API.get("/onboard-user/refresh")
     .then((res) => {
-      window.location.assign(`${res.data.url}`);
+      window.open(`${res.data.url}`, "_blank");
+    })
+    .catch((err) => {
+      return false;
+    });
+};
+
+export const getStripeDashboard = () => (dispatch) => {
+  API.get("/get-stripe-dashboard")
+    .then((res) => {
+      window.open(`${res.data.url}`, "_blank");
     })
     .catch((err) => {
       return false;
@@ -72,5 +82,15 @@ export const refundFromPhotographer = (orderID) => (dispatch) => {
     })
     .catch((err) => {
       return false;
+    });
+};
+
+export const getBalance = () => (dispatch) => {
+  return API.get("/get-your-balance")
+    .then((res) => {
+      dispatch({ type: "SET_BALANCE", payload: res.data.balance });
+    })
+    .catch((err) => {
+      dispatch({ type: "SET_BALANCE", payload: 0 });
     });
 };

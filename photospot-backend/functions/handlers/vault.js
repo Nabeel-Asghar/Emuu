@@ -1,6 +1,6 @@
 const { admin, db, storage } = require("../util/admin");
 const config = require("../util/config");
-const storageBucketVar = config.photoVault;
+const storageBucketVar = config.storageBucket;
 var JSZip = require("jszip");
 const imageToBase64 = require("image-to-base64");
 const email = require("./email");
@@ -9,79 +9,101 @@ const { TIME_TO_PAYOUT } = require("../util/constants");
 //const { logToFile } = require("../util/log");
 
 exports.getVault = async (req, res) => {
-  let vaultID = req.params.vaultID;
-  let id = req.user.uid;
+  try {
+    let vaultID = req.params.vaultID;
+    let id = req.user.uid;
 
-  // check access level
-  let vault = await checkID(vaultID, id);
+    // check access level
+    let vault = await checkID(vaultID, id);
 
-  if (vault) {
-    return res.json(vault);
-  } else {
-    return res.status(401).json({ error: "Access denied" });
+    if (vault) {
+      return res.json(vault);
+    } else {
+      return res.status(401).json({ error: "Access denied" });
+    }
+  } catch (e) {
+    return res.json({ message: "Failed to get vault" });
   }
 };
 
 exports.downloadImages = async (req, res) => {
-  let vaultID = req.params.vaultID;
+  try {
+    let vaultID = req.params.vaultID;
 
-  let files = await getFiles(vaultID);
-  let images = await getImages(files);
-  let zipFile = await zipImages(images);
+    let files = await getFiles(vaultID);
+    let images = await getImages(files);
+    let zipFile = await zipImages(images);
 
-  res.set("Content-Type", "application/zip");
-  res.set("Content-Disposition", "attachment; filename=images.zip");
-  res.set("Content-Length", zipFile.length);
-  return res.end(zipFile, "binary");
+    res.set("Content-Type", "application/zip");
+    res.set("Content-Disposition", "attachment; filename=images.zip");
+    res.set("Content-Length", zipFile.length);
+    return res.end(zipFile, "binary");
+  } catch (e) {
+    return res.json({ message: "Failed to download images" });
+  }
 };
 
 exports.uploadToVault = async (req, res) => {
-  const vaultID = req.params.vaultID;
-  const imageNames = req.body;
-  console.log(req.body);
-  let imageUrls = [];
+  try {
+    const vaultID = req.params.vaultID;
+    const imageNames = req.body;
+    let imageUrls = [];
 
-  imageNames.forEach((image) => {
-    // Replace the "/" with "%2F" in the url since google storage does that for some dumbass reason if placing in folder
-    url = `https://firebasestorage.googleapis.com/v0/b/${storageBucketVar}/o/${vaultID}%2F${image}?alt=media`;
-    imageUrls.push(url);
-  });
-
-  db.doc(`/photoVault/${vaultID}`)
-    .update({
-      images: admin.firestore.FieldValue.arrayUnion(...imageUrls),
-    })
-    .catch((err) => {
-      return res.json({ error: err });
+    imageNames.forEach((image) => {
+      // Replace the "/" with "%2F" in the url since google storage does that for some dumbass reason if placing in folder
+      url = `https://firebasestorage.googleapis.com/v0/b/${storageBucketVar}/o/vaults%2F${vaultID}%2F${image}?alt=media`;
+      imageUrls.push(url);
     });
+
+    db.doc(`/photoVault/${vaultID}`)
+      .update({
+        images: admin.firestore.FieldValue.arrayUnion(...imageUrls),
+      })
+      .then((res) => {
+        return res.json({ message: "Added to vault images array" });
+      })
+      .catch((err) => {
+        return res.json({ error: err });
+      });
+  } catch (e) {
+    return res.json({ message: "Failed to upload to vault" });
+  }
 };
 
 exports.deleteFromVault = async (req, res) => {
-  let vaultID = req.params.vaultID;
-  let images = req.body;
+  try {
+    let vaultID = req.params.vaultID;
+    let images = req.body;
 
-  const promises = images.map(async (image) => {
-    let imageLocation = getImageLocation(image, vaultID);
-    await deleteFromStorage(imageLocation);
-    await deleteFromDatabase(image, vaultID);
-  });
+    const promises = images.map(async (image) => {
+      let imageLocation = getImageLocation(image, vaultID);
+      await this.deleteFromStorage(imageLocation);
+      await deleteFromDatabase(image, vaultID);
+    });
 
-  await Promise.all(promises);
+    await Promise.all(promises);
 
-  return res.json({ response: "Image(s) deleted" });
+    return res.json({ response: "Image(s) deleted" });
+  } catch (e) {
+    return res.json({ message: "Failed to delete from vault" });
+  }
 };
 
 exports.getVaultSize = async (req, res) => {
-  let vaultID = req.params.vaultID;
+  try {
+    let vaultID = req.params.vaultID;
 
-  let files = await getFiles(vaultID);
-  let allSizes = [];
+    let files = await getFiles(vaultID);
+    let allSizes = [];
 
-  files[0].forEach((file) => {
-    allSizes.push(file.metadata.size);
-  });
+    files[0].forEach((file) => {
+      allSizes.push(file.metadata.size);
+    });
 
-  return res.json({ size: allSizes });
+    return res.json({ size: allSizes });
+  } catch (e) {
+    return res.json({ message: "Failed to get size" });
+  }
 };
 
 exports.notifyCustomer = async (req, res) => {
@@ -101,10 +123,9 @@ exports.notifyCustomer = async (req, res) => {
 };
 
 exports.finalizeVault = async (req, res) => {
+  const orderID = req.params.vaultID;
   try {
-    const orderID = req.params.vaultID;
-    const { consumerID, photographerID } = await getVaultOwners(orderID);
-    await payment.payOut(orderID, consumerID, photographerID);
+    await confirmedByCustomer(orderID);
     return res.json({
       response: "You've confirmed your photos. You may now download them!",
     });
@@ -162,9 +183,10 @@ function checkID(vaultID, id) {
 }
 
 function getFiles(vaultID) {
-  return storage
+  return admin
+    .storage()
     .bucket(storageBucketVar)
-    .getFiles({ prefix: `${vaultID}/` })
+    .getFiles({ prefix: `vaults/${vaultID}/` })
     .then((files) => {
       return files;
     })
@@ -217,8 +239,9 @@ function getImage(url) {
   });
 }
 
-function deleteFromStorage(imageLocation) {
-  storage
+exports.deleteFromStorage = (imageLocation) => {
+  admin
+    .storage()
     .bucket(storageBucketVar)
     .deleteFiles({ prefix: imageLocation })
     .then((res) => {
@@ -228,7 +251,7 @@ function deleteFromStorage(imageLocation) {
     .catch((err) => {
       console.log(err);
     });
-}
+};
 
 function deleteFromDatabase(image, vaultID) {
   const docs = db.collection("photoVault").doc(`${vaultID}`);
@@ -245,9 +268,9 @@ function deleteFromDatabase(image, vaultID) {
 
 function getImageLocation(image, vaultID) {
   let urlSplit = image.split("%2F");
-  let partWeWant = urlSplit[1];
+  let partWeWant = urlSplit[2];
   let imageName = partWeWant.split("?");
-  let imageLocation = `${vaultID}/${imageName[0]}`;
+  let imageLocation = `vaults/${vaultID}/${imageName[0]}`;
   return imageLocation;
 }
 
@@ -308,4 +331,22 @@ function getDateToPayout() {
   let theDate = new Date();
   theDate.setDate(theDate.getDate() + TIME_TO_PAYOUT);
   return theDate;
+}
+
+// set field to confirm customer approved photos
+function confirmedByCustomer(orderID) {
+  return db
+    .collection("photoVault")
+    .doc(orderID)
+    .update({ confirmedByCustomer: true })
+    .then(() => {
+      return true;
+    })
+    .catch((err) => {
+      console.log(
+        "error updating field to confirm customer approved photos: ",
+        err
+      );
+      return false;
+    });
 }

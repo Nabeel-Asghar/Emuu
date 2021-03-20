@@ -35,6 +35,7 @@ import PhotographerReviews from "../components/shared/photographerReviews";
 import UserImage from "../components/photographer-page/userImage";
 import UserInfo from "../components/photographer-page/userInfo";
 import Pricing from "../components/photographer-page/Pricing";
+import LoadingPage from "../components/shared/LoadingPage";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -77,6 +78,7 @@ class specificPhotographer extends Component {
       errors: {},
       openReview: false,
       openBackdrop: false,
+      intialLoading: true,
     };
   }
 
@@ -97,7 +99,6 @@ class specificPhotographer extends Component {
   }
 
   componentDidMount() {
-    console.log("running");
     const photographerID = this.props.match.params.photographerID;
     this.props.getPhotographerPage(photographerID);
     const photoDetails = this.props.photographerDetails;
@@ -105,11 +106,12 @@ class specificPhotographer extends Component {
     this.props.getReviews(photographerID).then(() => {
       this.setState({
         allReviews: this.props.reviews,
+        intialLoading: false,
       });
       this.handleCount(this.state.allReviews);
     });
-    this.props.getUserData().then(() => {
-      this.props.credentials &&
+    this.props.credentials &&
+      this.props.getUserData().then(() => {
         this.setState({
           openBackdrop: false,
           userEmail: this.props.credentials[0]?.email,
@@ -118,7 +120,7 @@ class specificPhotographer extends Component {
           userProfileImage: this.props.credentials[0]?.profileImage,
           photographer: this.props.credentials[0]?.photographer,
         });
-    });
+      });
   }
 
   componentDidUpdate(prevProps) {
@@ -127,12 +129,8 @@ class specificPhotographer extends Component {
     }
 
     if (!equal(this.props.credentials, prevProps.credentials)) {
-      console.log("updating");
-
       if (this.props.credentials) {
         if (this.props.credentials[0]?.photographer) {
-          console.log(this.props.credentials[0]?.photographer);
-
           this.setState({
             photographer: true,
           });
@@ -260,195 +258,210 @@ class specificPhotographer extends Component {
     }
 
     return (
-      <div>
-        <div style={{ margin: "65px auto 0px auto" }}>
-          <UserImage
-            background={
-              this.state.background ? this.state.background : defaultBackground
-            }
-            loading={loadingData}
-          />
-        </div>
-        <div
-          style={{
-            maxWidth: 1000,
-            margin: "-350px auto 0 auto",
-            paddingBottom: "20px",
-          }}
-        >
-          <Grid
-            container
-            direction="column"
-            alignItems="center"
-            justify="center"
-          >
-            <Usercard
-              authenticated={this.props.user.authenticated}
-              history={this.props.history}
-              firstName={this.state.firstName}
-              lastName={this.state.lastName}
-              userFirstName={this.state.userFirstName}
-              userLastName={this.state.userLastName}
-              email={this.state.email}
-              userEmail={this.state.userEmail}
-              profileImage={
-                this.state.profileImage
-                  ? this.state.profileImage
-                  : defaultProfilePicture
-              }
-              loading={loadingData}
-              photographer={this.state.photographer}
-            />
-
-            <UserInfo
-              firstName={this.state.firstName}
-              lastName={this.state.lastName}
-              location_city={this.state.location_city}
-              location_state={this.state.location_state}
-              instagram={this.state.instagram}
-              company={this.state.company}
-              loading={loadingData}
-              history={this.props.history}
-              headline={this.state.headline}
-              camera={this.state.camera}
-            />
-
-            <Pricing
-              pricing={this.state.pricing}
-              fullScreen={fullScreen}
-              selectable={false}
-              handleSelect={() => {}}
-            />
-          </Grid>
-
-          <Paper
-            elevation={3}
-            className={classes.paperComponent}
-            style={{ marginTop: 0 }}
-          >
-            <Grid
-              container
-              direction="row"
-              alignItems="center"
-              justify="flex-start"
+      <>
+        {this.state.intialLoading ? (
+          <LoadingPage />
+        ) : (
+          <div>
+            <div style={{ margin: "65px auto 0px auto" }}>
+              <UserImage
+                background={
+                  this.state.background
+                    ? this.state.background
+                    : defaultBackground
+                }
+                loading={loadingData}
+              />
+            </div>
+            <div
+              style={{
+                maxWidth: 1000,
+                margin: "-350px auto 0 auto",
+                paddingBottom: "20px",
+              }}
             >
-              <Grid item sm={12}>
-                <Bio
-                  {...this.props}
-                  key={this.state.bio}
-                  bio={this.state.bio}
+              <Grid
+                container
+                direction="column"
+                alignItems="center"
+                justify="center"
+              >
+                <Usercard
+                  authenticated={this.props.user.authenticated}
+                  history={this.props.history}
+                  firstName={this.state.firstName}
+                  lastName={this.state.lastName}
+                  userFirstName={this.state.userFirstName}
+                  userLastName={this.state.userLastName}
+                  email={this.state.email}
+                  userEmail={this.state.userEmail}
+                  profileImage={
+                    this.state.profileImage
+                      ? this.state.profileImage
+                      : defaultProfilePicture
+                  }
                   loading={loadingData}
+                  photographer={this.state.photographer}
+                />
+
+                <UserInfo
+                  firstName={this.state.firstName}
+                  lastName={this.state.lastName}
+                  location_city={this.state.location_city}
+                  location_state={this.state.location_state}
+                  instagram={this.state.instagram}
+                  company={this.state.company}
+                  loading={loadingData}
+                  history={this.props.history}
+                  headline={this.state.headline}
+                  camera={this.state.camera}
+                />
+
+                <Pricing
+                  pricing={this.state.pricing}
+                  fullScreen={fullScreen}
+                  selectable={false}
+                  handleSelect={() => {}}
                 />
               </Grid>
-            </Grid>
-          </Paper>
 
-          <Paper elevation={3} className={classes.margin}>
-            <Grid container>
-              <Grid item xs={12}>
-                <List dense="true">
-                  <ListItem>
-                    <ListItemText
-                      primary={
-                        <div style={{ marginTop: "2px" }}>
-                          <Typography variant="subtitle2" display="inline">
-                            <StarRatings
-                              rating={this.state.avgRating}
-                              numberOfStars={5}
-                              name="rating"
-                              starDimension="20px"
-                              starRatedColor="#23ba8b"
-                              starSpacing="3px"
-                            />
-                          </Typography>
-                          <Typography variant="subtitle2" display="inline">
-                            &nbsp;&nbsp;{this.state.reviewCount}{" "}
-                            {this.state.reviewCount > 1 ? (
-                              <Typography display="inline">ratings</Typography>
-                            ) : (
-                              <Typography display="inline">rating</Typography>
-                            )}
-                          </Typography>
-                        </div>
-                      }
-                      style={{
-                        textAlign: "center",
-                      }}
-                    />
-                    <ListItemSecondaryAction>
-                      <IconButton edge="end" onClick={() => this.handleCheck()}>
-                        {this.state.checked ? (
-                          <KeyboardArrowDownIcon />
-                        ) : (
-                          <KeyboardArrowLeftIcon />
-                        )}
-                      </IconButton>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                </List>
-              </Grid>
-            </Grid>
-          </Paper>
-
-          <Collapse in={this.state.checked}>
-            {allReviews}
-            {this.props.user.authenticated &&
-              this.props.user.credentials[0]?.photographer === false && (
-                <Fab
-                  variant="extended"
-                  color="secondary"
-                  aria-label="add"
-                  style={{ margin: "10px 0 20px 0", float: "right" }}
-                  onClick={() => this.handleReviewOpenState()}
+              <Paper
+                elevation={3}
+                className={classes.paperComponent}
+                style={{ marginTop: 0 }}
+              >
+                <Grid
+                  container
+                  direction="row"
+                  alignItems="center"
+                  justify="flex-start"
                 >
-                  <AddIcon className={classes.extendedIcon} />
-                  <Typography style={{ fontWeight: "bold" }}>
-                    ADD REVIEW
-                  </Typography>
-                </Fab>
-              )}
+                  <Grid item sm={12}>
+                    <Bio
+                      {...this.props}
+                      key={this.state.bio}
+                      bio={this.state.bio}
+                      loading={loadingData}
+                    />
+                  </Grid>
+                </Grid>
+              </Paper>
 
-            <ReviewDialog
-              openReview={this.state.openReview}
-              errors={this.state.errors}
-              loadingReviewAction={loadingReviewAction}
-              newReviewSucess={newReviewSucess}
-              handleDisagree={this.handleDisagree}
-              changeRating={this.changeRating}
-              handleBackdropClose={this.handleBackdropClose}
-              handleReviewOpenState={this.handleReviewOpenState}
-              handleReviewDialogAgree={this.handleReviewDialogAgree}
-              newReviewRating={this.state.newReviewRating}
-              description={this.state.description}
-              title={this.state.title}
-              rating={this.state.newReviewRating}
-              photographerProfile={this.state.profileImage}
-              photographerLastName={this.state.lastName}
-              photographerFirstName={this.state.firstName}
-              openBackdrop={this.state.openBackdrop}
-              type={"Review Photographer"}
-              typeReview="submitted"
-            />
-          </Collapse>
+              <Paper elevation={3} className={classes.margin}>
+                <Grid container>
+                  <Grid item xs={12}>
+                    <List dense="true">
+                      <ListItem>
+                        <ListItemText
+                          primary={
+                            <div style={{ marginTop: "2px" }}>
+                              <Typography variant="subtitle2" display="inline">
+                                <StarRatings
+                                  rating={this.state.avgRating}
+                                  numberOfStars={5}
+                                  name="rating"
+                                  starDimension="20px"
+                                  starRatedColor="#23ba8b"
+                                  starSpacing="3px"
+                                />
+                              </Typography>
+                              <Typography variant="subtitle2" display="inline">
+                                &nbsp;&nbsp;{this.state.reviewCount}{" "}
+                                {this.state.reviewCount > 1 ? (
+                                  <Typography display="inline">
+                                    ratings
+                                  </Typography>
+                                ) : (
+                                  <Typography display="inline">
+                                    rating
+                                  </Typography>
+                                )}
+                              </Typography>
+                            </div>
+                          }
+                          style={{
+                            textAlign: "center",
+                          }}
+                        />
+                        <ListItemSecondaryAction>
+                          <IconButton
+                            edge="end"
+                            onClick={() => this.handleCheck()}
+                          >
+                            {this.state.checked ? (
+                              <KeyboardArrowDownIcon />
+                            ) : (
+                              <KeyboardArrowLeftIcon />
+                            )}
+                          </IconButton>
+                        </ListItemSecondaryAction>
+                      </ListItem>
+                    </List>
+                  </Grid>
+                </Grid>
+              </Paper>
 
-          <Paper elevation={3}>
-            <Grid
-              container
-              direction="column"
-              alignItems="center"
-              justify="center"
-            >
-              <Grid item xs={12} className={classes.centerGrid}>
-                <PhotoSamples
-                  key={this.state.images}
-                  images={this.state.images}
-                  loading={loadingData}
+              <Collapse in={this.state.checked}>
+                {allReviews}
+                {this.props.user.authenticated &&
+                  this.props.user.credentials[0]?.photographer === false && (
+                    <Fab
+                      variant="extended"
+                      color="secondary"
+                      aria-label="add"
+                      style={{ margin: "10px 0 20px 0", float: "right" }}
+                      onClick={() => this.handleReviewOpenState()}
+                    >
+                      <AddIcon className={classes.extendedIcon} />
+                      <Typography style={{ fontWeight: "bold" }}>
+                        ADD REVIEW
+                      </Typography>
+                    </Fab>
+                  )}
+
+                <ReviewDialog
+                  openReview={this.state.openReview}
+                  errors={this.state.errors}
+                  loadingReviewAction={loadingReviewAction}
+                  newReviewSucess={newReviewSucess}
+                  handleDisagree={this.handleDisagree}
+                  changeRating={this.changeRating}
+                  handleBackdropClose={this.handleBackdropClose}
+                  handleReviewOpenState={this.handleReviewOpenState}
+                  handleReviewDialogAgree={this.handleReviewDialogAgree}
+                  newReviewRating={this.state.newReviewRating}
+                  description={this.state.description}
+                  title={this.state.title}
+                  rating={this.state.newReviewRating}
+                  photographerProfile={this.state.profileImage}
+                  photographerLastName={this.state.lastName}
+                  photographerFirstName={this.state.firstName}
+                  openBackdrop={this.state.openBackdrop}
+                  type={"Review Photographer"}
+                  typeReview="submitted"
                 />
-              </Grid>
-            </Grid>
-          </Paper>
-        </div>
-      </div>
+              </Collapse>
+
+              <Paper elevation={3}>
+                <Grid
+                  container
+                  direction="column"
+                  alignItems="center"
+                  justify="center"
+                >
+                  <Grid item xs={12} className={classes.centerGrid}>
+                    <PhotoSamples
+                      key={this.state.images}
+                      images={this.state.images}
+                      loading={loadingData}
+                    />
+                  </Grid>
+                </Grid>
+              </Paper>
+            </div>
+          </div>
+        )}
+      </>
     );
   }
 }

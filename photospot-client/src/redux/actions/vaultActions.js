@@ -53,7 +53,7 @@ export const deleteImages = (vaultID, images) => (dispatch) => {
 };
 
 export const getSize = (vaultID) => (dispatch) => {
-  return API.get(`/vault/${vaultID}/getSize`, vaultID)
+  return API.get(`/vault/${vaultID}/getSize`)
     .then((res) => {
       dispatch({ type: "VAULT_SIZE", payload: res.data.size });
     })
@@ -64,7 +64,7 @@ export const getSize = (vaultID) => (dispatch) => {
 
 export const notifyCustomer = (vaultID) => (dispatch) => {
   dispatch({ type: "VAULT_LOADING" });
-  return API.get(`/vault/${vaultID}/notifyCustomer`, vaultID)
+  return API.get(`/vault/${vaultID}/notifyCustomer`)
     .then((res) => {
       return true;
     })
