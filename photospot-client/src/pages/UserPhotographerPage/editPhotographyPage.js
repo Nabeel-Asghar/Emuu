@@ -190,8 +190,6 @@ class editPhotographyPage extends Component {
   };
 
   handlePricingAgree = (passedCategories, passedPricingMap) => {
-    console.log(passedCategories);
-    console.log(passedPricingMap);
     this.setState({
       openPricing: false,
       categories: passedCategories,
@@ -203,9 +201,7 @@ class editPhotographyPage extends Component {
       pricingMap: passedPricingMap,
     };
 
-    console.log(details);
     this.props.updatePhotographerPage(details);
-    console.log(details);
   };
 
   handleBioChange = (event) => {

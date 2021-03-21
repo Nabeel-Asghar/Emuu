@@ -20,10 +20,6 @@ const PricingEditor = (props) => {
     setPricingMap(Object.assign(props.pricingMap));
   }, [props.pricingMap]);
 
-  const handleDelete = (chipToDelete) => () => {
-    setCategories(categories.filter((items) => items !== chipToDelete));
-  };
-
   const handleClose = () => {
     setPricingMap(Object.assign(props.pricingMap));
     setCategories(Object.values(props.categories));
@@ -32,6 +28,13 @@ const PricingEditor = (props) => {
 
   const handleAgree = () => {
     props.handlePricingAgree(categories, pricingMap);
+  };
+
+  const handleDelete = (chipToDelete) => () => {
+    setCategories(categories.filter((items) => items !== chipToDelete));
+    var tempObj = Object.assign(pricingMap);
+    delete tempObj[chipToDelete];
+    setPricingMap({ ...tempObj });
   };
 
   const addToPricingObject = (name, price) => {
