@@ -8,7 +8,7 @@ import PhotoSamples from "../../components/photographer-page/photoSamples";
 import Pricing from "../../components/photographer-page/Pricing";
 import EditButton from "../../components/shared/Buttons/EditButton";
 import Feedback from "../../components/shared/feedback";
-import LoadingPage from "../../components/shared/LoadingPage";
+import LoadingPage from "../../components/shared/loadingPage";
 import PictureUploader from "../../components/shared/pictureUploader";
 import EditableUsercard from "../../components/your-photography-page/editableUsercard";
 import EditBio from "../../components/your-photography-page/editBio";
@@ -38,7 +38,7 @@ class editPhotographyPage extends Component {
       openFeedback: false,
       openAlert: true,
       categories: [],
-      pricingMap: new Map(),
+      pricingMap: {},
       firstName: "",
       lastName: "",
       email: "",
@@ -58,7 +58,6 @@ class editPhotographyPage extends Component {
       backgroundImage: "",
       profileImageName: "",
       croppedProfileImage: "",
-      tempCategories: [],
       tempBio: "",
       tempInstagram: "",
       tempCamera: "",
@@ -175,10 +174,8 @@ class editPhotographyPage extends Component {
   };
 
   handlePricingOpen = () => {
-    let tempCategories = Object.assign([], this.state.categories);
     this.setState({
       openPricing: true,
-      tempCategories: tempCategories,
     });
   };
 
@@ -192,23 +189,23 @@ class editPhotographyPage extends Component {
     });
   };
 
-  handlePricingAgree = (tempCategories, tempPricingMap) => {
-    console.log(tempCategories);
-    console.log(tempPricingMap);
+  handlePricingAgree = (passedCategories, passedPricingMap) => {
+    console.log(passedCategories);
+    console.log(passedPricingMap);
     this.setState({
       openPricing: false,
-      categories: tempCategories,
-      pricingMap: tempPricingMap,
+      categories: passedCategories,
+      pricingMap: passedPricingMap,
     });
 
     const details = {
-      categories: tempCategories,
-      pricingMap: tempPricingMap,
+      categories: passedCategories,
+      pricingMap: passedPricingMap,
     };
 
     console.log(details);
-
-    // this.props.updatePhotographerPage(details);
+    this.props.updatePhotographerPage(details);
+    console.log(details);
   };
 
   handleBioChange = (event) => {
@@ -339,6 +336,7 @@ class editPhotographyPage extends Component {
             >
               <Grid container>
                 <Pricing
+                  pricing={this.state.pricingMap}
                   handleSelect={() => {}}
                   onClick={this.handlePricingOpen}
                   editable={true}
@@ -351,162 +349,62 @@ class editPhotographyPage extends Component {
                   handlePricingAgree={this.handlePricingAgree}
                   handleClose={this.handleClose}
                 />
-
+              </Grid>
+              <Paper elevation={3} className={classes.margin}>
                 <Grid container>
+                  <EditButton
+                    onClick={this.handleBioClickOpen}
+                    text="Edit Bio"
+                  />
                   <Grid item xs={12}>
-                    <EditableUsercard
-                      profileImage={this.state.profileImage}
-                      background={this.state.background}
-                      firstName={this.state.firstName}
-                      lastName={this.state.lastName}
-                      location_city={this.state.location_city}
-                      location_state={this.state.location_state}
-                      instagram={this.state.instagram}
-                      company={this.state.company}
-                      headline={this.state.headline}
-                      camera={this.state.camera}
-                      loading={loading}
-                      handleBackgroundChange={this.handleBackgroundChange}
-                      handleEditBackground={this.handleEditBackground}
-                      handleProfileImageChange={this.handleProfileImageChange}
-                      handleEditProfileImage={this.handleEditProfileImage}
-                      handleOpenEdit={this.handleClickOpen}
-                      history={this.props.history}
+                    <TextField
+                      disabled
+                      id="standard-full-width"
+                      name="bio"
+                      type="text"
+                      label="Biography"
+                      value={this.state.bio}
+                      helperText="Tell us about yourself"
+                      fullWidth
+                      multiline
+                      rows={4}
+                      margin="normal"
+                      variant="outlined"
+                      onChange={this.handleBioChange}
+                      InputLabelProps={{
+                        shrink: true,
+                      }}
                     />
                   </Grid>
                   <EditBio
-                    open={this.state.openBio}
+                    open={this.state.open}
                     handleAgree={this.handleBioAgree}
-                    handleClose={this.handleClose}
+                    handleDisagree={this.handleBioDisagree}
                     handleChange={this.handleBioChange}
-                    bio={this.state.tempBio}
+                    handleCatChange={this.handleCategoryChange}
+                    bio={this.state.fakeBio}
                   />
                 </Grid>
-
-                <PictureUploader
-                  {...this.props}
-                  image={this.state.croppedProfileImage}
-                  name={this.state.profileImageName}
-                  open={this.state.openProfileEditor}
-                  closeEditor={() =>
-                    this.setState({ openProfileEditor: false })
-                  }
-                  savePicture={(image) => this.saveProfileImage(image)}
-                  aspect={1}
-                />
-
-                <PictureUploader
-                  {...this.props}
-                  image={this.state.backgroundImage}
-                  name={this.state.backgroundImageName}
-                  open={this.state.openBackgroundEditor}
-                  closeEditor={() =>
-                    this.setState({ openBackgroundEditor: false })
-                  }
-                  savePicture={(image) => this.saveBackgroundImage(image)}
-                  aspect={10 / 3}
-                />
-
-                <Feedback
-                  open={this.state.openFeedback}
-                  handleClose={() => this.setState({ openFeedback: false })}
-                  error={this.props.user.uploadErrorResponse}
-                />
-
-                <EditUserDetails
-                  open={this.state.openDetails}
-                  handleAgree={this.handleAgree}
-                  handleDisagree={this.handleDisagree}
-                  handleChange={this.handleChange}
-                  instagram={this.state.fakeInstagram}
-                  camera={this.state.fakeCamera}
-                  company={this.state.fakeCompany}
-                  headline={this.state.fakeHeadline}
-                />
-                <div
-                  style={{
-                    maxWidth: 1000,
-                    margin: "0 auto",
-                    paddingBottom: "20px",
-                  }}
-                >
-                  <Grid container>
-                    <Pricing
-                      pricing={this.state.pricing}
-                      handleSelect={() => {}}
-                      onClick={this.handlePricingOpen}
-                      editable={true}
-                      selectable={false}
-                    />
-                    <PricingEditor
-                      open={this.state.openPricing}
-                      pricing={this.state.pricing}
-                      categories={this.state.categories}
-                      handleAgree={this.handlePricingAgree}
-                      handleClose={this.handlePricingClose}
+              </Paper>
+              <Paper elevation={3} className={classes.margin}>
+                <Grid container direction="column" justify="center">
+                  <Grid item xs={12} className={classes.centerGrid}>
+                    <EditButton
+                      onClick={() => {
+                        this.props.history.push("/uploadPhotographyPictures");
+                      }}
+                      text="Edit Pictures"
                     />
                   </Grid>
-
-                  <Paper elevation={3} className={classes.margin}>
-                    <Grid container>
-                      <EditButton
-                        onClick={this.handleBioClickOpen}
-                        text="Edit Bio"
-                      />
-                      <Grid item xs={12}>
-                        <TextField
-                          disabled
-                          id="standard-full-width"
-                          name="bio"
-                          type="text"
-                          label="Biography"
-                          value={this.state.bio}
-                          helperText="Tell us about yourself"
-                          fullWidth
-                          multiline
-                          rows={4}
-                          margin="normal"
-                          variant="outlined"
-                          onChange={this.handleBioChange}
-                          InputLabelProps={{
-                            shrink: true,
-                          }}
-                        />
-                      </Grid>
-                      <EditBio
-                        open={this.state.open}
-                        handleAgree={this.handleBioAgree}
-                        handleDisagree={this.handleBioDisagree}
-                        handleChange={this.handleBioChange}
-                        handleCatChange={this.handleCategoryChange}
-                        bio={this.state.fakeBio}
-                        categories={this.state.tempCategories}
-                      />
-                    </Grid>
-                  </Paper>
-                  <Paper elevation={3} className={classes.margin}>
-                    <Grid container direction="column" justify="center">
-                      <Grid item xs={12} className={classes.centerGrid}>
-                        <EditButton
-                          onClick={() => {
-                            this.props.history.push(
-                              "/uploadPhotographyPictures"
-                            );
-                          }}
-                          text="Edit Pictures"
-                        />
-                      </Grid>
-                      <Grid item xs={12} className={classes.centerGrid}>
-                        <PhotoSamples
-                          key={this.state.images}
-                          images={this.state.images}
-                          loading={loading}
-                        />
-                      </Grid>
-                    </Grid>
-                  </Paper>
-                </div>
-              </Grid>
+                  <Grid item xs={12} className={classes.centerGrid}>
+                    <PhotoSamples
+                      key={this.state.images}
+                      images={this.state.images}
+                      loading={loading}
+                    />
+                  </Grid>
+                </Grid>
+              </Paper>
             </div>
           </div>
         )}

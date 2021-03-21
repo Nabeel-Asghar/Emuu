@@ -1,38 +1,41 @@
-import React, { useState, useEffect } from "react";
+import { Typography } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-import OutlinedTextField from "../shared/OutlinedTextField";
-import { Typography } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
 import Categories from "../../pages/SignUp/Categories";
+import OutlinedTextField from "../shared/OutlinedTextField";
 
 const PricingEditor = (props) => {
-  const [tempCategories, setCategories] = useState([]);
-  const [tempPricingMap, setPricingMap] = useState(new Map());
+  const [categories, setCategories] = useState([]);
+  const [pricingMap, setPricingMap] = useState({});
 
   useEffect(() => {
     setCategories(Object.values(props.categories));
   }, [props.categories]);
 
   useEffect(() => {
-    setPricingMap(props.pricingMap);
+    setPricingMap(Object.assign(props.pricingMap));
   }, [props.pricingMap]);
 
   const handleDelete = (chipToDelete) => () => {
-    setCategories(tempCategories.filter((items) => items !== chipToDelete));
+    setCategories(categories.filter((items) => items !== chipToDelete));
   };
 
   const handleClose = () => {
+    setPricingMap(Object.assign(props.pricingMap));
     setCategories(Object.values(props.categories));
     props.handleClose("openPricing");
   };
 
   const handleAgree = () => {
-    console.log(tempCategories, tempPricingMap);
-    props.handlePricingAgree(tempCategories, tempPricingMap);
+    props.handlePricingAgree(categories, pricingMap);
+  };
+
+  const addToPricingObject = (name, price) => {
+    setPricingMap({ ...pricingMap, [name]: price });
   };
 
   return (
@@ -44,16 +47,14 @@ const PricingEditor = (props) => {
     >
       <DialogTitle>Edit Your Pricing</DialogTitle>
 
-      {console.log(tempCategories)}
-
       <DialogContent>
         <Categories
           // errors={errors?.categories}
-          categories={tempCategories}
+          categories={categories}
           handleChange={(event) => setCategories(event.target.value)}
           handleDelete={handleDelete}
         />
-        {tempCategories?.map((item) => {
+        {categories?.map((item) => {
           return (
             <>
               <Typography variant="h6">{item}</Typography>
@@ -61,11 +62,9 @@ const PricingEditor = (props) => {
               <OutlinedTextField
                 name={item}
                 label={item}
-                value={tempPricingMap?.get(item)}
+                value={pricingMap[item]}
                 handleChange={(event) =>
-                  setPricingMap(
-                    tempPricingMap.set(event.target.name, event.target.value)
-                  )
+                  addToPricingObject(event.target.name, event.target.value)
                 }
               />
             </>

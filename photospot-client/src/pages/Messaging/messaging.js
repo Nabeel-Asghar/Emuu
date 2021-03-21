@@ -3,7 +3,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import equal from "fast-deep-equal";
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import LoadingPage from "../../components/shared/LoadingPage";
+import LoadingPage from "../../components/shared/loadingPage";
 import { firebase } from "../../util/firestore";
 import { getUserData } from "../../redux/actions/userActions";
 import ChatTextBoxComponent from "./chatTextBox";
