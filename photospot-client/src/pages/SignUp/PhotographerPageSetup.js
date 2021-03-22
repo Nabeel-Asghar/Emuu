@@ -26,13 +26,6 @@ const styles = (theme) => ({
     width: "100%",
     textAlign: "left",
   },
-  chips: {
-    display: "flex",
-    flexWrap: "wrap",
-  },
-  chip: {
-    margin: 2,
-  },
   customError: {
     color: "red",
     marginBottom: "15px",
@@ -41,7 +34,6 @@ const styles = (theme) => ({
     maxWidth: "500px",
     margin: "auto",
   },
-
   header: {
     textAlign: "center",
   },
@@ -125,6 +117,10 @@ class photographerPageSetup extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
+  handleCategoryChanges = (values) => {
+    this.setState({ categories: values });
+  };
+
   handleDelete = (chipToDelete) => () => {
     let categories = this.state.categories;
     this.handleCategoryChanges(
@@ -184,7 +180,6 @@ class photographerPageSetup extends Component {
                   </div>
 
                   <Categories
-                    classes={classes}
                     errors={errors?.categories}
                     categories={this.state.categories}
                     handleChange={this.handleChange}

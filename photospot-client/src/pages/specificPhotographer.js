@@ -35,7 +35,7 @@ import PhotographerReviews from "../components/shared/photographerReviews";
 import UserImage from "../components/photographer-page/userImage";
 import UserInfo from "../components/photographer-page/userInfo";
 import Pricing from "../components/photographer-page/Pricing";
-import LoadingPage from "../components/shared/LoadingPage";
+import LoadingPage from "../components/shared/loadingPage";
 
 const styles = (theme) => ({
   ...theme.spreadThis,

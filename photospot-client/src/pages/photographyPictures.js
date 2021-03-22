@@ -1,32 +1,29 @@
-import React, { Component } from "react";
-import { firebase } from "../util/firestore";
-import { nanoid } from "nanoid";
-
-// Material UI
-import withStyles from "@material-ui/core/styles/withStyles";
+import { Typography } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
+import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
-import Button from "@material-ui/core/Button";
+// Material UI
+import withStyles from "@material-ui/core/styles/withStyles";
 import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import SaveIcon from "@material-ui/icons/Save";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import { Typography } from "@material-ui/core";
-
+import { nanoid } from "nanoid";
+import React, { Component } from "react";
 // Redux
 import { connect } from "react-redux";
-import {
-  deleteImages,
-  uploadImages,
-  getYourPhotographyPage,
-} from "../redux/actions/userActions";
-
+import GoBackButton from "../components/shared/Buttons/GoBackButton";
+import FailureFeedback from "../components/shared/FailureFeedback";
 // Components
 import ImageGrid from "../components/shared/imageGrid";
-import Success from "../components/shared/success";
+import LoadingPage from "../components/shared/loadingPage";
 import Progress from "../components/shared/progress";
-import FailureFeedback from "../components/shared/FailureFeedback";
-import GoBackButton from "../components/shared/Buttons/GoBackButton";
-import LoadingPage from "../components/shared/LoadingPage";
+import Success from "../components/shared/success";
+import {
+  deleteImages,
+  getYourPhotographyPage,
+  uploadImages,
+} from "../redux/actions/userActions";
+import { firebase } from "../util/firestore";
 
 const styles = (theme) => ({
   ...theme.spreadThis,

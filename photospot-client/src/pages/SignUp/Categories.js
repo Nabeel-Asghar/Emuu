@@ -4,12 +4,27 @@ import {
   FormHelperText,
   InputLabel,
   MenuItem,
-  Paper,
   Select,
+  withStyles,
 } from "@material-ui/core";
 import React from "react";
+import { CATEGORIES_LIST } from "../../util/constants";
 
-const names = ["Linkedin Portrait", "Instagram", "Personal Shoot"];
+const styles = (theme) => ({
+  ...theme.spreadThis,
+  textFieldWidth: {
+    margin: "0px auto 15px auto",
+    width: "100%",
+    textAlign: "left",
+  },
+  chips: {
+    display: "flex",
+    flexWrap: "wrap",
+  },
+  chip: {
+    margin: 2,
+  },
+});
 
 const Categories = (props) => {
   const { classes, errors, categories } = props;
@@ -52,7 +67,7 @@ const Categories = (props) => {
           },
         }}
       >
-        {names.map((name) => (
+        {CATEGORIES_LIST.map((name) => (
           <MenuItem key={name} value={name}>
             {name}
           </MenuItem>
@@ -63,4 +78,4 @@ const Categories = (props) => {
   );
 };
 
-export default Categories;
+export default withStyles(styles)(Categories);

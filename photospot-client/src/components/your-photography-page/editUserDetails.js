@@ -128,7 +128,7 @@ class editUserDetails extends Component {
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={this.props.handleDisagree}
+            onClick={() => this.props.handleClose("openDetails")}
             variant="outlined"
             color="secondary"
           >
