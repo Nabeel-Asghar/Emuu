@@ -5,11 +5,8 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import OutlinedTextField from "../../components/shared/OutlinedTextField";
-import {
-  signupPhotographer,
-  uploadProfileImage,
-} from "../../redux/actions/userActions";
-import Categories from "./Categories";
+import { signupPhotographer } from "../../redux/actions/userActions";
+import { textFields } from ".././../util/constants";
 import LocationCity from "./LocationCity";
 import LocationState from "./LocationState";
 
@@ -33,7 +30,7 @@ const styles = (theme) => ({
   },
 });
 
-class setUpProfile extends Component {
+class signUpPhotographer extends Component {
   constructor() {
     super();
     this.state = {
@@ -44,21 +41,11 @@ class setUpProfile extends Component {
       lastName: "",
       location_city: "",
       location_state: "",
-      profileImage: "",
-      categories: [],
       photographer: true,
       loading: false,
       registration: false,
       errors: {},
     };
-
-    this.textFields = [
-      { name: "email", label: "Email" },
-      { name: "password", label: "Password" },
-      { name: "confirmPassword", label: "Confirm Password" },
-      { name: "firstName", label: "First Name" },
-      { name: "lastName", label: "Last Name" },
-    ];
   }
 
   componentWillReceiveProps(nextProps) {
@@ -72,7 +59,7 @@ class setUpProfile extends Component {
     this.setState({ [event.target.name]: event.target.value });
   };
 
-  handlePhotographerAgree = (event) => {
+  handlePhotographerSubmit = (event) => {
     event.preventDefault();
     this.setState({ loading: true });
 
@@ -103,8 +90,8 @@ class setUpProfile extends Component {
     return (
       <div>
         <div style={{ textAlign: "center", padding: "0px 0px 10px 0px" }}>
-          <form className={classes.root}>
-            {this.textFields.map((item) => {
+          <form>
+            {textFields.map((item) => {
               return (
                 <OutlinedTextField
                   name={item.name}
@@ -143,7 +130,7 @@ class setUpProfile extends Component {
             fullWidth
             variant="contained"
             style={{ height: "40px" }}
-            onClick={this.handlePhotographerAgree}
+            onClick={this.handlePhotographerSubmit}
             disabled={loading}
           >
             SIGN UP
@@ -168,5 +155,4 @@ const mapStateToProps = (state) => ({
 
 export default connect(mapStateToProps, {
   signupPhotographer,
-  uploadProfileImage,
-})(withStyles(styles)(setUpProfile));
+})(withStyles(styles)(signUpPhotographer));
