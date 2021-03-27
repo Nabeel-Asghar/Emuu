@@ -109,7 +109,8 @@ exports.validateReview = (data) => {
   }
 
   if (isEmpty(data.description) || data.description.length < 10) {
-    errors.description = "The description of your review must be longer than 10 characters.";
+    errors.description =
+      "The description of your review must be longer than 10 characters.";
   }
 
   if (data.reviewID === data.photographerID) {
@@ -147,6 +148,10 @@ exports.validatePhotographerPageData = (data) => {
 
   if (isEmpty(data.bio) || data.bio.length < 20) {
     errors.bio = "Must be longer than 20 characters";
+  }
+
+  if (isEmpty(data.profileImageName)) {
+    errors.profileImageName = "You must upload a profile image";
   }
 
   // if (data.ratePerHour === null) {
