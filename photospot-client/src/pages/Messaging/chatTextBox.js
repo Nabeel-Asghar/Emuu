@@ -1,12 +1,10 @@
 import { Box } from "@material-ui/core";
 import Fab from "@material-ui/core/Fab";
-import Grid from "@material-ui/core/Grid";
 import InputBase from "@material-ui/core/InputBase";
 import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
 import SendIcon from "@material-ui/icons/Send";
 import React, { Component } from "react";
-// Redux
 import { connect } from "react-redux";
 
 const styles = (theme) => ({
@@ -52,7 +50,6 @@ class ChatTextBoxComponent extends Component {
   messageValid = (txt) => txt && txt.replace(/\s/g, "").length;
 
   submitMessage = () => {
-    console.log(this.state.chatText);
     if (this.messageValid(this.state.chatText)) {
       this.props.submitMessageFn(this.state.chatText);
       document.getElementById("chattextbox").value = "";

@@ -43,6 +43,8 @@ const styles = (theme) => ({
   },
 
   unreadMessage: {
+    width: "30px",
+    height: "30px",
     position: "absolute",
     top: "0",
     right: "5px",
@@ -52,8 +54,15 @@ const styles = (theme) => ({
     },
   },
 
-  listItemText: {
-    fontWeight: "bold",
+  primaryListItemText: {
+    fontWeight: "600",
+    overflow: "hidden",
+    whiteSpace: "nowrap" /* Don't forget this one */,
+    textOverflow: "ellipsis",
+  },
+
+  primaryListItemTextUnread: {
+    fontWeight: "1000",
     overflow: "hidden",
     whiteSpace: "nowrap" /* Don't forget this one */,
     textOverflow: "ellipsis",
@@ -105,7 +114,13 @@ class UserListComponent extends Component {
                   </ListItemAvatar>
                   <Hidden xsDown>
                     <ListItemText
-                      classes={{ primary: classes.listItemText }}
+                      classes={
+                        _chat?.messages &&
+                        _chat.receiverHasRead === false &&
+                        !this.userIsSender(_chat)
+                          ? { primary: classes.primaryListItemTextUnread }
+                          : { primary: classes.primaryListItemText }
+                      }
                       primary={
                         _chat.names.filter((_user) => _user !== userName)[0]
                       }
@@ -125,7 +140,7 @@ class UserListComponent extends Component {
                   {_chat?.messages &&
                   _chat.receiverHasRead === false &&
                   !this.userIsSender(_chat) ? (
-                    <ListItemIcon>
+                    <ListItemIcon style={{ width: "40px", height: "40px" }}>
                       <FiberManualRecordIcon
                         color="secondary"
                         className={classes.unreadMessage}
