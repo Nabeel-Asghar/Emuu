@@ -21,21 +21,23 @@ class usercard extends Component {
     super();
     this.state = {
       open: false,
-      email: "",
+      photographerEmail: "",
+      photographerThumbnail: "",
       userEmail: "",
-      userProfileImage: "",
-      profileImage: "",
+      userThumbnail: "",
       text: false,
     };
   }
 
   componentWillReceiveProps(newProps) {
+    console.log(newProps);
     this.setState({
-      email: newProps.email,
+      photographerEmail: newProps.email,
+      photographerThumbnail: newProps.photographerThumbnailImage,
       userEmail: newProps.userEmail,
-      profileImage: newProps.profileImage,
-      userProfileImage: newProps.userProfileImage,
+      userThumbnail: newProps.userThumbnailImage,
     });
+    console.log(this.state);
   }
 
   handleHover() {
@@ -109,7 +111,7 @@ class usercard extends Component {
               </Button>
               <NewChatComponent
                 email={email}
-                photographerProfile={this.state.profileImage}
+                photographerProfile={this.state.photographerThumbnail}
                 photographerLastName={this.props.lastName}
                 photographerFirstName={this.props.firstName}
                 open={this.state.open}
@@ -144,14 +146,9 @@ class usercard extends Component {
 
   newChatSubmit = async (chatObject) => {
     const docKey = this.buildDocKey();
-    var emails = docKey.split(":");
-    var friendEmail = emails[0];
-    if (emails[0] == this.state.email) {
-      friendEmail = emails[1];
-    }
 
     var userName = this.props.userFirstName + " " + this.props.userLastName;
-    var friendName = this.props.firstName + " " + this.props.lastName;
+    var photographerName = this.props.firstName + " " + this.props.lastName;
 
     await firebase
       .firestore()
@@ -160,16 +157,20 @@ class usercard extends Component {
       .set(
         {
           receiverHasRead: false,
-          users: [this.state.email, this.state.userEmail],
+          users: [this.state.photographerEmail, this.state.userEmail],
           messages: firebase.firestore.FieldValue.arrayUnion({
             message: chatObject.message,
             sender: this.state.userEmail,
             timestamp: Date.now(),
           }),
           timestamp: Date.now(),
-          [this.state.email]: { profileImage: this.state.profileImage || "" },
-          [friendEmail]: { profileImage: this.state.userProfileImage || "" },
-          names: [userName, friendName],
+          [this.state.photographerEmail]: {
+            profileImage: this.state.photographerThumbnail || "",
+          },
+          [this.state.userEmail]: {
+            profileImage: this.state.userThumbnail || "",
+          },
+          names: [userName, photographerName],
         },
         { merge: true }
       );
@@ -180,7 +181,9 @@ class usercard extends Component {
   };
 
   buildDocKey = () => {
-    return [this.state.email, this.state.userEmail].sort().join(":");
+    return [this.state.photographerEmail, this.state.userEmail]
+      .sort()
+      .join(":");
   };
 }
 

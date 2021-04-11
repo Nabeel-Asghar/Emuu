@@ -335,7 +335,8 @@ exports.uploadProfilePicture = async (req, res) => {
         req.user.uid,
         500,
         false,
-        res.locals.photographer
+        res.locals.photographer,
+        req.user.email
       );
       await uploadProfileImage(
         imageToBeUploaded,
@@ -344,7 +345,8 @@ exports.uploadProfilePicture = async (req, res) => {
         req.user.uid,
         100,
         true,
-        res.locals.photographer
+        res.locals.photographer,
+        req.user.email
       );
     } catch (err) {
       console.log("error uploading profile/thumbnail.", err);
@@ -736,17 +738,23 @@ async function uploadProfileImage(
   userID,
   size,
   thumbnail,
-
-  photographer
+  photographer,
+  email
 ) {
   sharp(originalImage.tempPath)
     .resize(size, size)
     .toFile(image.imagePath)
     .then(async () => {
       await uploadToStorage(image, userID, fileName);
-      await updateProfileImage("users", userID, fileName, thumbnail);
+      await updateProfileImage("users", userID, fileName, thumbnail, email);
       photographer &&
-        (await updateProfileImage("photographer", userID, fileName, thumbnail));
+        (await updateProfileImage(
+          "photographer",
+          userID,
+          fileName,
+          thumbnail,
+          email
+        ));
       if (thumbnail) {
         fs.unlinkSync(originalImage.tempPath);
       }
@@ -780,10 +788,10 @@ function uploadToStorage(file, folder, filename) {
     });
 }
 
-function updateProfileImage(database, id, imageFileName, thumbnail) {
+function updateProfileImage(database, id, imageFileName, thumbnail, email) {
   if (thumbnail) {
     const thumbnailImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/users%2F${id}%2F${imageFileName}?alt=media`;
-
+    updateChatProfileImages(thumbnailImage, email);
     return db.collection(database).doc(id).update({ thumbnailImage });
   } else {
     const profileImage = `https://firebasestorage.googleapis.com/v0/b/${config.storageBucket}/o/users%2F${id}%2F${imageFileName}?alt=media`;
@@ -794,6 +802,24 @@ function updateProfileImage(database, id, imageFileName, thumbnail) {
     console.log("profile image: ", profileImage);
     return db.collection(database).doc(id).update({ profileImage });
   }
+}
+
+function updateChatProfileImages(thumbnailImage, email) {
+  const properEmail = new admin.firestore.FieldPath(email);
+
+  console.log(properEmail);
+
+  return db
+    .collection("chats")
+    .where("users", "array-contains", email)
+    .get()
+    .then((querySnapshot) => {
+      querySnapshot.forEach(function (doc) {
+        doc.ref.update(properEmail, {
+          profileImage: thumbnailImage || "",
+        });
+      });
+    });
 }
 
 function getPhotographer(userid) {
