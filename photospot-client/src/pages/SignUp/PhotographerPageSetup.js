@@ -6,18 +6,17 @@ import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
 import React, { Component } from "react";
-// Redux
 import { connect } from "react-redux";
 import OutlinedTextField from "../../components/shared/OutlinedTextField";
+import PictureUploader from "../../components/shared/pictureUploader";
+import SnackbarAlert from "../../components/shared/SnackbarAlert";
 import EditProfileImage from "../../components/user-profile/editProfileImage";
 import {
   setPhotographerPage,
   uploadProfileImage,
 } from "../../redux/actions/userActions";
+import { photographerPageSetupTextFields } from "../../util/constants";
 import Categories from "./Categories";
-import textFields from "./textFields";
-import SnackbarAlert from "../../components/shared/SnackbarAlert";
-import PictureUploader from "../../components/shared/pictureUploader";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -38,6 +37,10 @@ const styles = (theme) => ({
     textAlign: "center",
   },
   textFieldDescription: { marginTop: "10px", marginBottom: "8px" },
+  customError: {
+    color: "red",
+    marginBottom: "15px",
+  },
 });
 
 class photographerPageSetup extends Component {
@@ -51,8 +54,11 @@ class photographerPageSetup extends Component {
       company: "",
       bio: "",
       loading: false,
-      errors: {},
       open: "true",
+      openEditor: false,
+      profileImageName: "",
+      croppedProfileImage: "",
+      errors: {},
     };
   }
 
@@ -69,9 +75,7 @@ class photographerPageSetup extends Component {
 
   handleSubmit = (event) => {
     event.preventDefault();
-    this.setState({
-      loading: true,
-    });
+    this.setState({ loading: true });
 
     const additionalData = {
       bio: this.state.bio,
@@ -80,6 +84,7 @@ class photographerPageSetup extends Component {
       company: this.state.company,
       headline: this.state.headline,
       instagram: this.state.instagram,
+      profileImageName: this.state.profileImageName,
     };
     this.props.setPhotographerPage(additionalData, this.props.history);
   };
@@ -114,7 +119,9 @@ class photographerPageSetup extends Component {
   };
 
   handleChange = (event) => {
-    this.setState({ [event.target.name]: event.target.value });
+    let x = "errors." + [event.target.name];
+    console.log(x);
+    this.setState({ [event.target.name]: event.target.value, [x]: "" });
   };
 
   handleCategoryChanges = (values) => {
@@ -167,6 +174,11 @@ class photographerPageSetup extends Component {
                     savePicture={(image) => this.saveProfileImage(image)}
                     aspect={1}
                   />
+                  {errors?.profileImageName && (
+                    <Typography variant="body1" className={classes.customError}>
+                      {errors?.profileImageName}
+                    </Typography>
+                  )}
                 </div>
                 <form noValidate onSubmit={this.handleSubmit}>
                   <div className={classes.textFieldDescription}>
@@ -186,7 +198,7 @@ class photographerPageSetup extends Component {
                     handleDelete={this.handleDelete}
                   />
 
-                  {textFields.map((item) => {
+                  {photographerPageSetupTextFields.map((item) => {
                     return (
                       <div>
                         <div className={classes.textFieldDescription}>
