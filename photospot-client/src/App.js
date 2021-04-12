@@ -330,12 +330,6 @@ const App = () => {
                   )}
                 />
 
-                {/* <AuthRoute
-                  exact
-                  path="/setupProfile"
-                  component={setUpProfile}
-                /> */}
-
                 <Route exact path="/resetPassword" component={resetPassword} />
 
                 <AuthRoute exact path="/stripe" component={StripeDashboard} />

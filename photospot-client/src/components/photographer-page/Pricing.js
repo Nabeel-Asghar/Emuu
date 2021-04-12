@@ -1,8 +1,6 @@
-// Material UI
-import Avatar from "@material-ui/core/Avatar";
+import { Typography } from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
 import Grid from "@material-ui/core/Grid";
-import IconButton from "@material-ui/core/IconButton";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemAvatar";
@@ -10,13 +8,11 @@ import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
-import React, { useState, useCallback } from "react";
-import { Button, Typography } from "@material-ui/core";
-
-// Components
-import GetIcon from "../shared/GetIcon";
+import React, { useState } from "react";
 import { formatMoney } from "../../util/UtilFunctions";
 import EditButton from "../shared/Buttons/EditButton";
+import GetIcon from "../shared/GetIcon";
+import { shootType } from "../../util/constants";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -30,7 +26,7 @@ const Pricing = (props) => {
   const { classes, fullScreen, editable, selectable } = props;
   const [selected, setSelected] = useState(null);
 
-  const pricing = props.pricing?.sort((a, b) => a.price - b.price);
+  const pricing = props.pricing;
   const padding = editable ? 10 : 0;
 
   function handleClick(event, index) {
@@ -48,36 +44,35 @@ const Pricing = (props) => {
         {editable && <EditButton onClick={props.onClick} text="Edit Pricing" />}
         <Grid xs={12}>
           {pricing &&
-            pricing.map((item, index) => {
+            Object.keys(pricing).map((item) => {
               return (
                 <>
                   <List
-                    onClick={(e) => handleClick(e, index)}
+                    onClick={(e) => handleClick(e, pricing[item])}
                     className={
-                      selectable && selected === index && classes.selected
+                      selectable &&
+                      selected === pricing[item] &&
+                      classes.selected
                     }
                   >
                     <ListItem>
                       <ListItemIcon style={{ minWidth: 40 }}>
-                        <GetIcon name={item.name} />
+                        <GetIcon name={item} />
                       </ListItemIcon>
                       <ListItemText
-                        primary={item.name}
-                        secondary={
-                          !fullScreen &&
-                          "This a shoot where we will try our hardest to accomodate you."
-                        }
+                        primary={item}
+                        secondary={!fullScreen && shootType[item]}
                       />
 
                       <ListItemSecondaryAction className={classes.rightGrid}>
                         <Typography variant="h6">
-                          {formatMoney(item.price)}
+                          {formatMoney(pricing[item])}
                         </Typography>
                         <Typography variant="caption"> per hour</Typography>
                       </ListItemSecondaryAction>
                     </ListItem>
                   </List>
-                  {index < pricing.length - 1 && <Divider />}
+                  {pricing[item] < pricing.length - 1 && <Divider />}
                 </>
               );
             })}

@@ -1,31 +1,20 @@
 import { Slide } from "@material-ui/core";
 import Button from "@material-ui/core/Button";
 import ButtonGroup from "@material-ui/core/ButtonGroup";
-import CircularProgress from "@material-ui/core/CircularProgress";
 import Grid from "@material-ui/core/Grid";
 import Paper from "@material-ui/core/Paper";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
 import PropTypes from "prop-types";
 import React, { Component } from "react";
-// Redux
 import { connect } from "react-redux";
 import { Link, Redirect } from "react-router-dom";
-import OutlinedTextField from "../../components/shared/OutlinedTextField";
 import AppIcon from "../../images/logo.png";
-import {
-  signupPhotographer,
-  signupUser,
-  uploadProfileImage,
-} from "../../redux/actions/userActions";
-import SetUpProfile from "./signupPhotographer";
+import SignUpPhotographer from "./signupPhotographer";
+import SignUpUser from "./signUpUser";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
-  customError: {
-    color: "red",
-    marginBottom: "15px",
-  },
   signUpContainer: {
     [theme.breakpoints.down("sm")]: {
       marginTop: "-90px",
@@ -39,35 +28,12 @@ const styles = (theme) => ({
   buttonGroup: {
     marginBottom: "15px",
   },
-  button: {
-    marginTop: "0px",
-    height: "40px",
-  },
-  textField: { margin: "0px auto 15px auto" },
 });
 
 class signup extends Component {
   constructor() {
     super();
-    this.state = {
-      email: "",
-      password: "",
-      confirmPassword: "",
-      firstName: "",
-      lastName: "",
-      photographer: false,
-      loading: false,
-      errors: {},
-      registration: true,
-    };
-
-    this.textFields = [
-      { name: "email", label: "Email" },
-      { name: "password", label: "Password" },
-      { name: "confirmPassword", label: "Confirm Password" },
-      { name: "firstName", label: "First Name" },
-      { name: "lastName", label: "Last Name" },
-    ];
+    this.state = { photographer: false };
   }
 
   componentWillReceiveProps(nextProps) {
@@ -77,37 +43,11 @@ class signup extends Component {
     }
   }
 
-  handleSubmit = (event) => {
-    event.preventDefault();
-    this.setState({
-      loading: true,
-    });
-
-    const newUserData = this.state;
-    delete newUserData.loading;
-    delete newUserData.errors;
-
-    console.log(newUserData);
-
-    this.props.signupUser(newUserData, this.props.history);
-  };
-
-  handleChange = (event) => {
-    this.setState({
-      [event.target.name]: event.target.value,
-    });
-  };
-
   handleToggleChange = (value) => {
     if (value === "photographer") {
-      this.setState({
-        photographer: true,
-        errors: {},
-      });
+      this.setState({ photographer: true });
     } else {
-      this.setState({
-        photographer: false,
-      });
+      this.setState({ photographer: false });
     }
   };
 
@@ -115,11 +55,8 @@ class signup extends Component {
     if (this.props.authenticated === true) {
       return <Redirect to="/" />;
     }
-    const {
-      classes,
-      UI: { loading },
-    } = this.props;
-    const { errors } = this.state;
+    const { classes } = this.props;
+
     return (
       <Slide direction="up" in={true} mountOnEnter unmountOnExit timeout={400}>
         <Grid container spacing={2} className={classes.signUpContainer}>
@@ -160,46 +97,9 @@ class signup extends Component {
                 </ButtonGroup>
 
                 {this.state.photographer ? (
-                  <SetUpProfile history={this.props.history} />
+                  <SignUpPhotographer history={this.props.history} />
                 ) : (
-                  <form noValidate onSubmit={this.handleSubmit}>
-                    {this.textFields.map((item) => {
-                      return (
-                        <OutlinedTextField
-                          name={item.name}
-                          label={item.label}
-                          errors={errors?.[item.name]}
-                          value={this.state[item.name]}
-                          handleChange={this.handleChange}
-                        />
-                      );
-                    })}
-
-                    {errors?.general && (
-                      <Typography
-                        variant="body2"
-                        className={classes.customError}
-                      >
-                        {errors.general}
-                      </Typography>
-                    )}
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="secondary"
-                      className={classes.button}
-                      disabled={loading}
-                      fullWidth
-                    >
-                      Sign up
-                      {loading && (
-                        <CircularProgress
-                          color="secondary"
-                          className={classes.progress}
-                        />
-                      )}
-                    </Button>
-                  </form>
+                  <SignUpUser history={this.props.history} />
                 )}
               </div>
             </Paper>
@@ -210,7 +110,7 @@ class signup extends Component {
                 to="/login"
                 style={{ textTransform: "none" }}
               >
-                Have an account?{" "}
+                Have an account?
                 <span style={{ color: "#23ba8b" }}>&nbsp;Log in</span>
               </Button>
             </Paper>
@@ -226,8 +126,6 @@ signup.propTypes = {
   classes: PropTypes.object.isRequired,
   user: PropTypes.object.isRequired,
   UI: PropTypes.object.isRequired,
-  signupUser: PropTypes.func.isRequired,
-  signupPhotographer: PropTypes.func.isRequired,
 };
 
 const mapStateToProps = (state) => ({
@@ -236,8 +134,4 @@ const mapStateToProps = (state) => ({
   authenticated: state.user.authenticated,
 });
 
-export default connect(mapStateToProps, {
-  signupUser,
-  signupPhotographer,
-  uploadProfileImage,
-})(withStyles(styles)(signup));
+export default connect(mapStateToProps)(withStyles(styles)(signup));

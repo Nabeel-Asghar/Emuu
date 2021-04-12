@@ -9,6 +9,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import "../your-photography-page/editBiocss.css";
+import Categories from "../../pages/SignUp/Categories";
 
 class editBio extends Component {
   render() {
@@ -41,58 +42,10 @@ class editBio extends Component {
               }}
             />
           </DialogContentText>
-          <div className="container12">
-            <ul className="ks-cboxtags">
-              <li>
-                <input
-                  name="Instagram"
-                  value="Instagram"
-                  type="checkbox"
-                  id="checkboxTen"
-                  checked={
-                    this.props.categories.includes("Instagram") ? true : false
-                  }
-                  onChange={this.props.handleCatChange}
-                />
-                <label for="checkboxTen">Instagram</label>
-              </li>
-              <li>
-                <input
-                  name="LinkedIn Portrait"
-                  type="checkbox"
-                  id="checkboxEleven"
-                  value="LinkedIn Portrait"
-                  checked={
-                    this.props.categories.includes("LinkedIn Portrait")
-                      ? true
-                      : false
-                  }
-                  onClick={this.props.handleCatChange}
-                />
-                <label for="checkboxEleven">LinkedIn Portrait</label>
-              </li>
-
-              <li>
-                <input
-                  name="Personal Shoot"
-                  type="checkbox"
-                  id="checkboxFourteen"
-                  checked={
-                    this.props.categories.includes("Personal Shoot")
-                      ? true
-                      : false
-                  }
-                  value="Personal Shoot"
-                  onClick={this.props.handleCatChange}
-                />
-                <label for="checkboxFourteen">Personal Shoot</label>
-              </li>
-            </ul>
-          </div>
         </DialogContent>
         <DialogActions>
           <Button
-            onClick={this.props.handleDisagree}
+            onClick={() => this.props.handleClose("openBio")}
             variant="contained"
             color="secondary"
           >

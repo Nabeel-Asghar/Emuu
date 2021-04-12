@@ -17,7 +17,7 @@ import AddIcon from "@material-ui/icons/Add";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowLeftIcon from "@material-ui/icons/KeyboardArrowLeft";
 import equal from "fast-deep-equal";
-import defaultProfilePicture from "../images/defaultProfilePicture.png";
+import defaultProfilePicture from "../images/defaultThumbnail.png";
 import defaultBackground from "../images/defaultBackground.jpg";
 
 // Redux
@@ -35,7 +35,7 @@ import PhotographerReviews from "../components/shared/photographerReviews";
 import UserImage from "../components/photographer-page/userImage";
 import UserInfo from "../components/photographer-page/userInfo";
 import Pricing from "../components/photographer-page/Pricing";
-import LoadingPage from "../components/shared/LoadingPage";
+import LoadingPage from "../components/shared/loadingPage";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -48,7 +48,8 @@ class specificPhotographer extends Component {
       allReviews: [],
       photographer: true,
       userEmail: "",
-      userProfileImage: "",
+      thumbnailImage: "",
+      userThumbnailImage: "",
       email: "",
       firstName: "",
       lastName: "",
@@ -91,6 +92,8 @@ class specificPhotographer extends Component {
   assignValues(details) {
     const photoDetails = Object.values(details);
 
+    console.log(photoDetails);
+
     photoDetails.forEach((task) =>
       Object.entries(task).forEach(([key, value]) => {
         this.assignStates(key, value);
@@ -118,6 +121,7 @@ class specificPhotographer extends Component {
           userFirstName: this.props.credentials[0]?.firstName,
           userLastName: this.props.credentials[0]?.lastName,
           userProfileImage: this.props.credentials[0]?.profileImage,
+          userThumbnailImage: this.props.credentials[0]?.thumbnailImage,
           photographer: this.props.credentials[0]?.photographer,
         });
       });
@@ -141,6 +145,7 @@ class specificPhotographer extends Component {
           photographer: this.props.credentials[0]?.photographer,
           userEmail: this.props.credentials[0]?.email,
           userProfileImage: this.props.credentials[0]?.profileImage,
+          userThumbnailImage: this.props.credentials[0]?.thumbnailImage,
         });
       }
     }
@@ -298,6 +303,16 @@ class specificPhotographer extends Component {
                   profileImage={
                     this.state.profileImage
                       ? this.state.profileImage
+                      : defaultProfilePicture
+                  }
+                  photographerThumbnailImage={
+                    this.state.thumbnailImage
+                      ? this.state.thumbnailImage
+                      : defaultProfilePicture
+                  }
+                  userThumbnailImage={
+                    this.state.userThumbnailImage
+                      ? this.state.userThumbnailImage
                       : defaultProfilePicture
                   }
                   loading={loadingData}
