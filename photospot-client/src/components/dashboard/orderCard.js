@@ -10,11 +10,11 @@ import Typography from "@material-ui/core/Typography";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import { red } from "@material-ui/core/colors";
 
 // util
 import { timeConvert, dateConvert } from "../../util/UtilFunctions";
 import { showVault, showCancel } from "../../util/constants";
+import CancelButton from "../shared/Buttons/CancelButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -26,16 +26,6 @@ const styles = (theme) => ({
     margin: "8px 0px 8px 8px",
   },
 });
-
-const ColorButton = withStyles((theme) => ({
-  root: {
-    color: theme.palette.getContrastText(red[500]),
-    backgroundColor: red[500],
-    "&:hover": {
-      backgroundColor: red[700],
-    },
-  },
-}))(Button);
 
 class orderCard extends Component {
   getName = () => {
@@ -150,6 +140,18 @@ class orderCard extends Component {
                   </Grid>
                   <Grid item xs={12} style={{ textAlign: "right" }}>
                     <>
+                      {showCancel.includes(orderDetails.status) && (
+                        <CancelButton
+                          variant="contained"
+                          color="secondary"
+                          onClick={() =>
+                            this.props.handleRefund(orderDetails.orderID)
+                          }
+                          className={classes.buttonSpacing}
+                        >
+                          Cancel
+                        </CancelButton>
+                      )}
                       {showVault.includes(orderDetails.status) && (
                         <Button
                           variant="contained"
@@ -163,18 +165,6 @@ class orderCard extends Component {
                         >
                           Photo Vault
                         </Button>
-                      )}
-                      {showCancel.includes(orderDetails.status) && (
-                        <ColorButton
-                          variant="contained"
-                          color="secondary"
-                          onClick={() =>
-                            this.props.handleRefund(orderDetails.orderID)
-                          }
-                          className={classes.buttonSpacing}
-                        >
-                          Cancel
-                        </ColorButton>
                       )}
                     </>
                   </Grid>

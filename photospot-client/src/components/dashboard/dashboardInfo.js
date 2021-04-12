@@ -6,6 +6,7 @@ import { withTheme, withStyles } from "@material-ui/core/styles";
 import ArrowDropUpIcon from "@material-ui/icons/ArrowDropUp";
 import ArrowDropDownIcon from "@material-ui/icons/ArrowDropDown";
 import Chip from "@material-ui/core/Chip";
+import { formatMoney } from "../../util/UtilFunctions";
 
 const styles = (theme) => ({
   number: {
@@ -52,7 +53,7 @@ export class dashboardInfo extends Component {
         <Grid item sm={4} xs={12} style={{ textAlign: "center" }}>
           <DashboardPaper variant="outlined">
             <Typography variant="h4" className={classes.number}>
-              ${this.props.totalRevenue}.00
+              {formatMoney(this.props.totalRevenue)}
             </Typography>
             <Typography gutterBottom variant="caption">
               Est. Revenue
