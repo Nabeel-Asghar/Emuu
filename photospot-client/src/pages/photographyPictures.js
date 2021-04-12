@@ -15,7 +15,7 @@ import GoBackButton from "../components/shared/Buttons/GoBackButton";
 import FailureFeedback from "../components/shared/FailureFeedback";
 // Components
 import ImageGrid from "../components/shared/imageGrid";
-import LoadingPage from "../components/shared/loadingPage";
+import LoadingPage from "../components/shared/LoadingPage";
 import Progress from "../components/shared/progress";
 import Success from "../components/shared/success";
 import {

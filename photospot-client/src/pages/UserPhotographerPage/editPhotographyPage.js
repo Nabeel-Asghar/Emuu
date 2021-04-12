@@ -8,7 +8,7 @@ import PhotoSamples from "../../components/photographer-page/photoSamples";
 import Pricing from "../../components/photographer-page/Pricing";
 import EditButton from "../../components/shared/Buttons/EditButton";
 import Feedback from "../../components/shared/feedback";
-import LoadingPage from "../../components/shared/loadingPage";
+import LoadingPage from "../../components/shared/LoadingPage";
 import PictureUploader from "../../components/shared/pictureUploader";
 import EditableUsercard from "../../components/your-photography-page/editableUsercard";
 import EditBio from "../../components/your-photography-page/editBio";

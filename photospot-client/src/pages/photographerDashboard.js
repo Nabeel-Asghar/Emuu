@@ -30,12 +30,12 @@ import OrderCard from "../components/dashboard/orderCard";
 import ProfileCard from "../components/dashboard/profileCard";
 import ContactCard from "../components/dashboard/contactCard";
 import SettingsCard from "../components/dashboard/settingsCard";
-import StripeCard from "../components/dashboard/stripeCard";
+import StripeCard from "../components/dashboard/StripeCard";
 import PhotographerReviews from "../components/shared/photographerReviews";
 import CollapseItems from "../components/shared/collapse";
 import Confirmation from "../components/shared/confirmation";
 import Success from "../components/shared/success";
-import LoadingPage from "../components/shared/loadingPage";
+import LoadingPage from "../components/shared/LoadingPage";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
