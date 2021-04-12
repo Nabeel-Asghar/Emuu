@@ -93,14 +93,19 @@ exports.getBalance = async (req, res) => {
 
   try {
     const stripeID = await getPhotographerStripeID(userID);
-    let balanceObject = await stripe.balance.retrieve({
+
+    const payouts = await stripe.payouts.list({
       stripeAccount: stripeID,
     });
 
-    const balance =
-      balanceObject.available[0].amount + balanceObject.pending[0].amount / 100;
+    let balance = 0;
 
-    return res.json({ balance: balance });
+    payouts.data.length > 0 &&
+      payouts.data.forEach((payment) => {
+        balance += payment.amount;
+      });
+
+    return res.json({ balance: balance / 100 });
   } catch (e) {
     return res.json({ balance: 0 });
   }
@@ -386,7 +391,7 @@ async function transferToBank(paymentID, orderID, consumerID, photographerID) {
     console.log("Paying out photographer", orderID);
     const payout = await stripe.payouts.create(
       {
-        amount: payoutAmount,
+        amount: 100,
         currency: "usd",
         metadata: {
           orderID: orderID,
