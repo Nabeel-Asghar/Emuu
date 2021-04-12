@@ -125,13 +125,26 @@ exports.notifyCustomer = async (req, res) => {
 exports.finalizeVault = async (req, res) => {
   const orderID = req.params.vaultID;
   try {
-    await confirmedByCustomer(orderID);
+    await editVaultValues(orderID, { confirmedByCustomer: true });
     return res.json({
       response: "You've confirmed your photos. You may now download them!",
     });
   } catch (err) {
     console.log("error finalizing vault: ", err);
     return res.status(400).json({ response: "Error confirming photos." });
+  }
+};
+
+exports.dispute = async (req, res) => {
+  try {
+    const orderID = req.params.vaultID;
+    const disputeReason = req.body.disputeReason;
+    holdPayout(orderID);
+    editVaultValues(orderID, { disputeReason: disputeReason });
+    email.emailDispute({ orderID: orderID, disputeReason: disputeReason });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ message: "Something went wrong" });
   }
 };
 
@@ -299,6 +312,7 @@ function getPersonDetails(id) {
 }
 
 function editVaultValues(id, object) {
+  console.log("stuff", id, object);
   return db
     .collection("photoVault")
     .doc(`${id}`)
@@ -333,20 +347,6 @@ function getDateToPayout() {
   return theDate;
 }
 
-// set field to confirm customer approved photos
-function confirmedByCustomer(orderID) {
-  return db
-    .collection("photoVault")
-    .doc(orderID)
-    .update({ confirmedByCustomer: true })
-    .then(() => {
-      return true;
-    })
-    .catch((err) => {
-      console.log(
-        "error updating field to confirm customer approved photos: ",
-        err
-      );
-      return false;
-    });
+function holdPayout(orderID) {
+  return db.collection("scheduler").doc(orderID).update({ status: "paused" });
 }

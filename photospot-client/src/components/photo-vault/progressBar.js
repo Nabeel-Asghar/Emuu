@@ -50,7 +50,25 @@ class progressBar extends Component {
             }}
           />
         </div>
-        {this.props.confirmedByCustomer ? (
+        {this.props.disputeReason ? (
+          <Typography variant="subtitle2">
+            Status: <b>Dispute By Customer</b>
+            <Tooltip
+              title={
+                <Typography style={{ padding: 7 }}>
+                  The customer has disputed the order because: "
+                  {this.props.disputeReason}"
+                </Typography>
+              }
+            >
+              <InfoIcon
+                fontSize="small"
+                color="secondary"
+                style={{ padding: "0px 5px" }}
+              />
+            </Tooltip>
+          </Typography>
+        ) : this.props.confirmedByCustomer ? (
           <Typography variant="subtitle2">
             Status: <b>Confirmed By Customer</b>
             <Tooltip

@@ -177,12 +177,27 @@ function emailPayOutReceiptToPhotographer(customerDetails) {
     from: "PhotoSpot@photospot.site",
     templateId: "d-3e961ecd94e041b4bb6515ae96e6893c",
     dynamic_template_data: {
-      photographerFirstName: orderDetails.photographerFirstName,
-      amount: orderDetails.amount,
+      photographerFirstName: customerDetails.photographerFirstName,
+      amount: customerDetails.amount,
     },
   };
   sgMail.send(msg);
   console.log("Payout has been sent to photographer");
+  return true;
+}
+
+function emailDispute(details) {
+  const msg = {
+    to: "nabeel.asghar156@gmail.com",
+    from: "PhotoSpot@photospot.site",
+    templateId: "d-27cb6c62d11a4cc9ac8b7858b03b0a2f",
+    dynamic_template_data: {
+      orderID: details.orderID,
+      disputeReason: details.disputeReason,
+    },
+  };
+  sgMail.send(msg);
+  console.log("Dispute email send to PhotoSpot admin to review.");
   return true;
 }
 
@@ -191,3 +206,4 @@ exports.emailRefundsByCustomer = emailRefundsByCustomer;
 exports.emailRefundsByPhotographer = emailRefundsByPhotographer;
 exports.emailVaultReady = emailVaultReady;
 exports.emailPayout = emailPayout;
+exports.emailDispute = emailDispute;

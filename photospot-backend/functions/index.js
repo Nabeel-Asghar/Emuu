@@ -81,6 +81,7 @@ const {
   getVaultSize,
   notifyCustomer,
   finalizeVault,
+  dispute,
 } = require("./handlers/vault");
 
 const { testFunction } = require("./handlers/test");
@@ -156,17 +157,24 @@ app.get("/vault/:vaultID/download", FBAuth, downloadImages);
 app.get("/vault/:vaultID/getSize", FBAuth, getVaultSize);
 app.get("/vault/:vaultID/notifyCustomer", FBAuth, notifyCustomer);
 app.post("/vault/:vaultID/finalize", FBAuth, finalizeVault);
+app.post("/vault/:vaultID/dispute", FBAuth, dispute);
 
 // Testing
-app.post("/test", testFunction);
+app.post("/test", function (req, res) {
+  payment.payOut(
+    "6da0c1726662c5da",
+    "V8vE1d5Cy5aykcO9qtLgN6aGtUN2",
+    "7ifDj24PGCQvmw3eFzfB8TrNKVe2"
+  );
+});
 
 exports.dailyJob = functions.pubsub
   .schedule(`*/15 * * * *`)
   .onRun(async (context) => {
     const now = admin.firestore.Timestamp.now();
     db.collection("scheduler")
-      .where("performAt", "<=", now)
       .where("status", "==", "scheduled")
+      .where("performAt", "<=", now)
       .get()
       .then(function (querySnapshot) {
         if (querySnapshot.size > 0) {
@@ -183,9 +191,11 @@ exports.dailyJob = functions.pubsub
       })
       .catch((err) => {
         console.log("error in doing cronjob in payouts", err);
+        return false;
       })
       .finally(() => {
         console.log("Finished cron job");
+        return true;
       });
   });
 
