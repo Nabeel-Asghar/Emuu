@@ -333,7 +333,7 @@ class specificPhotographer extends Component {
                 />
 
                 <Pricing
-                  pricing={this.state.pricing}
+                  pricing={this.state.pricingMap}
                   fullScreen={fullScreen}
                   selectable={false}
                   handleSelect={() => {}}
