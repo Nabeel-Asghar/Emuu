@@ -9,7 +9,7 @@ const containerStyles = {
   height: 20,
   width: 200,
   backgroundColor: "#e0e0de",
-  borderRadius: 50,
+  borderRadius: "5px",
   margin: "5px auto 10px auto",
 };
 
@@ -31,7 +31,7 @@ class progressBar extends Component {
     return (
       <Box
         border={2}
-        borderRadius={16}
+        borderRadius={10}
         borderColor="secondary.main"
         style={{ maxWidth: 250, margin: "0px auto", padding: 10 }}
       >
