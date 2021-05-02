@@ -74,8 +74,9 @@ class progressBar extends Component {
             <Tooltip
               title={
                 <Typography style={{ padding: 7 }}>
-                  The customer has confirmed the photos. You will be paid within
-                  2 days or 7 days if this is your first booking.
+                  The customer has confirmed the photos. The photographer will
+                  be paid within 2 days or 7 days if this is their first
+                  booking.
                 </Typography>
               }
             >
