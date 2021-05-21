@@ -16,11 +16,9 @@ const styles = {
     borderRadius: "0px",
     lineHeight: "50px",
   },
-
   userList: {
     backgroundColor: "white",
   },
-
   messagesIcon: {
     width: "300px",
     height: "300px",
@@ -31,15 +29,16 @@ const styles = {
 const StyledSlide = withStyles(styles)(Slide);
 
 const emptyChat = (props) => {
+  const { classes } = props.classes;
   return (
     <Grid container spacing={0} style={{ height: "75vh" }}>
-      <Grid item xs={0} sm={4} className={props.classes.userList}>
+      <Grid item xs={0} sm={4} className={classes.userList}>
         <Hidden only="xs">
           <Typography
             component="h1"
             variant="subtitle1"
             align="center"
-            className={props.classes.newChatBtn}
+            className={classes.newChatBtn}
           >
             Messages
           </Typography>
@@ -51,7 +50,7 @@ const emptyChat = (props) => {
       </Grid>
       <Grid item xs={12} sm={8}>
         <StyledSlide
-          media={<QuestionAnswerIcon className={props.classes.messagesIcon} />}
+          media={<QuestionAnswerIcon className={classes.messagesIcon} />}
           mediaBackgroundStyle={{ backgroundColor: "#23ba8b" }}
           style={{ backgroundColor: "#00895e" }}
           title="You have no messages."

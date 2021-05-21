@@ -27,7 +27,6 @@ const styles = (theme) => ({
   },
 
   messagingContainer: {
-    border: "2px solid #e6e6e6",
     [theme.breakpoints.down(600)]: {
       margin: "-16px -10px -10px -10px",
       border: "0px",
@@ -134,17 +133,15 @@ class messaging extends Component {
   buildDocKey = (friend) => [this.state.email, friend].sort().join(":");
 
   messageRead = () => {
+    const chats = this.state?.chats;
+    const index = this.state?.selectedChat;
+    const messages = chats[index]?.messages;
+
     const docKey = this.buildDocKey(
-      this.state.chats[this.state.selectedChat]?.users.filter(
-        (_usr) => _usr !== this.state.email
-      )[0]
+      chats[index]?.users.filter((user) => user !== this.state.email)[0]
     );
-    console.log(this.state.chats);
-    if (
-      this.state.chats.messages &&
-      this.clickedChatWhereNotSender(this.state.selectedChat)
-    ) {
-      console.log("read");
+
+    if (messages && this.clickedChatWhereNotSender(messages)) {
       firebase
         .firestore()
         .collection("chats")
@@ -153,13 +150,10 @@ class messaging extends Component {
     }
   };
 
-  clickedChatWhereNotSender = (chatIndex) =>
-    this.state?.chats[chatIndex]?.messages[
-      this.state?.chats[chatIndex]?.messages?.length - 1
-    ].sender !== this.state.email;
+  clickedChatWhereNotSender = (messages) =>
+    messages[messages.length - 1].sender !== this.state.email;
 
   selectChat = async (chatIndex) => {
-    console.log(chatIndex);
     await this.setState({ selectedChat: chatIndex, newChatFormVisible: false });
     this.messageRead();
   };

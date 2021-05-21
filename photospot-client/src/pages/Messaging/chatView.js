@@ -1,7 +1,6 @@
-import { Avatar, Box, Hidden } from "@material-ui/core";
+import { Avatar, Box, Hidden, Divider } from "@material-ui/core";
 import withStyles from "@material-ui/core/styles/withStyles";
 import React, { Component } from "react";
-// Redux
 import { connect } from "react-redux";
 
 const styles = (theme) => ({
@@ -136,13 +135,11 @@ class ChatViewComponent extends Component {
   };
 
   formatDate = (date) => {
-    var dateString = moment.unix(date / 1000).format("MMM Do, h:mm A");
-    return dateString;
+    return moment.unix(date / 1000).format("MMM Do, h:mm A");
   };
 
   formatDateOnlyTime = (date) => {
-    var dateString = moment.unix(date / 1000).format("LT");
-    return dateString;
+    return moment.unix(date / 1000).format("LT");
   };
 
   render() {
@@ -155,6 +152,7 @@ class ChatViewComponent extends Component {
           <div className={classes.chatHeader}>
             {chat.names && chat.names.filter((_usr) => _usr !== userName)[0]}
           </div>
+          <Divider />
           <main id="chatview-container" className={classes.chatViewContainer}>
             {chat.messages &&
               chat.messages.map((_msg, _index) => {
@@ -211,7 +209,7 @@ class ChatViewComponent extends Component {
                   </Box>
                 );
               })}
-          </main>{" "}
+          </main>
         </div>
       );
     }
