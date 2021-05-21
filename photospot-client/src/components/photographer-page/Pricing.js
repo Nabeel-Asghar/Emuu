@@ -26,10 +26,10 @@ const Pricing = (props) => {
   const { classes, fullScreen, editable, selectable } = props;
   const [selected, setSelected] = useState(null);
 
-  const pricing = props.pricing;
+  const pricing = props.pricing && Object.entries(props.pricing);
   const padding = editable ? 10 : 0;
 
-  function handleClick(event, index) {
+  function handleClick(index) {
     setSelected(index);
     props.handleSelect(pricing[index]);
   }
@@ -44,35 +44,33 @@ const Pricing = (props) => {
         {editable && <EditButton onClick={props.onClick} text="Edit Pricing" />}
         <Grid xs={12}>
           {pricing &&
-            Object.keys(pricing).map((item) => {
+            pricing.map(function (item, index) {
               return (
                 <>
                   <List
-                    onClick={(e) => handleClick(e, pricing[item])}
+                    onClick={() => handleClick(index)}
                     className={
-                      selectable &&
-                      selected === pricing[item] &&
-                      classes.selected
+                      selectable && selected === index && classes.selected
                     }
                   >
                     <ListItem>
                       <ListItemIcon style={{ minWidth: 40 }}>
-                        <GetIcon name={item} />
+                        <GetIcon name={item[0]} />
                       </ListItemIcon>
                       <ListItemText
-                        primary={item}
-                        secondary={!fullScreen && shootType[item]}
+                        primary={item[0]}
+                        // secondary={!fullScreen && item.description}
                       />
 
                       <ListItemSecondaryAction className={classes.rightGrid}>
                         <Typography variant="h6">
-                          {formatMoney(pricing[item])}
+                          {formatMoney(item[1])}
                         </Typography>
                         <Typography variant="caption"> per hour</Typography>
                       </ListItemSecondaryAction>
                     </ListItem>
                   </List>
-                  {pricing[item] < pricing.length - 1 && <Divider />}
+                  {index < pricing.length - 1 && <Divider />}
                 </>
               );
             })}

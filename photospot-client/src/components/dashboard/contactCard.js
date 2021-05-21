@@ -17,15 +17,11 @@ class contactCard extends Component {
         <div className={classes.interiorCard}>
           <Typography variant="subtitle2">LOCATION</Typography>
           <Typography variant="body1" className={classes.textStyle}>
-            {location_city}, {location_state}
+            {location_city}, {location_city}
           </Typography>
           <Typography variant="subtitle2">EMAIL</Typography>
           <Typography variant="body1" className={classes.textStyle}>
             {email}
-          </Typography>
-          <Typography variant="subtitle2">PHONE</Typography>
-          <Typography variant="body1" className={classes.textStyle}>
-            (248) 123-4555
           </Typography>
         </div>
       </Paper>

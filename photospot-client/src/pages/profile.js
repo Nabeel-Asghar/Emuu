@@ -18,7 +18,7 @@ import EditProfileImage from "../components/user-profile/editProfileImage";
 import EditUserDetails from "../components/user-profile/editUserDetails";
 import Feedback from "../components/shared/feedback";
 import PictureUploader from "../components/shared/pictureUploader";
-import LoadingPage from "../components/shared/loadingPage";
+import LoadingPage from "../components/shared/LoadingPage";
 import GoBackButton from "../components/shared/Buttons/GoBackButton";
 
 const styles = (theme) => ({

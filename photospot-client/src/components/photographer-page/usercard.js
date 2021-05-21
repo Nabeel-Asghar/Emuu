@@ -30,14 +30,12 @@ class usercard extends Component {
   }
 
   componentWillReceiveProps(newProps) {
-    console.log(newProps);
     this.setState({
       photographerEmail: newProps.email,
       photographerThumbnail: newProps.photographerThumbnailImage,
       userEmail: newProps.userEmail,
       userThumbnail: newProps.userThumbnailImage,
     });
-    console.log(this.state);
   }
 
   handleHover() {
@@ -81,11 +79,10 @@ class usercard extends Component {
             </Skeleton>
           ) : (
             <div>
-              {console.log("Photographer:", photographer)}
               <Button
                 className={classes.spacedButton}
                 startIcon={<BookIcon />}
-                disabled={loading || photographer}
+                disabled={loading === true || photographer === true}
                 variant="outlined"
                 color="secondary"
                 size="large"

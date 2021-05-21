@@ -33,6 +33,7 @@ import ReviewList from "../components/dashboard/reviewList";
 import Confirmation from "../components/shared/confirmation";
 import Success from "../components/shared/success";
 import CollapseItems from "../components/shared/collapse";
+import LoadingPage from "../components/shared/LoadingPage";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -66,6 +67,7 @@ class userDashboard extends Component {
       openRefundDialog: false,
       orderID: "",
       openSuccess: false,
+      intialLoading: true,
     };
   }
 
@@ -96,6 +98,7 @@ class userDashboard extends Component {
     this.props.getUsersReviews();
     this.setState({
       allReviews: Object.values(this.props.reviews || {}),
+      intialLoading: false,
     });
   }
 
@@ -285,67 +288,73 @@ class userDashboard extends Component {
     }
 
     return (
-      <Grid container spacing={2} style={{ overflow: "hidden" }}>
-        {/* Left sidebar */}
-        <Grid item md={4} sm={12} xs={12}>
-          <ProfileCard
-            profileImage={this.state.profileImage}
-            firstName={this.state.firstName}
-            lastName={this.state.lastName}
-            formattedDate={moment(this.state.createdAt).format("LL")}
-          />
+      <>
+        {this.state.intialLoading ? (
+          <LoadingPage />
+        ) : (
+          <Grid container spacing={2} style={{ overflow: "hidden" }}>
+            {/* Left sidebar */}
+            <Grid item md={4} sm={12} xs={12}>
+              <ProfileCard
+                profileImage={this.state.profileImage}
+                firstName={this.state.firstName}
+                lastName={this.state.lastName}
+                formattedDate={moment(this.state.createdAt).format("LL")}
+              />
 
-          <ContactCard
-            location_city={this.state.location_city}
-            location_state={this.state.location_state}
-            email={this.state.email}
-          />
-        </Grid>
+              <ContactCard
+                location_city={this.state.location_city}
+                location_state={this.state.location_state}
+                email={this.state.email}
+              />
+            </Grid>
 
-        {/* Confirmation for refund */}
-        <Confirmation
-          open={this.state.openRefundDialog}
-          secondaryConfirmation={true}
-          handleAgree={this.handleRefundAgree.bind(this)}
-          handleDisagree={this.handleRefundDisagree.bind(this)}
-          loading={this.props.loading}
-          title="Confirm Cancellation of Order"
-          text={
-            <div>
-              <Typography gutterBottom style={{ paddingBottom: "10px" }}>
-                Are you sure you want to cancel your order?
-              </Typography>
+            {/* Confirmation for refund */}
+            <Confirmation
+              open={this.state.openRefundDialog}
+              secondaryConfirmation={true}
+              handleAgree={this.handleRefundAgree.bind(this)}
+              handleDisagree={this.handleRefundDisagree.bind(this)}
+              loading={this.props.loading}
+              title="Confirm Cancellation of Order"
+              text={
+                <div>
+                  <Typography gutterBottom style={{ paddingBottom: "10px" }}>
+                    Are you sure you want to cancel your order?
+                  </Typography>
 
-              <Typography gutterBottom style={{ paddingBottom: "10px" }}>
-                You will only get full refunds on orders cancelled{" "}
-                <b>12 hours</b> before the shoot otherwise you will be refunded
-                50%. This cannot be undone.
-              </Typography>
-            </div>
-          }
-          label="I understand I want to cancel the order"
-        />
-        {/* Success after refund */}
-        <Success
-          body={
-            <Typography gutterBottom>
-              Your refund is being processed. This may take a few moments.
-            </Typography>
-          }
-          open={this.state.openSuccess}
-          reload={true}
-        />
+                  <Typography gutterBottom style={{ paddingBottom: "10px" }}>
+                    You will only get full refunds on orders cancelled{" "}
+                    <b>12 hours</b> before the shoot otherwise you will be
+                    refunded 50%. This cannot be undone.
+                  </Typography>
+                </div>
+              }
+              label="I understand I want to cancel the order"
+            />
+            {/* Success after refund */}
+            <Success
+              body={
+                <Typography gutterBottom>
+                  Your refund is being processed. This may take a few moments.
+                </Typography>
+              }
+              open={this.state.openSuccess}
+              reload={true}
+            />
 
-        <Grid item md={8} sm={12} xs={12}>
-          <CollapseItems text="Upcoming Shoot" items={theUserOrders} />
+            <Grid item md={8} sm={12} xs={12}>
+              <CollapseItems text="Upcoming Shoot" items={theUserOrders} />
 
-          <CollapseItems text="Past Shoots" items={theUserPastOrders} />
+              <CollapseItems text="Past Shoots" items={theUserPastOrders} />
 
-          <CollapseItems text="Your Reviews" items={gridImages} />
+              <CollapseItems text="Your Reviews" items={gridImages} />
 
-          {camp}
-        </Grid>
-      </Grid>
+              {camp}
+            </Grid>
+          </Grid>
+        )}
+      </>
     );
   }
 }

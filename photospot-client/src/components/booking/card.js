@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import Card from "@material-ui/core/Card";
 import CardMedia from "@material-ui/core/CardMedia";
 import CardContent from "@material-ui/core/CardContent";
+import { formatMoney } from "../../util/UtilFunctions";
 
 const styles = {
   card: {
@@ -48,7 +49,7 @@ class ProfileCard extends Component {
           title="Profile Image"
         />
         <CardContent className={classes.content} gutterBottom>
-          <Typography variant="h5">
+          <Typography variant="h5" gutterBottom>
             Book with&nbsp;{firstName}&nbsp;{lastName}
           </Typography>
           <div>
@@ -74,7 +75,7 @@ class ProfileCard extends Component {
             )}
             {price && (
               <Typography variant="body1" gutterBottom>
-                Price: <b>${price}.00</b>
+                Price: <b>{formatMoney(price)}</b>
               </Typography>
             )}
           </div>

@@ -13,6 +13,7 @@ import {
   deleteImages,
   notifyCustomer,
   confirmPictures,
+  handleDispute,
 } from "../redux/actions/vaultActions";
 
 // Material UI
@@ -23,6 +24,8 @@ import CloudUploadIcon from "@material-ui/icons/CloudUpload";
 import SaveIcon from "@material-ui/icons/Save";
 import Typography from "@material-ui/core/Typography";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import CancelIcon from "@material-ui/icons/Cancel";
+import { TextField } from "@material-ui/core";
 
 // Components
 import ImageGrid from "../components/shared/imageGrid";
@@ -30,10 +33,11 @@ import ProgressBar from "../components/photo-vault/progressBar";
 import Success from "../components/shared/success";
 import Progress from "../components/shared/progress";
 import Confirmation from "../components/shared/confirmation";
-import LoadingPage from "../components/shared/loadingPage";
+import LoadingPage from "../components/shared/LoadingPage";
 import DownloadOrNotify from "../components/photo-vault/downloadOrNotify";
 import GoBackButton from "../components/shared/Buttons/GoBackButton";
 import { firebase } from "../util/firestore";
+import CancelButton from "../components/shared/Buttons/CancelButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -57,6 +61,7 @@ class photoVault extends Component {
       imagesToDelete: [],
       imageSizes: [],
       totalSize: 0,
+      disputeReason: null,
       intialLoading: false,
       open: false,
       disabled: true,
@@ -71,6 +76,9 @@ class photoVault extends Component {
       totalNewImagesSize: 0,
       uploadProgress: 0,
       uploadResponse: "",
+      openDisputeDialog: false,
+      openSuccessDispute: false,
+      dispute: "",
     };
   }
 
@@ -82,6 +90,7 @@ class photoVault extends Component {
         images: this.props.vault.vaultData.images,
         notifiedCustomer: this.props.vault.vaultData.notifiedCustomer,
         confirmedByCustomer: this.props.vault.vaultData.confirmedByCustomer,
+        disputeReason: this.props.vault.vaultData.disputeReason,
       });
     });
 
@@ -283,6 +292,22 @@ class photoVault extends Component {
     });
   }
 
+  handleDispute() {
+    this.props
+      .handleDispute(this.props.match.params.orderID, {
+        disputeReason: this.state.dispute,
+      })
+      .then(() => {
+        this.closeDialog();
+        this.setState({
+          openSuccessDispute: true,
+        });
+      })
+      .catch(() => {
+        //handle error
+      });
+  }
+
   openFinalizeDialog(type) {
     type === "photographer"
       ? this.setState({
@@ -292,15 +317,13 @@ class photoVault extends Component {
           openCustomerFinal: true,
         });
   }
-
-  closeFinalizeDialog(type) {
-    type === "photographer"
-      ? this.setState({
-          openDialog: false,
-        })
-      : this.setState({
-          openCustomerFinal: false,
-        });
+  closeDialog() {
+    this.setState({
+      openDialog: false,
+      openCustomerFinal: false,
+      openCustcloseFinalizeDialogomerFinal: false,
+      openDisputeDialog: false,
+    });
   }
 
   render() {
@@ -343,6 +366,7 @@ class photoVault extends Component {
                     setSize={this.setSize.bind(this)}
                     notifiedCustomer={this.state.notifiedCustomer}
                     confirmedByCustomer={this.state.confirmedByCustomer}
+                    disputeReason={this.state.disputeReason}
                   />
                 </Grid>
 
@@ -415,14 +439,28 @@ class photoVault extends Component {
                     ) : (
                       this.state.notifiedCustomer &&
                       !this.state.confirmedByCustomer && (
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          startIcon={<CheckCircleIcon />}
-                          onClick={() => this.openFinalizeDialog()}
-                        >
-                          Confirm Pictures
-                        </Button>
+                        <>
+                          <CancelButton
+                            variant="contained"
+                            color="secondary"
+                            startIcon={<CancelIcon />}
+                            onClick={() =>
+                              this.setState({ openDisputeDialog: true })
+                            }
+                            disabled={this.state.disputeReason}
+                          >
+                            Open Dispute
+                          </CancelButton>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            startIcon={<CheckCircleIcon />}
+                            onClick={() => this.openFinalizeDialog()}
+                            disabled={this.state.disputeReason}
+                          >
+                            Confirm Pictures
+                          </Button>
+                        </>
                       )
                     )}
                   </div>
@@ -435,7 +473,7 @@ class photoVault extends Component {
                 fullScreen={fullScreen}
                 secondaryConfirmation={false}
                 handleAgree={() => this.notifyCustomer()}
-                handleDisagree={() => this.closeFinalizeDialog("photographer")}
+                handleDisagree={() => this.closeDialog()}
                 title="Confirm Notifying Customer"
                 text={
                   "This will notify the customer that the photos are finished. Do not confirm if you are still uploading or still need to upload."
@@ -448,10 +486,46 @@ class photoVault extends Component {
                 fullScreen={fullScreen}
                 secondaryConfirmation={true}
                 handleAgree={() => this.confirmPictures()}
-                handleDisagree={() => this.closeFinalizeDialog()}
+                handleDisagree={() => this.closeDialog()}
                 title="Confirm Pictures"
                 text={
                   "This will pay your photographer and finalize your shoot. You will be allowed to download photos in this vault after confirming."
+                }
+                label="This is not reversable. Are you sure you want to do this?"
+              />
+
+              <Confirmation
+                open={this.state.openDisputeDialog}
+                fullScreen={fullScreen}
+                secondaryConfirmation={true}
+                handleAgree={() => this.handleDispute()}
+                handleDisagree={() => this.closeDialog()}
+                title="Dispute Photos?"
+                text={
+                  <div>
+                    <Typography gutterBottom style={{ paddingBottom: "10px" }}>
+                      Are these not the photos that you asked for? Have you
+                      tried to contact your photographer?{" "}
+                    </Typography>
+
+                    <Typography gutterBottom style={{ paddingBottom: "10px" }}>
+                      If not, you will be able to open up a dispute. The payment
+                      to the photographer will be paused,{" "}
+                      <b>this may take up to a week.</b>
+                    </Typography>
+
+                    <TextField
+                      color="secondary"
+                      label="Dispute Reason"
+                      placeholder="Please enter a short sentence to explain."
+                      value={this.state.dispute}
+                      onChange={(e) =>
+                        this.setState({ dispute: e.target.value })
+                      }
+                      fullWidth
+                      style={{ paddingBottom: 10 }}
+                    />
+                  </div>
                 }
                 label="This is not reversable. Are you sure you want to do this?"
               />
@@ -496,6 +570,13 @@ class photoVault extends Component {
                 }
                 reload={true}
               />
+
+              <Success
+                open={this.state.openSuccessDispute}
+                headline="Success!"
+                body={<Typography>Successfully submitted dispute.</Typography>}
+                reload={true}
+              />
             </Paper>
           ) : (
             <Typography
@@ -525,6 +606,7 @@ const mapActionsToProps = {
   deleteImages,
   notifyCustomer,
   confirmPictures,
+  handleDispute,
 };
 
 export default connect(

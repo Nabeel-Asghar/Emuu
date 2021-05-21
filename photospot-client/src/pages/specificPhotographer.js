@@ -35,7 +35,7 @@ import PhotographerReviews from "../components/shared/photographerReviews";
 import UserImage from "../components/photographer-page/userImage";
 import UserInfo from "../components/photographer-page/userInfo";
 import Pricing from "../components/photographer-page/Pricing";
-import LoadingPage from "../components/shared/loadingPage";
+import LoadingPage from "../components/shared/LoadingPage";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -46,7 +46,7 @@ class specificPhotographer extends Component {
     super();
     this.state = {
       allReviews: [],
-      photographer: true,
+      isUserPhotographer: false,
       userEmail: "",
       thumbnailImage: "",
       userThumbnailImage: "",
@@ -92,8 +92,6 @@ class specificPhotographer extends Component {
   assignValues(details) {
     const photoDetails = Object.values(details);
 
-    console.log(photoDetails);
-
     photoDetails.forEach((task) =>
       Object.entries(task).forEach(([key, value]) => {
         this.assignStates(key, value);
@@ -113,16 +111,24 @@ class specificPhotographer extends Component {
       });
       this.handleCount(this.state.allReviews);
     });
-    this.props.credentials &&
-      this.props.getUserData().then(() => {
+
+    this.props
+      .getUserData()
+      .then(() => {
+        this.props.credentials &&
+          this.setState({
+            openBackdrop: false,
+            userEmail: this.props.credentials[0]?.email,
+            userFirstName: this.props.credentials[0]?.firstName,
+            userLastName: this.props.credentials[0]?.lastName,
+            userProfileImage: this.props.credentials[0]?.profileImage,
+            userThumbnailImage: this.props.credentials[0]?.thumbnailImage,
+            isUserPhotographer: this.props.credentials[0]?.photographer,
+          });
+      })
+      .catch(() => {
         this.setState({
-          openBackdrop: false,
-          userEmail: this.props.credentials[0]?.email,
-          userFirstName: this.props.credentials[0]?.firstName,
-          userLastName: this.props.credentials[0]?.lastName,
-          userProfileImage: this.props.credentials[0]?.profileImage,
-          userThumbnailImage: this.props.credentials[0]?.thumbnailImage,
-          photographer: this.props.credentials[0]?.photographer,
+          isUserPhotographer: false,
         });
       });
   }
@@ -134,15 +140,8 @@ class specificPhotographer extends Component {
 
     if (!equal(this.props.credentials, prevProps.credentials)) {
       if (this.props.credentials) {
-        if (this.props.credentials[0]?.photographer) {
-          this.setState({
-            photographer: true,
-          });
-        } else {
-          this.setState({ photographer: false });
-        }
         this.setState({
-          photographer: this.props.credentials[0]?.photographer,
+          isUserPhotographer: this.props.credentials[0]?.photographer,
           userEmail: this.props.credentials[0]?.email,
           userProfileImage: this.props.credentials[0]?.profileImage,
           userThumbnailImage: this.props.credentials[0]?.thumbnailImage,
@@ -316,7 +315,7 @@ class specificPhotographer extends Component {
                       : defaultProfilePicture
                   }
                   loading={loadingData}
-                  photographer={this.state.photographer}
+                  photographer={this.state.isUserPhotographer}
                 />
 
                 <UserInfo
@@ -333,7 +332,7 @@ class specificPhotographer extends Component {
                 />
 
                 <Pricing
-                  pricing={this.state.pricing}
+                  pricing={this.state.pricingMap}
                   fullScreen={fullScreen}
                   selectable={false}
                   handleSelect={() => {}}

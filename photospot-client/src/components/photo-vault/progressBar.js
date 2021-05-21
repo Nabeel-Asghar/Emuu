@@ -9,7 +9,7 @@ const containerStyles = {
   height: 20,
   width: 200,
   backgroundColor: "#e0e0de",
-  borderRadius: 50,
+  borderRadius: "5px",
   margin: "5px auto 10px auto",
 };
 
@@ -31,7 +31,7 @@ class progressBar extends Component {
     return (
       <Box
         border={2}
-        borderRadius={16}
+        borderRadius={10}
         borderColor="secondary.main"
         style={{ maxWidth: 250, margin: "0px auto", padding: 10 }}
       >
@@ -50,14 +50,33 @@ class progressBar extends Component {
             }}
           />
         </div>
-        {this.props.confirmedByCustomer ? (
+        {this.props.disputeReason ? (
+          <Typography variant="subtitle2">
+            Status: <b>Dispute By Customer</b>
+            <Tooltip
+              title={
+                <Typography style={{ padding: 7 }}>
+                  The customer has disputed the order because: "
+                  {this.props.disputeReason}"
+                </Typography>
+              }
+            >
+              <InfoIcon
+                fontSize="small"
+                color="secondary"
+                style={{ padding: "0px 5px" }}
+              />
+            </Tooltip>
+          </Typography>
+        ) : this.props.confirmedByCustomer ? (
           <Typography variant="subtitle2">
             Status: <b>Confirmed By Customer</b>
             <Tooltip
               title={
                 <Typography style={{ padding: 7 }}>
-                  The customer has confirmed the photos. You will be paid within
-                  2 days or 7 days if this is your first booking.
+                  The customer has confirmed the photos. The photographer will
+                  be paid within 2 days or 7 days if this is their first
+                  booking.
                 </Typography>
               }
             >

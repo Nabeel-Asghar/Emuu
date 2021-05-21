@@ -88,25 +88,14 @@ class NewChatComponent extends Component {
     } = this.props;
     return (
       <Dialog
-        scroll="paper"
-        style={{ height: "500px" }}
         TransitionComponent={Transition}
         fullWidth="true"
         maxWidth="sm"
         open={this.props.open}
         onClose={this.props.handleClose}
-        aria-labelledby="alert-dialog-title"
-        aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title" className={classes.dialogTitle}>
-          Send a Message
-          <IconButton
-            edge="end"
-            onClick={this.props.handleClose}
-            style={{ paddingTop: 0, float: "right" }}
-          >
-            <CloseIcon />
-          </IconButton>
+        <DialogTitle className={classes.dialogTitle}>
+          Send a message
         </DialogTitle>
 
         <DialogContent>
@@ -121,8 +110,7 @@ class NewChatComponent extends Component {
             <Grid item xs={12}>
               <DialogContentText id="title">
                 <TextField
-                  autoComplete="new-password"
-                  label="Enter your Message"
+                  label="Enter your message"
                   required
                   onChange={(e) => this.userTyping("message", e)}
                   id="standard-title"
@@ -141,26 +129,22 @@ class NewChatComponent extends Component {
         </DialogContent>
 
         <DialogActions>
-          <Grid container spacing={3}>
-            <Grid item xs={12} align="right" className={classes.btns}>
-              <Button
-                onClick={this.props.handleClose}
-                variant="outlined"
-                color="secondary"
-              >
-                <Typography style={{ fontWeight: "bold" }}>Close</Typography>
-              </Button>
+          <Button
+            onClick={this.props.handleClose}
+            variant="outlined"
+            color="secondary"
+          >
+            <Typography style={{ fontWeight: "bold" }}>Close</Typography>
+          </Button>
 
-              <Button
-                onClick={this.createChat}
-                variant="contained"
-                color="secondary"
-                autoFocus
-              >
-                <Typography style={{ fontWeight: "bold" }}>Send</Typography>
-              </Button>
-            </Grid>
-          </Grid>
+          <Button
+            onClick={this.createChat}
+            variant="contained"
+            color="secondary"
+            autoFocus
+          >
+            <Typography style={{ fontWeight: "bold" }}>Send</Typography>
+          </Button>
         </DialogActions>
       </Dialog>
     );

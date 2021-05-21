@@ -57,7 +57,9 @@ class book extends Component {
       reviewCount: null,
       totalRating: null,
       pricing: null,
-      selectedShoot: null,
+      selectedShootName: null,
+      selectedShootPrice: null,
+      pricingMap: null,
     };
   }
 
@@ -182,7 +184,10 @@ class book extends Component {
       photographerLastName: this.state.lastName,
       photographerProfileImage: this.state.profileImage,
       photographerThumbnailImage: this.state.thumbnailImage,
-      selectedShoot: this.state.selectedShoot,
+      selectedShoot: {
+        name: this.state.selectedShootName,
+        price: this.state.selectedShootPrice,
+      },
     };
 
     this.props.history.push({
@@ -200,7 +205,10 @@ class book extends Component {
   };
 
   handleSelect = (shootType) => {
-    this.setState({ selectedShoot: shootType });
+    this.setState({
+      selectedShootName: shootType[0],
+      selectedShootPrice: shootType[1],
+    });
   };
 
   render() {
@@ -235,7 +243,7 @@ class book extends Component {
                 />
               ) : (
                 <Pricing
-                  pricing={this.state.pricing}
+                  pricing={this.state.pricingMap}
                   fullScreen={fullScreen}
                   handleSelect={(selected) => this.handleSelect(selected)}
                   selectable={true}
@@ -244,7 +252,7 @@ class book extends Component {
             </Grid>
           </Grid>
 
-          {this.state.selectedShoot && (
+          {this.state.selectedShootName && (
             <Paper
               style={{
                 padding: 15,
@@ -273,8 +281,8 @@ class book extends Component {
                         profileImage={this.state.profileImage}
                         location_city={this.state.location_city}
                         location_state={this.state.location_state}
-                        type={this.state.selectedShoot?.name}
-                        price={this.state.selectedShoot?.price}
+                        type={this.state.selectedShootName}
+                        price={this.state.selectedShootPrice}
                       />
                     ) : (
                       <ProfileCard
@@ -283,8 +291,8 @@ class book extends Component {
                         profileImage={this.state.profileImage}
                         location_city={this.state.location_city}
                         location_state={this.state.location_state}
-                        type={this.state.selectedShoot?.name}
-                        price={this.state.selectedShoot?.price}
+                        type={this.state.selectedShootName}
+                        price={this.state.selectedShootPrice}
                       />
                     )
                   ) : (
@@ -295,8 +303,8 @@ class book extends Component {
                       location_city={this.state.location_city}
                       location_state={this.state.location_state}
                       price={this.state.ratePerHour}
-                      type={this.state.selectedShoot?.name}
-                      price={this.state.selectedShoot?.price}
+                      type={this.state.selectedShootName}
+                      price={this.state.selectedShootPrice}
                     />
                   )}
                 </Grid>

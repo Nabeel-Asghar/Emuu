@@ -89,3 +89,13 @@ export const confirmPictures = (vaultID) => (dispatch) => {
       });
     });
 };
+
+export const handleDispute = (vaultID, disputeReason) => (dispatch) => {
+  return API.post(`/vault/${vaultID}/dispute`, disputeReason)
+    .then((res) => {
+      return true;
+    })
+    .catch((res) => {
+      return false;
+    });
+};

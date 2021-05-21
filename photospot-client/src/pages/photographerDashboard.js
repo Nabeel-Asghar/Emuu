@@ -30,12 +30,12 @@ import OrderCard from "../components/dashboard/orderCard";
 import ProfileCard from "../components/dashboard/profileCard";
 import ContactCard from "../components/dashboard/contactCard";
 import SettingsCard from "../components/dashboard/settingsCard";
-import StripeCard from "../components/dashboard/stripeCard";
+import StripeCard from "../components/dashboard/StripeCard";
 import PhotographerReviews from "../components/shared/photographerReviews";
 import CollapseItems from "../components/shared/collapse";
 import Confirmation from "../components/shared/confirmation";
 import Success from "../components/shared/success";
-import LoadingPage from "../components/shared/loadingPage";
+import LoadingPage from "../components/shared/LoadingPage";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -188,9 +188,9 @@ class photograhperDashboard extends Component {
     ));
 
     // Get photographers reviews
-    let gridImages = [];
+    let reviews = [];
     for (var key = 0; key < this.state.allReviews.length; key++) {
-      gridImages.push(
+      reviews.push(
         <div>
           <PhotographerReviews
             review={this.state.allReviews[key]}
@@ -203,14 +203,26 @@ class photograhperDashboard extends Component {
     // If no current orders return this
     if (theUserPastOrders.length < 1) {
       theUserPastOrders = (
-        <Typography variant="subtitle2">You have no past shoots</Typography>
+        <Typography variant="subtitle2" style={{ textAlign: "center" }}>
+          <b>You have no past shoots</b>
+        </Typography>
       );
     }
 
     // If no past orders return this
     if (theUserOrders.length < 1) {
       theUserOrders = (
-        <Typography variant="subtitle2">You have no upcoming shoots</Typography>
+        <Typography variant="subtitle2" style={{ textAlign: "center" }}>
+          <b>You have no upcoming shoots</b>
+        </Typography>
+      );
+    }
+
+    if (reviews.length < 1) {
+      reviews = (
+        <Typography variant="subtitle2" style={{ textAlign: "center" }}>
+          <b>You have no reviews</b>
+        </Typography>
       );
     }
 
@@ -254,7 +266,7 @@ class photograhperDashboard extends Component {
 
               <CollapseItems items={theUserPastOrders} text="Past Shoots" />
 
-              <CollapseItems items={gridImages} text="Your Reviews" />
+              <CollapseItems items={reviews} text="Your Reviews" />
 
               {/* Confirmation for refund */}
               <Confirmation
