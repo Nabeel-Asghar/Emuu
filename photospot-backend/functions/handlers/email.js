@@ -1,4 +1,5 @@
 const sgMail = require("@sendgrid/mail");
+const { baseURL } = require("../util/constants");
 const SendGridKey = process.env.SENDGRID_API_KEY;
 
 sgMail.setApiKey(SendGridKey);
@@ -71,8 +72,7 @@ function emailRefundToPhotographerByCustomer(orderDetails) {
 
 // Order details
 function emailOrderToCustomer(orderDetails) {
-  let url =
-    "http://localhost:3000/photographers/" + orderDetails.photographerID;
+  let url = baseURL + "photographers/" + orderDetails.photographerID;
 
   const msg = {
     to: orderDetails.consumerEmail,
@@ -155,7 +155,7 @@ function emailRefundToPhotographerByPhotographer(orderDetails) {
 
 // Vault emails
 function emailVaultReadyToCustomer(customerDetails) {
-  let url = "http://localhost:3000/vault/" + customerDetails.vaultID;
+  let url = baseURL + "vault/" + customerDetails.vaultID;
 
   const msg = {
     to: customerDetails.email,

@@ -312,7 +312,6 @@ function getPersonDetails(id) {
 }
 
 function editVaultValues(id, object) {
-  console.log("stuff", id, object);
   return db
     .collection("photoVault")
     .doc(`${id}`)

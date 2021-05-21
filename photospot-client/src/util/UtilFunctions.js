@@ -5,18 +5,36 @@ export function dateConvert(date) {
   return convertedDate;
 }
 
-export function timeConvert(time) {
+export function timeConvert(time, recursive = true) {
   // Check correct time format and split into components
   if (time) {
-    time = time.toString().match(/^([01]\d|2[0-3])(:)([0-5]\d)?$/) || [time];
+    time = time.split(":")[0];
+    time = parseInt(time);
+    let originalTime = time;
 
-    if (time.length > 1) {
-      // If time format correct
-      time = time.slice(1); // Remove full string match value
-      time[5] = +time[0] < 12 ? " AM" : " PM"; // Set AM/PM
-      time[0] = +time[0] % 12 || 12; // Adjust hours
+    let period = null;
+
+    if (time < 12 || time === 24) {
+      period = "AM";
+    } else {
+      period = "PM";
     }
-    return time.join(""); // return adjusted time or original string
+
+    if (time > 12) {
+      time = time - 12;
+    }
+
+    if (recursive) {
+      return (
+        String(time) +
+        ":00 " +
+        period +
+        " - " +
+        timeConvert(String(originalTime + 1) + ":00 ", false)
+      );
+    } else {
+      return String(time) + ":00 " + period;
+    }
   }
 }
 

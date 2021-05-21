@@ -184,7 +184,10 @@ class book extends Component {
       photographerLastName: this.state.lastName,
       photographerProfileImage: this.state.profileImage,
       photographerThumbnailImage: this.state.thumbnailImage,
-      selectedShoot: this.state.selectedShoot,
+      selectedShoot: {
+        name: this.state.selectedShootName,
+        price: this.state.selectedShootPrice,
+      },
     };
 
     this.props.history.push({
