@@ -14,7 +14,7 @@ import {
 } from "../../redux/actions/paymentActions";
 
 import { getUserData } from "../../redux/actions/userActions";
-import GoBackButton from "../../components/shared/Buttons/GoBackButton";
+import GoBackButton from "../../components/Shared/Buttons/GoBackButton";
 
 const styles = (theme) => ({
   ...theme.spreadThis,

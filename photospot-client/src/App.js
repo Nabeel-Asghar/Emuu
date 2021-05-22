@@ -14,32 +14,32 @@ import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 
 // Pages
-import login from "./pages/login";
-import signup from "./pages/SignUp/signup";
-import resetPassword from "./pages/resetPassword";
-import changePassword from "./pages/changePassword";
-import resetPasswordSent from "./pages/resetPasswordSent";
-import changePasswordSent from "./pages/changePasswordSent";
-import messaging from "./pages/Messaging/messaging";
-import SpecificPhotographer from "./pages/specificPhotographer";
-import Book from "./pages/book";
-import profile from "./pages/profile";
-import Search from "./pages/Search/search";
-import editPhotographyPage from "./pages/UserPhotographerPage/editPhotographyPage";
-import photographyPictures from "./pages/photographyPictures";
-import Home from "./pages/home";
-import setYourSchedule from "./pages/setYourSchedule";
-import userDashboard from "./pages/userDashboard";
-import photographerDashboard from "./pages/photographerDashboard";
-import successPage from "./pages/successPage";
-import checkout from "./pages/checkout";
-import photoVault from "./pages/photoVault";
-import photographerPageSetup from "./pages/SignUp/PhotographerPageSetup";
+import Login from "./pages/Landing/Login";
+import Signup from "./pages/Landing/Signup";
+import ResetPassword from "./pages/ChangePassword/ResetPassword";
+import ChangePassword from "./pages/ChangePassword/ChangePassword";
+import ResetPasswordSent from "./pages/ChangePassword/ResetPasswordSent";
+import ChangePasswordSent from "./pages/ChangePassword/ChangePasswordSent";
+import Messaging from "./pages/Messaging/Messaging";
+import SpecificPhotographer from "./pages/Photographer/SpecificPhotographer";
+import Book from "./pages/Booking/Book";
+import Profile from "./pages/Landing/Profile";
+import Search from "./pages/Search/Search";
+import EditPhotographyPage from "./pages/EditPhotographerPage/EditPhotographyPage";
+import PhotographyPictures from "./pages/EditPhotographerPage/PhotographyPictures";
+import Home from "./pages/Landing/Home";
+import SetYourSchedule from "./pages/EditPhotographerPage/SetYourSchedule";
+import UserDashboard from "./pages/Dashboards/UserDashboard";
+import PhotographerDashboard from "./pages/Dashboards/PhotographerDashboard";
+import SuccessPage from "./pages/Stripe/SuccessStripe";
+import Checkout from "./pages/Booking/Checkout";
+import PhotoVault from "./pages/PhotoVault/PhotoVault";
+import PhotographerPageSetup from "./components/SignUp/PhotographerPageSetup";
 import StripeDashboard from "./pages/Stripe/StripeDashboard";
 import Refresh from "./pages/Stripe/Refresh";
 
 // Components
-import Navbar from "./components/shared/Navbar";
+import Navbar from "./components/Shared/Navbar";
 import AuthRoute from "./util/AuthRoute";
 
 // API
@@ -313,14 +313,14 @@ const App = () => {
               <AuthRoute
                 exact
                 path="/yourPhotographyProfile"
-                component={editPhotographyPage}
+                component={EditPhotographyPage}
                 fullScreen={halfScreen}
               />
 
-              <Route exact path="/login" component={login} />
+              <Route exact path="/login" component={Login} />
 
               <div className="container">
-                <Route exact path="/signup" component={signup} />
+                <Route exact path="/signup" component={Signup} />
 
                 <Route
                   exact
@@ -330,7 +330,7 @@ const App = () => {
                   )}
                 />
 
-                <Route exact path="/resetPassword" component={resetPassword} />
+                <Route exact path="/resetPassword" component={ResetPassword} />
 
                 <AuthRoute exact path="/stripe" component={StripeDashboard} />
 
@@ -339,58 +339,58 @@ const App = () => {
                 <AuthRoute
                   exact
                   path="/photographerPageSetup"
-                  component={photographerPageSetup}
+                  component={PhotographerPageSetup}
                 />
 
                 <AuthRoute
                   exact
                   path="/stripe/success"
-                  component={successPage}
+                  component={SuccessPage}
                 />
 
                 <Route
                   exact
                   path="/resetPasswordSent"
-                  component={resetPasswordSent}
+                  component={ResetPasswordSent}
                 />
 
                 <AuthRoute
                   exact
                   path="/changePassword"
-                  component={changePassword}
+                  component={ChangePassword}
                 />
 
                 <AuthRoute
                   exact
                   path="/changePasswordSent"
-                  component={changePasswordSent}
+                  component={ChangePasswordSent}
                 />
 
                 <AuthRoute
                   exact
                   path="/userDashboard"
-                  component={userDashboard}
+                  component={UserDashboard}
                 />
 
                 <AuthRoute
                   exact
                   path="/photographerDashboard"
-                  component={photographerDashboard}
+                  component={PhotographerDashboard}
                 />
 
                 <AuthRoute
                   exact
                   path="/profile"
-                  component={profile}
+                  component={Profile}
                   fullScreen={halfScreen}
                 />
 
-                <AuthRoute exact path="/messaging" component={messaging} />
+                <AuthRoute exact path="/messaging" component={Messaging} />
 
                 <AuthRoute
                   exact
                   path="/vault/:orderID"
-                  component={photoVault}
+                  component={PhotoVault}
                   fullScreen={halfScreen}
                 />
 
@@ -405,14 +405,14 @@ const App = () => {
                 <AuthRoute
                   exact
                   path="/yourPhotographyProfile/setYourSchedule"
-                  component={setYourSchedule}
+                  component={SetYourSchedule}
                   fullScreen={fullScreen}
                 />
 
                 <AuthRoute
                   exact
                   path="/uploadPhotographyPictures"
-                  component={photographyPictures}
+                  component={PhotographyPictures}
                 />
 
                 <Route
@@ -431,7 +431,7 @@ const App = () => {
                   <AuthRoute
                     exact
                     path="/photographers/:photographerID/book/checkout"
-                    component={checkout}
+                    component={Checkout}
                     fullScreen={fullScreen}
                   />
                 </Elements>
