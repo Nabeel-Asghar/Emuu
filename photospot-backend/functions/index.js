@@ -69,7 +69,7 @@ const {
   getBalance,
 } = require("./handlers/payment");
 
-const { deleteJob } = require("./handlers/administrator");
+const { completeJob } = require("./handlers/administrator");
 
 const { webhooks } = require("./handlers/webhooks");
 
@@ -184,23 +184,20 @@ exports.dailyJob = functions.pubsub
                   doc.data().data.photographerID
                 )
                 .then(() => {
-                  deleteJob(doc.id);
+                  completeJob(doc.id, doc.data());
                 });
             } catch (e) {
-              console.log("Error doing job or delete job with id: ", doc.id);
+              console.log("Error doing daily job with id: ", doc.id);
               return false;
             }
           });
-        } else {
-          console.log("No jobs to do");
         }
       })
       .catch((err) => {
-        console.log("error in doing cronjob in payouts", err);
+        console.log("Error in doing cronjob in payouts: ", err);
         return false;
       })
       .finally(() => {
-        console.log("Finished cron job");
         return true;
       });
   });

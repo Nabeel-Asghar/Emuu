@@ -18,7 +18,6 @@ import { refund } from "../../redux/actions/paymentActions";
 // Material UI
 import withStyles from "@material-ui/core/styles/withStyles";
 import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import dayjs from "dayjs";
 import equal from "fast-deep-equal";
@@ -92,13 +91,13 @@ class userDashboard extends Component {
   async componentDidMount() {
     this.props.getUsersOrders();
     this.props.getUsersPastOrders();
+    this.props.getUsersReviews();
     await this.props.getUserData().then(() => {
       this.assignValues(this.props.credentials);
-    });
-    this.props.getUsersReviews();
-    this.setState({
-      allReviews: Object.values(this.props.reviews || {}),
-      intialLoading: false,
+      this.setState({
+        allReviews: Object.values(this.props.reviews || {}),
+        intialLoading: false,
+      });
     });
   }
 
