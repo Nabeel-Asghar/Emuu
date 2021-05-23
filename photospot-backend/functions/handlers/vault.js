@@ -328,16 +328,12 @@ function editVaultValues(id, object) {
 function schedulePayout(orderID, consumerID, photographerID) {
   let theDate = new Date();
   theDate.setDate(theDate.getDate() + 2);
-  db.collection("scheduler")
-    .doc(orderID)
-    .set({
-      data: {
-        consumerID: consumerID,
-        photographerID: photographerID,
-      },
-      performAt: getDateToPayout(),
-      status: "scheduled",
-    });
+  db.collection("scheduler").doc(orderID).set({
+    consumerID: consumerID,
+    photographerID: photographerID,
+    performAt: getDateToPayout(),
+    status: "scheduled",
+  });
 }
 
 function getDateToPayout() {

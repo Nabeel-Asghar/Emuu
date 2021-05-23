@@ -179,8 +179,8 @@ exports.dailyJob = functions.pubsub
             try {
               payment.payOut(
                 doc.id,
-                doc.data().data.consumerID,
-                doc.data().data.photographerID
+                doc.data().consumerID,
+                doc.data().photographerID
               );
             } catch (e) {
               console.log(
