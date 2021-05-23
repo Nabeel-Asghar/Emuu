@@ -177,17 +177,18 @@ exports.dailyJob = functions.pubsub
         if (querySnapshot.size > 0) {
           querySnapshot.forEach(async function (doc) {
             try {
-              payment
-                .payOut(
-                  doc.id,
-                  doc.data().data.consumerID,
-                  doc.data().data.photographerID
-                )
-                .then(() => {
-                  completeJob(doc.id, doc.data());
-                });
+              payment.payOut(
+                doc.id,
+                doc.data().data.consumerID,
+                doc.data().data.photographerID
+              );
             } catch (e) {
-              console.log("Error doing daily job with id: ", doc.id);
+              console.log(
+                "Error doing daily job with id: ",
+                doc.id,
+                " with error: ",
+                e
+              );
               return false;
             }
           });
@@ -209,7 +210,9 @@ exports.updateAlgoliaIndex = functions.firestore
     object.objectID = context.params.userId;
     index
       .saveObject(object)
-      .then(() => {})
+      .then(() => {
+        return true;
+      })
       .catch((err) => {
         console.error(err);
         return res.status(500).json({ error: err.code });

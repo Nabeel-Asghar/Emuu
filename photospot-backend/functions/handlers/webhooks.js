@@ -6,6 +6,7 @@ const { shootStatus } = require("../util/constants");
 
 // Import email functions
 const email = require("./email");
+const { completeJob } = require("./administrator");
 
 exports.webhooks = (req, res) => {
   let event = req.body;
@@ -63,17 +64,17 @@ async function handlePayout(orderDetails, amount, payoutID) {
     let booking = await getOrderDetails(orderID);
     booking.status = shootStatus.completed;
 
-    await deleteFromOrders(orderID);
-    await deleteFromPhotographers(photographerID, orderID);
-    await deleteFromUser(consumerID, orderID);
+    deleteFromOrders(orderID);
+    deleteFromPhotographers(photographerID, orderID);
+    deleteFromUser(consumerID, orderID);
 
-    await addToOverallCompletedOrders(booking, orderID);
-    await addToUserCompletedOrders(consumerID, orderID, booking);
-    await addToPhotographersCompletedOrders(photographerID, orderID, booking);
+    addToOverallCompletedOrders(booking, orderID);
+    addToUserCompletedOrders(consumerID, orderID, booking);
+    addToPhotographersCompletedOrders(photographerID, orderID, booking);
 
-    await removePayoutJob(orderID);
+    completeJob(orderID);
 
-    await email.emailPayout(booking);
+    email.emailPayout(booking);
   } catch (err) {
     console.log("Webhook error with payout:", err);
   }
@@ -98,16 +99,16 @@ async function handleRefund(orderDetails, chargeAmount, paymentID) {
       shootStatus.customer
     );
 
-    await deleteFromOrders(orderID);
-    await deleteFromPhotographers(photographerID, orderID);
-    await deleteFromUser(consumerID, orderID);
-    await freePhotographerTimeslot(photographerID, shootDate, shootTime);
+    deleteFromOrders(orderID);
+    deleteFromPhotographers(photographerID, orderID);
+    deleteFromUser(consumerID, orderID);
+    freePhotographerTimeslot(photographerID, shootDate, shootTime);
 
-    await addToOverallCompletedOrders(booking, orderID);
-    await addToUserCompletedOrders(consumerID, orderID, booking);
-    await addToPhotographersCompletedOrders(photographerID, orderID, booking);
+    addToOverallCompletedOrders(booking, orderID);
+    addToUserCompletedOrders(consumerID, orderID, booking);
+    addToPhotographersCompletedOrders(photographerID, orderID, booking);
 
-    await emailRefundsByCustomer(booking);
+    emailRefundsByCustomer(booking);
   } catch (err) {
     console.log("Webhook error with refund by customer:", err);
   }
@@ -136,16 +137,16 @@ async function handleRefundByPhotographer(
       shootStatus.photographer
     );
 
-    await deleteFromOrders(orderID);
-    await deleteFromPhotographers(photographerID, orderID);
-    await deleteFromUser(consumerID, orderID);
-    await freePhotographerTimeslot(photographerID, shootDate, shootTime);
+    deleteFromOrders(orderID);
+    deleteFromPhotographers(photographerID, orderID);
+    deleteFromUser(consumerID, orderID);
+    freePhotographerTimeslot(photographerID, shootDate, shootTime);
 
-    await addToOverallCompletedOrders(booking, orderID);
-    await addToUserCompletedOrders(consumerID, orderID, booking);
-    await addToPhotographersCompletedOrders(photographerID, orderID, booking);
+    addToOverallCompletedOrders(booking, orderID);
+    addToUserCompletedOrders(consumerID, orderID, booking);
+    addToPhotographersCompletedOrders(photographerID, orderID, booking);
 
-    await emailRefundsByPhotographer(booking);
+    emailRefundsByPhotographer(booking);
   } catch (err) {
     console.log("Webhook error with refund by photographer:", err);
   }
@@ -176,7 +177,9 @@ async function handlePayment(orderDetails, chargeAmount, paymentID) {
     updateMainOrders(orderID, booking);
     updatePhotographerOrders(photographerID, orderID, booking);
     updateUserOrders(consumerID, orderID, booking);
+
     fillPhotographerTimeslot(photographerID, shootDate, shootTime);
+
     createPhotoVault(orderID, photographerID, consumerID);
     emailOrderDetails(booking);
     createChat(chatName, chat);
@@ -482,19 +485,6 @@ function getOrderDetails(orderID) {
     })
     .catch((err) => {
       console.log("error getting order details: ", err);
-      return false;
-    });
-}
-
-function removePayoutJob(orderID) {
-  return db
-    .collection("scheduler")
-    .doc(orderID)
-    .delete()
-    .then(() => {
-      return true;
-    })
-    .catch(() => {
       return false;
     });
 }
