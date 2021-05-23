@@ -29,3 +29,17 @@ start stripe.exe
 ```
 stripe listen --forward-to http://localhost:{YOUR_PORT}/photospot-5f554/us-central1/api/webhooks
 ```
+
+**To deploy to remote, do the following steps: **
+1. Change API refernces in constants.js in backend and api.js in the front-end
+2. Disable redux dev tools by uncommenting the following line 26 in file store.js:
+```
+compose(applyMiddleware(...middleware))
+```
+And commenting out the following lines 27-30: 
+```
+compose(
+  applyMiddleware(...middleware),
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+)
+ ```
