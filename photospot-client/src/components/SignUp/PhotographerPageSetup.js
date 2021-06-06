@@ -17,6 +17,7 @@ import {
 } from "../../redux/actions/userActions";
 import { photographerPageSetupTextFields } from "../../util/Constants";
 import Categories from "./Categories";
+import { StripeDashboard } from "../../pages/Stripe/StripeDashboard";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -39,7 +40,7 @@ const styles = (theme) => ({
   },
 });
 
-class photographerPageSetup extends Component {
+class PhotographerPageSetup extends Component {
   constructor() {
     super();
     this.state = {
@@ -115,9 +116,7 @@ class photographerPageSetup extends Component {
   };
 
   handleChange = (event) => {
-    let x = "errors." + [event.target.name];
-    console.log(x);
-    this.setState({ [event.target.name]: event.target.value, [x]: "" });
+    this.setState({ [event.target.name]: event.target.value });
   };
 
   handleCategoryChanges = (values) => {
@@ -144,7 +143,7 @@ class photographerPageSetup extends Component {
             open={this.state.open}
             severity={"info"}
             handleClose={this.handleClose}
-            message={"You must fill out this page to use Photospot!"}
+            message={"You must fill out this page to use PhotoSpot!"}
           />
           <Grid item md={2} xs={0} />
           <Grid item md={8} xs={12}>
@@ -258,4 +257,4 @@ const mapStateToProps = (state) => ({
 export default connect(mapStateToProps, {
   setPhotographerPage,
   uploadProfileImage,
-})(withStyles(styles)(photographerPageSetup));
+})(withStyles(styles)(PhotographerPageSetup));
