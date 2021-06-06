@@ -13,7 +13,7 @@ import {
   getStripeDashboard,
 } from "../../redux/actions/paymentActions";
 
-import { getUserData } from "../../redux/actions/userActions";
+import { getUserDataWithoutChecks } from "../../redux/actions/userActions";
 import GoBackButton from "../../components/Shared/Buttons/GoBackButton";
 
 const styles = (theme) => ({
@@ -37,9 +37,9 @@ export class StripeDashboard extends Component {
 
   assignValues(details) {
     if (details) {
-      const photoDetails = Object.values(details);
+      const values = Object.values(details);
 
-      photoDetails.forEach((task) =>
+      values.forEach((task) =>
         Object.entries(task).forEach(([key, value]) => {
           this.assignStates(key, value);
         })
@@ -48,10 +48,11 @@ export class StripeDashboard extends Component {
   }
 
   componentDidMount() {
-    this.props.getUserData().then(() => {
+    this.props.getUserData2().then(() => {
       this.assignValues(this.props.credentials);
     });
     this.props.getStripeStatus().then(() => {
+      console.log(this.props.stripeStatus);
       if (!this.props.stripeStatus) {
         this.setState({ stripe: false });
       }
@@ -72,31 +73,17 @@ export class StripeDashboard extends Component {
     }
     return (
       <>
-        <GoBackButton {...this.props} />
         <Container maxWidth="sm">
           <Paper style={{ padding: "20px", marginBottom: "12px" }}>
-            <Typography>
-              Stripe Status:{" "}
-              {this.state.stripe ? (
-                <span style={{ color: "#23ba8b" }}>Connected</span>
-              ) : (
-                <span style={{ color: "red" }}>Not Connected</span>
-              )}
+            <Typography variant="h">
+              This page is required to use PhotoSpot. Without connecting your
+              bank information, you will not be listed in searches for
+              photographers.
             </Typography>
           </Paper>
-          {!this.state.stripe && (
-            <Paper style={{ textAlign: "center", padding: "20px" }}>
-              <Button
-                variant="contained"
-                color="secondary"
-                onClick={() => this.handleClick()}
-                disabled={this.state.stripe}
-              >
-                Setup payouts with Stripe
-              </Button>
-            </Paper>
-          )}
-          {this.state.stripe && (
+
+          {console.log(this.state.stripe)}
+          {this.state.stripe ? (
             <Paper
               style={{
                 textAlign: "center",
@@ -104,6 +91,10 @@ export class StripeDashboard extends Component {
                 margin: "10px 0px",
               }}
             >
+              <Typography>
+                Stripe Status:{" "}
+                <span style={{ color: "#23ba8b" }}>Connected</span>
+              </Typography>
               <Button
                 variant="contained"
                 color="secondary"
@@ -111,6 +102,21 @@ export class StripeDashboard extends Component {
                 disabled={!this.state.stripe}
               >
                 Stripe Dashboard
+              </Button>
+            </Paper>
+          ) : (
+            <Paper style={{ textAlign: "center", padding: "20px" }}>
+              <Typography>
+                Stripe Status:{" "}
+                <span style={{ color: "red" }}>Not Connected</span>
+              </Typography>
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={() => this.handleClick()}
+                disabled={this.state.stripe}
+              >
+                Setup payouts with Stripe
               </Button>
             </Paper>
           )}
@@ -130,7 +136,7 @@ const mapStateToProps = (state) => ({
 const mapActionsToProps = {
   getStripeStatus,
   onboardStripe,
-  getUserData,
+  getUserData2: getUserDataWithoutChecks,
   getStripeDashboard,
 };
 

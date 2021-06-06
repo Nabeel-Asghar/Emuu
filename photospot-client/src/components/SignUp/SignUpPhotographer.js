@@ -43,7 +43,8 @@ class signUpPhotographer extends Component {
       location_state: "",
       photographer: true,
       loading: false,
-      registration: false,
+      registration: "not started",
+      stripeID: "",
       errors: {},
     };
   }

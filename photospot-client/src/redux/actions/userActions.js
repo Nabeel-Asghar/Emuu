@@ -36,25 +36,24 @@ export const signupUser = (newUserData, history) => (dispatch) => {
     });
 };
 
-export const signupPhotographer = (newPhotographerData, history) => (
-  dispatch
-) => {
-  dispatch({ type: "LOADING_UI" });
-  API.post("/signupPhotographer", newPhotographerData)
-    .then((res) => {
-      // setAuthorizationHeader(res.data.token);
-      // dispatch(getUserData());
-      dispatch({ type: "CLEAR_ERRORS" });
-      history.push({ pathname: "/login", state: { success: true } });
-    })
-    .catch((err) => {
-      console.log(err);
-      dispatch({
-        type: "SET_ERRORS",
-        payload: err.response.data,
+export const signupPhotographer =
+  (newPhotographerData, history) => (dispatch) => {
+    dispatch({ type: "LOADING_UI" });
+    API.post("/signupPhotographer", newPhotographerData)
+      .then((res) => {
+        // setAuthorizationHeader(res.data.token);
+        // dispatch(getUserData());
+        dispatch({ type: "CLEAR_ERRORS" });
+        history.push({ pathname: "/login", state: { success: true } });
+      })
+      .catch((err) => {
+        console.log(err);
+        dispatch({
+          type: "SET_ERRORS",
+          payload: err.response.data,
+        });
       });
-    });
-};
+  };
 
 export const setPhotographerPage = (details, history) => (dispatch) => {
   dispatch({ type: "LOADING_UI" });
@@ -63,7 +62,7 @@ export const setPhotographerPage = (details, history) => (dispatch) => {
       console.log(res.data);
       dispatch({ type: "CLEAR_ERRORS" });
       history.push({
-        pathname: "/yourPhotographyProfile",
+        pathname: "/stripe",
         state: { success: true },
       });
     })
@@ -117,16 +116,41 @@ export const logoutUser = () => (dispatch) => {
 export const getUserData = (history) => (dispatch) => {
   return API.get("/youruserprofile")
     .then((res) => {
+      console.log(res.data);
       dispatch({
         type: "SET_USER",
         payload: res.data,
       });
-      if (!res.data[0].registration) {
+      if (
+        !res.data[0].registration ||
+        res.data[0].registration === "not-started"
+      ) {
         history.push({
           pathname: "/photographerPageSetup",
           state: { success: false },
         });
       }
+      if (res.data[0].registration === "incomplete") {
+        console.log("HELLOO");
+        history.push({
+          pathname: "/stripe",
+          state: { success: true },
+        });
+      }
+    })
+    .catch((err) => {
+      dispatch(logoutUser());
+    });
+};
+
+export const getUserDataWithoutChecks = () => (dispatch) => {
+  return API.get("/youruserprofile")
+    .then((res) => {
+      console.log(res.data);
+      dispatch({
+        type: "SET_USER",
+        payload: res.data,
+      });
     })
     .catch((err) => {
       dispatch(logoutUser());

@@ -38,7 +38,12 @@ exports.onboardUser = async (req, res) => {
         .doc(req.user.uid)
         .update(stripeDetails)
         .then(() => {
-          return res.json({ url: accountLinkURL });
+          db.collection("users")
+            .doc(req.user.uid)
+            .update({ registration: "done" })
+            .then(() => {
+              return res.json({ url: accountLinkURL });
+            });
         })
         .catch((err) => {
           console.log("error putting stripe details in database");
@@ -224,8 +229,8 @@ function generateAccountLink(accountID) {
     .create({
       type: "account_onboarding",
       account: accountID,
-      refresh_url: `${baseURL}onboard/refresh`,
-      return_url: `${baseURL}onboard/success`,
+      refresh_url: `${baseURL}stripe/refresh`,
+      return_url: `${baseURL}stripe/success`,
     })
     .then((link) => link.url);
 }

@@ -75,7 +75,7 @@ exports.signupPhotographer = (req, res) => {
     photographer: newPhotographer.photographer,
     createdAt: newPhotographer.createdAt,
     profileImage: newPhotographer.profileImage,
-    registration: false,
+    registration: "not-started",
   };
 
   const { valid, errors } = validateSignUpData(newPhotographer);
@@ -246,7 +246,7 @@ exports.setYourPhotographyPage = async (req, res) => {
   db.doc(`/photographer/${req.user.uid}`)
     .update(reqDetails)
     .then(() => {
-      db.doc(`/users/${req.user.uid}`).update({ registration: true });
+      db.doc(`/users/${req.user.uid}`).update({ registration: "incomplete" });
     })
     .then(() => {
       saveObjectToAlgolia(algoliaObject);

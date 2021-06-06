@@ -15,7 +15,7 @@ const styles = (theme) => ({
   },
 });
 
-export class successStripe extends Component {
+export class SuccessStripe extends Component {
   render() {
     const { classes } = this.props;
     return (
@@ -29,7 +29,7 @@ export class successStripe extends Component {
           css={{ height: "75vh" }}
         >
           <Box p={1}>
-            <Paper style={{ width: "300px", textAlign: "center" }}>
+            <Paper style={{ textAlign: "center", padding: "25px" }}>
               <CheckCircleIcon color="secondary" style={{ fontSize: 120 }} />
               <Typography variant="h5">Success!</Typography>
               <Typography variant="h6">
@@ -37,12 +37,17 @@ export class successStripe extends Component {
               </Typography>
               <Button
                 component={Link}
-                to="/"
+                to={{
+                  pathname: "/yourPhotographyProfile",
+                  state: {
+                    success: true,
+                  },
+                }}
                 variant="contained"
                 color="secondary"
                 className={classes.margin}
               >
-                Go back
+                Click here to continue
               </Button>
             </Paper>
           </Box>
@@ -52,4 +57,4 @@ export class successStripe extends Component {
   }
 }
 
-export default withStyles(styles)(successStripe);
+export default withStyles(styles)(SuccessStripe);
