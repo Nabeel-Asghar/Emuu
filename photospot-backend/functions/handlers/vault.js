@@ -1,5 +1,10 @@
 const { admin, db, storage } = require("../util/admin");
-const config = require("../util/config");
+const functions = require("firebase-functions");
+
+const config =
+  functions.config().app.environment === "dev"
+    ? require("../util/config")
+    : require("../util/config.prod");
 const storageBucketVar = config.storageBucket;
 var JSZip = require("jszip");
 const imageToBase64 = require("image-to-base64");
