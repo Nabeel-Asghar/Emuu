@@ -3,10 +3,8 @@ const admin = require("firebase-admin");
 const functions = require("firebase-functions");
 const serviceAccount =
   functions.config().app.environment === "dev"
-    ? require("../keys/admin.json")
+    ? require("../keys/admin.dev.json")
     : require("../keys/admin.prod.json.json");
-
-console.log(serviceAccount);
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
