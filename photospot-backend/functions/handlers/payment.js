@@ -11,6 +11,7 @@ const paymentFee = process.env.paymentFee;
 const stripe = require("stripe")(stripePrivateKey);
 
 const { handleCancel } = require("./webhooks.js");
+const { baseURL } = require("../util/constants");
 
 // Photographer Routes
 //
@@ -28,8 +29,7 @@ exports.onboardUser = async (req, res) => {
       },
     });
 
-    const origin = "http://localhost:3000/";
-    generateAccountLink(account.id, origin).then((accountLinkURL) => {
+    generateAccountLink(account.id).then((accountLinkURL) => {
       let stripeDetails = {
         stripeID: account.id,
       };
@@ -53,9 +53,8 @@ exports.onboardUser = async (req, res) => {
 // If page is refreshed, redirect
 exports.onboardUserRefresh = async (req, res) => {
   try {
-    const origin = "http://localhost:3000/";
     const accountID = await getPhotographerStripeID(req.user.uid);
-    const accountLinkURL = await generateAccountLink(accountID, origin);
+    const accountLinkURL = await generateAccountLink(accountID);
     return res.json({ url: accountLinkURL });
   } catch (err) {
     console.log("stripe refresh error: ", err.message);
@@ -93,14 +92,19 @@ exports.getBalance = async (req, res) => {
 
   try {
     const stripeID = await getPhotographerStripeID(userID);
-    let balanceObject = await stripe.balance.retrieve({
+
+    const payouts = await stripe.payouts.list({
       stripeAccount: stripeID,
     });
 
-    const balance =
-      balanceObject.available[0].amount + balanceObject.pending[0].amount / 100;
+    let balance = 0;
 
-    return res.json({ balance: balance });
+    payouts.data.length > 0 &&
+      payouts.data.forEach((payment) => {
+        balance += payment.amount;
+      });
+
+    return res.json({ balance: balance / 100 });
   } catch (e) {
     return res.json({ balance: 0 });
   }
@@ -119,11 +123,8 @@ exports.createPayment = (req, res) => {
 
   calculateOrderAmount(photographerBooked, req.body.selectedShoot.name)
     .then((amount) => {
-      console.log("amount1: ", amount);
       getPhotographerStripeID(photographerBooked)
         .then((connectedStripeAccountID) => {
-          console.log("amount: ", amount);
-          console.log("stripeid: ", connectedStripeAccountID);
           stripe.paymentIntents
             .create({
               payment_method_types: ["card"],
@@ -218,13 +219,13 @@ exports.refundFromPhotographer = async (req, res) => {
 // Functions
 //
 // Generate link for photographers creating connecting Stripe Accounts
-function generateAccountLink(accountID, origin) {
+function generateAccountLink(accountID) {
   return stripe.accountLinks
     .create({
       type: "account_onboarding",
       account: accountID,
-      refresh_url: `${origin}onboard/refresh`,
-      return_url: `${origin}onboard/success`,
+      refresh_url: `${baseURL}onboard/refresh`,
+      return_url: `${baseURL}onboard/success`,
     })
     .then((link) => link.url);
 }
@@ -245,21 +246,18 @@ function getPhotographerStripeID(photographerID) {
 
 // Calculate how much to charge customer
 async function calculateOrderAmount(photographerId, type) {
-  let amount = null;
-  await db
+  return db
     .collection("photographer")
     .doc(photographerId)
     .get()
     .then((doc) => {
       try {
-        doc.data().pricing.map((item, index) => {
-          if (item.name === type) {
-            console.log("item.price", item.price);
-            amount = item.price * 100;
-          }
-        });
+        console.log(type);
+        console.log(doc.data().pricingMap[type]);
+        const price = doc.data().pricingMap[type];
+        return parseInt(price) * 100;
       } catch (e) {
-        return res.status(500).json({ error: "Shoot type not found" });
+        return "Shoot type not found";
       }
     })
     .catch((err) => {
@@ -386,7 +384,7 @@ async function transferToBank(paymentID, orderID, consumerID, photographerID) {
     console.log("Paying out photographer", orderID);
     const payout = await stripe.payouts.create(
       {
-        amount: payoutAmount,
+        amount: 100,
         currency: "usd",
         metadata: {
           orderID: orderID,

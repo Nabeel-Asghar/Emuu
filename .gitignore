@@ -68,3 +68,4 @@ node_modules/
 stripe/stripe.exe
 stripe/stripe forward.txt
 photospot-client/src/api.js
+/.idea/prettier.xml

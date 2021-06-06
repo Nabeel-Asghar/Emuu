@@ -6,6 +6,7 @@ const { shootStatus } = require("../util/constants");
 
 // Import email functions
 const email = require("./email");
+const { completeJob } = require("./administrator");
 
 exports.webhooks = (req, res) => {
   let event = req.body;
@@ -55,52 +56,62 @@ exports.webhooks = (req, res) => {
 
 // handle payouts
 async function handlePayout(orderDetails, amount, payoutID) {
-  let orderID = orderDetails.orderID;
-  let photographerID = orderDetails.photographerID;
-  let consumerID = orderDetails.consumerID;
+  try {
+    let orderID = orderDetails.orderID;
+    let photographerID = orderDetails.photographerID;
+    let consumerID = orderDetails.consumerID;
 
-  let booking = await getOrderDetails(orderID);
-  booking.status = shootStatus.completed;
+    let booking = await getOrderDetails(orderID);
+    booking.status = shootStatus.completed;
 
-  await deleteFromOrders(orderID);
-  await deleteFromPhotographers(photographerID, orderID);
-  await deleteFromUser(consumerID, orderID);
+    deleteFromOrders(orderID);
+    deleteFromPhotographers(photographerID, orderID);
+    deleteFromUser(consumerID, orderID);
 
-  await addToOverallCompletedOrders(booking, orderID);
-  await addToUserCompletedOrders(consumerID, orderID, booking);
-  await addToPhotographersCompletedOrders(photographerID, orderID, booking);
+    addToOverallCompletedOrders(booking, orderID);
+    addToUserCompletedOrders(consumerID, orderID, booking);
+    addToPhotographersCompletedOrders(photographerID, orderID, booking);
 
-  await email.emailPayout(booking);
+    completeJob(orderID);
+
+    email.emailPayout(booking);
+  } catch (err) {
+    console.log("Webhook error with payout:", err);
+  }
 }
 
 // handle successful refunds intiated by customer
 async function handleRefund(orderDetails, chargeAmount, paymentID) {
-  let orderID = orderDetails.orderID;
-  let shootType = orderDetails.shootType;
-  let photographerID = orderDetails.photographerID;
-  let consumerID = orderDetails.consumerID;
-  let shootDate = orderDetails.date;
-  let shootTime = orderDetails.time;
+  try {
+    let orderID = orderDetails.orderID;
+    let shootType = orderDetails.shootType;
+    let photographerID = orderDetails.photographerID;
+    let consumerID = orderDetails.consumerID;
+    let shootDate = orderDetails.date;
+    let shootTime = orderDetails.time;
 
-  let booking = await bookingObject(
-    orderID,
-    shootType,
-    orderDetails,
-    chargeAmount,
-    paymentID,
-    shootStatus.customer
-  );
+    let booking = await bookingObject(
+      orderID,
+      shootType,
+      orderDetails,
+      chargeAmount,
+      paymentID,
+      shootStatus.customer
+    );
 
-  await deleteFromOrders(orderID);
-  await deleteFromPhotographers(photographerID, orderID);
-  await deleteFromUser(consumerID, orderID);
-  await freePhotographerTimeslot(photographerID, shootDate, shootTime);
+    deleteFromOrders(orderID);
+    deleteFromPhotographers(photographerID, orderID);
+    deleteFromUser(consumerID, orderID);
+    freePhotographerTimeslot(photographerID, shootDate, shootTime);
 
-  await addToOverallCompletedOrders(booking, orderID);
-  await addToUserCompletedOrders(consumerID, orderID, booking);
-  await addToPhotographersCompletedOrders(photographerID, orderID, booking);
+    addToOverallCompletedOrders(booking, orderID);
+    addToUserCompletedOrders(consumerID, orderID, booking);
+    addToPhotographersCompletedOrders(photographerID, orderID, booking);
 
-  await emailRefundsByCustomer(booking);
+    emailRefundsByCustomer(booking);
+  } catch (err) {
+    console.log("Webhook error with refund by customer:", err);
+  }
 }
 
 // handle refund intiated by photographer
@@ -109,65 +120,75 @@ async function handleRefundByPhotographer(
   chargeAmount,
   paymentID
 ) {
-  let orderID = orderDetails.orderID;
-  let shootType = orderDetails.shootType;
-  let photographerID = orderDetails.photographerID;
-  let consumerID = orderDetails.consumerID;
-  let shootDate = orderDetails.date;
-  let shootTime = orderDetails.time;
+  try {
+    let orderID = orderDetails.orderID;
+    let shootType = orderDetails.shootType;
+    let photographerID = orderDetails.photographerID;
+    let consumerID = orderDetails.consumerID;
+    let shootDate = orderDetails.date;
+    let shootTime = orderDetails.time;
 
-  let booking = await bookingObject(
-    orderID,
-    shootType,
-    orderDetails,
-    chargeAmount,
-    paymentID,
-    shootStatus.photographer
-  );
+    let booking = await bookingObject(
+      orderID,
+      shootType,
+      orderDetails,
+      chargeAmount,
+      paymentID,
+      shootStatus.photographer
+    );
 
-  await deleteFromOrders(orderID);
-  await deleteFromPhotographers(photographerID, orderID);
-  await deleteFromUser(consumerID, orderID);
-  await freePhotographerTimeslot(photographerID, shootDate, shootTime);
+    deleteFromOrders(orderID);
+    deleteFromPhotographers(photographerID, orderID);
+    deleteFromUser(consumerID, orderID);
+    freePhotographerTimeslot(photographerID, shootDate, shootTime);
 
-  await addToOverallCompletedOrders(booking, orderID);
-  await addToUserCompletedOrders(consumerID, orderID, booking);
-  await addToPhotographersCompletedOrders(photographerID, orderID, booking);
+    addToOverallCompletedOrders(booking, orderID);
+    addToUserCompletedOrders(consumerID, orderID, booking);
+    addToPhotographersCompletedOrders(photographerID, orderID, booking);
 
-  await emailRefundsByPhotographer(booking);
+    emailRefundsByPhotographer(booking);
+  } catch (err) {
+    console.log("Webhook error with refund by photographer:", err);
+  }
 }
 
 // handle successful payments
 async function handlePayment(orderDetails, chargeAmount, paymentID) {
-  let orderID = orderDetails.orderID;
-  let shootType = orderDetails.shootType;
-  let shootDate = orderDetails.date;
-  let shootTime = orderDetails.time;
-  let photographerID = orderDetails.photographerID;
-  let consumerID = orderDetails.consumerID;
+  try {
+    let orderID = orderDetails.orderID;
+    let shootType = orderDetails.shootType;
+    let shootDate = orderDetails.date;
+    let shootTime = orderDetails.time;
+    let photographerID = orderDetails.photographerID;
+    let consumerID = orderDetails.consumerID;
 
-  let booking = await bookingObject(
-    orderID,
-    shootType,
-    orderDetails,
-    chargeAmount,
-    paymentID,
-    shootStatus.inProgress
-  );
+    let booking = await bookingObject(
+      orderID,
+      shootType,
+      orderDetails,
+      chargeAmount,
+      paymentID,
+      shootStatus.inProgress
+    );
 
-  let chat = await chatObject(orderDetails);
-  let chatName = `${orderDetails.photographerEmail}:${orderDetails.consumerEmail}`;
+    let chat = await chatObject(orderDetails);
+    let chatName = `${orderDetails.photographerEmail}:${orderDetails.consumerEmail}`;
 
-  updateMainOrders(orderID, booking);
-  updatePhotographerOrders(photographerID, orderID, booking);
-  updateUserOrders(consumerID, orderID, booking);
-  fillPhotographerTimeslot(photographerID, shootDate, shootTime);
-  createPhotoVault(orderID, photographerID, consumerID);
-  emailOrderDetails(booking);
-  createChat(chatName, chat);
+    updateMainOrders(orderID, booking);
+    updatePhotographerOrders(photographerID, orderID, booking);
+    updateUserOrders(consumerID, orderID, booking);
+
+    fillPhotographerTimeslot(photographerID, shootDate, shootTime);
+
+    createPhotoVault(orderID, photographerID, consumerID);
+    emailOrderDetails(booking);
+    createChat(chatName, chat);
+  } catch (err) {
+    console.log("Webhook error with handling payments:", err);
+  }
 }
 
-// helper functions
+// Helper functions
 //
 // create booking object
 function bookingObject(

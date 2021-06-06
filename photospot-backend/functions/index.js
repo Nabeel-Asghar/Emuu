@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const app = require("express")();
 require("dotenv").config();
 app.use(bodyParser.json({ limit: "50mb" }));
-app.use(cors());
+app.use(cors({ origin: true }));
 app.use(helmet());
 const sessionkey1 = process.env.session_key_one;
 const sessionkey2 = process.env.session_key_two;
@@ -69,7 +69,7 @@ const {
   getBalance,
 } = require("./handlers/payment");
 
-const { completedOrders } = require("./handlers/administrator");
+const { completeJob } = require("./handlers/administrator");
 
 const { webhooks } = require("./handlers/webhooks");
 
@@ -81,6 +81,7 @@ const {
   getVaultSize,
   notifyCustomer,
   finalizeVault,
+  dispute,
 } = require("./handlers/vault");
 
 const { testFunction } = require("./handlers/test");
@@ -142,9 +143,6 @@ app.get("/photographers/:photographerId/getReviews", getReviews);
 app.get("/photographers/:photographerId/bookingTimes", getPhotographerSchedule);
 app.get("/photographers/:photographerId/pricing", FBAuth, getPricing);
 
-// Administrator
-app.get("/admin/completedOrders", completedOrders);
-
 // Webhooks for Stripe
 app.post("/webhooks", webhooks);
 
@@ -156,36 +154,52 @@ app.get("/vault/:vaultID/download", FBAuth, downloadImages);
 app.get("/vault/:vaultID/getSize", FBAuth, getVaultSize);
 app.get("/vault/:vaultID/notifyCustomer", FBAuth, notifyCustomer);
 app.post("/vault/:vaultID/finalize", FBAuth, finalizeVault);
+app.post("/vault/:vaultID/dispute", FBAuth, dispute);
 
 // Testing
-app.post("/test", testFunction);
+// app.post("/test", function (req, res) {
+//   payment.payOut(
+//     "6da0c1726662c5da",
+//     "V8vE1d5Cy5aykcO9qtLgN6aGtUN2",
+//     "7ifDj24PGCQvmw3eFzfB8TrNKVe2"
+//   );
+// });
 
 exports.dailyJob = functions.pubsub
   .schedule(`*/15 * * * *`)
   .onRun(async (context) => {
     const now = admin.firestore.Timestamp.now();
     db.collection("scheduler")
-      .where("performAt", "<=", now)
       .where("status", "==", "scheduled")
+      .where("performAt", "<=", now)
       .get()
       .then(function (querySnapshot) {
         if (querySnapshot.size > 0) {
           querySnapshot.forEach(async function (doc) {
-            payment.payOut(
-              doc.id,
-              doc.data().data.consumerID,
-              doc.data().data.photographerID
-            );
+            try {
+              payment.payOut(
+                doc.id,
+                doc.data().consumerID,
+                doc.data().photographerID
+              );
+            } catch (e) {
+              console.log(
+                "Error doing daily job with id: ",
+                doc.id,
+                " with error: ",
+                e
+              );
+              return false;
+            }
           });
-        } else {
-          console.log("No jobs to do");
         }
       })
       .catch((err) => {
-        console.log("error in doing cronjob in payouts", err);
+        console.log("Error in doing cronjob in payouts: ", err);
+        return false;
       })
       .finally(() => {
-        console.log("Finished cron job");
+        return true;
       });
   });
 
@@ -196,7 +210,9 @@ exports.updateAlgoliaIndex = functions.firestore
     object.objectID = context.params.userId;
     index
       .saveObject(object)
-      .then(() => {})
+      .then(() => {
+        return true;
+      })
       .catch((err) => {
         console.error(err);
         return res.status(500).json({ error: err.code });
