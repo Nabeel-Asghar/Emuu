@@ -1,13 +1,16 @@
 const admin = require("firebase-admin");
 
-var serviceAccount = require("../keys/admin.json");
+const functions = require("firebase-functions");
+const serviceAccount =
+  functions.config().app.environment === "dev"
+    ? require("../keys/admin.dev.json")
+    : require("../keys/admin.prod.json.json");
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: "https://photospot-5f554.firebaseio.com",
 });
 
-const functions = require("firebase-functions");
 const algoliasearch = require("algoliasearch");
 
 const db = admin.firestore();

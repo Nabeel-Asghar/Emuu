@@ -1,5 +1,10 @@
 const { admin, db } = require("../util/admin");
-const config = require("../util/config");
+const functions = require("firebase-functions");
+
+const config =
+  functions.config().app.environment === "dev"
+    ? require("../util/config")
+    : require("../util/config.prod");
 const storageBucketVar = config.storageBucket;
 const sharp = require("sharp");
 const path = require("path");

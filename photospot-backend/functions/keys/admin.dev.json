@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "photospot-dev-b174a",
+  "private_key_id": "c5c35387fb719f66a3dc1fb5d4b53317caa8bd89",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCSvCQk2swSTQOO\nmPsB6G1yywu9SoZJ4SqPtxkkiGqXqnqUQH28UdxvXfhWyUfm++y/sY48UUT4apdW\nZuOGSUKjtslVeJ7Hnqm0ZBu6K2FNdVMNEI1Ehg57w9H0QbbWyfu/4BWEhfgz4b0e\neJr6+dnj9J5Ogpv0qHwbgqad1xCqrrKG493uEqJT9KoRZInFhJyhQdTFaYeINAoG\n9aVFvxDTiWyXuGYrx0afmcgdHIZPOjP+rR1WiAuyKNFfOUqlkZnX4Z4stvPi9UsB\nj+WIpTOU3n2ZS1/JDIgAd5C5HcyrvDoWli+oAZ37UeFpfVx39kIgRVV4bhDyTeVz\nXcd90AvJAgMBAAECggEAC5K9Qw7iw5rBahDU01yyrTgoj+B94PvacIVffUspJRc0\nHddMU3sdaMc/nBC6FBTQonntnwJF71Xw48avsVq738+953jhBRuVhP3UVgWv4f0b\n9M7WZY4xPD/AooRAWIaLzaFt8Qrj/auTUADxMFRehCU6CzUv+ccEKuNOIurgjKWm\nJtTVLj+MMMcr4ul0JWwY+2gsS6Y3VRYzvTn4UGkymvM4qt7ee7tlI1/74I/7e/Y4\nAN+zxsxd2L6xYpDB41gaC8gQXH3ZV3uCzrghLD5TwRAeLXtea7wHf69vfJhwwgjM\nXTiOjDwBTNmwlKDLSit7pC7+yaJSaFot9CRM1NL2VQKBgQDHpupt2sv2Z8PRkIvA\no0JYpWVPJ1nWFuQthXvrJA4Jt6otXx6/TmRj0Gr6SDQ+qLKzuPfvzFl5UUcptJjI\njlE3n59vqgJYNAUoMM5abeFN/v8genY0wfq4iVrZbABmxJyo052aIDOvP0aDSrbe\nEweUqaIDE3mdxaap+48FO5JU3wKBgQC8JefnrTdlVPhNui5dH6vicS5N3CQ/UdYi\nkFkDXJolXKkiSxirJM8OprbKPR32uk4Nd2WbXRss2DZjNXD9gTArWcg91gwg/bET\nNA8Ok+GQIjxP6rRJoSwY4IG9lumG3Rds6JcHgA0NP+7FEa6TpIj14xGEx9pY/cXG\nUrM5Q31MVwKBgQCbHqXP2opUFUUAguUCNBZtV3xCJpnXDAwXDjo8dNPvWuL+w4PZ\nMWgwYRNtCEKHWH0XxCPnDYeLCcpXrfhzApg5tmyizp1puGk1U85QVkUSW4gPzPYg\ngYJydE3A1fft4N6zEU/HGzPs+iWoBpnUK0bdi3rUFwKLwbB/K3NwpltIUwKBgQCK\nr5ZFm9TdiMiO4tISKqpUfAEZu0+srPIfAC/c3oFxUOALOzevz64gqprKcEqJ98JZ\nAs2OvA6v+5/7eQUUmAmdqsyDaCgAmX/RG+qNYExAJjw23FaQf5E1tSdtTLROiOIf\nkULicG0uexXRhbsdcYbTWNEtAvPb7RO/oG4jo6/UeQKBgQCXAGkn61CiVeAVEAOB\n9mMxv2cyacFismlHNhLHD7x/IVAgX9cJskSSK4yiBcdkggUmVTcYYlerkz6D5I/l\nUnOL/sfNiAod3o9VyViuQiM+q1ffHH1DP2OKmHf3baz1jRjSsEcmD8AP+SWhjkDL\nrQlihIya5Jc9Cclr6M7TZlIDHA==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-kztaq@photospot-dev-b174a.iam.gserviceaccount.com",
+  "client_id": "105758363986908978675",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-kztaq%40photospot-dev-b174a.iam.gserviceaccount.com"
+}
