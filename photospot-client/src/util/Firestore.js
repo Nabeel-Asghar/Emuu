@@ -22,6 +22,6 @@ const dev_config = {
   measurementId: "G-1VFRQT634Y",
 };
 
-firebase.initializeApp(dev_config);
+firebase.initializeApp(prod_Config);
 
 export { firebase };
