@@ -13,7 +13,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import qs from "qs";
 
-// Componenents
+// Components
 import ConnectedClearRefinements from "../../components/Search/ConnectedClearRefinements";
 import ConnectedHits from "../../components/Search/ConnectedHits";
 import ConnectedNumericMenu from "../../components/Search/ConnectedNumericMenu";
@@ -25,6 +25,7 @@ import ConnectedDate from "../../components/Search/ConnectedDate";
 import ConnectedStats from "../../components/Search/ConnectedStats";
 import "./Search.css";
 import { Filter1 } from "@material-ui/icons";
+const { algoliaCred } = require("../../util/Firestore");
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -34,9 +35,7 @@ const styles = (theme) => ({
 });
 
 const DEBOUNCE_TIME = 0;
-const APP_ID = "SYUBAMS440";
-const SEARCH_KEY = "587bf2e2211c20cdb452ed974fbd6b77";
-const client = algoliasearch(APP_ID, SEARCH_KEY);
+const client = algoliasearch(algoliaCred.appID, algoliaCred.searchKey);
 
 const createURL = (state) => `?${qs.stringify(state)}`;
 
@@ -88,8 +87,6 @@ class Search extends Component {
       { name: "location_city", header: "City" },
       { name: "categories", header: "Category" },
     ];
-
-    var client = algoliasearch(APP_ID, SEARCH_KEY);
 
     return (
       <Grid container spacing={2}>

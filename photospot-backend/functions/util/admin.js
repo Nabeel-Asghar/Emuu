@@ -18,8 +18,10 @@ const db2 = admin.firestore;
 
 const storage = admin.storage();
 
-const APP_ID = "SYUBAMS440";
-const ADMIN_KEY = "441365132c4d965b7da318d6c8439c18";
+const APP_ID = functions.config().algolia.id;
+const ADMIN_KEY = functions.config().algolia.key;
+
+console.log("Algolia:", APP_ID, "", ADMIN_KEY);
 
 const client = algoliasearch(APP_ID, ADMIN_KEY);
 const index = client.initIndex("photographers");

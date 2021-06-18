@@ -1,5 +1,9 @@
 {
   "app": {
     "environment": "dev"
+  },
+  "algolia": {
+    "id": "SYUBAMS440",
+    "key": "441365132c4d965b7da318d6c8439c18"
   }
 }
