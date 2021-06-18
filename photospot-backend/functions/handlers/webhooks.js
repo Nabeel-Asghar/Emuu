@@ -14,41 +14,49 @@ exports.webhooks = (req, res) => {
   switch (event.type) {
     // successful payment
     case "payment_intent.succeeded":
-      console.log("Successful Payment");
       handlePayment(
         event.data.object.metadata,
         event.data.object.amount,
         event.data.object.id
-      );
-      break;
+      ).then((r) => {
+        console.log("Successful Payment");
+        return true;
+      });
 
     // refund
     case "charge.refunded":
       if (event.data.object.refunds.data[0].metadata.photographerCancel) {
-        console.log("Refund By Photographer Successful");
         handleRefundByPhotographer(
           event.data.object.metadata,
           event.data.object.amount,
-          event.data.object.id
-        );
+          event.data.object.id,
+          true
+        ).then((r) => {
+          console.log("Refund By Photographer Successful");
+          return true;
+        });
       } else {
-        console.log("Refund By Customer Successful");
         handleRefund(
           event.data.object.metadata,
           event.data.object.amount,
-          event.data.object.id
-        );
+          event.data.object.id,
+          false
+        ).then((r) => {
+          console.log("Refund By Customer Successful");
+          return true;
+        });
       }
 
-      break;
-
+    // payout to photographer
     case "payout.paid":
-      console.log("Successful Payout", event.data);
       handlePayout(
         event.data.object.metadata,
         event.data.object.amount,
         event.data.object.id
-      );
+      ).then((r) => {
+        console.log("Successful Payout");
+        return true;
+      });
   }
 
   return res.status(200).end();
@@ -81,44 +89,11 @@ async function handlePayout(orderDetails, amount, payoutID) {
 }
 
 // handle successful refunds intiated by customer
-async function handleRefund(orderDetails, chargeAmount, paymentID) {
-  try {
-    let orderID = orderDetails.orderID;
-    let shootType = orderDetails.shootType;
-    let photographerID = orderDetails.photographerID;
-    let consumerID = orderDetails.consumerID;
-    let shootDate = orderDetails.date;
-    let shootTime = orderDetails.time;
-
-    let booking = await bookingObject(
-      orderID,
-      shootType,
-      orderDetails,
-      chargeAmount,
-      paymentID,
-      shootStatus.customer
-    );
-
-    deleteFromOrders(orderID);
-    deleteFromPhotographers(photographerID, orderID);
-    deleteFromUser(consumerID, orderID);
-    freePhotographerTimeslot(photographerID, shootDate, shootTime);
-
-    addToOverallCompletedOrders(booking, orderID);
-    addToUserCompletedOrders(consumerID, orderID, booking);
-    addToPhotographersCompletedOrders(photographerID, orderID, booking);
-
-    emailRefundsByCustomer(booking);
-  } catch (err) {
-    console.log("Webhook error with refund by customer:", err);
-  }
-}
-
-// handle refund intiated by photographer
-async function handleRefundByPhotographer(
+async function handleRefund(
   orderDetails,
   chargeAmount,
-  paymentID
+  paymentID,
+  byPhotographer
 ) {
   try {
     let orderID = orderDetails.orderID;
@@ -134,7 +109,7 @@ async function handleRefundByPhotographer(
       orderDetails,
       chargeAmount,
       paymentID,
-      shootStatus.photographer
+      byPhotographer ? shootStatus.photographer : shootStatus.customer
     );
 
     deleteFromOrders(orderID);
@@ -146,9 +121,13 @@ async function handleRefundByPhotographer(
     addToUserCompletedOrders(consumerID, orderID, booking);
     addToPhotographersCompletedOrders(photographerID, orderID, booking);
 
-    emailRefundsByPhotographer(booking);
+    byPhotographer
+      ? emailRefundsByPhotographer(booking)
+      : emailRefundsByCustomer(booking);
   } catch (err) {
-    console.log("Webhook error with refund by photographer:", err);
+    byPhotographer
+      ? console.log("Webhook error with refund by photographer:", err)
+      : console.log("Webhook error with refund by customer:", err);
   }
 }
 

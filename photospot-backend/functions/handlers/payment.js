@@ -362,7 +362,6 @@ async function payOut(orderID, consumerID, photographerID) {
   try {
     const { paymentID } = await getPaymentID(consumerID, orderID);
     await transferToBank(paymentID, orderID, consumerID, photographerID);
-    console.log("Paid out photographer");
     return true;
   } catch (err) {
     console.log("Error paying out", err);
@@ -381,7 +380,7 @@ async function transferToBank(paymentID, orderID, consumerID, photographerID) {
 
   const payoutAmount = amount - application_fee_amount;
   try {
-    console.log("Paying out photographer", orderID);
+    console.log("Attempting payout", orderID);
     const payout = await stripe.payouts.create(
       {
         amount: 100,
