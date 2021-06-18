@@ -9,16 +9,28 @@ class StripeCard extends Component {
     return (
       <Paper style={{ marginTop: "5px", padding: "20px 0px 20px 0px" }}>
         <div style={{ textAlign: "center" }}>
-          <Tooltip title="You must connect your Stripe to be booked!">
-            <Button
-              component={Link}
-              to="/stripe"
-              color="secondary"
-              variant="contained"
-            >
-              Access Stripe
-            </Button>
-          </Tooltip>
+          {this.props.stripe ? (
+            <Tooltip title="Access your Stripe dashboard here.">
+              <Button
+                variant="contained"
+                color="secondary"
+                onClick={this.props.handleDashboard}
+              >
+                Stripe Dashboard
+              </Button>
+            </Tooltip>
+          ) : (
+            <Tooltip title="You must connect your Stripe to be booked!">
+              <Button
+                component={Link}
+                to="/stripe"
+                color="secondary"
+                variant="contained"
+              >
+                Access Stripe
+              </Button>
+            </Tooltip>
+          )}
         </div>
       </Paper>
     );

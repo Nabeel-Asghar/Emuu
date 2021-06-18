@@ -55,7 +55,7 @@ const Confirmation = (props) => {
           variant="outlined"
           color="secondary"
         >
-          Disagree
+          {props.disagreeText ? props.disagreeText : "Disagree"}
         </Button>
         <Button
           disabled={props.loading || !selectedValue}
@@ -64,7 +64,7 @@ const Confirmation = (props) => {
           color="secondary"
           autoFocus
         >
-          Agree
+          {props.agreeText ? props.agreeText : "Agree"}
         </Button>
       </DialogActions>
     </Dialog>

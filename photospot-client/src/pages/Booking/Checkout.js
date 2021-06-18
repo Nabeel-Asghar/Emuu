@@ -186,9 +186,8 @@ const Checkout = (props) => {
                     Thanks for your order!
                   </Typography>
                   <Typography variant="body1" gutterBottom>
-                    You will recieve an email with all your order details.
-                    Contact your photographer to setup a shoot location and have
-                    fun!
+                    You will receive an email with all your details. Contact
+                    your photographer to setup your shoot.
                   </Typography>
                 </div>
               }

@@ -184,7 +184,7 @@ class editableUsercard extends Component {
                 )
               }
             >
-              Set Your Timings
+              Set Your Availability
             </Button>
           </Grid>
 

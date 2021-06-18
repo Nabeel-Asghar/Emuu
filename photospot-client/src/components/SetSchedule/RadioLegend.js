@@ -13,6 +13,7 @@ export class radioLegend extends Component {
           style={{ width: "120px" }}
         />
         <FormControlLabel
+          checked={true}
           disabled={true}
           control={<Checkbox />}
           label={"You are booked"}

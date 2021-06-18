@@ -228,7 +228,7 @@ class photoVault extends Component {
         const imageName = nanoid(10);
         imageNames.push(imageName);
 
-        var task = firebase
+        const task = firebase
           .storage()
           .ref()
           .child(`vaults/${this.props.match.params.orderID}/${imageName}`)
@@ -239,7 +239,13 @@ class photoVault extends Component {
         task.on(
           "state_changed",
           function progress(snapshot) {
-            var percentage = (snapshot.bytesTransferred / totalSize) * 100;
+            const percentage =
+              (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log(
+              "total",
+              snapshot.totalBytes / 1000000,
+              totalSize / 1000000
+            );
             if (percentage > that.state.uploadProgress) {
               that.setState({
                 uploadProgress: percentage,
