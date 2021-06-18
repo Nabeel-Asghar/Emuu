@@ -17,6 +17,8 @@ import {
 import {
   refundFromPhotographer,
   getBalance,
+  getStripeDashboard,
+  getStripeStatus,
 } from "../../redux/actions/paymentActions";
 
 // Material UI
@@ -92,6 +94,7 @@ class photograhperDashboard extends Component {
   async componentDidMount() {
     await this.props.getPhotographerOrders();
     await this.props.getPhotographerPastOrders();
+    this.props.getStripeStatus();
     this.props.getYourPhotographyPage().then(() => {
       this.assignValues(this.props.credentials);
       this.getBookingCount();
@@ -152,6 +155,10 @@ class photograhperDashboard extends Component {
       });
 
     this.setState({ bookings });
+  }
+
+  handleDashboard() {
+    this.props.getStripeDashboard();
   }
 
   render() {
@@ -251,7 +258,10 @@ class photograhperDashboard extends Component {
                 email={this.state.email}
               />
 
-              <StripeCard />
+              <StripeCard
+                stripe={this.props.stripeStatus}
+                handleDashboard={() => this.handleDashboard()}
+              />
 
               <SettingsCard />
             </Grid>
@@ -314,6 +324,7 @@ const mapStateToProps = (state) => ({
   userPastOrders: state.user.userPastOrders,
   userReviews: state.user.userReviews,
   balance: state.payment.balance,
+  stripeStatus: state.payment.stripeStatus,
 });
 
 const mapActionsToProps = {
@@ -325,6 +336,8 @@ const mapActionsToProps = {
   getPhotographerReviews,
   refundFromPhotographer,
   getBalance,
+  getStripeDashboard,
+  getStripeStatus,
 };
 
 export default connect(

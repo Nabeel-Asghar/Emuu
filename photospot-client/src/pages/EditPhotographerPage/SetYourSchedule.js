@@ -20,6 +20,7 @@ import { getUserData, editBookingTimes } from "../../redux/actions/userActions";
 // Date format
 import moment from "moment";
 import equal from "fast-deep-equal";
+import Confirmation from "../../components/Shared/Confirmation";
 
 const styles = (theme) => ({
   ...theme.spreadThis,
@@ -36,6 +37,8 @@ class SetYourSchedule extends Component {
       checkedSlots: [],
       disabledCheckSlots: [],
       open: false,
+      changed: false,
+      openConfirmation: false,
     };
     this.baseChecks = this.state.checkedSlots;
     this.baseDisabled = this.state.disabledCheckSlots;
@@ -61,9 +64,12 @@ class SetYourSchedule extends Component {
   }
 
   assignTimes(times) {
-    this.setState({
-      availability: times,
-    });
+    this.setState(
+      {
+        availability: times,
+      },
+      () => this.handleDateChange(new Date())
+    );
   }
 
   resetState() {
@@ -77,6 +83,7 @@ class SetYourSchedule extends Component {
   };
 
   handleChange = (event) => {
+    this.setState({ changed: true });
     let value = parseInt(event.target.value.substring(0, 2), 10);
 
     if (!this.state.checkedSlots.includes(value)) {
@@ -112,6 +119,11 @@ class SetYourSchedule extends Component {
   };
 
   handleSubmit = () => {
+    this.setState({
+      openConfirmation: false,
+      changed: false,
+      changedDate: null,
+    });
     var formatedTimeslots = [];
     var formattedDict = {};
 
@@ -171,12 +183,14 @@ class SetYourSchedule extends Component {
   }
 
   handleDateChange = (date) => {
+    if (this.state.changed) {
+      this.setState({ openConfirmation: true, changedDate: date });
+      return;
+    }
     this.setState({
       selectedDate: date,
       formattedDate: moment(date).format("MM-DD-YYYY"),
     });
-
-    console.log(moment(date).format("MM-DD-YYYY"));
 
     let found = false;
 
@@ -202,6 +216,22 @@ class SetYourSchedule extends Component {
     }
   };
 
+  handleDisagree = () => {
+    this.setState({
+      openConfirmation: false,
+    });
+  };
+
+  handleAgree = () => {
+    this.setState(
+      {
+        openConfirmation: false,
+        changed: false,
+      },
+      () => this.handleDateChange(this.state.changedDate)
+    );
+  };
+
   render() {
     const {
       classes,
@@ -209,77 +239,94 @@ class SetYourSchedule extends Component {
       fullScreen,
     } = this.props;
 
+    console.log(this.state.timeslots);
+
     return (
-      <Grid
-        container
-        spacing={1}
-        justify="center"
-        className={classes.mediumPaperContainer}
-      >
-        <Grid item xs={12}>
-          <GoBackButton {...this.props} />
-        </Grid>
-        <Grid item md={6} sm={12} className={classes.dateContainer}>
-          <DateView
-            selectedDate={this.state.selectedDate}
-            handleDateChange={this.handleDateChange}
-            fullScreen={fullScreen}
+      <div>
+        <GoBackButton {...this.props} />
+        <Grid
+          container
+          spacing={1}
+          justify="center"
+          className={classes.mediumPaperContainer}
+        >
+          <Confirmation
+            {...this.props}
+            open={this.state.openConfirmation}
+            title={"Save unsaved changes?"}
+            text={
+              "You have unsaved changed. You must submit for each day. We know this is annoying and are working on fixing this."
+            }
+            handleDisagree={this.handleDisagree}
+            disagreeText={"Cancel"}
+            handleAgree={this.handleAgree}
+            agreeText={"Continue"}
           />
-        </Grid>
-        <Grid item md={6} sm={12} className={classes.timeContainer}>
-          {loadingData ? (
-            <CircularProgress className={classes.progress} color="secondary" />
-          ) : (
-            <TimeView
-              date={this.state.formattedDate}
-              checked={this.state.checkedSlots}
-              disabled={this.state.disabledCheckSlots}
-              reset={this.resetChecked}
-              submit={this.handleSubmit}
-              handleChange={this.handleChange}
-              loading={loadingAction}
-              open={this.state.open}
-              error={generalError}
-              handleClose={this.handleClose}
+          <Grid item md={6} sm={12} className={classes.dateContainer}>
+            <DateView
+              selectedDate={this.state.selectedDate}
+              handleDateChange={this.handleDateChange}
+              fullScreen={fullScreen}
             />
-          )}
-        </Grid>
-        <Grid item xs={12}>
-          <div
-            className={classes.root}
-            style={{ marginTop: "10px", textAlign: "center" }}
-          >
-            <Button
-              variant="outlined"
-              disabled={loadingAction}
-              color="secondary"
-              onClick={() => {
-                this.resetChecked();
-              }}
-              className={classes.spacedButton}
-              size="large"
+          </Grid>
+          <Grid item md={6} sm={12} className={classes.timeContainer}>
+            {loadingData ? (
+              <CircularProgress
+                className={classes.progress}
+                color="secondary"
+              />
+            ) : (
+              <TimeView
+                date={this.state.formattedDate}
+                checked={this.state.checkedSlots}
+                disabled={this.state.disabledCheckSlots}
+                reset={this.resetChecked}
+                submit={this.handleSubmit}
+                handleChange={this.handleChange}
+                loading={loadingAction}
+                open={this.state.open}
+                error={generalError}
+                handleClose={this.handleClose}
+              />
+            )}
+          </Grid>
+          <Grid item xs={12}>
+            <div
+              className={classes.root}
+              style={{ marginTop: "10px", textAlign: "center" }}
             >
-              Reset
-            </Button>
-            <Button
-              variant="contained"
-              disabled={loadingAction}
-              color="secondary"
-              onClick={() => this.handleSubmit()}
-              className={classes.spacedButton}
-              size="large"
-            >
-              Submit
-              {loadingAction && (
-                <CircularProgress
-                  className={classes.progress}
-                  color="secondary"
-                />
-              )}
-            </Button>
-          </div>
+              <Button
+                variant="outlined"
+                disabled={loadingAction}
+                color="secondary"
+                onClick={() => {
+                  this.resetChecked();
+                }}
+                className={classes.spacedButton}
+                size="large"
+              >
+                Reset
+              </Button>
+              <Button
+                variant="contained"
+                disabled={loadingAction}
+                color="secondary"
+                onClick={() => this.handleSubmit()}
+                className={classes.spacedButton}
+                size="large"
+              >
+                Submit
+                {loadingAction && (
+                  <CircularProgress
+                    className={classes.progress}
+                    color="secondary"
+                  />
+                )}
+              </Button>
+            </div>
+          </Grid>
         </Grid>
-      </Grid>
+      </div>
     );
   }
 }

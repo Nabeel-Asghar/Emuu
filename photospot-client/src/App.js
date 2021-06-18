@@ -37,6 +37,7 @@ import PhotoVault from "./pages/PhotoVault/PhotoVault";
 import PhotographerPageSetup from "./components/SignUp/PhotographerPageSetup";
 import StripeDashboard from "./pages/Stripe/StripeDashboard";
 import Refresh from "./pages/Stripe/Refresh";
+import NotFound from "./pages/Landing/NotFound";
 
 // Components
 import Navbar from "./components/Shared/Navbar";
@@ -436,6 +437,7 @@ const App = () => {
                   />
                 </Elements>
               </div>
+              <Route path="*" component={NotFound} />
             </Switch>
           </BrowserRouter>
         </div>

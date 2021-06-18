@@ -10,7 +10,7 @@ const SnackbarAlert = (props) => {
         horizontal: "center",
       }}
       open={props.open}
-      autoHideDuration={8000}
+      autoHideDuration={props.duration ? props.duration : 8000}
       onClose={props.handleClose}
     >
       <Alert
