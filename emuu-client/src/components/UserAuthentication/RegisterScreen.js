@@ -1,4 +1,5 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import React, {useState} from 'react'
 const theme = createTheme({
   palette: {
     primary: {
@@ -17,11 +18,39 @@ const theme = createTheme({
 });
 
 function Register() {
+
+  //use state for registration variables
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const[password, setPassword] = useState("")
+  const[email,setEmail] = useState("")
+  const[userName, setUserName] = useState("")
+
+  function signUp(){
+    let item = {firstName, lastName,userName, email, password}
+    console.warn(item)
+  }
+  //registration form
   return (
+
+
     <ThemeProvider theme={theme}>
-      <div className="Register">
-      <h1>             </h1>
+
+      <div className="col-sm-6 offset-sm-3">
+
       <h1>Register</h1>
+      <input type= "text" value = {firstName} onChange ={(e) =>setFirstName(e.target.value)} className= "form-control" placeholder = "First Name" />
+      <br />
+      <input type= "text" value = {lastName} onChange ={(e) =>setLastName(e.target.value)} className= "form-control" placeholder = "Last Name" />
+      <br />
+      <input type= "text" value = {userName} onChange ={(e) =>setUserName(e.target.value)} className= "form-control" placeholder = "User Name" />
+      <br />
+      <input type= "text" value = {email} onChange ={(e) =>setEmail(e.target.value)} className= "form-control" placeholder = "Email Address" />
+      <br />
+      <input type= "password" value = {password} onChange ={(e) =>setPassword(e.target.value)} className= "form-control" placeholder = "Password" />
+      <br />
+
+      <button onClick= {signUp} className = "btn btn-primary"> Sign Up </button>
       </div>
     </ThemeProvider>
   );
