@@ -1,6 +1,4 @@
-import React, { useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-
 const theme = createTheme({
   palette: {
     primary: {
@@ -18,18 +16,15 @@ const theme = createTheme({
   },
 });
 
-function Home() {
-    return (
-        <ThemeProvider theme={theme}>
-            <div className="Home">
-                <h1>Home</h1>
-
-            </div>
-        </ThemeProvider>
-    );
-  useEffect = () => {
-    // Get clips
-  };
+function Register() {
+  return (
+    <ThemeProvider theme={theme}>
+      <div className="Register">
+      <h1>             </h1>
+      <h1>Register</h1>
+      </div>
+    </ThemeProvider>
+  );
 }
 
-export default Home;
+export default Register;
