@@ -5,24 +5,27 @@ import (
 )
 
 func RegisterUser(c *gin.Context) {
-	//email := c.PostForm("email")
-	//username := c.PostForm("username")
-	//password := c.PostForm("password")
-	//fName := c.PostForm("firstName")
-	//lName := c.PostForm("lastName")
-// Add validation to registration
+authClient, _ := firebaseApp.Auth(context.Background())
+
+	email := c.PostForm("email")
+	username := c.PostForm("username")
+	password := c.PostForm("password")
+	fName := c.PostForm("firstName")
+	lName := c.PostForm("lastName")
+//Validate user registration
 	valid := helpers.Validation(
 		[]interfaces.Validation{
+		    {Value:fName, Valid: "firstName"},
+		    {Value:lName, Valid: "lastName"},
+		    {Value: email, Valid: "email"},
 			{Value: username, Valid: "username"},
-			{Value: email, Valid: "email"},
-			{Value: pass, Valid: "password"},
+			{Value: password, Valid: "password"},
 		})
 	if valid {
 		// Create registration logic
 		// Connect DB
 		db := helpers.ConnectDB()
-		generatedPassword := helpers.HashAndSalt([]byte(pass))
-		user := &interfaces.User{Username: username, Email: email, Password: generatedPassword}
+		user := &interfaces.User{Username: username, Email: email, Password: password}
 		db.Create(&user)
 
 		account := &interfaces.Account{Type: "Registered Account", Name: string(username + "'s" + " account"), Balance: 0, UserID: user.ID}
@@ -39,6 +42,6 @@ func RegisterUser(c *gin.Context) {
 		return map[string]interface{}{"message": "not valid values"}
 	}
 
-}
+
 	c.JSON(200, gin.H{"message": "User has registered successfully!"})
 }
