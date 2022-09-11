@@ -1,6 +1,11 @@
 import logo from "./logo.svg";
 import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import Header from './components/NavBar/Header'
+import {BrowserRouter, Route} from 'react-router-dom'
+import Login from './components/UserAuthentication/LoginScreen'
+import Register from './components/UserAuthentication/RegisterScreen'
+import Home from './components/home/Home'
 
 const theme = createTheme({
   palette: {
@@ -22,7 +27,21 @@ const theme = createTheme({
 function App() {
   return (
     <ThemeProvider theme={theme}>
-      <div className="App"></div>
+      <div className="App">
+      <BrowserRouter>
+      <Header />
+       <h1>Emuu</h1>
+       <Route path ="/home">
+       <Home />
+       </Route>
+       <Route path ="/login">
+       <Login />
+       </Route>
+       <Route path ="/register">
+        <Register />
+       </Route>
+       </BrowserRouter>
+      </div>
     </ThemeProvider>
   );
 }
