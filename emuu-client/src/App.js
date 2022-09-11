@@ -25,12 +25,16 @@ const theme = createTheme({
 });
 
 function App() {
+
+//Navigation bar
   return (
     <ThemeProvider theme={theme}>
+
       <div className="App">
+
+
       <BrowserRouter>
       <Header />
-       <h1>Emuu</h1>
        <Route path ="/home">
        <Home />
        </Route>
@@ -41,6 +45,9 @@ function App() {
         <Register />
        </Route>
        </BrowserRouter>
+
+
+
       </div>
     </ThemeProvider>
   );

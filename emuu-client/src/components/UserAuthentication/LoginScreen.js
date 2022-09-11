@@ -19,7 +19,7 @@ function Login() {
   return (
     <ThemeProvider theme={theme}>
       <div className="Login">
-      <h1>             </h1>
+
       <h1>Login</h1>
 
       </div>
