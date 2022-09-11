@@ -39,7 +39,7 @@ authClient, _ := firebaseApp.Auth(context.Background())
 
 		return response
 	} else {
-		return map[string]interface{}{"message": "not valid values"}
+		return map[string]interface{}{"message": "Invalid"}
 	}
 
 
