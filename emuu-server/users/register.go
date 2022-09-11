@@ -22,8 +22,7 @@ authClient, _ := firebaseApp.Auth(context.Background())
 			{Value: password, Valid: "password"},
 		})
 	if valid {
-		// Create registration logic
-		// Connect DB
+		//Connect firebase
 		db := helpers.ConnectDB()
 		user := &interfaces.User{Username: username, Email: email, Password: password}
 		db.Create(&user)
