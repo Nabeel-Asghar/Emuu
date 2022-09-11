@@ -4,7 +4,7 @@ import (
 	"log"
 	"emuu-server/main/firebase"
 	status "emuu-server/main/status"
-// 	register "emuu-server/main/users"
+ 	register "emuu-server/main/users"
 	"github.com/gin-gonic/gin"
 )
 
@@ -16,7 +16,7 @@ func main() {
 	router := gin.Default()
 
     	router.GET("/status", status.Status)
-//     	router.POST("/register", register.RegisterUser)
+    	router.POST("/register", register.RegisterUser)
 
     	router.Run()
 }
