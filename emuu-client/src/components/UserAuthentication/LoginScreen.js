@@ -1,4 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import React, {useState, useEffect} from 'react'
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -16,11 +18,18 @@ const theme = createTheme({
   },
 });
 function Login() {
+ const[email, setEmail] = useState("")
+  const[password, setPassword] = useState("")
   return (
     <ThemeProvider theme={theme}>
-      <div className="Login">
+       <div className="col-sm-6 offset-sm-3">
 
       <h1>Login</h1>
+     <input type= "text" onChange ={(e) =>setEmail(e.target.value)} className= "form-control" placeholder = "Email" />
+        <br />
+      <input type= "password" onChange ={(e) =>setPassword(e.target.value)} className= "form-control" placeholder = "Password" />
+        <br />
+        <button className = "btn btn-primary"> Login </button>
 
       </div>
     </ThemeProvider>

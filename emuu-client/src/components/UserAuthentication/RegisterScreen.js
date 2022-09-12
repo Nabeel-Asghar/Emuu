@@ -26,10 +26,6 @@ function Register() {
   const[email,setEmail] = useState("")
   const[userName, setUserName] = useState("")
 
-  function signUp(){
-    let item = {firstName, lastName,userName, email, password}
-    console.warn(item)
-  }
   //registration form
   return (
 
@@ -50,7 +46,7 @@ function Register() {
       <input type= "password" value = {password} onChange ={(e) =>setPassword(e.target.value)} className= "form-control" placeholder = "Password" />
       <br />
 
-      <button onClick= {signUp} className = "btn btn-primary"> Sign Up </button>
+      <button className = "btn btn-primary"> Sign Up </button>
       </div>
     </ThemeProvider>
   );
