@@ -8,10 +8,10 @@ function Header() {
     <div>
       <Navbar bg="dark" variant="dark">
         <Container>
-          <Navbar.Brand href="\Home">EMUU</Navbar.Brand>
+          <Navbar.Brand href="/Home">EMUU</Navbar.Brand>
           <Nav className="me-auto">
-            <Nav.Link href="\Login">Login</Nav.Link>
-            <Nav.Link href="\Register">Register</Nav.Link>
+            <Nav.Link href="/Login">Login</Nav.Link>
+            <Nav.Link href="/Register">Register</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
