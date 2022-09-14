@@ -2,7 +2,7 @@ package users
 
 import (
 	"github.com/gin-gonic/gin"
-	RegisterScreen.js
+
 )
 
 func RegisterUser(c *gin.Context) {
