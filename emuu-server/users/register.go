@@ -8,9 +8,9 @@ import (
     "io/ioutil"
 )
 
-func RegisterUser(c *gin.Context) {
+func RegisterUser(c *gin.Context, w http.ResponseWriter, r *http.Request) {
 //authClient, _ := firebaseApp.Auth(context.Background())
-    mux := http.NewServeMux()
+  /*  mux := http.NewServeMux()
     mux.HandleFunc("/Register", func(w http.ResponseWriter, r *http.Request))
     {
     //Parse form data from registration page
@@ -40,5 +40,7 @@ func RegisterUser(c *gin.Context) {
     //	_ = ioutil.WriteFile("test.json", file, 0644)
 
 http.ListenAndServe(":8080", mux)
+*/
+
 
 }
