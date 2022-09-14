@@ -40,6 +40,7 @@ function Register() {
       <div className="col-sm-6 offset-sm-3">
 
       <h1>Register</h1>
+       <form id="registerForm" method="POST">
 
        <input type= "text" value = {firstName} onChange ={(e) =>setFirstName(e.target.value)} className= "form-control" placeholder = "First Name" />
        <br />
@@ -51,6 +52,7 @@ function Register() {
        <br />
        <input type= "password" value = {password} onChange ={(e) =>setPassword(e.target.value)} className= "form-control" placeholder = "Password" />
        <br />
+       </form>
 
 
        <button onClick={()=>handleSubmit()} type="submit" className="btn btn-primary">Register</button>
