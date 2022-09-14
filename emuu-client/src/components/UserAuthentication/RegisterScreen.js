@@ -26,6 +26,11 @@ function Register() {
   const[email,setEmail] = useState("")
   const[userName, setUserName] = useState("")
 
+
+  //logs registration inputs
+  const handleSubmit  = () => {
+          console.log(firstName,lastName,userName,email,password);
+      }
   //registration form
   return (
 
@@ -35,19 +40,22 @@ function Register() {
       <div className="col-sm-6 offset-sm-3">
 
       <h1>Register</h1>
-      <input type= "text" value = {firstName} onChange ={(e) =>setFirstName(e.target.value)} className= "form-control" placeholder = "First Name" />
-      <br />
-      <input type= "text" value = {lastName} onChange ={(e) =>setLastName(e.target.value)} className= "form-control" placeholder = "Last Name" />
-      <br />
-      <input type= "text" value = {userName} onChange ={(e) =>setUserName(e.target.value)} className= "form-control" placeholder = "User Name" />
-      <br />
-      <input type= "text" value = {email} onChange ={(e) =>setEmail(e.target.value)} className= "form-control" placeholder = "Email Address" />
-      <br />
-      <input type= "password" value = {password} onChange ={(e) =>setPassword(e.target.value)} className= "form-control" placeholder = "Password" />
-      <br />
 
-      <button className = "btn btn-primary"> Sign Up </button>
-      </div>
+       <input type= "text" value = {firstName} onChange ={(e) =>setFirstName(e.target.value)} className= "form-control" placeholder = "First Name" />
+       <br />
+       <input type= "text" value = {lastName} onChange ={(e) =>setLastName(e.target.value)} className= "form-control" placeholder = "Last Name" />
+       <br />
+       <input type= "text" value = {userName} onChange ={(e) =>setUserName(e.target.value)} className= "form-control" placeholder = "User Name" />
+       <br />
+       <input type= "text" value = {email} onChange ={(e) =>setEmail(e.target.value)} className= "form-control" placeholder = "Email Address" />
+       <br />
+       <input type= "password" value = {password} onChange ={(e) =>setPassword(e.target.value)} className= "form-control" placeholder = "Password" />
+       <br />
+
+
+       <button onClick={()=>handleSubmit()} type="submit" className="btn btn-primary">Register</button>
+            </div>
+
     </ThemeProvider>
   );
 }
