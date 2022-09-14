@@ -4,12 +4,14 @@ import (
 	"github.com/gin-gonic/gin"
 	"fmt"
 	"net/http"
+	"encoding/json"
+    "io/ioutil"
 )
 
 func RegisterUser(c *gin.Context) {
 //authClient, _ := firebaseApp.Auth(context.Background())
     mux := http.NewServeMux()
-    mux.HandleFunc("/Register", func(w http.ResponseWriter, r *http.Request)
+    mux.HandleFunc("/Register", func(w http.ResponseWriter, r *http.Request))
     {
     //Parse form data from registration page
     r.ParseForm()
@@ -31,6 +33,11 @@ func RegisterUser(c *gin.Context) {
 	c.JSON(200, gin.H{"message": r.FormValue("password")})
 	c.JSON(200, gin.H{"message": r.FormValue("firstName")})
 	c.JSON(200, gin.H{"message": r.FormValue("lastName")})
+
+	//Writes to a json file
+	//file, _ := json.MarshalIndent(data, "", " ")
+
+    //	_ = ioutil.WriteFile("test.json", file, 0644)
 
 http.ListenAndServe(":8080", mux)
 
