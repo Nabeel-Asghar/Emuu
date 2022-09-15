@@ -1,7 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, {useState} from 'react'
 import axios from "../api/axios";
-const REGISTER_URL = "/register";
 const theme = createTheme({
   palette: {
     primary: {
@@ -41,17 +40,11 @@ const handleSubmit = async() => {
   try {
     // make axios post request
     const response = await axios.post({
-
+      method: 'post',
+      url: '/register',
       data: registrationFormData,
 
-      JSON.stringify({ firstName, lastName }),
-            {
-
-              headers: { "Content-Type": "application/json" }
-
-            }
-          );
-
+});
   } catch(error) {
     console.log(error)
   }
