@@ -2,11 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8493d53e-db58-4626-b4e8-fbf4ec91baf5" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../emuu-client/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/yarn.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.mod" beforeDir="false" afterPath="$PROJECT_DIR$/go.mod" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/go.sum" beforeDir="false" afterPath="$PROJECT_DIR$/go.sum" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main/main.go" beforeDir="false" afterPath="$PROJECT_DIR$/main/main.go" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/register.go" beforeDir="false" afterPath="$PROJECT_DIR$/users/register.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +31,18 @@
       <option name="presentableId" value="Default" />
       <updated>1662892980901</updated>
     </task>
+    <task id="LOCAL-00001" summary="Added firebase integration">
+      <created>1662918103835</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1662918103835</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added firebase integration" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added firebase integration" />
   </component>
 </project>

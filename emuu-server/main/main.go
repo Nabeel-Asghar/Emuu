@@ -13,6 +13,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("error initializing firebase %v", err)
 	}
+	log.Println("Firebase Connected")
 	router := gin.Default()
 
     	router.GET("/status", status.Status)
