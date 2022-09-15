@@ -5,7 +5,7 @@ import (
 )
 
 func RegisterUser(c *gin.Context) {
-authClient, _ := firebaseApp.Auth(context.Background())
+authClient, _ := firebase.App.Auth(context.Background())
 
 	email := c.PostForm("email")
 	username := c.PostForm("username")
