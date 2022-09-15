@@ -1,46 +1,70 @@
 package users
 
 import (
-	"github.com/gin-gonic/gin"
+   //"github.com/gin-gonic/gin"
+   "fmt"
+   "net/http"
+   //"encoding/json"
+    //"io/ioutil"
 )
 
-func RegisterUser(c *gin.Context) {
-authClient, _ := firebase.App.Auth(context.Background())
+func RegisterUser(w http.ResponseWriter, r *http.Request) {
+   if r.URL.Path != "/" {
+      http.Error(w, "404 not found.", http.StatusNotFound)
+      return
+   }
 
-	email := c.PostForm("email")
-	username := c.PostForm("username")
-	password := c.PostForm("password")
-	fName := c.PostForm("firstName")
-	lName := c.PostForm("lastName")
-//Validate user registration
-	valid := helpers.Validation(
-		[]interfaces.Validation{
-		    {Value:fName, Valid: "firstName"},
-		    {Value:lName, Valid: "lastName"},
-		    {Value: email, Valid: "email"},
-			{Value: username, Valid: "username"},
-			{Value: password, Valid: "password"},
-		})
-	if valid {
-		//Connect firebase
-		db := helpers.ConnectDB()
-		user := &interfaces.User{Username: username, Email: email, Password: password}
-		db.Create(&user)
-
-		account := &interfaces.Account{Type: "Registered Account", Name: string(username + "'s" + " account"), Balance: 0, UserID: user.ID}
-		db.Create(&account)
-
-		defer db.Close()
-		accounts := []interfaces.ResponseAccount{}
-		respAccount := interfaces.ResponseAccount{ID: account.ID, Name: account.Name, Email: account.Email}
-		accounts = append(accounts, respAccount)
-		var response = prepareResponse(user, accounts)
-
-		return response
-	} else {
-		return map[string]interface{}{"message": "Invalid"}
-	}
-
-
-	c.JSON(200, gin.H{"message": "User has registered successfully!"})
+   switch r.Method {
+   case "GET":
+       http.ServeFile(w, r, "C:/Users/Rabby/Documents/Emuu/emuu-client/src/components/UserAuthentication/RegisterScreen.js")
+   case "POST":
+      // Call ParseForm() to parse the raw query and update r.PostForm and r.Form.
+      if err := r.ParseForm(); err != nil {
+         fmt.Fprintf(w, "ParseForm() err: %v", err)
+         return
+      }
+      fmt.Fprintf(w, "Post from website! r.PostFrom = %v\n", r.PostForm)
+      name := r.FormValue("name")
+      address := r.FormValue("address")
+      fmt.Fprintf(w, "Name = %s\n", name)
+      fmt.Fprintf(w, "Address = %s\n", address)
+   default:
+      fmt.Fprintf(w, "Sorry, only GET and POST methods are supported.")
+   }
 }
+/*
+func RegisterUser(c *gin.Context) {
+//authClient, _ := firebaseApp.Auth(context.Background())
+    mux := http.NewServeMux()
+    mux.HandleFunc("/Register", func(w http.ResponseWriter, r *http.Request))
+    {
+    //Parse form data from registration page
+    r.ParseForm()
+
+
+    }
+    //
+   email := c.PostForm("email")
+   username := c.PostForm("username")
+   password := c.PostForm("password")
+   fName := c.PostForm("firstName")
+   lName := c.PostForm("lastName")
+
+
+   //Pass form value data into a json file
+   c.JSON(200, gin.H{"message": "User has registered successfully!"})
+   c.JSON(200, gin.H{"message": r.FormValue("email")})
+   c.JSON(200, gin.H{"message": r.FormValue("username")})
+   c.JSON(200, gin.H{"message": r.FormValue("password")})
+   c.JSON(200, gin.H{"message": r.FormValue("firstName")})
+   c.JSON(200, gin.H{"message": r.FormValue("lastName")})
+
+   //Writes to a json file
+   //file, _ := json.MarshalIndent(data, "", " ")
+
+    // _ = ioutil.WriteFile("test.json", file, 0644)
+
+http.ListenAndServe(":8080", mux)
+
+}
+*/
