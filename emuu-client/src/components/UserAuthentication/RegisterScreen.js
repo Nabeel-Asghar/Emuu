@@ -1,6 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, {useState} from 'react'
-import axios from "../api/axios";
+import axios from 'axios';
 const theme = createTheme({
   palette: {
     primary: {
@@ -21,33 +21,23 @@ const theme = createTheme({
 function Register() {
 
   //use state for registration variables
-  const [firstName, setFirstName] = useState("")
-  const [lastName, setLastName] = useState("")
-  const[password, setPassword] = useState("")
-  const[email,setEmail] = useState("")
-  const[userName, setUserName] = useState("")
+  const [firstName, setFirstName] = useState("z")
+  const [lastName, setLastName] = useState("x")
+  const[password, setPassword] = useState("c")
+  const[email,setEmail] = useState("f")
+  const[userName, setUserName] = useState("h")
+  const[message, setMessage] = useState("f")
+  console.log(firstName, lastName, userName, email, password)
 
+const userdata = {user_firstName:firstName,user_lastName:lastName,user_userName:userName,user_email:email,user_password:password}
 
-const handleSubmit = async() => {
+const handleSubmit = async(e) => {
   // store the states in the form data
-  const registrationFormData = new FormData();
-  registrationFormData.append("firstName", setFirstName)
-  registrationFormData.append("lastName", setLastName)
-  registrationFormData.append("userName", setUserName)
-  registrationFormData.append("email", setEmail)
-  registrationFormData.append("password", setPassword)
 
-  try {
-    // make axios post request
-    const response = await axios.post({
-      method: 'post',
-      url: '/register',
-      data: registrationFormData,
 
-});
-  } catch(error) {
-    console.log(error)
-  }
+    await axios.post('http://localhost:8080/', JSON.stringify(userdata))
+    .then(result=>{setMessage(result.data.msg) ; console.log(result.data);});
+
 }
 
   //registration form
