@@ -1,6 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, {useState} from 'react'
 import axios from "../api/axios";
+axios.defaults.headers.post[‘Content-Type’] = ‘multipart/form-date’;
 const theme = createTheme({
   palette: {
     primary: {
@@ -41,7 +42,7 @@ const handleSubmit = async() => {
     // make axios post request
     const response = await axios.post({
       method: 'post',
-      url: '/register',
+      url: 'http://localhost:3030/register',
       data: registrationFormData,
 
 });
