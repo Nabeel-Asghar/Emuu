@@ -14,7 +14,7 @@ var (
 
 func Init() error {
 	opt:= option.WithCredentialsFile("./serviceAccountKey.json")
-	config := &firebase.Config{ProjectID: "emuu-1ee85"}q
+	config := &firebase.Config{ProjectID: "emuu-1ee85"}
 	app, err := firebase.NewApp(context.Background(), config, opt)
 	if err != nil {
 		log.Printf("error initializing app: %v\n", err)

@@ -1,13 +1,13 @@
 package main
 
 import (
-	"fmt"
+	//"fmt"
     "log"
-    "net/http"
+    //"net/http"
 	"emuu-server/main/firebase"
-	status "emuu-server/main/status"
+	//status "emuu-server/main/status"
  	register "emuu-server/main/users"
-	"github.com/gin-gonic/gin"
+	//"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -16,12 +16,13 @@ func main() {
 		log.Fatalf("error initializing firebase %v", err)
 	}
 	log.Println("Firebase Connected")
-	router := gin.Default()
+	//router := gin.Default()
 
-    	router.GET("/status", status.Status)
-    	router.POST("/register", register.RegisterUser)
+    	//router.GET("/status", status.Status)
+    	//router.POST("/register", register.RegisterUser)
 
-    	router.Run()
+    	//router.Run()
+    	register.RegisterUser()
 }
 
 

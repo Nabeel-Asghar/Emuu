@@ -35,7 +35,7 @@ const handleSubmit = async(e) => {
   // store the states in the form data
 
 
-    await axios.post('http://localhost:8080/', JSON.stringify(userdata))
+    await axios.post('http://localhost:8080/register', JSON.stringify(userdata))
     .then(result=>{setMessage(result.data.msg) ; console.log(result.data);});
 
 }
