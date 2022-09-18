@@ -1,71 +1,72 @@
 package users
-
 import (
-   //"github.com/gin-gonic/gin"
-   "fmt"
-   "net/http"
-   //"encoding/json"
-    //"io/ioutil"
+
+"encoding/json"
+  "fmt"
+  "io/ioutil"
+  "log"
+  "net/http"
+ "github.com/gorilla/mux"
+
+
 )
 
-func RegisterUser(w http.ResponseWriter, r *http.Request) {
+ //Headers to allow host connection 3000 with 8081
+ func corsAcceptance(w http.ResponseWriter, r *http.Request) {
+     w.Header().Set("Content-Type", "application/json")
+     w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000/Register")
+     w.Header().Set("Access-Control-Max-Age", "15")
+     w.Header().Set("Access-Control-Allow-Origin", "*");
+     w.Header().Set("Access-Control-Allow-Credentials", "true");
+     w.Header().Set("Access-Control-Allow-Methods", "GET; POST; OPTIONS");
+     }
 
-   if r.URL.Path != "/" {
-      http.Error(w, "404 not found.", http.StatusNotFound)
-      return
-   }
 
-   switch r.Method {
-   case "GET":
-       http.ServeFile(w, r, "C:/Users/Rabby/Documents/Emuu/emuu-client/src/components/UserAuthentication/RegisterScreen.js")
-   case "POST":
-      // Call ParseForm() to parse the raw query and update r.PostForm and r.Form.
-      if err := r.ParseForm(); err != nil {
-         fmt.Print(w, "ParseForm() err: %v", err)
-         return
-      }
-      fmt.Print(w, "Post from website! r.PostFrom = %v\n", r.PostForm)
-      name := r.FormValue("name")
-      address := r.FormValue("address")
-      fmt.Print(w, "Name = %s\n", name)
-      fmt.Print(w, "Address = %s\n", address)
-   default:
-      fmt.Print(w, "Sorry, only GET and POST methods are supported.")
-   }
+
+ //testing to get and output axios data
+type RegisterUserInfo struct {
+  User_firstName string `json:"user_firstName"`
+  User_lastName string `json:"user_lastName"`
+  User_userName string `json:"user_userName"`
+  User_email string `json:"user_email"`
+  User_password string `json:"user_password"`
 }
-/*
-func RegisterUser(c *gin.Context) {
-//authClient, _ := firebaseApp.Auth(context.Background())
-    mux := http.NewServeMux()
-    mux.HandleFunc("/Register", func(w http.ResponseWriter, r *http.Request))
-    {
-    //Parse form data from registration page
-    r.ParseForm()
 
+
+func createUser(w http.ResponseWriter, r *http.Request) {
+    body, err := ioutil.ReadAll(r.Body)
+    if err != nil {
+        panic(err)
+    }
+   // log.Println(string(body))
+    var account RegisterUserInfo
+    err = json.Unmarshal(body, &account)
+    if err != nil {
+        panic(err)
+    }
+    fmt.Println(account.User_firstName)
+    fmt.Println(account.User_lastName)
+    fmt.Println(account.User_userName)
+    fmt.Println(account.User_email)
+    fmt.Println(account.User_password)
+    fmt.Println("Registering User...", account.User_userName)
+
+  }
+
+ func handleReqs() {
+   r := mux.NewRouter().StrictSlash(true)
+  r.HandleFunc("/", createUser).Methods("POST")
+
+  log.Fatal(http.ListenAndServe(":8081", r))
+
+ }
+
+
+ func RegisterUser() {
+
+ //allows host connection when running MainTest.go
+    http.HandleFunc("/", corsAcceptance)
+
+    handleReqs();
 
     }
-    //
-   email := c.PostForm("email")
-   username := c.PostForm("username")
-   password := c.PostForm("password")
-   fName := c.PostForm("firstName")
-   lName := c.PostForm("lastName")
-
-
-   //Pass form value data into a json file
-   c.JSON(200, gin.H{"message": "User has registered successfully!"})
-   c.JSON(200, gin.H{"message": r.FormValue("email")})
-   c.JSON(200, gin.H{"message": r.FormValue("username")})
-   c.JSON(200, gin.H{"message": r.FormValue("password")})
-   c.JSON(200, gin.H{"message": r.FormValue("firstName")})
-   c.JSON(200, gin.H{"message": r.FormValue("lastName")})
-
-   //Writes to a json file
-   //file, _ := json.MarshalIndent(data, "", " ")
-
-    // _ = ioutil.WriteFile("test.json", file, 0644)
-
-http.ListenAndServe(":8080", mux)
-
-}
-*/
