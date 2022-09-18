@@ -21,13 +21,13 @@ const theme = createTheme({
 function Register() {
 
   //use state for registration variables
-  const [firstName, setFirstName] = useState("z")
-  const [lastName, setLastName] = useState("x")
-  const[password, setPassword] = useState("c")
-  const[email,setEmail] = useState("f")
-  const[userName, setUserName] = useState("h")
-  const[message, setMessage] = useState("f")
-  console.log(firstName, lastName, userName, email, password)
+  const [firstName, setFirstName] = useState("")
+  const [lastName, setLastName] = useState("")
+  const[password, setPassword] = useState("")
+  const[email,setEmail] = useState("")
+  const[userName, setUserName] = useState("")
+  const[message, setMessage] = useState("")
+
 
 const userdata = {user_firstName:firstName,user_lastName:lastName,user_userName:userName,user_email:email,user_password:password}
 
@@ -35,8 +35,8 @@ const handleSubmit = async(e) => {
   // store the states in the form data
 
 
-    await axios.post('http://localhost:8080/register', JSON.stringify(userdata))
-    .then(result=>{setMessage(result.data.msg) ; console.log(result.data);});
+    await axios.post('http://localhost:8081', JSON.stringify(userdata))
+    .then(result=>{setMessage(userdata) ; console.log(userdata);});
 
 }
 
