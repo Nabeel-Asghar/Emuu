@@ -12,6 +12,7 @@ func hello(w http.ResponseWriter, r *http.Request) {
       return
    }
 
+
    switch r.Method {
    case "GET":
        http.ServeFile(w, r, "C:/Users/tanvi/IdeaProjects/Emuu/emuu-client/src/components/UserAuthentication/RegisterScreen.js")
