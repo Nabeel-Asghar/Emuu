@@ -38,7 +38,7 @@ func Init() error {
 
 
     ctx:=context.Background()
-	opt:= option.WithCredentialsFile("./serviceAccountKey.json")
+	opt:= option.WithCredentialsFile("../serviceAccountKey.json")
 	config := &firebase.Config{DatabaseURL: "https://emuu-1ee85-default-rtdb.firebaseio.com/",}
 
 	app, err := firebase.NewApp(ctx, config, opt)
@@ -53,7 +53,7 @@ func Init() error {
     }
 
 
-	myuser :=newUser("Frank","abidulamin013@gmail.com", "covac", "john","yellow123")
+	myuser :=newUser("test","test@gmail.com", "test", "number1","test123")
 
 	if err := client.NewRef("accounts").Set(ctx, myuser); err != nil {
       log.Fatal(err)
