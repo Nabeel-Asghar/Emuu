@@ -1,5 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, {useState} from 'react'
+import axios from 'axios';
 const theme = createTheme({
   palette: {
     primary: {
@@ -25,12 +26,20 @@ function Register() {
   const[password, setPassword] = useState("")
   const[email,setEmail] = useState("")
   const[userName, setUserName] = useState("")
+  const[message, setMessage] = useState("")
 
 
-  //logs registration inputs
-  const handleSubmit  = () => {
-          console.log(firstName,lastName,userName,email,password);
-      }
+const userdata = {user_firstName:firstName,user_lastName:lastName,user_userName:userName,user_email:email,user_password:password}
+
+const handleSubmit = async(e) => {
+  // store the states in the form data
+
+
+    await axios.post('http://localhost:8081', JSON.stringify(userdata))
+    .then(result=>{setMessage(userdata) ; console.log(userdata);});
+
+}
+
   //registration form
   return (
 
