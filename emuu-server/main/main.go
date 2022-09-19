@@ -2,23 +2,20 @@ package main
 
 import (
 
-    "log"
+    //"log"
 
-   "emuu-server/main/firebase"
+
    //status "emuu-server/main/status"
    register "emuu-server/main/users"
    //"github.com/gin-gonic/gin"
+   //auth "emuu-server/main/firebase"
 )
 
 
 
 
 func main() {
-   err := firebase.Init()
-   if err != nil {
-      log.Fatalf("error initializing firebase %v", err)
-   }
-   log.Println("Firebase Connected")
+
    register.RegisterUser()
 
 }
