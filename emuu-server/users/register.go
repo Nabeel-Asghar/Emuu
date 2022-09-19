@@ -69,4 +69,5 @@ func createUser(w http.ResponseWriter, r *http.Request) {
 
     handleReqs();
 
-    }
+
+}

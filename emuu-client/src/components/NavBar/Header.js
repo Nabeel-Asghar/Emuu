@@ -12,6 +12,7 @@ function Header() {
           <Nav className="me-auto">
             <Nav.Link href="/Login">Login</Nav.Link>
             <Nav.Link href="/Register">Register</Nav.Link>
+            <Nav.Link href= "/Upload">Upload</Nav.Link>
           </Nav>
         </Container>
       </Navbar>
