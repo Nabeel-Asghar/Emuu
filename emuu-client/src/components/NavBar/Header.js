@@ -12,7 +12,11 @@ function Header() {
           <Nav className="me-auto">
             <Nav.Link href="/Login">Login</Nav.Link>
             <Nav.Link href="/Register">Register</Nav.Link>
-            <Nav.Link href= "/Upload">Upload</Nav.Link>
+            <Nav.Link href="/Upload">
+            <button class="btn btn-default">
+              <img src="https://img.icons8.com/sf-black/64/FFFFFF/upload.png" width = "30" /> Upload Video
+            </button>
+            </Nav.Link>
           </Nav>
         </Container>
       </Navbar>

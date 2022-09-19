@@ -1,7 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, {useState} from 'react'
 import axios from 'axios';
-import database from './firebase';
 const theme = createTheme({
   palette: {
     primary: {

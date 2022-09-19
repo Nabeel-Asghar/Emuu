@@ -4,19 +4,11 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"text/template"
     )
 
-    // Compile templates on start of the application
-    var templates = template.Must(template.ParseFiles("public/upload.html"))
-
-    // Display the named template
-    func display(w http.ResponseWriter, page string, data interface{}) {
-    	templates.ExecuteTemplate(w, page+".html", data)
-    }
 
 func uploadFile(w http.ResponseWriter, r *http.Request) {
-	// Maximum upload of 10 MB files
+	// Maximum upload of 40 MB files ~ equivalent to 30 second video
 	r.ParseMultipartForm(40 << 20)
 
 	// Get handler for filename, size and headers
