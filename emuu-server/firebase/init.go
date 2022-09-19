@@ -1,65 +1,57 @@
 package firebase
 
 import (
-	"context"
-	"log"
-firebase "firebase.google.com/go/v4"
-	"google.golang.org/api/option"
+   "context"
+   "log"
+     "firebase.google.com/go/v4"
+     "firebase.google.com/go/v4/auth"
+
+     //"firebase.google.com/go/v4/messaging"
+   "google.golang.org/api/option"
 )
 
 var (
-	firebaseApp *firebase.App
+   firebaseApp *firebase.App
 )
-
-type user1 struct{
-UserName string
-Email string
-FirstName string
-LastName string
-Password string
-}
-
-func newUser(UserName string,Email string,FirstName string, LastName string, Password string) user1{
-u:= user1{
-    UserName:UserName,
-    Email:Email,
-    FirstName:FirstName,
-    LastName:LastName,
-    Password:Password,
-
-}
-return u
-
-}
-
 
 
 func Init() error {
-
-
     ctx:=context.Background()
-	opt:= option.WithCredentialsFile("../serviceAccountKey.json")
-	config := &firebase.Config{DatabaseURL: "https://emuu-1ee85-default-rtdb.firebaseio.com/",}
+   opt:= option.WithCredentialsFile("../serviceAccountKey.json")
+   config := &firebase.Config{DatabaseURL: "https://emuu-1ee85-default-rtdb.firebaseio.com/",}
 
-	app, err := firebase.NewApp(ctx, config, opt)
-	if err != nil {
-		log.Printf("error initializing app: %v\n", err)
+   app, err := firebase.NewApp(ctx, config, opt)
+   if err != nil {
+      log.Printf("error initializing app: %v\n", err)
 
-		return err
-	}
-	client, err := app.Database(ctx)
+      return err
+   }
+ client, err := app.Auth(ctx)
+ if err != nil {
+         log.Fatalf("error getting Auth client: %v\n", err)
+ }
+    params := (&auth.UserToCreate{}).
+        Email("user@example.com").
+        EmailVerified(false).
+        PhoneNumber("+15555550100").
+        Password("secretPassword").
+        DisplayName("John Doe").
+        PhotoURL("http://www.example.com/12345678/photo.png").
+        Disabled(false)
+    u, err := client.CreateUser(ctx, params)
     if err != nil {
-      log.Fatal(err)
+        log.Fatalf("error creating user: %v\n", err)
     }
+    log.Printf("Successfully created user: %v\n", u)
 
 
-	myuser :=newUser("test","test@gmail.com", "test", "number1","test123")
 
-	if err := client.NewRef("accounts").Set(ctx, myuser); err != nil {
-      log.Fatal(err)
-    }
 
-	firebaseApp = app
 
-	return nil
+
+
+
+   firebaseApp = app
+
+   return nil
 }

@@ -13,6 +13,9 @@ import (
 
 
 
+
+
+
 func main() {
    err := firebase.Init()
    if err != nil {
@@ -21,4 +24,24 @@ func main() {
    log.Println("Firebase Connected")
    register.RegisterUser()
 
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
