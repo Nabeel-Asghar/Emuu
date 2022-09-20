@@ -1,7 +1,6 @@
 import logo from "./logo.svg";
 import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Header from './components/NavBar/Header'
 import HeaderPostLogin from './components/NavbarPostLogin/HeaderPostLogin'
 import {BrowserRouter, Route} from 'react-router-dom'
 import Login from './components/UserAuthentication/LoginScreen'

@@ -5,7 +5,7 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-
+import user from '../UserAuthentication/LoginScreen'
 function HeaderPostLogin() {
   return (
     <>
@@ -35,9 +35,9 @@ function HeaderPostLogin() {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                    <Nav.Link href="/Login">Login</Nav.Link>
-                    <Nav.Link href="/UserProfile">User Profile</Nav.Link>
-                    <Nav.Link href="/Upload">Upload</Nav.Link>
+                    {!user &&<Nav.Link href="/Login">Login</Nav.Link>}
+                    {user &&<Nav.Link href="/UserProfile">User Profile</Nav.Link>}
+                    {user &&<Nav.Link href="/Upload">Upload</Nav.Link>}
 
                 </Nav>
 
