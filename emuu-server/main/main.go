@@ -3,7 +3,7 @@ package main
 import (
 
     //"log"
-
+"fmt"
 
    //status "emuu-server/main/status"
    register "emuu-server/main/users"
@@ -15,7 +15,7 @@ import (
 
 
 func main() {
-
+    fmt.Println("Host 8080 Listening...")
    register.RegisterUser()
 
 }
