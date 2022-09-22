@@ -29,11 +29,7 @@ function Register() {
   const[message, setMessage] = useState("")
 
 
-
-
-const userdata = {user_firstName:firstName,user_lastName:lastName,user_userName:userName,user_email:email,user_password:password}
-
-
+const userdata = { user_firstName:firstName,user_lastName:lastName,user_userName:userName,user_email:email,user_password:password}
 
 const handleSubmit = async(e) => {
   // store the states in the form data
