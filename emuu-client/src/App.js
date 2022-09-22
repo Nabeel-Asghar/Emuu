@@ -6,6 +6,10 @@ import {BrowserRouter, Route} from 'react-router-dom'
 import Login from './components/UserAuthentication/LoginScreen'
 import Register from './components/UserAuthentication/RegisterScreen'
 import Home from './components/home/Home'
+import Profile from './components/UserProfile/Profile'
+import Feeds from './components/UserProfile/Feeds'
+import UserInfo from './components/UserProfile/UserInfo'
+import {useSelector} from 'react-redux'
 
 const theme = createTheme({
   palette: {
@@ -26,6 +30,8 @@ const theme = createTheme({
 
 function App() {
 
+
+
 //Navigation bar
   return (
     <ThemeProvider theme={theme}>
@@ -44,6 +50,12 @@ function App() {
        <Route path ="/register">
         <Register />
        </Route>
+       <Route path="/UserProfile">
+       <Profile />
+       <Feeds />
+       <UserInfo />
+        </Route>
+
        </BrowserRouter>
 
 

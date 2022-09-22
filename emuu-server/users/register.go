@@ -100,6 +100,8 @@ func createUser(w http.ResponseWriter, r *http.Request) {
     	firebaseApp = app
 
 
+
+
      //END OF FIREBASE CONNECTION AND REGISTRATION...
   }
 

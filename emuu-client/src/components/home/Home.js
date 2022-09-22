@@ -1,5 +1,9 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useState } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import { Link } from "react-router-dom";
+
+import {useSelector} from 'react-redux';
+import axios from 'axios';
 
 const theme = createTheme({
   palette: {
@@ -19,10 +23,18 @@ const theme = createTheme({
 });
 
 function Home() {
+
+
     return (
+
+
+
         <ThemeProvider theme={theme}>
             <div className="Home">
                 <h1>Emuu</h1>
+
+
+
 
             </div>
         </ThemeProvider>
