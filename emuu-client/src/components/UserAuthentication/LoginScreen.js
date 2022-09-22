@@ -1,10 +1,12 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, {useState, useEffect} from 'react'
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
 import {Routes, Route, useHistory} from 'react-router-dom';
 import Home from '../home/Home'
 import "../../Firebase.js"
-
+//import firebase from 'firebase/compat/app';
+import firebase from 'firebase/app';
+//import testUserStatus from './UserStatus'
 
 const theme = createTheme({
   palette: {
@@ -23,10 +25,17 @@ const theme = createTheme({
   },
 });
 function Login() {
- const[email, setEmail] = useState("")
-  const[password, setPassword] = useState("")
-const history = useHistory()
 
+
+
+
+ const[email, setEmail] = useState("")
+ const[password, setPassword] = useState("")
+ const history = useHistory()
+
+
+
+//Sign in feature
   const handleSubmit = async(e) => {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
@@ -35,13 +44,14 @@ const history = useHistory()
         const user = userCredential.user;
         console.log("User is signed in");
         history.push('/home')
-        // ...
+        // ..
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log("Invalid User Credentials");
       });
+//testUserStatus();
   }
   return (
     <ThemeProvider theme={theme}>

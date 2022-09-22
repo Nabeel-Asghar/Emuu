@@ -5,8 +5,36 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import user from '../UserAuthentication/LoginScreen'
+
+import {Routes, Route, useHistory} from 'react-router-dom';
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import firebase from 'firebase/app';
+//import TestUserStatus from '../UserAuthentication/UserStatus'
+
+
+
+
 function HeaderPostLogin() {
+
+
+
+    //Sign Out Function in Nav Bar
+    const history = useHistory()
+    const auth = getAuth;
+
+    const SignedOut = async(e) => {
+
+
+        signOut(auth).then(() => {
+
+            console.log("User is signed out");
+            history.push("/home")
+            //TestUserStatus()
+        }).catch((error) => {
+      // An error happened.
+        });
+    }
+
   return (
     <>
       {[false].map((expand) => (
@@ -35,10 +63,10 @@ function HeaderPostLogin() {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                    {!user &&<Nav.Link href="/Login">Login</Nav.Link>}
-                    {user &&<Nav.Link href="/UserProfile">User Profile</Nav.Link>}
-                    {user &&<Nav.Link href="/Upload">Upload</Nav.Link>}
-
+                    {<Nav.Link href="/Login">Login</Nav.Link>}
+                    { <Nav.Link href="/UserProfile">User Profile</Nav.Link>}
+                    { <Nav.Link href="/Upload">Upload</Nav.Link>}
+                    { <button onClick={()=>SignedOut()} type="submit" button class="btn me-4 btn-dark btn-lg">Sign Out</button>}
                 </Nav>
 
               </Offcanvas.Body>
