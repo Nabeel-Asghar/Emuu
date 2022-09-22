@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { storage } from "./firebaseConfig";
+import storage from "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
-function App() {
+function FileUpload() {
     // State to store uploaded file
     const [file, setFile] = useState("");
 
