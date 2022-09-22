@@ -1,66 +1,57 @@
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import React, {useState} from 'react'
-import axios from 'axios';
-import database from './firebase';
-const theme = createTheme({
-  palette: {
-    primary: {
-      light: "#484848",
-      main: "#212121",
-      dark: "#000000",
-      contrastText: "#fff",
-    },
-    secondary: {
-      light: "#6bffff",
-      main: "#0be9d0",
-      dark: "#00b69f",
-      contrastText: "#000",
-    },
-  },
-});
+import { useState } from "react";
+import { storage } from "./firebaseConfig";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
-const handleSubmit = async(e) => {
-  // store the states in the form data
+function App() {
+    // State to store uploaded file
+    const [file, setFile] = useState("");
 
+    // progress
+    const [percent, setPercent] = useState(0);
 
-    await axios.post('http://localhost:8081', JSON.stringify(userdata))
-    .then(result=>{setMessage(userdata) ; console.log(userdata);});
+    // Handle file upload event and update state
+    function handleChange(event) {
+        setFile(event.target.files[0]);
+    }
 
+    const handleUpload = () => {
+        if (!file) {
+            alert("Please upload an image first!");
+        }
+
+        const storageRef = ref(storage, `/files/${file.name}`);
+
+        // progress can be paused and resumed. It also exposes progress updates.
+        // Receives the storage reference and the file to upload.
+        const uploadTask = uploadBytesResumable(storageRef, file);
+
+        uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+                const percent = Math.round(
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                );
+
+                // update progress
+                setPercent(percent);
+            },
+            (err) => console.log(err),
+            () => {
+                // download url
+                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+                    console.log(url);
+                });
+            }
+        );
+    };
+
+    return (
+        <div>
+            <input type="file" onChange={handleChange} accept="/image/*" />
+            <button onClick={handleUpload}>Upload to Firebase</button>
+            <p>{percent} "% done"</p>
+        </div>
+    );
 }
 
-  //registration form
-  return (
-
-
-    <ThemeProvider theme={theme}>
-
-      <div className="col-sm-6 offset-sm-3">
-
-      <<html lang="en">
-         <head>
-           <meta charset="UTF-8" />
-           <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-           <meta http-equiv="X-UA-Compatible" content="ie=edge" />
-           <title>Upload File</title>
-         </head>
-         <body>
-           <form
-             enctype="multipart/form-data"
-             action="http://localhost:8081/upload"
-             method="post"
-           >
-             <input type="file" name="myFile" />
-             <input type="submit" value="upload" />
-           </form>
-         </body>
-       </html>
-
-
-       <button onClick={()=>handleSubmit()} type="submit" className="btn btn-primary">Upload</button>
-            </div>
-
-    </ThemeProvider>
-  );
-}
-
-export default Upload;
+export default FileUpload;

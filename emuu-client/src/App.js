@@ -6,6 +6,7 @@ import {BrowserRouter, Route} from 'react-router-dom'
 import Login from './components/UserAuthentication/LoginScreen'
 import Register from './components/UserAuthentication/RegisterScreen'
 import Home from './components/home/Home'
+import FileUpload from './components/upload/UploadButton'
 
 const theme = createTheme({
   palette: {
@@ -44,6 +45,9 @@ function App() {
        <Route path ="/register">
         <Register />
        </Route>
+       <Route path ="/upload">
+        <FileUpload />
+        </Route>
        </BrowserRouter>
 
 
