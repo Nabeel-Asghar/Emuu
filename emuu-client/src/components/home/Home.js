@@ -1,9 +1,5 @@
-import React, { useEffect,useState } from "react";
+import React, { useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { Link } from "react-router-dom";
-
-import {useSelector} from 'react-redux';
-import axios from 'axios';
 
 const theme = createTheme({
   palette: {
@@ -23,19 +19,18 @@ const theme = createTheme({
 });
 
 function Home() {
-
-
     return (
-
-
-
         <ThemeProvider theme={theme}>
             <div className="Home">
                 <h1>Emuu</h1>
-
-
-
-
+                <h2>Top Videos </h2>
+                <body>
+                    <iframe width="560" height="315"
+                    src="https://www.youtube.com/embed/UqjRknIf3oI"
+                    title="YouTube video player" frameborder="0"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowfullscreen></iframe>
+                  </body>
             </div>
         </ThemeProvider>
     );
