@@ -16,7 +16,7 @@ function FileUpload() {
 
     const handleUpload = () => {
         if (!file) {
-            alert("Please upload an image first!");
+            alert("Please upload an image first");
         }
 
         const storageRef = ref(storage, `/files/${file.name}`);
