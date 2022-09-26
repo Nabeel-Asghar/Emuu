@@ -47,7 +47,7 @@ function FileUpload() {
 
     return (
         <div>
-            <input type="file" onChange={handleChange} accept="/video/*" />
+            <input type="file" onChange={handleChange} accept="video/mp4" />
             <button onClick={handleUpload}>Upload to Firebase</button>
             <p>{percent} "% done"</p>
         </div>
