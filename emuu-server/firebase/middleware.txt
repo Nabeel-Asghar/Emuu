@@ -1,0 +1,49 @@
+package firebase
+
+
+import (
+    "firebase.google.com/go/auth"
+    "github.com/gin-gonic/gin"
+
+    "log"
+    "net/http"
+    "strings"
+    "time"
+
+
+)
+
+
+const (
+
+    authorizationHeader="Authorization"
+    apiKeyHeader= "X-API-Key"
+    cronExecutedHeader="x-Appengine-Cron"
+    valName="FIREBASE_ID_TOKEN"
+
+)
+
+func AuthJWT(client *auth.Client) gin.HandlerFunc{
+    return func (c *gin.context){
+    startTime:=time.Now()
+
+    authHeader:=c.Request.Header.Get(authorizationHeader)
+    log.println(v...:"authheader",authHeader)
+    token :=strings.Replace(authHeader, old: "Bearer", new: "",n:1)
+    idToken,err :=client.VerifyIDToken(c,token)
+
+    if err !=nil{
+        c.JSON(http.StatusUnauthorized, gin.H{
+        "message":http.StatusText(http.StatusUnauthorized),
+       })a
+
+    }
+
+    log.Println(v...:"Auth time:", time.Since(startTime))
+    c.Set(valName,idToken)
+    c.Next()
+    }
+
+
+
+}
