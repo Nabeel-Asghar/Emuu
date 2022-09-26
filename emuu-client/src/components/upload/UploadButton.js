@@ -16,7 +16,7 @@ function FileUpload() {
 
     const handleUpload = () => {
         if (!file) {
-            alert("Please upload an image first");
+            alert("Please upload a video first");
         }
 
         const storageRef = ref(storage, `/files/${file.name}`);
@@ -47,7 +47,7 @@ function FileUpload() {
 
     return (
         <div>
-            <input type="file" onChange={handleChange} accept="/image/*" />
+            <input type="file" onChange={handleChange} accept="/video/*" />
             <button onClick={handleUpload}>Upload to Firebase</button>
             <p>{percent} "% done"</p>
         </div>
