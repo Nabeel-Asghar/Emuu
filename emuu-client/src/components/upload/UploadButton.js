@@ -19,7 +19,7 @@ function FileUpload() {
             alert("Please upload a video first");
         }
 
-        const storageRef = ref(storage, `/files/${file.name}`);
+        const storageRef = ref(storage, `/videos/${file.name}`);
 
         // progress can be paused and resumed. It also exposes progress updates.
         // Receives the storage reference and the file to upload.
