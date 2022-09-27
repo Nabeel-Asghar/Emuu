@@ -7,8 +7,9 @@ import Login from './components/UserAuthentication/LoginScreen'
 import Register from './components/UserAuthentication/RegisterScreen'
 import Home from './components/home/Home'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import UserProfile from './components/Screens/UserProfile'
+import Profile from './components/UserProfile/Profile'
 import Upload from './components/Screens/upload/UploadButton'
+import Feeds from './components/UserProfile/Feeds'
 
 
 const theme = createTheme({
@@ -50,7 +51,7 @@ function App() {
         <Register />
        </Route>
         <Route path ="/userprofile">
-        <UserProfile />
+        <Profile />
          </Route>
          <Route path ="/upload">
          <Upload />
