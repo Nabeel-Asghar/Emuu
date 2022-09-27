@@ -63,9 +63,9 @@ function HeaderPostLogin() {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                    {<Nav.Link href="/Login">Login</Nav.Link>}
-                    { <Nav.Link href="/UserProfile">User Profile</Nav.Link>}
-                    { <Nav.Link href="/Upload">Upload</Nav.Link>}
+                    {  <Nav.Link href="/Login">Login</Nav.Link>}
+                    {  <Nav.Link href="/UserProfile">User Profile</Nav.Link>}
+                    {  <Nav.Link href="/Upload">Upload</Nav.Link>}
                     { <button onClick={()=>SignedOut()} type="submit" button class="btn me-4 btn-dark btn-lg">Sign Out</button>}
                 </Nav>
 

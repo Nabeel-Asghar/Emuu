@@ -7,7 +7,7 @@ import Login from './components/UserAuthentication/LoginScreen'
 import Register from './components/UserAuthentication/RegisterScreen'
 import Home from './components/home/Home'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import UserProfile from './components/Screens/UserProfile'
+import Profile from './components/UserProfile/Profile'
 import FileUpload from './components/upload/UploadButton'
 
 
@@ -50,8 +50,8 @@ function App() {
         <Register />
        </Route>
         <Route path ="/userprofile">
-        <UserProfile />
-         </Route>
+         <Profile />
+        </Route>
          <Route path ="/upload">
          <FileUpload />
          </Route>

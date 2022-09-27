@@ -23,14 +23,16 @@ func main() {
 
 	auth := r.Group("auth") //group is in the gin gonic framework,if you want to create login forgot password, you can create it
 	{
+// 	    auth.POST("/upload", upload.UploadVideo)
 		auth.POST("/register", register.CreateUser)
-		auth.POST("/login", register.CreateUser)
+       // auth.POST("/login", login.LoginUser)
 	}
 
 	api := r.Group("api").Use(firebaseSer.AuthJWT)//create a new router with the middleware authJWT
 	{//you should supply the jwt token from firebase
 		api.POST("/", func(ctx *gin.Context) {
 			log.Println("Hello")
+
 		})
 	}
 
