@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	firebaseConfigFile = "serviceAccountKey.json"
+	firebaseConfigFile = "../serviceAccountKey.json"
 )
 
 func InitAuth() *auth.Client { //client library

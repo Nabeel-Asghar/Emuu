@@ -3,36 +3,36 @@ import storage from "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 function FileUpload() {
-    // State to store uploaded file
+    // Store uploaded file
     const [file, setFile] = useState("");
 
-    // progress
+    //Store pecent
     const [percent, setPercent] = useState(0);
 
-    // Handle file upload event and update state
+    //File upload 1
     function handleChange(event) {
         setFile(event.target.files[0]);
     }
-
+    //If a user doesn't choose a file and tries to upload, error will appear
     const handleUpload = () => {
         if (!file) {
-            alert("Please upload an image first");
+            alert("Please upload a video first");
         }
+        //Store into video folder in firebase storage
+        const storageRef = ref(storage, `/videos/${file.name}`);
 
-        const storageRef = ref(storage, `/files/${file.name}`);
 
-        // progress can be paused and resumed. It also exposes progress updates.
-        // Receives the storage reference and the file to upload.
+        //Upload to firebase function
         const uploadTask = uploadBytesResumable(storageRef, file);
 
         uploadTask.on(
             "state_changed",
             (snapshot) => {
                 const percent = Math.round(
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100 //percent display
                 );
 
-                // update progress
+                // update percent
                 setPercent(percent);
             },
             (err) => console.log(err),
@@ -47,7 +47,7 @@ function FileUpload() {
 
     return (
         <div>
-            <input type="file" onChange={handleChange} accept="/image/*" />
+            <input type="file" onChange={handleChange} accept="video/mp4" /> //only accepts mp4 files
             <button onClick={handleUpload}>Upload to Firebase</button>
             <p>{percent} "% done"</p>
         </div>

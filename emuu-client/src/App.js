@@ -50,8 +50,8 @@ function App() {
         <Register />
        </Route>
         <Route path ="/userprofile">
-         <Profile />
-        </Route>
+        <Profile />
+         </Route>
          <Route path ="/upload">
          <FileUpload />
          </Route>
