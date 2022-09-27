@@ -21,6 +21,8 @@ import (
 }*/
 
 //testing to get and output axios data
+
+//set struct for user info
 type RegisterUserInfo struct {
 	User_firstName string `json:"user_firstName"`
 	User_lastName  string `json:"user_lastName"`
@@ -39,7 +41,7 @@ func CreateUser(c *gin.Context) {
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) //setting context with timeout 15
 	defer cancel() //after 15 seconds, if the function is not executed it will cancel and throw an error
 
-
+    //Firebase connection
 	firebaseAuth := c.MustGet("firebaseAuth").(*auth.Client)
 	//firebaseAuth := firebaseSer.InitAuth()
 
