@@ -19,18 +19,87 @@ const theme = createTheme({
 });
 
 function Home() {
+
+
     return (
         <ThemeProvider theme={theme}>
             <div className="Home">
-                <h1>Emuu</h1>
-                <h2>Top Videos </h2>
-                <body>
-                    <iframe width="560" height="315"
-                    src="https://www.youtube.com/embed/UqjRknIf3oI"
+                <h1>EMUU</h1>
+                <p class="text-start">
+                <h2> Top Videos </h2>
+<div class="row">
+  <div class="col-sm-3"><body>
+           <iframe width="382" height="215"
+             src="https://www.youtube.com/embed/UqjRknIf3oI"
+             title="YouTube video player" frameborder="0"
+           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen></iframe>
+            </body>
+          </div>
+  <div class="col-sm-3"><body>
+      <iframe width="382" height="215"
+        src="https://www.youtube.com/embed/UqjRknIf3oI"
+         title="YouTube video player" frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+         allowfullscreen></iframe>
+     </body>
+     </div>
+  <div class="col-sm-3"><body>
+     <iframe width="382" height="215"
+       src="https://www.youtube.com/embed/UqjRknIf3oI"
+        title="YouTube video player" frameborder="0"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+       allowfullscreen></iframe>
+     </body>
+     </div>
+  <div class="col-sm-3"><body>
+   <iframe width="382" height="215"
+   src="https://www.youtube.com/embed/UqjRknIf3oI"
+    title="YouTube video player" frameborder="0"
+    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+    allowfullscreen></iframe>
+   </body>
+   </div>
+</div>
+ </p>
+                <p class="text-start">
+                <h2>Newest</h2>
+                <div class="row">
+                  <div class="col-sm-3"><body>
+                           <iframe width="382" height="215"
+                             src="https://www.youtube.com/embed/mybpNuyP9Xw"
+                             title="YouTube video player" frameborder="0"
+                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowfullscreen></iframe>
+                            </body>
+                          </div>
+                  <div class="col-sm-3"><body>
+                      <iframe width="382" height="215"
+                        src="https://www.youtube.com/embed/mybpNuyP9Xw"
+                         title="YouTube video player" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                         allowfullscreen></iframe>
+                     </body>
+                     </div>
+                  <div class="col-sm-3"><body>
+                     <iframe width="382" height="215"
+                       src="https://www.youtube.com/embed/mybpNuyP9Xw"
+                        title="YouTube video player" frameborder="0"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                       allowfullscreen></iframe>
+                     </body>
+                     </div>
+                  <div class="col-sm-3"><body>
+                   <iframe width="382" height="215"
+                   src="https://www.youtube.com/embed/mybpNuyP9Xw"
                     title="YouTube video player" frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowfullscreen></iframe>
-                  </body>
+                   </body>
+                   </div>
+                </div>
+                   </p>
+
             </div>
         </ThemeProvider>
     );
