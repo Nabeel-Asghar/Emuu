@@ -11,14 +11,14 @@ import (
 )
 
 //Headers to allow host connection 3000 with 8081
-/*func corsAcceptance(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "application/json")
-	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000/Register")
-	w.Header().Set("Access-Control-Max-Age", "15")
-	w.Header().Set("Access-Control-Allow-Origin", "*")
-	w.Header().Set("Access-Control-Allow-Credentials", "true")
-	w.Header().Set("Access-Control-Allow-Methods", "GET; POST; OPTIONS")
-}*/
+// func corsAcceptance(w http.ResponseWriter, r *http.Request) {
+// 	w.Header().Set("Content-Type", "application/json")
+// 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000/Register")
+// 	w.Header().Set("Access-Control-Max-Age", "15")
+// 	w.Header().Set("Access-Control-Allow-Origin", "*")
+// 	w.Header().Set("Access-Control-Allow-Credentials", "true")
+// 	w.Header().Set("Access-Control-Allow-Methods", "GET; POST; OPTIONS")
+// }
 
 //testing to get and output axios data
 

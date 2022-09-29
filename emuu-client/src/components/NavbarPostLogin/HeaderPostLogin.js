@@ -7,20 +7,43 @@ import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
 
 import {Routes, Route, useHistory} from 'react-router-dom';
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged, getIdToken, signInWithEmailAndPassword } from "firebase/auth";
 import firebase from 'firebase/app';
 //import TestUserStatus from '../UserAuthentication/UserStatus'
 
 
 
 
+
 function HeaderPostLogin() {
 
-
-
-    //Sign Out Function in Nav Bar
     const history = useHistory()
-    const auth = getAuth;
+    const auth = getAuth();
+
+    let token ="";
+
+
+    let value = false;
+
+
+
+onAuthStateChanged(auth, async (user) => {
+         if (user) {
+            //retrieves token
+           token = await getIdToken(user);
+           let value = true;
+
+
+         }
+        else{
+        let value = false;
+
+        }
+       });
+
+
+
+
 
     const SignedOut = async(e) => {
 
@@ -29,11 +52,13 @@ function HeaderPostLogin() {
 
             console.log("User is signed out");
             history.push("/home")
+            const user = auth.currentUser
             //TestUserStatus()
         }).catch((error) => {
       // An error happened.
         });
     }
+
 
   return (
     <>
@@ -63,10 +88,10 @@ function HeaderPostLogin() {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                    {  <Nav.Link href="/Login">Login</Nav.Link>}
-                    {  <Nav.Link href="/UserProfile">User Profile</Nav.Link>}
-                    {  <Nav.Link href="/Upload">Upload</Nav.Link>}
-                    { <button onClick={()=>SignedOut()} type="submit" button class="btn me-4 btn-dark btn-lg">Sign Out</button>}
+                    { !value && <Nav.Link href="/Login">Login</Nav.Link>}
+                    { value && <Nav.Link href="/UserProfile">User Profile</Nav.Link>}
+                    { value && <Nav.Link href="/Upload">Upload</Nav.Link>}
+                    { value && <button onClick={()=>SignedOut()} type="submit" button class="btn me-4 btn-dark btn-lg">Sign Out</button>}
                 </Nav>
 
               </Offcanvas.Body>
@@ -76,7 +101,6 @@ function HeaderPostLogin() {
         </Navbar>
       ))}
     </>
-  );
+  )
 }
-
 export default HeaderPostLogin;

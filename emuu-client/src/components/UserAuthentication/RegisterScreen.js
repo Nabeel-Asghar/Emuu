@@ -38,10 +38,11 @@ const userdata = { user_firstName:firstName,user_lastName:lastName,user_userName
 const handleSubmit = async(e) => {
   // store the states in the form data
 
-    history.push('/login')
+   history.push('/login')
    await axios.post('http://localhost:8080/auth/register', JSON.stringify(userdata))
     .then(result=>{
     console.log("User is registered");
+
 
 
    });
@@ -98,7 +99,7 @@ const handleSubmit = async(e) => {
        <div className="col-sm-6 offset-sm-3">
        <input type= "password" value = {password} onChange ={(e) =>setPassword(e.target.value)} className= "form-control" placeholder = "Password" required/>
        <div class="valid-feedback">Valid.</div>
-       <div class="invalid-feedback">Please fill out this field.</div>
+       <div class="invalid-feedback">Password must be at least 6 characters long!</div>
        </div>
        <br />
 
