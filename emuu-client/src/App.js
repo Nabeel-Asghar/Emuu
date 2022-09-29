@@ -32,7 +32,7 @@ const theme = createTheme({
 function App() {
 
 
-//Navigation bar
+//Navigation bar.
   return (
     <ThemeProvider theme={theme}>
 
