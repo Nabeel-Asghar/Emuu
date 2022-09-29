@@ -55,7 +55,7 @@ function Home() {
      </p>
 
      <p class="text-start">
-                <div className = "break"><div class = "p-4"><h2>Newest</h2></div></div>
+                <div className = "break"><div class = "p-4"><div className = "lineBreak"><h2>Newest</h2></div></div></div>
 
                 <div className = "spacer">
                            <iframe width="382" height="215"

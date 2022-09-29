@@ -1,5 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, {useState} from 'react'
+import "../../Firebase.js"
 import storage from "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 const theme = createTheme({
@@ -26,8 +27,6 @@ function FileUpload() {
   const [videoDescription, setVideoDescription] = useState("")
   const[videoTag, setVideoTag] = useState("")
   const[videoDate,setVideoDate] = useState("")
-  const videoData = { video_Title:videoTitle,video_Description:videoDescription,
-  video_Tag:videoTag,video_Date:videoDate}
 
     // Store uploaded file
     const [file, setFile] = useState("");
