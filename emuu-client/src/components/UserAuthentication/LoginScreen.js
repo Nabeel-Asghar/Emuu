@@ -1,12 +1,17 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, {useState, useEffect} from 'react'
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, getIdToken } from "firebase/auth";
 import {Routes, Route, useHistory} from 'react-router-dom';
 import Home from '../home/Home'
 import "../../Firebase.js"
+
 //import firebase from 'firebase/compat/app';
 import firebase from 'firebase/app';
 //import testUserStatus from './UserStatus'
+import axios from 'axios';
+import HeaderPostLogin from '../NavbarPostLogin/HeaderPostLogin'
+import app from "../../Firebase.js"
+
 
 const theme = createTheme({
   palette: {
@@ -28,22 +33,31 @@ function Login() {
 
 
 
-
  const[email, setEmail] = useState("")
  const[password, setPassword] = useState("")
+ let token = ""
  const history = useHistory()
+
+ const auth = getAuth();
+
 
 
 
 //Sign in feature
-  const handleSubmit = async(e) => {
-    const auth = getAuth();
+  const SignIn = async(e) => {
+
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
-        const user = userCredential.user;
+
         console.log("User is signed in");
+
         history.push('/home')
+
+//         app.auth().currentUser.getToken().then(function(token){
+//           console.log(token);
+//         });
+
         // ..
       })
       .catch((error) => {
@@ -51,8 +65,10 @@ function Login() {
         const errorMessage = error.message;
         console.log("Invalid User Credentials");
       });
-//testUserStatus();
+
   }
+
+
   return (
     <ThemeProvider theme={theme}>
        <div className="col-sm-6 offset-sm-3">
@@ -66,7 +82,7 @@ function Login() {
 
         <div class="row">
             <div class="col-sm-12 text-center">
-               <button onClick={()=>handleSubmit()} type="submit" button class="btn me-4 btn-dark btn-lg">Sign In</button>
+               <button onClick={()=>SignIn()} type="submit" button class="btn me-4 btn-dark btn-lg">Sign In</button>
                 <a class="btn btn-dark btn-lg" href="/Register" role = "button">Sign Up</a>
              </div>
         </div>

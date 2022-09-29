@@ -50,6 +50,7 @@ function App() {
        <Route path ="/register">
         <Register />
        </Route>
+
         <Route path ="/userprofile">
         <Profile />
          </Route>

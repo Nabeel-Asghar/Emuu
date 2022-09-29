@@ -1,6 +1,10 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import React, {useState} from 'react'
+import {React, useState, Component} from 'react'
 import axios from 'axios';
+import Login from './LoginScreen'
+import {Routes, Route, useHistory} from 'react-router-dom';
+
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -27,18 +31,26 @@ function Register() {
   const[email,setEmail] = useState("")
   const[userName, setUserName] = useState("")
   const[message, setMessage] = useState("")
-
+  const history = useHistory()
 
 const userdata = { user_firstName:firstName,user_lastName:lastName,user_userName:userName,user_email:email,user_password:password}
 
 const handleSubmit = async(e) => {
   // store the states in the form data
 
+   history.push('/login')
+   await axios.post('http://localhost:8080/auth/register', JSON.stringify(userdata))
+    .then(result=>{
+    console.log("User is registered");
 
-    await axios.post('http://localhost:8080/auth/register', JSON.stringify(userdata))
-    .then(result=>{setMessage(userdata) ; console.log(userdata);});
+
+
+   });
 
 }
+
+
+
 
   //registration form
   return (
@@ -46,26 +58,57 @@ const handleSubmit = async(e) => {
 
     <ThemeProvider theme={theme}>
 
-      <div className="col-sm-6 offset-sm-3">
+
 
       <h1>Register</h1>
-       <form id="registerForm" method="POST">
+       <form id="registerForm" method="POST" class="was-validated">
 
-       <input type= "text" value = {firstName} onChange ={(e) =>setFirstName(e.target.value)} className= "form-control" placeholder = "First Name" />
+        {/*First Name */}
+       <div className="col-sm-6 offset-sm-3">
+       <input type= "text" value = {firstName} onChange ={(e) =>setFirstName(e.target.value)} className= "form-control" placeholder = "First Name" required />
+       <div class="valid-feedback">Valid.</div>
+       <div class="invalid-feedback">Please fill out this field.</div>
+       </div>
        <br />
-       <input type= "text" value = {lastName} onChange ={(e) =>setLastName(e.target.value)} className= "form-control" placeholder = "Last Name" />
+
+        {/*Last Name */}
+       <div className="col-sm-6 offset-sm-3">
+       <input type= "text" value = {lastName} onChange ={(e) =>setLastName(e.target.value)} className= "form-control" placeholder = "Last Name" required/>
+       <div class="valid-feedback">Valid.</div>
+       <div class="invalid-feedback">Please fill out this field.</div>
+       </div>
        <br />
-       <input type= "text" value = {userName} onChange ={(e) =>setUserName(e.target.value)} className= "form-control" placeholder = "User Name" />
+
+        {/*User Name */}
+       <div className="col-sm-6 offset-sm-3">
+       <input type= "text" value = {userName} onChange ={(e) =>setUserName(e.target.value)} className= "form-control" placeholder = "User Name" required/>
+       <div class="valid-feedback">Valid.</div>
+       <div class="invalid-feedback">Please fill out this field.</div>
+       </div>
        <br />
-       <input type= "text" value = {email} onChange ={(e) =>setEmail(e.target.value)} className= "form-control" placeholder = "Email Address" />
+
+        {/*Email */}
+       <div className="col-sm-6 offset-sm-3">
+       <input type= "text" value = {email} onChange ={(e) =>setEmail(e.target.value)} className= "form-control" placeholder = "Email Address" required/>
+       <div class="valid-feedback">Valid.</div>
+       <div class="invalid-feedback">Please fill out this field.</div>
+       </div>
        <br />
-       <input type= "password" value = {password} onChange ={(e) =>setPassword(e.target.value)} className= "form-control" placeholder = "Password" />
+
+        {/*Password */}
+       <div className="col-sm-6 offset-sm-3">
+       <input type= "password" value = {password} onChange ={(e) =>setPassword(e.target.value)} className= "form-control" placeholder = "Password" required/>
+       <div class="valid-feedback">Valid.</div>
+       <div class="invalid-feedback">Password must be at least 6 characters long!</div>
+       </div>
        <br />
+
+
        </form>
 
 
-       <button onClick={()=>handleSubmit()} type="submit" className="btn btn-primary">Register</button>
-            </div>
+       <button onClick={()=>handleSubmit()} type="submit" className="btn me-4 btn-dark btn-lg">Register</button>
+
 
     </ThemeProvider>
   );
