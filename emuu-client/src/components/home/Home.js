@@ -1,5 +1,7 @@
 import React, { useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+import './Home.scss';
+
 
 const theme = createTheme({
   palette: {
@@ -26,79 +28,58 @@ function Home() {
             <div className="Home">
                 <h1>EMUU</h1>
                 <p class="text-start">
-                <h2> Top Videos </h2>
-<div class="row">
-  <div class="col-sm-3"><body>
+                <h2><div class = "p-4"> Top Videos </div></h2>
+
+                <div className = "spacer">
            <iframe width="382" height="215"
              src="https://www.youtube.com/embed/UqjRknIf3oI"
              title="YouTube video player" frameborder="0"
            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
               allowfullscreen></iframe>
-            </body>
-          </div>
-  <div class="col-sm-3"><body>
+            </div>
+
+           <div className = "spacer">
       <iframe width="382" height="215"
-        src="https://www.youtube.com/embed/UqjRknIf3oI"
+        src="https://www.youtube.com/embed/rDxv8jkYmb4"
          title="YouTube video player" frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
          allowfullscreen></iframe>
-     </body>
      </div>
-  <div class="col-sm-3"><body>
+    <div className = "spacer">
      <iframe width="382" height="215"
-       src="https://www.youtube.com/embed/UqjRknIf3oI"
+       src="https://www.youtube.com/embed/0GBiA5JOht4"
         title="YouTube video player" frameborder="0"
       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
        allowfullscreen></iframe>
-     </body>
      </div>
-  <div class="col-sm-3"><body>
-   <iframe width="382" height="215"
-   src="https://www.youtube.com/embed/UqjRknIf3oI"
-    title="YouTube video player" frameborder="0"
-    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-    allowfullscreen></iframe>
-   </body>
-   </div>
-</div>
- </p>
-                <p class="text-start">
-                <h2>Newest</h2>
-                <div class="row">
-                  <div class="col-sm-3"><body>
+     </p>
+
+     <p class="text-start">
+                <div className = "break"><div class = "p-4"><h2>Newest</h2></div></div>
+
+                <div className = "spacer">
                            <iframe width="382" height="215"
-                             src="https://www.youtube.com/embed/mybpNuyP9Xw"
+                             src="https://www.youtube.com/embed/RrrleE-EREI"
                              title="YouTube video player" frameborder="0"
                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                               allowfullscreen></iframe>
-                            </body>
-                          </div>
-                  <div class="col-sm-3"><body>
+                            </div>
+
+                           <div className = "spacer">
                       <iframe width="382" height="215"
                         src="https://www.youtube.com/embed/mybpNuyP9Xw"
                          title="YouTube video player" frameborder="0"
                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                          allowfullscreen></iframe>
-                     </body>
                      </div>
-                  <div class="col-sm-3"><body>
+                    <div className = "spacer">
                      <iframe width="382" height="215"
-                       src="https://www.youtube.com/embed/mybpNuyP9Xw"
+                       src="https://www.youtube.com/embed/4XmfNkB8HUY"
                         title="YouTube video player" frameborder="0"
                       allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                        allowfullscreen></iframe>
-                     </body>
                      </div>
-                  <div class="col-sm-3"><body>
-                   <iframe width="382" height="215"
-                   src="https://www.youtube.com/embed/mybpNuyP9Xw"
-                    title="YouTube video player" frameborder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowfullscreen></iframe>
-                   </body>
-                   </div>
-                </div>
-                   </p>
+                     </p>
 
             </div>
         </ThemeProvider>
