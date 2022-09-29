@@ -5,30 +5,53 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-
+import React, {Component} from 'react';
 import {Routes, Route, useHistory} from 'react-router-dom';
-import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged, getIdToken, signInWithEmailAndPassword } from "firebase/auth";
 import firebase from 'firebase/app';
 //import TestUserStatus from '../UserAuthentication/UserStatus'
 
 
 
 
+
 function HeaderPostLogin() {
 
-
-
-    //Sign Out Function in Nav Bar
     const history = useHistory()
-    const auth = getAuth;
+    const auth = getAuth();
+
+    let token ="";
+
+
+
+
+
+
+onAuthStateChanged(auth, async (user) => {
+         if (user) {
+            //retrieves token
+           token = await getIdToken(user);
+           console.log("Success Sign In")
+           console.log(token)
+         }
+        else{
+            console.log("Success Sign Out")
+            token =""
+            console.log(token)
+        }
+       });
+
+
+
+
 
     const SignedOut = async(e) => {
 
 
         signOut(auth).then(() => {
-
             console.log("User is signed out");
             history.push("/home")
+
             //TestUserStatus()
         }).catch((error) => {
       // An error happened.
@@ -40,7 +63,7 @@ function HeaderPostLogin() {
       {[false].map((expand) => (
         <Navbar key={expand} bg="dark" variant = "dark" expand={expand} className="mb-3">
           <Container fluid>
-            <Navbar.Brand href="/Home">Emuu</Navbar.Brand>
+            <Navbar.Brand href="/Home">EMUU</Navbar.Brand>
              <Form className="d-flex">
                   <Form.Control
                     type="search"
@@ -63,10 +86,11 @@ function HeaderPostLogin() {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                    {  <Nav.Link href="/Login">Login</Nav.Link>}
-                    {  <Nav.Link href="/UserProfile">User Profile</Nav.Link>}
-                    {  <Nav.Link href="/Upload">Upload</Nav.Link>}
-                    { <button onClick={()=>SignedOut()} type="submit" button class="btn me-4 btn-dark btn-lg">Sign Out</button>}
+                   { <Nav.Link href="/Login">Login</Nav.Link>}
+                   {  <Nav.Link href="/UserProfile">User Profile</Nav.Link>}
+                  {  <Nav.Link href="/Upload">Upload</Nav.Link>}
+                  {<button onClick={()=>SignedOut()} type="submit" button class="btn me-4 btn-dark btn-lg">Sign Out</button>}
+
                 </Nav>
 
               </Offcanvas.Body>
@@ -76,7 +100,7 @@ function HeaderPostLogin() {
         </Navbar>
       ))}
     </>
-  );
-}
+  )}
+
 
 export default HeaderPostLogin;

@@ -3,6 +3,7 @@ import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getStorage } from "firebase/storage";
 
+
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
@@ -17,6 +18,7 @@ const firebaseConfig = {
   appId: "1:683280790109:web:a0127221c86d47224d13b4",
   measurementId: "G-WLHXZLJM0Q"
 };
+
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);

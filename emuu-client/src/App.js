@@ -2,13 +2,14 @@ import logo from "./logo.svg";
 import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import HeaderPostLogin from './components/NavbarPostLogin/HeaderPostLogin'
-import {BrowserRouter, Route} from 'react-router-dom'
+import {BrowserRouter, Route, useHistory} from 'react-router-dom'
 import Login from './components/UserAuthentication/LoginScreen'
 import Register from './components/UserAuthentication/RegisterScreen'
 import Home from './components/home/Home'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Profile from './components/UserProfile/Profile'
 import FileUpload from './components/upload/UploadButton'
+
 
 
 const theme = createTheme({
@@ -31,7 +32,7 @@ const theme = createTheme({
 function App() {
 
 
-//Navigation bar
+//Navigation bar.
   return (
     <ThemeProvider theme={theme}>
 
@@ -49,6 +50,7 @@ function App() {
        <Route path ="/register">
         <Register />
        </Route>
+
         <Route path ="/userprofile">
         <Profile />
          </Route>

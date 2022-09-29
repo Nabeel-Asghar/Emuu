@@ -1,7 +1,46 @@
+$main-color:#4dd6b6;
 .Main-Feeds-Container{
     height: 100%;
     width: 100%;
-    background: yellow;
+    margin:2rem;
+    padding:1rem;
+    box-shadow: 1rem 1rem 2rem 1rem lightgray;
+    border-radius:0.5rem;
+        .Feed-input container{
+        display:flex;
+        align-items:center;
+            .input-container{
+            background:$main-color;
+            border-radius:1rem;
+            width:100%;
 
-//user feeds
-}
+            margin-left:0.5rem;
+            #Post-Desc{
+            width:100%;
+            background:transparent;
+            border:none;
+            height:2rem;
+            line-height:1.8rem;
+            padding:0.2rem;
+            font-size:1rem;
+            &:focus{
+            outline:none;
+            border:none;
+            }
+            &::placeholder{
+                color:black;
+            }
+            }
+        }
+    }
+
+
+
+
+
+
+
+
+    }
+
+//User Feeds

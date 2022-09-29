@@ -7,12 +7,16 @@ import (
 	"log"
 
 	"github.com/gin-gonic/gin"
+	"github.com/gin-contrib/cors"
 )
+
 
 func main() {
 	fmt.Println("Host 8080 Listening...")
 	// initialize new gin engine (for server)
 	r := gin.Default() //default router
+
+	 r.Use(cors.Default())
 	// configure firebase
 	firebaseAuth := firebaseSer.InitAuth()//calling firebase auth client
 
@@ -25,13 +29,13 @@ func main() {
 	{
 // 	    auth.POST("/upload", upload.UploadVideo)
 		auth.POST("/register", register.CreateUser)
-       // auth.POST("/login", login.LoginUser)
+
 	}
 
 	api := r.Group("api").Use(firebaseSer.AuthJWT)//create a new router with the middleware authJWT
 	{//you should supply the jwt token from firebase
 		api.POST("/", func(ctx *gin.Context) {
-			log.Println("Hello")
+			fmt.Println("Hello")
 
 		})
 	}
