@@ -43,7 +43,9 @@ function Login() {
         // Signed in
         const user = userCredential.user;
         console.log("User is signed in");
+        localStorage.setItem('auth',true)
         history.push('/home')
+        window.location.reload();
         // ..
       })
       .catch((error) => {

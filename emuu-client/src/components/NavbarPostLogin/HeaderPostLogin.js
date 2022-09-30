@@ -35,7 +35,9 @@ function HeaderPostLogin() {
         });
     }
 
+const navAuth=localStorage.getItem('auth')
   return (
+
     <>
       {[false].map((expand) => (
         <Navbar key={expand} bg="dark" variant = "dark" expand={expand} className="mb-3">
@@ -63,10 +65,19 @@ function HeaderPostLogin() {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                    {  <Nav.Link href="/Login">Login</Nav.Link>}
-                    {  <Nav.Link href="/UserProfile">User Profile</Nav.Link>}
-                    {  <Nav.Link href="/Upload">Upload</Nav.Link>}
-                    { <button onClick={()=>SignedOut()} type="submit" button class="btn me-4 btn-dark btn-lg">Sign Out</button>}
+                {navAuth==="false" &&(
+                      <Nav.Link href="/Login">Login</Nav.Link>
+                    )}
+                    {navAuth==="true" &&(
+                    <>
+                      <Nav.Link href="/UserProfile">User Profile</Nav.Link>
+                      <Nav.Link href="/Upload">Upload</Nav.Link>
+
+
+
+                    { <button onClick={()=>{SignedOut();localStorage.setItem('auth',false); window.location.reload();}} type="submit" button class="btn me-4 btn-dark btn-lg">Sign Out</button>}
+                </>
+                )}
                 </Nav>
 
               </Offcanvas.Body>

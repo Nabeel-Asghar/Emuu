@@ -31,7 +31,7 @@ const theme = createTheme({
 
 function App() {
 
-
+const auth=localStorage.getItem('auth')
 //Navigation bar
   return (
     <ThemeProvider theme={theme}>
@@ -50,9 +50,15 @@ function App() {
        <Route path ="/register">
         <Register />
        </Route>
+       {
+       auth==='true' && (
+
         <Route path ="/userprofile">
         <Profile />
-         </Route>
+        </Route>
+        )}
+
+
          <Route path ="/upload">
          <FileUpload />
          </Route>
