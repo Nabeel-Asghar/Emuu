@@ -4,7 +4,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import HeaderPostLogin from './components/NavbarPostLogin/HeaderPostLogin'
 import {BrowserRouter, Route} from 'react-router-dom'
 import Login from './components/UserAuthentication/LoginScreen'
-import Register from './components/UserAuthentication/RegisterScreen'
+import Register from './components/UserAuthentication/newRegister'
 import Home from './components/home/Home'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Profile from './components/UserProfile/Profile'
