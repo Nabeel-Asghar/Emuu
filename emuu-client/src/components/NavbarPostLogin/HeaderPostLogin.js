@@ -5,60 +5,39 @@ import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Offcanvas from 'react-bootstrap/Offcanvas';
-import React, {Component} from 'react';
+
 import {Routes, Route, useHistory} from 'react-router-dom';
-import { getAuth, signOut, onAuthStateChanged, getIdToken, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import firebase from 'firebase/app';
 //import TestUserStatus from '../UserAuthentication/UserStatus'
 
 
 
 
-
 function HeaderPostLogin() {
 
+
+
+    //Sign Out Function in Nav Bar
     const history = useHistory()
-    const auth = getAuth();
-
-    let token ="";
-
-
-
-
-
-
-onAuthStateChanged(auth, async (user) => {
-         if (user) {
-            //retrieves token
-           token = await getIdToken(user);
-           console.log("Success Sign In")
-           console.log(token)
-         }
-        else{
-            console.log("User is not logged in")
-            token =""
-            console.log(token)
-        }
-       });
-
-
-
-
+    const auth = getAuth;
 
     const SignedOut = async(e) => {
 
 
         signOut(auth).then(() => {
+
             console.log("User is signed out");
             history.push("/home")
-
             //TestUserStatus()
         }).catch((error) => {
       // An error happened.
         });
     }
 
+const navAuth=localStorage.getItem('auth')
   return (
+
     <>
       {[false].map((expand) => (
         <Navbar key={expand} bg="dark" variant = "dark" expand={expand} className="mb-3">
@@ -86,11 +65,19 @@ onAuthStateChanged(auth, async (user) => {
               </Offcanvas.Header>
               <Offcanvas.Body>
                 <Nav className="justify-content-end flex-grow-1 pe-3">
-                   { <Nav.Link href="/Login">Login</Nav.Link>}
-                   {  <Nav.Link href="/UserProfile">User Profile</Nav.Link>}
-                  {  <Nav.Link href="/Upload">Upload</Nav.Link>}
-                  {<button onClick={()=>SignedOut()} type="submit" button class="btn me-4 btn-dark btn-lg">Sign Out</button>}
+                {navAuth==="false" &&(
+                      <Nav.Link href="/Login">Login</Nav.Link>
+                    )}
+                    {navAuth==="true" &&(
+                    <>
+                      <Nav.Link href="/UserProfile">User Profile</Nav.Link>
+                      <Nav.Link href="/Upload">Upload</Nav.Link>
 
+
+
+                    { <button onClick={()=>{SignedOut();localStorage.setItem('auth',false); window.location.reload();}} type="submit" button class="btn me-4 btn-dark btn-lg">Sign Out</button>}
+                </>
+                )}
                 </Nav>
 
               </Offcanvas.Body>
@@ -100,7 +87,7 @@ onAuthStateChanged(auth, async (user) => {
         </Navbar>
       ))}
     </>
-  )}
-
+  );
+}
 
 export default HeaderPostLogin;

@@ -2,7 +2,7 @@ import logo from "./logo.svg";
 import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import HeaderPostLogin from './components/NavbarPostLogin/HeaderPostLogin'
-import {BrowserRouter, Route, useHistory} from 'react-router-dom'
+import {BrowserRouter, Route} from 'react-router-dom'
 import Login from './components/UserAuthentication/LoginScreen'
 import Register from './components/UserAuthentication/RegisterScreen'
 import Home from './components/home/Home'
@@ -31,8 +31,8 @@ const theme = createTheme({
 
 function App() {
 
-
-//Navigation bar.
+const auth=localStorage.getItem('auth')
+//Navigation bar
   return (
     <ThemeProvider theme={theme}>
 
@@ -50,10 +50,15 @@ function App() {
        <Route path ="/register">
         <Register />
        </Route>
+       {
+       auth==='true' && (
 
         <Route path ="/userprofile">
         <Profile />
-         </Route>
+        </Route>
+        )}
+
+
          <Route path ="/upload">
          <FileUpload />
          </Route>

@@ -1,107 +1,62 @@
-$main-color:#4dd6b6;
-$secondary-color:#26343D;
-#prf-bg-img{
-            height: 100vh;
-            width: 100vw;
-            margin-top: -12rem;
-        }
-.MainProfileDiv{
-    height: 80vh;
-    width: 100vw;
-    background: white;
-    overflow-x: hidden;
+$main-color: #4dd6b6;
+$secondary-color: #26343d;
+#prf-bg-img {
+  height: 70vh;
+  width: 100vw;
+  margin-top: -12rem;
+}
+.MainProfileDiv {
+  background: lightgray;
+  padding: 20px 0 20px 0;
 
-    .profile-container{
-    width:100%;
-    height: 100vh;
+  .profile-container {
+    width: 90%;
     background: white;
-    margin:auto;
+    margin: auto;
+    border-radius: 20px;
 
-    .top-portion{
-        height: 25%;
-        width: 100%;
-        position: relative;
-        .user-profile-bg-image{
-        height: 100%;
+    .top-portion {
+      width: 100%;
+      position: relative;
+      .user-profile-bg-image {
         width: 100%;
         background: $main-color;
         overflow: hidden;
-
-                }.user-profile-img{
-            position: absolute;
-            height: 60%;
-            width: 15%;
-            border-radius: 50%;
-            transform: translate(50%);
-            right: 50%;
-            background-color: $secondary-color;
-            bottom:-2rem;
-            border: 2px solid white;
-            #prf-img{
-                height: 100%;
-                width: 100%;
-                object-fit: cover;
-                border-radius: 50%;
-
-            }
-
-        }
-        .userName{
-            text-align: center;
-            width: 100%;
-            position: absolute;
-            bottom: -4.5rem;
-            font-size: 2rem;
-            color: black;
-
-
-
-
-
-        }
-    }
-    .bottom-portion{
+        border-radius: 20px 20px 0 0;
+      }
+      .user-profile-img {
         display: flex;
-
-        justify-content: center;
-        flex-direction: row;
-
+        flex-direction: column;
+        position: absolute;
+        height: 250px;
+        width: 250px;
+        border-radius: 50%;
+        transform: translate(50%);
+        background-color: $secondary-color;
+        bottom: -2rem;
+        border: 5px solid white;
+        #prf-img {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+          border-radius: 50%;
+        }
+      }
+      .userName {
         width: 100%;
-        margin-top:5rem;
-        background: white;
-        .right-side{
-            flex:0.60;
-
-            height: 100%;
-        }
-        .left-side{
-            flex:0.40;
-
-            height: 100%;
-        }
+        position: absolute;
+        bottom: -4.5rem;
+        font-size: 2rem;
+        font-style: italic;
+        color: black;
+      }
     }
-
- }
- .spacer{
-  padding-right: 20px;
-     padding-left: 20px;
-     float: left;
-     margin-bottom: 50px;
- }
- .break {
-     width: 200px;
-     overflow-wrap: break-word;
-     word-wrap: break-word;
-     word-break: break-word;
- }
- .gap {
-
- 				height:70px;
- 			}
- .lineBreak{
- margin-top: 225px;
- }
-
-
-
+    .bottom-portion {
+      display: flex;
+      flex-direction: column;
+      margin-top: 5rem;
+      background: white;
+      border-radius: 20px;
+    }
+  }
 }
