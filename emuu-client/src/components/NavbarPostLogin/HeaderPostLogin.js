@@ -35,7 +35,7 @@ onAuthStateChanged(auth, async (user) => {
            console.log(token)
          }
         else{
-            console.log("Success Sign Out")
+            console.log("User is not logged in")
             token =""
             console.log(token)
         }
