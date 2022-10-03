@@ -128,7 +128,7 @@ function Register() {
             </Button>
             <Grid container justifyContent="flex-end">
               <Grid item>
-                <Link href="LoginScreen.js" variant="body2">
+                <Link href="/Login" variant="body2">
                   Already have an account? Log in
                 </Link>
               </Grid>

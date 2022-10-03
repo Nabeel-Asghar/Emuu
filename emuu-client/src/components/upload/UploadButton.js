@@ -3,6 +3,12 @@ import React, {useState} from 'react'
 import "../../Firebase.js"
 import storage from "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import PropTypes from 'prop-types';
+import CircularProgress from '@mui/material/CircularProgress';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -19,7 +25,35 @@ const theme = createTheme({
     },
   },
 });
+function CircularProgressWithLabel(props) {
+  return (
+    <Box sx={{position: 'relative', display: 'inline-flex' }}>
+      <CircularProgress variant="determinate" {...props} />
+      <Box
+        sx={{
+          top: 0,
+          left: 0,
+          bottom: 0,
+          right: 0,
+          minWidth: 150,
+          position: 'absolute',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}
+      >
+        <Typography variant="subtitle" component="div" color="black">
+          {`${Math.round(props.value)}%`}
+        </Typography>
+      </Box>
+    </Box>
+  );
+}
 
+CircularProgressWithLabel.propTypes = {
+
+  value: PropTypes.number.isRequired,
+};
 
 function FileUpload() {
  //use state for registration variables
@@ -92,7 +126,7 @@ function FileUpload() {
                </form>
             <input type="file" onChange={handleChange} accept="video/mp4" />
        <button onClick={()=>handleUpload()} type="submit" className="btn btn-primary">Upload</button>
-            <p>{percent} % done</p>
+            <p> <CircularProgressWithLabel value={percent} /> </p>
         </div>
     );
 }

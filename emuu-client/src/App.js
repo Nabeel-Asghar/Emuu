@@ -52,16 +52,18 @@ const auth=localStorage.getItem('auth')
        </Route>
        {
        auth==='true' && (
-
+         <>
         <Route path ="/userprofile">
         <Profile />
         </Route>
-        )}
+
 
 
          <Route path ="/upload">
          <FileUpload />
          </Route>
+         </>
+         ) }
 
        </BrowserRouter>
 
