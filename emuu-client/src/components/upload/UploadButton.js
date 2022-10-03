@@ -61,7 +61,22 @@ function FileUpload() {
   const [videoDescription, setVideoDescription] = useState("")
   const[videoTag, setVideoTag] = useState("")
   const[videoDate,setVideoDate] = useState("")
+const axios = require("axios");
 
+const options = {
+  method: 'GET',
+  url: 'https://rawg-video-games-database.p.rapidapi.com/games?key=e1858c6ba8fc4fddaee1a7853f12e9b5',
+  headers: {
+    'X-RapidAPI-Key': 'a37da360f5msh6876a81ea4e84dcp1aa95bjsn1fe86c68d821',
+    'X-RapidAPI-Host': 'rawg-video-games-database.p.rapidapi.com'
+  }
+};
+
+axios.request(options).then(function (response) {
+	console.log(response.data);
+}).catch(function (error) {
+	console.error(error);
+});
     // Store uploaded file
     const [file, setFile] = useState("");
 
@@ -77,6 +92,12 @@ function FileUpload() {
         if (!file) {
             alert("Please upload a video first");
         }
+        //Restrict file size to 40 MB ~ equivalent to 30 second video
+        if(file.size > 40 * 1024 * 1024){
+             alert("File size exceeds maximum allowed!")
+             return
+        }
+
 
         //Store into video folder in firebase storage
         const storageRef = ref(storage, `/videos/${file.name}`);
