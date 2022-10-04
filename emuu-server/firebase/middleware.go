@@ -8,10 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+
 const (
 	authorizationHeader = "Authorization"
-	apiKeyHeader        = "X-API-Key"
-	cronExecutedHeader  = "x-Appengine-Cron"
 	valName             = "FIREBASE_ID_TOKEN"
 )
 
