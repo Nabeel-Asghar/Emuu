@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import getData from "../../gameTagAPI.js";
+//import getData from "../../gameTagAPI.js";
 
 
 const theme = createTheme({
@@ -64,7 +64,7 @@ function FileUpload() {
   const [videoDate, setVideoDate] = useState("");
 
 //Gets the RAWG api data for game database
-getData();
+//getData();
 
   // Store uploaded file
   const [file, setFile] = useState("");
