@@ -3,7 +3,7 @@ import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import HeaderPostLogin from './components/NavbarPostLogin/HeaderPostLogin'
 import {BrowserRouter, Route} from 'react-router-dom'
-import Login from './components/UserAuthentication/LoginScreen'
+import Login from './components/UserAuthentication/newloginscreen'
 import Register from './components/UserAuthentication/RegisterScreen'
 import Home from './components/home/Home'
 import { getAuth, onAuthStateChanged } from "firebase/auth";
@@ -52,16 +52,19 @@ const auth=localStorage.getItem('auth')
        </Route>
        {
        auth==='true' && (
+       <>
 
         <Route path ="/userprofile">
         <Profile />
         </Route>
-        )}
+
 
 
          <Route path ="/upload">
          <FileUpload />
          </Route>
+         </>
+         )}
 
        </BrowserRouter>
 
