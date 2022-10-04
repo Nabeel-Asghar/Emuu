@@ -42,7 +42,7 @@ const theme = createTheme();
           const user = userCredential.user;
           console.log("User is signed in");
           localStorage.setItem('auth',true)
-          history.push('/home')
+          history.push('/Home')
           window.location.reload();
           // ..
         })
@@ -130,7 +130,7 @@ const theme = createTheme();
                   </Link>
                 </Grid>
                 <Grid item>
-                  <Link href="RegisterScreen.js" variant="body2">
+                  <Link href="/Register" variant="body2">
                     Don't have an account? Sign Up
                   </Link>
                 </Grid>
