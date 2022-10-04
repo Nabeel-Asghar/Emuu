@@ -10,17 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-//Headers to allow host connection 3000 with 8081
-// func corsAcceptance(w http.ResponseWriter, r *http.Request) {
-// 	w.Header().Set("Content-Type", "application/json")
-// 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000/Register")
-// 	w.Header().Set("Access-Control-Max-Age", "15")
-// 	w.Header().Set("Access-Control-Allow-Origin", "*")
-// 	w.Header().Set("Access-Control-Allow-Credentials", "true")
-// 	w.Header().Set("Access-Control-Allow-Methods", "GET; POST; OPTIONS")
-// }
 
-//testing to get and output axios data
 
 //set struct for user info
 type RegisterUserInfo struct {
@@ -43,7 +33,6 @@ func CreateUser(c *gin.Context) {
 
     //Firebase connection
 	firebaseAuth := c.MustGet("firebaseAuth").(*auth.Client)
-	//firebaseAuth := firebaseSer.InitAuth()
 
 	//firebases paramaters for user registration
 	params := (&auth.UserToCreate{}).
@@ -66,20 +55,3 @@ func CreateUser(c *gin.Context) {
 
 
 
-
-// func handleReqs() {
-// 	// r := mux.NewRouter().StrictSlash(true)
-// 	// r.HandleFunc("/", createUser).Methods("POST")
-// 	// log.Fatal(http.ListenAndServe(":8081", r))
-
-// 	// routes definition for finding and creating artists
-// 	r.GET("/", api.FindArtists)
-// 	r.POST("/artist", api.CreateArtist)
-// }
-
-// func RegisterUser() {
-// 	//allows host connection when running MainTest.go
-// 	http.HandleFunc("/", corsAcceptance)
-// 	//pulls data from register.js and stores it into firebase
-// 	handleReqs()
-// }

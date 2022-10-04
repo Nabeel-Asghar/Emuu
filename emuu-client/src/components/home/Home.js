@@ -1,7 +1,6 @@
 import React, { useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import './Home.scss';
-
+import "./Home.scss";
 
 const theme = createTheme({
   palette: {
@@ -21,69 +20,96 @@ const theme = createTheme({
 });
 
 function Home() {
+  return (
+    <ThemeProvider theme={theme}>
+      <div className="Home">
+        <h1>EMUU</h1>
+        <p class="text-start">
+          <h2>
+            <div class="p-4"> Top Videos </div>
+          </h2>
 
+          <div className="spacer">
+            <iframe
+              width="382"
+              height="215"
+              src="https://www.youtube.com/embed/UqjRknIf3oI"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
 
-    return (
-        <ThemeProvider theme={theme}>
-            <div className="Home">
-                <h1>EMUU</h1>
-                <p class="text-start">
-                <h2><div class = "p-4"> Top Videos </div></h2>
+          <div className="spacer">
+            <iframe
+              width="382"
+              height="215"
+              src="https://www.youtube.com/embed/rDxv8jkYmb4"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <div className="spacer">
+            <iframe
+              width="382"
+              height="215"
+              src="https://www.youtube.com/embed/0GBiA5JOht4"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </p>
 
-                <div className = "spacer">
-           <iframe width="382" height="215"
-             src="https://www.youtube.com/embed/UqjRknIf3oI"
-             title="YouTube video player" frameborder="0"
-           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen></iframe>
-            </div>
+        <p class="text-start">
+          <div className="break">
+            <h2>
+              <div class="p-4">Newest</div>
+            </h2>
+          </div>
 
-           <div className = "spacer">
-      <iframe width="382" height="215"
-        src="https://www.youtube.com/embed/rDxv8jkYmb4"
-         title="YouTube video player" frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-         allowfullscreen></iframe>
-     </div>
-    <div className = "spacer">
-     <iframe width="382" height="215"
-       src="https://www.youtube.com/embed/0GBiA5JOht4"
-        title="YouTube video player" frameborder="0"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-       allowfullscreen></iframe>
-     </div>
-     </p>
+          <div className="spacer">
+            <iframe
+              width="382"
+              height="215"
+              src="https://www.youtube.com/embed/RrrleE-EREI"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
 
-     <p class="text-start">
-                <div className = "break"><h2><div class = "p-4">Newest</div></h2></div>
-
-                <div className = "spacer">
-                           <iframe width="382" height="215"
-                             src="https://www.youtube.com/embed/RrrleE-EREI"
-                             title="YouTube video player" frameborder="0"
-                           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                              allowfullscreen></iframe>
-                            </div>
-
-                           <div className = "spacer">
-                      <iframe width="382" height="215"
-                        src="https://www.youtube.com/embed/mybpNuyP9Xw"
-                         title="YouTube video player" frameborder="0"
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                         allowfullscreen></iframe>
-                     </div>
-                    <div className = "spacer">
-                     <iframe width="382" height="215"
-                       src="https://www.youtube.com/embed/4XmfNkB8HUY"
-                        title="YouTube video player" frameborder="0"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                       allowfullscreen></iframe>
-                     </div>
-                     </p>
-
-            </div>
-        </ThemeProvider>
-    );
+          <div className="spacer">
+            <iframe
+              width="382"
+              height="215"
+              src="https://www.youtube.com/embed/mybpNuyP9Xw"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+          <div className="spacer">
+            <iframe
+              width="382"
+              height="215"
+              src="https://www.youtube.com/embed/4XmfNkB8HUY"
+              title="YouTube video player"
+              frameborder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowfullscreen
+            ></iframe>
+          </div>
+        </p>
+      </div>
+    </ThemeProvider>
+  );
   useEffect = () => {
     // Get clips
   };

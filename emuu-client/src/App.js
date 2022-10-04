@@ -1,16 +1,14 @@
 import logo from "./logo.svg";
 import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import HeaderPostLogin from './components/NavbarPostLogin/HeaderPostLogin'
-import {BrowserRouter, Route, useHistory} from 'react-router-dom'
-import Login from './components/UserAuthentication/LoginScreen'
-import Register from './components/UserAuthentication/RegisterScreen'
-import Home from './components/home/Home'
+import HeaderPostLogin from "./components/NavbarPostLogin/HeaderPostLogin";
+import { BrowserRouter, Route } from "react-router-dom";
+import Login from "./components/UserAuthentication/LoginScreen";
+import Register from "./components/UserAuthentication/newRegister";
+import Home from "./components/home/Home";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import Profile from './components/UserProfile/Profile'
-import FileUpload from './components/upload/UploadButton'
-
-
+import Profile from "./components/UserProfile/Profile";
+import FileUpload from "./components/upload/UploadButton";
 
 const theme = createTheme({
   palette: {
@@ -30,38 +28,34 @@ const theme = createTheme({
 });
 
 function App() {
-
-
-//Navigation bar.
+  const auth = localStorage.getItem("auth");
+  //Navigation bar
   return (
     <ThemeProvider theme={theme}>
-
       <div className="App">
+        <BrowserRouter>
+          <HeaderPostLogin />
+          <Route path="/home">
+            <Home />
+          </Route>
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/register">
+            <Register />
+          </Route>
+          {auth === "true" && (
+            <>
+              <Route path="/userprofile">
+                <Profile />
+              </Route>
 
-
-      <BrowserRouter>
-      <HeaderPostLogin />
-       <Route path ="/home">
-       <Home />
-       </Route>
-       <Route path ="/login">
-       <Login />
-       </Route>
-       <Route path ="/register">
-        <Register />
-       </Route>
-
-        <Route path ="/userprofile">
-        <Profile />
-         </Route>
-         <Route path ="/upload">
-         <FileUpload />
-         </Route>
-
-       </BrowserRouter>
-
-
-
+              <Route path="/upload">
+                <FileUpload />
+              </Route>
+            </>
+          )}
+        </BrowserRouter>
       </div>
     </ThemeProvider>
   );
