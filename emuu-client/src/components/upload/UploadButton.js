@@ -7,6 +7,8 @@ import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
+import getData from "../../gameTagAPI.js";
+
 
 const theme = createTheme({
   palette: {
@@ -53,31 +55,17 @@ CircularProgressWithLabel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
+
 function FileUpload() {
   //use state for registration variables
   const [videoTitle, setVideoTitle] = useState("");
   const [videoDescription, setVideoDescription] = useState("");
   const [videoTag, setVideoTag] = useState("");
   const [videoDate, setVideoDate] = useState("");
-  const axios = require("axios");
 
-  const options = {
-    method: "GET",
-    url: "https://rawg-video-games-database.p.rapidapi.com/games?key=e1858c6ba8fc4fddaee1a7853f12e9b5",
-    headers: {
-      "X-RapidAPI-Key": "a37da360f5msh6876a81ea4e84dcp1aa95bjsn1fe86c68d821",
-      "X-RapidAPI-Host": "rawg-video-games-database.p.rapidapi.com",
-    },
-  };
+//Gets the RAWG api data for game database
+getData();
 
-  axios
-    .request(options)
-    .then(function (response) {
-      console.log(response.data);
-    })
-    .catch(function (error) {
-      console.error(error);
-    });
   // Store uploaded file
   const [file, setFile] = useState("");
 
