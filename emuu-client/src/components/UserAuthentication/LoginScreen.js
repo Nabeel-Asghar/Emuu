@@ -1,11 +1,15 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import React, {useState, useEffect} from 'react'
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
-import {Routes, Route, useHistory} from 'react-router-dom';
-import Home from '../home/Home'
-import "../../Firebase.js"
+import React, { useState, useEffect } from "react";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { Routes, Route, useHistory } from "react-router-dom";
+import Home from "../home/Home";
+import "../../Firebase.js";
 //import firebase from 'firebase/compat/app';
-import firebase from 'firebase/app';
+import firebase from "firebase/app";
 //import testUserStatus from './UserStatus'
 
 const theme = createTheme({
@@ -25,26 +29,20 @@ const theme = createTheme({
   },
 });
 function Login() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const history = useHistory();
 
-
-
-
- const[email, setEmail] = useState("")
- const[password, setPassword] = useState("")
- const history = useHistory()
-
-
-
-//Sign in feature
-  const handleSubmit = async(e) => {
+  //Sign in feature
+  const handleSubmit = async (e) => {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
         console.log("User is signed in");
-        localStorage.setItem('auth',true)
-        history.push('/home')
+        localStorage.setItem("auth", true);
+        history.push("/home");
         window.location.reload();
         // ..
       })
@@ -53,26 +51,42 @@ function Login() {
         const errorMessage = error.message;
         console.log("Invalid User Credentials");
       });
-//testUserStatus();
-  }
+    //testUserStatus();
+  };
   return (
     <ThemeProvider theme={theme}>
-       <div className="col-sm-6 offset-sm-3">
-
-      <h1>Login</h1>
-     <input type= "text" onChange ={(e) =>setEmail(e.target.value)} className= "form-control" placeholder = "Email" />
+      <div className="col-sm-6 offset-sm-3">
+        <h1>Login</h1>
+        <input
+          type="text"
+          onChange={(e) => setEmail(e.target.value)}
+          className="form-control"
+          placeholder="Email"
+        />
         <br />
-      <input type= "password" onChange ={(e) =>setPassword(e.target.value)} className= "form-control" placeholder = "Password" />
+        <input
+          type="password"
+          onChange={(e) => setPassword(e.target.value)}
+          className="form-control"
+          placeholder="Password"
+        />
         <br />
-
 
         <div class="row">
-            <div class="col-sm-12 text-center">
-               <button onClick={()=>handleSubmit()} type="submit" button class="btn me-4 btn-dark btn-lg">Sign In</button>
-                <a class="btn btn-dark btn-lg" href="/Register" role = "button">Sign Up</a>
-             </div>
+          <div class="col-sm-12 text-center">
+            <button
+              onClick={() => handleSubmit()}
+              type="submit"
+              button
+              class="btn me-4 btn-dark btn-lg"
+            >
+              Sign In
+            </button>
+            <a class="btn btn-dark btn-lg" href="/Register" role="button">
+              Sign Up
+            </a>
+          </div>
         </div>
-
       </div>
     </ThemeProvider>
   );

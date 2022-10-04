@@ -1,19 +1,8 @@
-import React from 'react'
-import './Posts.scss';
+import React from "react";
+import "./Posts.scss";
 
-function Posts(){
-    return (
-        <div className="Main-Post-Container">
-
-        </div>
-
-
-
-    )
-
-
-
-
+function Posts() {
+  return <div className="Main-Post-Container"></div>;
 }
 
-export default Posts
+export default Posts;

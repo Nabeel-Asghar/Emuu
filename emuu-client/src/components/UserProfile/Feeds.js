@@ -10,7 +10,6 @@ function Feeds() {
     <div className="feed-container">
       <h3 className="feed__heading">Feed</h3>
       <div className="videos__container">
-
         {YouTubeJSON.map((video) => (
           <div className="video__container" key={video.id}>
             <iframe

@@ -1,13 +1,12 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import React, {useState} from 'react'
-import "../../Firebase.js"
+import React, { useState } from "react";
+import "../../Firebase.js";
 import storage from "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
-import PropTypes from 'prop-types';
-import CircularProgress from '@mui/material/CircularProgress';
-import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
-
+import PropTypes from "prop-types";
+import CircularProgress from "@mui/material/CircularProgress";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 
 const theme = createTheme({
   palette: {
@@ -27,7 +26,7 @@ const theme = createTheme({
 });
 function CircularProgressWithLabel(props) {
   return (
-    <Box sx={{position: 'relative', display: 'inline-flex' }}>
+    <Box sx={{ position: "relative", display: "inline-flex" }}>
       <CircularProgress variant="determinate" {...props} />
       <Box
         sx={{
@@ -36,10 +35,10 @@ function CircularProgressWithLabel(props) {
           bottom: 0,
           right: 0,
           minWidth: 150,
-          position: 'absolute',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          position: "absolute",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
       >
         <Typography variant="subtitle" component="div" color="black">
@@ -51,105 +50,130 @@ function CircularProgressWithLabel(props) {
 }
 
 CircularProgressWithLabel.propTypes = {
-
   value: PropTypes.number.isRequired,
 };
 
 function FileUpload() {
- //use state for registration variables
-  const [videoTitle, setVideoTitle] = useState("")
-  const [videoDescription, setVideoDescription] = useState("")
-  const[videoTag, setVideoTag] = useState("")
-  const[videoDate,setVideoDate] = useState("")
-const axios = require("axios");
+  //use state for registration variables
+  const [videoTitle, setVideoTitle] = useState("");
+  const [videoDescription, setVideoDescription] = useState("");
+  const [videoTag, setVideoTag] = useState("");
+  const [videoDate, setVideoDate] = useState("");
+  const axios = require("axios");
 
-const options = {
-  method: 'GET',
-  url: 'https://rawg-video-games-database.p.rapidapi.com/games?key=e1858c6ba8fc4fddaee1a7853f12e9b5',
-  headers: {
-    'X-RapidAPI-Key': 'a37da360f5msh6876a81ea4e84dcp1aa95bjsn1fe86c68d821',
-    'X-RapidAPI-Host': 'rawg-video-games-database.p.rapidapi.com'
+  const options = {
+    method: "GET",
+    url: "https://rawg-video-games-database.p.rapidapi.com/games?key=e1858c6ba8fc4fddaee1a7853f12e9b5",
+    headers: {
+      "X-RapidAPI-Key": "a37da360f5msh6876a81ea4e84dcp1aa95bjsn1fe86c68d821",
+      "X-RapidAPI-Host": "rawg-video-games-database.p.rapidapi.com",
+    },
+  };
+
+  axios
+    .request(options)
+    .then(function (response) {
+      console.log(response.data);
+    })
+    .catch(function (error) {
+      console.error(error);
+    });
+  // Store uploaded file
+  const [file, setFile] = useState("");
+
+  //Store percent
+  const [percent, setPercent] = useState(0);
+
+  //File upload
+  function handleChange(event) {
+    setFile(event.target.files[0]);
   }
-};
-
-axios.request(options).then(function (response) {
-	console.log(response.data);
-}).catch(function (error) {
-	console.error(error);
-});
-    // Store uploaded file
-    const [file, setFile] = useState("");
-
-    //Store percent
-    const [percent, setPercent] = useState(0);
-
-    //File upload
-    function handleChange(event) {
-        setFile(event.target.files[0]);
+  //If a user doesn't choose a file and tries to upload, error will appear
+  const handleUpload = () => {
+    if (!file) {
+      alert("Please upload a video first");
     }
-    //If a user doesn't choose a file and tries to upload, error will appear
-    const handleUpload = () => {
-        if (!file) {
-            alert("Please upload a video first");
-        }
-        //Restrict file size to 40 MB ~ equivalent to 30 second video
-        if(file.size > 40 * 1024 * 1024){
-             alert("File size exceeds maximum allowed!")
-             return
-        }
+    //Restrict file size to 40 MB ~ equivalent to 30 second video
+    if (file.size > 40 * 1024 * 1024) {
+      alert("File size exceeds maximum allowed!");
+      return;
+    }
 
+    //Store into video folder in firebase storage
+    const storageRef = ref(storage, `/videos/${file.name}`);
 
-        //Store into video folder in firebase storage
-        const storageRef = ref(storage, `/videos/${file.name}`);
+    //Upload to firebase function
+    const uploadTask = uploadBytesResumable(storageRef, file);
 
-
-        //Upload to firebase function
-        const uploadTask = uploadBytesResumable(storageRef, file);
-
-        uploadTask.on(
-            "state_changed",
-            (snapshot) => {
-                const percent = Math.round(
-                    (snapshot.bytesTransferred / snapshot.totalBytes) * 100 //percent display
-                );
-
-                // update percent
-                setPercent(percent);
-            },
-            (err) => console.log(err),
-            () => {
-                // download url
-                getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-                    console.log(url);
-                });
-            }
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const percent = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100 //percent display
         );
-    };
 
-    return (
-        <div>
-
-        <h1>Upload a Video</h1>
-               <form id="videoUploadForm" method="POST">
-              <div className="col-sm-6 offset-sm-3">
-
-               <input type= "text" value = {videoTitle} onChange ={(e) =>setVideoTitle(e.target.value)} className= "form-control" placeholder = "Video Title" />
-               <br />
-                </div>
-              <div class="col-sm-6 offset-sm-3">
-               <input type= "text" value = {videoDescription} onChange ={(e) =>setVideoDescription(e.target.value)} className= "form-control" placeholder = "Description of Video" />
-               <br />
-               </div>
-              <div className="col-sm-6 offset-sm-3">
-               <input type= "text" value = {videoTag} onChange ={(e) =>setVideoTag(e.target.value)} className= "form-control" placeholder = "Game Tag" />
-               <br />
-               </div>
-               </form>
-            <input type="file" onChange={handleChange} accept="video/mp4" />
-       <button onClick={()=>handleUpload()} type="submit" className="btn btn-primary">Upload</button>
-            <p> <CircularProgressWithLabel value={percent} /> </p>
-        </div>
+        // update percent
+        setPercent(percent);
+      },
+      (err) => console.log(err),
+      () => {
+        // download url
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          console.log(url);
+        });
+      }
     );
+  };
+
+  return (
+    <div>
+      <h1>Upload a Video</h1>
+      <form id="videoUploadForm" method="POST">
+        <div className="col-sm-6 offset-sm-3">
+          <input
+            type="text"
+            value={videoTitle}
+            onChange={(e) => setVideoTitle(e.target.value)}
+            className="form-control"
+            placeholder="Video Title"
+          />
+          <br />
+        </div>
+        <div class="col-sm-6 offset-sm-3">
+          <input
+            type="text"
+            value={videoDescription}
+            onChange={(e) => setVideoDescription(e.target.value)}
+            className="form-control"
+            placeholder="Description of Video"
+          />
+          <br />
+        </div>
+        <div className="col-sm-6 offset-sm-3">
+          <input
+            type="text"
+            value={videoTag}
+            onChange={(e) => setVideoTag(e.target.value)}
+            className="form-control"
+            placeholder="Game Tag"
+          />
+          <br />
+        </div>
+      </form>
+      <input type="file" onChange={handleChange} accept="video/mp4" />
+      <button
+        onClick={() => handleUpload()}
+        type="submit"
+        className="btn btn-primary"
+      >
+        Upload
+      </button>
+      <p>
+        {" "}
+        <CircularProgressWithLabel value={percent} />{" "}
+      </p>
+    </div>
+  );
 }
 
 export default FileUpload;
