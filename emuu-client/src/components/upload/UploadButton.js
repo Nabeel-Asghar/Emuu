@@ -92,7 +92,7 @@ function FileUpload() {
                </form>
             <input type="file" onChange={handleChange} accept="video/mp4" />
        <button onClick={()=>handleUpload()} type="submit" className="btn btn-primary">Upload</button>
-            <p>{percent} "% done"</p>
+            <p>{percent}% done</p>
         </div>
     );
 }

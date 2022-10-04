@@ -31,11 +31,12 @@ onAuthStateChanged(auth, async (user) => {
          if (user) {
             //retrieves token
            token = await getIdToken(user);
-           console.log("Success Sign In")
-           console.log(token)
+           var tokenShortened = token.slice(0,5);
+           console.log("User is authorized and Logged in")
+           console.log("First 5 chars of token: " + tokenShortened)
          }
         else{
-            console.log("Success Sign Out")
+            console.log("User is not logged in")
             token =""
             console.log(token)
         }
@@ -68,10 +69,10 @@ onAuthStateChanged(auth, async (user) => {
                   <Form.Control
                     type="search"
                     placeholder="Search"
-                    className="me-2"
+                    className="me-1"
                     aria-label="Search"
                   />
-                  <Button variant="outline-success">Search</Button>
+                  <Button variant="light">Search</Button>
                 </Form>
             <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
             <Navbar.Offcanvas
