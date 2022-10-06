@@ -34,9 +34,40 @@ function Register() {
 
   const videoCollectionData = {};
 
-  const handleSubmit = async (e) => {
-    // store the states in the form data
+    const validatePassword= (pass)=>{
+    if(pass.length < 8){
+    document.querySelector("#password-err").innerHTML = "At least 8 characters";
+    return false;
 
+    }
+
+    let uppercase = false;
+    let specialChar = false;
+        for( let i = 0 ; i< pass.length; i++){
+    if(pass[i].charCodeAt(0) >= 65 && pass[i].charCodeAt(0)<= 90) uppercase = true;
+    }
+    if(!uppercase) {
+                       document.querySelector("#password-err").innerHTML = "At least 1 uppercase letter";
+                       return false;
+
+                       }
+    for( let i = 0 ; i< pass.length; i++){
+        if(pass[i].charCodeAt(0) >= 33 && pass[i].charCodeAt(0)<= 64) specialChar = true;
+        }
+       if(!specialChar) {
+                            document.querySelector("#password-err").innerHTML = "At least 1 special character";
+                            return false;
+
+                            }
+
+       return true;
+
+    }
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+    // store the states in the form data
+    if(!validatePassword(userdata.user_password))return
     history.push("/login");
     await axios
       .post("http://localhost:8080/auth/register", JSON.stringify(userdata))
@@ -66,7 +97,7 @@ function Register() {
           <Box component="form" sx={{ mt: 3 }}>
             <Grid container spacing={0}>
               <Grid item xs={12}>
-                <TextField
+                <input
                   required
                   fullWidth
                   id="username"
@@ -74,10 +105,12 @@ function Register() {
                   name="username"
                   autoComplete="username"
                   value={userName}
+                  className="register-input"
+                  placeholder="Username"
                   onChange={(e) => setUserName(e.target.value)}
                 />
                 <Grid item xs={12}>
-                  <TextField
+                  <input
                     required
                     fullWidth
                     id="email"
@@ -85,11 +118,13 @@ function Register() {
                     name="email"
                     autoComplete="email"
                     value={email}
+                    className="register-input"
+                    placeholder="Email Address"
                     onChange={(e) => setEmail(e.target.value)}
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <TextField
+                  <input
                     required
                     fullWidth
                     name="password"
@@ -98,12 +133,15 @@ function Register() {
                     id="password"
                     autoComplete="new-password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    className="register-input"
+                    placeholder="Password"
+                    onChange={(e) => {setPassword(e.target.value); document.querySelector("#password-err").innerHTML = "<pre>    </pre>" }}
                   />
+                  <p id="password-err" style={{color: "red", margin: "0"}}><pre>        </pre> </p>
                 </Grid>
               </Grid>
               <Button
-                onClick={() => handleSubmit()}
+                onClick={(e) => handleSubmit(e)}
                 type="submit"
                 fullWidth
                 variant="contained"
