@@ -5,10 +5,7 @@ import { Avatar } from "@mui/material";
 import YouTubeJSON from "../data/youtube-videos.json";
 import { AxiosContext } from "react-axios/lib/components/AxiosProvider";
 
-
-
 function Feeds() {
-
   return (
     <div className="feed-container">
       <h3 className="feed__heading">Feed</h3>

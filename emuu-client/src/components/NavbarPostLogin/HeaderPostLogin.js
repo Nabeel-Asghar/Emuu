@@ -9,7 +9,7 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import { Routes, Route, useHistory } from "react-router-dom";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import firebase from "firebase/app";
-//import TestUserStatus from '../UserAuthentication/UserStatus'
+
 
 function HeaderPostLogin() {
   //Sign Out Function in Nav Bar
@@ -38,7 +38,6 @@ function HeaderPostLogin() {
           variant="dark"
           expand={expand}
           className="mb-3"
-          
         >
           <Container fluid>
             <Navbar.Brand href="/Home">EMUU</Navbar.Brand>

@@ -7,8 +7,7 @@ import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-//import getData from "../../gameTagAPI.js";
-
+import getData from "../../gameTagAPI.js";
 
 const theme = createTheme({
   palette: {
@@ -55,7 +54,6 @@ CircularProgressWithLabel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-
 function FileUpload() {
   //use state for registration variables
   const [videoTitle, setVideoTitle] = useState("");
@@ -63,8 +61,8 @@ function FileUpload() {
   const [videoTag, setVideoTag] = useState("");
   const [videoDate, setVideoDate] = useState("");
 
-//Gets the RAWG api data for game database
-//getData();
+  //Gets the RAWG api data for game database
+  getData();
 
   // Store uploaded file
   const [file, setFile] = useState("");

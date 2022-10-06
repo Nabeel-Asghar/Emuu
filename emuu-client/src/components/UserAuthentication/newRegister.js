@@ -26,22 +26,13 @@ function Register() {
   const [message, setMessage] = useState("");
   const history = useHistory();
 
-
-
-
-
-
   const userdata = {
     user_userName: userName,
     user_email: email,
     user_password: password,
   };
 
-  const videoCollectionData ={
-
-
-
-  }
+  const videoCollectionData = {};
 
   const handleSubmit = async (e) => {
     // store the states in the form data
@@ -74,8 +65,6 @@ function Register() {
           </Typography>
           <Box component="form" sx={{ mt: 3 }}>
             <Grid container spacing={0}>
-
-
               <Grid item xs={12}>
                 <TextField
                   required
