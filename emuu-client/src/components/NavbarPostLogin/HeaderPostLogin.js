@@ -38,6 +38,7 @@ function HeaderPostLogin() {
           variant="dark"
           expand={expand}
           className="mb-3"
+          
         >
           <Container fluid>
             <Navbar.Brand href="/Home">EMUU</Navbar.Brand>

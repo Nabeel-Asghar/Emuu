@@ -23,7 +23,6 @@ import firebase from 'firebase/app';
 
 
 
-
 const theme = createTheme();
 
  function Login() {
@@ -33,25 +32,27 @@ const theme = createTheme();
 
 
 
-  //Sign in feature
-    const handleSubmit = async(e) => {
-      const auth = getAuth();
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          // Signed in
-          const user = userCredential.user;
-          console.log("User is signed in");
-          localStorage.setItem('auth',true)
-          history.push('/Home')
-          window.location.reload();
-          // ..
-        })
-        .catch((error) => {
-          const errorCode = error.code;
-          const errorMessage = error.message;
-          console.log("Invalid User Credentials");
-        });
-  };
+   //Sign in feature
+   const handleSubmit = async (e) => {
+     console.log("HandleSubmit working")
+     const auth = getAuth();
+     signInWithEmailAndPassword(auth, email, password)
+       .then((userCredential) => {
+         // Signed in
+         const user = userCredential.user;
+         console.log("User is signed in");
+         localStorage.setItem("auth", true);
+         history.push("/home");
+        window.location.reload();
+         // ..
+       })
+       .catch((error) => {
+         const errorCode = error.code;
+         const errorMessage = error.message;
+         console.log("Invalid User Credentials");
+       });
+     //testUserStatus();
+   };
 
   return (
     <ThemeProvider theme={theme}>
@@ -63,7 +64,7 @@ const theme = createTheme();
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://unsplash.com/photos/LFVBohYmtgc)',
+            backgroundImage: 'url(https://images.unsplash.com/photo-1616588589676-62b3bd4ff6d2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],
@@ -87,7 +88,7 @@ const theme = createTheme();
             <Typography component="h1" variant="h5">
               Sign in
             </Typography>
-            <Box component="form"  sx={{ mt: 1 }}>
+            <Box component="form" sx={{ mt: 1 }}>
               <TextField
                 margin="normal"
                 required
@@ -97,6 +98,7 @@ const theme = createTheme();
                 name="email"
                 autoComplete="email"
                 autoFocus
+                value = {email}
                 onChange ={(e) =>setEmail(e.target.value)}
               />
               <TextField
@@ -108,15 +110,18 @@ const theme = createTheme();
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                 value = {password}
                 onChange ={(e) =>setPassword(e.target.value)}
               />
               <FormControlLabel
                 control={<Checkbox value="remember" color="primary" />}
                 label="Remember me"
               />
-              <Button onClick={()=>handleSubmit()}
+              <Button
 
-                type="submit"
+                onClick={() => handleSubmit()}
+
+                type="button"
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
