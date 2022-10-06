@@ -20,18 +20,28 @@ const theme = createTheme();
 
 function Register() {
   //use state for registration variables
-
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
   const [message, setMessage] = useState("");
   const history = useHistory();
 
+
+
+
+
+
   const userdata = {
     user_userName: userName,
     user_email: email,
     user_password: password,
   };
+
+  const videoCollectionData ={
+
+
+
+  }
 
   const handleSubmit = async (e) => {
     // store the states in the form data
