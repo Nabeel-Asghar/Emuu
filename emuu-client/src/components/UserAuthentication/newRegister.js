@@ -37,6 +37,7 @@ function Register() {
     const validatePassword= (pass)=>{
     if(pass.length < 8){
     document.querySelector("#password-err").innerHTML = "At least 8 characters";
+    document.querySelector("#password-err").style.color = "red";
     return false;
 
     }
@@ -47,7 +48,8 @@ function Register() {
     if(pass[i].charCodeAt(0) >= 65 && pass[i].charCodeAt(0)<= 90) uppercase = true;
     }
     if(!uppercase) {
-                       document.querySelector("#password-err").innerHTML = "At least 1 uppercase letter";
+                       document.querySelector("#password-err").innerHTML = "At least 1 uppercase letter"
+                        document.querySelector("#password-err").style.color = "red";
                        return false;
 
                        }
@@ -55,7 +57,8 @@ function Register() {
         if(pass[i].charCodeAt(0) >= 33 && pass[i].charCodeAt(0)<= 64) specialChar = true;
         }
        if(!specialChar) {
-                            document.querySelector("#password-err").innerHTML = "At least 1 special character";
+                            document.querySelector("#password-err").innerHTML = "At least 1 special character"
+                             document.querySelector("#password-err").style.color = "red";
                             return false;
 
                             }
@@ -64,10 +67,33 @@ function Register() {
 
     }
 
+
+    function validateEmail(email)
+   {
+
+    let period = false;
+    let at = false;
+    for( let i=0 ; i< email.length; i++){
+    if(email[i]== '@')at = true;
+    if(email[i]== '.')period = true;
+    }
+
+    if(!period || !at){
+
+    document.querySelector("#password-err").innerHTML = "Email invalid";
+     document.querySelector("#password-err").style.color= "red";
+    return false;}
+
+
+    return true;
+   }
+
+
   const handleSubmit = async (e) => {
   e.preventDefault();
     // store the states in the form data
     if(!validatePassword(userdata.user_password))return
+    if(!validateEmail(userdata.user_email)) return
     history.push("/login");
     await axios
       .post("http://localhost:8080/auth/register", JSON.stringify(userdata))
@@ -120,9 +146,10 @@ function Register() {
                     value={email}
                     className="register-input"
                     placeholder="Email Address"
-                    onChange={(e) => setEmail(e.target.value)}
+                    onChange={(e) =>{  document.querySelector("#password-err").style.color = "black";document.querySelector("#password-err").innerHTML ="<small> Password must be at least 8 characters with 1 special character and 1 uppercase character </small>";setEmail(e.target.value)}}
                   />
                 </Grid>
+
                 <Grid item xs={12}>
                   <input
                     required
@@ -135,9 +162,10 @@ function Register() {
                     value={password}
                     className="register-input"
                     placeholder="Password"
-                    onChange={(e) => {setPassword(e.target.value); document.querySelector("#password-err").innerHTML = "<pre>    </pre>" }}
+                    onChange={(e) => {setPassword(e.target.value); document.querySelector("#password-err").style.color = "black";document.querySelector("#password-err").innerHTML = "<small> Password must be at least 8 characters with 1 special character and 1 uppercase character </small>" }}
                   />
-                  <p id="password-err" style={{color: "red", margin: "0"}}><pre>        </pre> </p>
+                  <p id="password-err" style={{color: "black", margin: "0"}}><small> Password must be at least 8 characters with 1 special character and 1 uppercase character </small> </p>
+
                 </Grid>
               </Grid>
               <Button

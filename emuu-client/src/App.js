@@ -44,17 +44,18 @@ function App() {
           <Route path="/register">
             <Register />
           </Route>
-          {auth === "true" && (
-            <>
-              <Route path="/userprofile">
-                <Profile />
-              </Route>
 
-              <Route path="/upload">
-                <FileUpload />
-              </Route>
-            </>
-          )}
+           {auth === "true" && (
+           <>
+           <Route path="/userprofile">
+           <Profile />
+           </Route>
+
+           <Route path="/upload">
+           <upload />
+           </Route>
+           </>
+           )}
         </BrowserRouter>
       </div>
     </ThemeProvider>
