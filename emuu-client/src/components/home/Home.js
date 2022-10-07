@@ -45,7 +45,7 @@ getDownloadURL(videoRef)
 
           <div className="spacer">
             <video width="382" height="215" controls>
-              <source src="gs://emuu-1ee85.appspot.com/videos/mylivewallpapers.com-Naruto-Shippuden.mp4" type="video/mp4"></source>
+              <source src="https://firebasestorage.googleapis.com/v0/b/emuu-1ee85.appspot.com/o/videos%2Fmylivewallpapers.com-Naruto-Shippuden.mp4?alt=media&token=a6af4486-e58e-47ff-82fe-e89a1c8721054" type="video/mp4"></source>
           </video>
           </div>
 
