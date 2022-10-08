@@ -23,8 +23,22 @@ $secondary-color: #26343d;
         background: $main-color;
         overflow: hidden;
         border-radius: 20px 20px 0 0;
+        position:relative;
+        #background-change{
+                              border-radius: 50%;
+                              height: 34px;
+                              position: absolute;
+                              top: 10px;
+                              right: 10px;
+                              background-color: white;
+                              width: 34px;
+                              display: flex;
+                              align-items: center;
+                              justify-content: center;
+                          }
       }
       .user-profile-img {
+        position:relative;
         display: flex;
         flex-direction: column;
         position: absolute;
@@ -35,6 +49,20 @@ $secondary-color: #26343d;
         background-color: $secondary-color;
         bottom: -2rem;
         border: 5px solid white;
+        #profile-change{
+                            position: absolute;
+                            bottom: 10px;
+                            right: 25px;
+                            border-radius: 50%;
+                            height: 34px;
+                            width: 34px;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+
+
+
+        }
         #prf-img {
           height: 100%;
           width: 100%;
@@ -59,4 +87,8 @@ $secondary-color: #26343d;
       border-radius: 20px;
     }
   }
+
 }
+
+
+

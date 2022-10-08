@@ -5,6 +5,7 @@ import React, { useState } from "react";
 import "../../Firebase.js";
 import storage from "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import CenterFocusWeakIcon from '@mui/icons-material/CenterFocusWeak';
 
 function Profile() {
 
@@ -52,6 +53,8 @@ function Profile() {
               alt=""
               srcSet=""
             />
+            <input style={{display:"none"}} id="background-inp" type="file"/>
+          <button id="background-change">  <CenterFocusWeakIcon /></button>
           </div>
           <div className="user-profile-img">
             <img
@@ -60,7 +63,8 @@ function Profile() {
               alt=""
               srcSet=""
             />
-
+            <input style={{display: "none"}} id="profile-inp" type="file"/>
+               <button id="profile-change">  <CenterFocusWeakIcon /></button>
             <div className={"userName"}>Moe</div>
           </div>
         </div>
