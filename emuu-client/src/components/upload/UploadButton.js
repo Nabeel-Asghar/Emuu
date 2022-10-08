@@ -8,6 +8,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import getData from "../../gameTagAPI.js";
+import Alert from '@mui/material/Alert';
 
 
 const theme = createTheme({
@@ -64,7 +65,7 @@ function FileUpload() {
   const [videoDate, setVideoDate] = useState("");
 
   //Gets the RAWG api data for game database
-  getData();
+  //getData();
 
   // Store uploaded file
   const [file, setFile] = useState("");
@@ -79,10 +80,11 @@ function FileUpload() {
   //If a user doesn't choose a file and tries to upload, error will appear
   const handleUpload = () => {
     if (!file) {
-      alert("Please upload a video first");
+          alert("Please upload a video first!");
+
     }
-    //Restrict file size to 40 MB ~ equivalent to 30 second video
-    if (file.size > 40 * 1024 * 1024) {
+    //Restrict file size to 5 MB ~ equivalent to 30 second video
+    if (file.size > 5 * 1024 * 1024) {
       alert("File size exceeds maximum allowed!");
       return;
     }
