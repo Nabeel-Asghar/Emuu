@@ -33,12 +33,12 @@ function HeaderPostLogin() {
     <>
       {[false].map((expand) => (
         <Navbar
-          key={expand}
-          bg="dark"
-          variant="dark"
-          expand={expand}
-          className="mb-3"
-        >
+                  key={expand}
+                  bg="dark"
+                  variant="dark"
+                  expand={expand}
+                  className="mb-3"
+                >
           <Container fluid>
             <Navbar.Brand href="/Home">EMUU</Navbar.Brand>
             <Form className="d-flex">
@@ -48,7 +48,7 @@ function HeaderPostLogin() {
                 className="me-2"
                 aria-label="Search"
               />
-              <Button variant="outline-success">Search</Button>
+              <Button variant="btn btn-success">Search</Button>
             </Form>
             <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
             <Navbar.Offcanvas
