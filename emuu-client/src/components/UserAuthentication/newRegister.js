@@ -32,7 +32,9 @@ function Register() {
     user_password: password,
   };
 
-  const videoCollectionData = {};
+  const videoCollectionData = {
+  user_JWT: AuthToken
+  };
 
   const handleSubmit = async (e) => {
     // store the states in the form data
