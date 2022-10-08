@@ -33,7 +33,7 @@ function Register() {
   };
 
   const videoCollectionData = {
-  user_JWT: AuthToken
+  //user_JWT: AuthToken
   };
 
   const handleSubmit = async (e) => {
