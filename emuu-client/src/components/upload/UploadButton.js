@@ -8,6 +8,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import getData from "../../gameTagAPI.js";
+import { getAuth } from "firebase/auth";
+import axios from "axios";
+
 
 const theme = createTheme({
   palette: {
@@ -60,6 +63,24 @@ function FileUpload() {
   const [videoDescription, setVideoDescription] = useState("");
   const [videoTag, setVideoTag] = useState("");
   const [videoDate, setVideoDate] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+  const [userName, setUserName] = useState("");
+
+  //upload data structure
+  const uploadData = {
+        user_userName: userName,
+        video_title: videoTitle,
+        video_description: videoDescription,
+        video_gameTags: videoTag,
+        video_url: videoUrl
+      };
+
+
+   //Gets user authentication
+   const auth = getAuth();
+   const user = auth.currentUser;
+
+
 
   //Gets the RAWG api data for game database
   getData();
@@ -73,9 +94,10 @@ function FileUpload() {
   //File upload
   function handleChange(event) {
     setFile(event.target.files[0]);
+    setUserName(user.displayName);
   }
   //If a user doesn't choose a file and tries to upload, error will appear
-  const handleUpload = () => {
+  const handleUpload = async (e) => {
     if (!file) {
       alert("Please upload a video first");
     }
@@ -85,11 +107,16 @@ function FileUpload() {
       return;
     }
 
+
+
+
     //Store into video folder in firebase storage
     const storageRef = ref(storage, `/videos/${file.name}`);
 
     //Upload to firebase function
     const uploadTask = uploadBytesResumable(storageRef, file);
+
+
 
     uploadTask.on(
       "state_changed",
@@ -105,10 +132,18 @@ function FileUpload() {
       () => {
         // download url
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          console.log(url);
+          setVideoUrl(url);
+
         });
       }
     );
+
+     //axios request to post upload information to backend
+            await axios
+                    .post("http://localhost:8080/auth/upload", JSON.stringify(uploadData))
+                    .then((result) => {
+                      console.log("User information is sent to firestore");
+                    });
   };
 
   return (
