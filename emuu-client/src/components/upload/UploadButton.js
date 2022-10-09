@@ -65,7 +65,7 @@ function FileUpload() {
   const [videoDate, setVideoDate] = useState("");
 
   //Gets the RAWG api data for game database
-  //getData();
+  getData();
 
   // Store uploaded file
   const [file, setFile] = useState("");
