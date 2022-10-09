@@ -11,7 +11,7 @@ function Profile() {
           <div className="user-profile-bg-image">
             <img
               id="prf-bg-img"
-              src="https://wallpaperaccess.com/full/170249.jpg"
+              src="http://mcentre.lk/frontend/assets/images/default-banner.png"
               alt=""
               srcSet=""
             />
@@ -19,7 +19,7 @@ function Profile() {
           <div className="user-profile-img">
             <img
               id="prf-img"
-              src="https://wallpaperaccess.com/full/170249.jpg"
+              src="https://i.stack.imgur.com/l60Hf.png"
               alt=""
               srcSet=""
             />
