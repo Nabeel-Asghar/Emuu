@@ -111,7 +111,7 @@ function FileUpload() {
 
 
     //Store into video folder in firebase storage
-    const storageRef = ref(storage, `/videos/${file.name}`);
+    const storageRef = ref(storage, `/videos/${file.name + new Date().getTime()}`);
 
     //Upload to firebase function
     const uploadTask = uploadBytesResumable(storageRef, file);

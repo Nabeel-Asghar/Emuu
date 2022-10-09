@@ -52,6 +52,7 @@ func UploadVideo(c *gin.Context) {
                 "Video url": input.Video_url,
                 "Comments": "",
                 "Likes": 0,
+                "Views": 0,
                 "Date": currentDate,
 
         })
