@@ -1,7 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useState } from "react";
+import {storage} from "../../Firebase.js";
 import "../../Firebase.js";
-import storage from "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";

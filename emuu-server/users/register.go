@@ -68,13 +68,13 @@ func CreateUser(c *gin.Context) {
   Date := dt.Format("01-02-2006")
 wr, err := client.Collection("Users").Doc(input.User_userName).Create(ctx, map[string]interface{}{
                 "Username": input.User_userName,
-                "Subscriber Count": 0,
-                "Liked Videos List": "",
-                "Subscriber List": "",
-                "Banner url": "http://mcentre.lk/frontend/assets/images/default-banner.png",
-                "Profile Picture url": "https://i.stack.imgur.com/l60Hf.png",
-                "Videos Posted": 0,
-                "Date Joined": Date,
+                "SubscriberCount": 0,
+                "LikedVideosList": "",
+                "SubscriberList": "",
+                "BannerUrl": "http://mcentre.lk/frontend/assets/images/default-banner.png",
+                "ProfilePictureUrl": "https://i.stack.imgur.com/l60Hf.png",
+                "VideosPosted": 0,
+                "DateJoined": Date,
 
         })
 

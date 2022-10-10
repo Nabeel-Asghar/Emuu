@@ -48,10 +48,10 @@ func UploadVideo(c *gin.Context) {
     id := uuid.New()
         wr, err := client.Collection("Videos").Doc(id.String()).Create(ctx, map[string]interface{}{
                 "Username": input.User_userName,
-                "Video Title": input.Video_title,
-                "Video Description": input.Video_description,
-                "Game Tag": input.Game_tags,
-                "Video url": input.Video_url,
+                "VideoTitle": input.Video_title,
+                "VideoDescription": input.Video_description,
+                "GameTag": input.Game_tags,
+                "VideoUrl": input.Video_url,
                 "Comments": "",
                 "Likes": 0,
                 "Views": 0,

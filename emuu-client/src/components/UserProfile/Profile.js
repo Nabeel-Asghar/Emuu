@@ -1,11 +1,31 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import "./Profile.scss";
 import Feeds from "./Feeds";
 import UserInfo from "./UserInfo";
+import {db} from "../../Firebase.js"
+import {  getDoc ,doc, collection, query, where, onSnapshot } from "firebase/firestore";
 
 const displayName = localStorage.getItem("displayName");
 
+
+
+
+
 function Profile() {
+
+const[Banner, setBanner] = useState("");
+const[ProfilePic, setProfilePic] = useState("");
+
+
+getDoc(doc(db, "Users", displayName)).then(docSnap => {
+
+  setBanner(docSnap.data().BannerUrl) ;
+  setProfilePic(docSnap.data().ProfilePictureUrl);
+
+})
+
+
+
 
   return (
     <div className="MainProfileDiv">
@@ -14,7 +34,7 @@ function Profile() {
           <div className="user-profile-bg-image">
             <img
               id="prf-bg-img"
-              src="http://mcentre.lk/frontend/assets/images/default-banner.png"
+              src={Banner}
               alt=""
               srcSet=""
             />
@@ -22,7 +42,7 @@ function Profile() {
           <div className="user-profile-img">
             <img
               id="prf-img"
-              src="https://i.stack.imgur.com/l60Hf.png"
+              src={ProfilePic}
               alt=""
               srcSet=""
             />
