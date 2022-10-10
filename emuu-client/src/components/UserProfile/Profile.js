@@ -1,9 +1,12 @@
-import React from "react";
+import React, {useState} from "react";
 import "./Profile.scss";
 import Feeds from "./Feeds";
 import UserInfo from "./UserInfo";
 
+const displayName = localStorage.getItem("displayName");
+
 function Profile() {
+
   return (
     <div className="MainProfileDiv">
       <div className="profile-container">
@@ -23,7 +26,7 @@ function Profile() {
               alt=""
               srcSet=""
             />
-            <div className={"userName"}>Moe</div>
+            <div className={"userName"}> {displayName} </div>
           </div>
         </div>
         <div className="bottom-portion">

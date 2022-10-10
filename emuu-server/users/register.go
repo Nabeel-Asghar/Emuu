@@ -52,6 +52,8 @@ func CreateUser(c *gin.Context) {
 		return
 	}
 
+
+        // Firestore initialized
 	  sa := option.WithCredentialsFile("../serviceAccountKey.json")
        client, err := firestore.NewClient(ctx, "emuu-1ee85", sa)
        if err != nil {

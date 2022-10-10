@@ -35,12 +35,14 @@ function Login() {
   const handleSubmit = async (e) => {
     console.log("HandleSubmit working");
     const auth = getAuth();
+    const user = auth.currentUser;
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
         console.log("User is signed in");
         localStorage.setItem("auth", true);
+        localStorage.setItem("displayName", user.displayName);
         history.push("/home");
         window.location.reload();
 
