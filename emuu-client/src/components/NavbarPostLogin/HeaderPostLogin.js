@@ -77,6 +77,8 @@ function HeaderPostLogin() {
                             SignedOut();
                             localStorage.setItem("auth", false);
                             window.location.reload();
+                            localStorage.setItem("user", null)
+
                           }}
                           type="submit"
                           button

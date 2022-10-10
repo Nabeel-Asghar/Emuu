@@ -40,6 +40,7 @@ function Login() {
       console.log(userCredential)
         // Signed in
         const user = userCredential.user;
+        localStorage.setItem("user" , JSON.stringify(userCredential.user))
         console.log("User is signed in");
         localStorage.setItem("auth", true);
         history.push("/home");

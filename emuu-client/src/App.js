@@ -28,6 +28,7 @@ const theme = createTheme({
 });
 
 function App() {
+
   const auth = localStorage.getItem("auth");
   //Navigation bar
   return (
