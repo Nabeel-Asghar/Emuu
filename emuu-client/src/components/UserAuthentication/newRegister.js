@@ -1,7 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { React, useState, Component } from "react";
 import axios from "axios";
-import Login from "./LoginScreen";
+import Login from "./newloginscreen";
 import { Routes, Route, useHistory } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
@@ -20,8 +20,6 @@ const theme = createTheme();
 
 function Register() {
   //use state for registration variables
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
@@ -29,12 +27,12 @@ function Register() {
   const history = useHistory();
 
   const userdata = {
-    user_firstName: firstName,
-    user_lastName: lastName,
     user_userName: userName,
     user_email: email,
     user_password: password,
   };
+
+
 
   const handleSubmit = async (e) => {
     // store the states in the form data
@@ -66,32 +64,7 @@ function Register() {
             Register
           </Typography>
           <Box component="form" sx={{ mt: 3 }}>
-            <Grid container spacing={3}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                />
-              </Grid>
+            <Grid container spacing={0}>
               <Grid item xs={12}>
                 <TextField
                   required

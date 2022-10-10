@@ -8,7 +8,8 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import getData from "../../gameTagAPI.js";
-import Alert from '@mui/material/Alert';
+import { getAuth } from "firebase/auth";
+import axios from "axios";
 
 
 const theme = createTheme({
@@ -56,13 +57,30 @@ CircularProgressWithLabel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-
 function FileUpload() {
   //use state for registration variables
   const [videoTitle, setVideoTitle] = useState("");
   const [videoDescription, setVideoDescription] = useState("");
   const [videoTag, setVideoTag] = useState("");
   const [videoDate, setVideoDate] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
+  const [userName, setUserName] = useState("");
+
+  //upload data structure
+  const uploadData = {
+        user_userName: userName,
+        video_title: videoTitle,
+        video_description: videoDescription,
+        video_gameTags: videoTag,
+        video_url: videoUrl
+      };
+
+
+   //Gets user authentication
+   const auth = getAuth();
+   const user = auth.currentUser;
+
+
 
   //Gets the RAWG api data for game database
   getData();
@@ -76,24 +94,29 @@ function FileUpload() {
   //File upload
   function handleChange(event) {
     setFile(event.target.files[0]);
+    setUserName(user.displayName);
   }
   //If a user doesn't choose a file and tries to upload, error will appear
-  const handleUpload = () => {
+  const handleUpload = async (e) => {
     if (!file) {
-          alert("Please upload a video first!");
-
+      alert("Please upload a video first");
     }
-    //Restrict file size to 5 MB ~ equivalent to 30 second video
-    if (file.size > 5 * 1024 * 1024) {
+    //Restrict file size to 40 MB ~ equivalent to 30 second video
+    if (file.size > 40 * 1024 * 1024) {
       alert("File size exceeds maximum allowed!");
       return;
     }
 
+
+
+
     //Store into video folder in firebase storage
-    const storageRef = ref(storage, `/videos/${file.name}`);
+    const storageRef = ref(storage, `/videos/${file.name + new Date().getTime()}`);
 
     //Upload to firebase function
     const uploadTask = uploadBytesResumable(storageRef, file);
+
+
 
     uploadTask.on(
       "state_changed",
@@ -109,10 +132,18 @@ function FileUpload() {
       () => {
         // download url
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          console.log(url);
+          setVideoUrl(url);
+
         });
       }
     );
+
+     //axios request to post upload information to backend
+            await axios
+                    .post("http://localhost:8080/auth/upload", JSON.stringify(uploadData))
+                    .then((result) => {
+                      console.log("User information is sent to firestore");
+                    });
   };
 
   return (

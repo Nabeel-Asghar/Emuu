@@ -5,7 +5,7 @@ import (
 	register "emuu-server/main/users"
 	"fmt"
 	"log"
-
+    upload "emuu-server/main/users"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
 )
@@ -27,7 +27,7 @@ func main() {
 
 	auth := r.Group("auth") //group is in the gin gonic framework,if you want to create login forgot password, you can create it
 	{
-// 	    auth.POST("/upload", upload.UploadVideo)
+ 	    auth.POST("/upload", upload.UploadVideo)
 		auth.POST("/register", register.CreateUser)
 
 	}

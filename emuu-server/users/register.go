@@ -5,9 +5,11 @@ import (
 	"log"
 	"net/http"
 	"time"
-
+   "cloud.google.com/go/firestore"
 	"firebase.google.com/go/v4/auth"
 	"github.com/gin-gonic/gin"
+	"fmt"
+	"google.golang.org/api/option"
 )
 
 
@@ -40,13 +42,44 @@ func CreateUser(c *gin.Context) {
 		EmailVerified(false).
 		Password(input.User_password).
 		DisplayName(input.User_userName).
+		PhotoURL("https://i.stack.imgur.com/l60Hf.png").
 		Disabled(false)
+
 
 	u, err := firebaseAuth.CreateUser(ctx, params)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+	  sa := option.WithCredentialsFile("../serviceAccountKey.json")
+       client, err := firestore.NewClient(ctx, "emuu-1ee85", sa)
+       if err != nil {
+            log.Fatalf("firestore client creation error:%s\n", err)
+       }
+       defer client.Close()
+
+
+//Get Time
+   dt := time.Now()
+//Format Time
+  Date := dt.Format("01-02-2006")
+wr, err := client.Collection("Users").Doc(input.User_userName).Create(ctx, map[string]interface{}{
+                "Username": input.User_userName,
+                "Subscriber Count": 0,
+                "Liked Videos List": "",
+                "Subscriber List": "",
+                "Banner url": "http://mcentre.lk/frontend/assets/images/default-banner.png",
+                "Profile Picture url": "https://i.stack.imgur.com/l60Hf.png",
+                "Videos Posted": 0,
+                "Date Joined": Date,
+
+        })
+
+        if err != nil {
+                log.Fatalf("firestore doc creation error:%s\n", err)
+        }
+        fmt.Println(wr.UpdateTime)
 
 	log.Println(u)
 
