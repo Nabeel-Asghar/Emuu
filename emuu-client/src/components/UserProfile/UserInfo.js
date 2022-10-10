@@ -1,21 +1,27 @@
-import React,  {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import "./UserInfo.scss";
-import {db} from "../../Firebase.js"
-import {  getDoc ,doc, collection, query, where, onSnapshot } from "firebase/firestore";
+import { db } from "../../Firebase.js";
+import {
+  getDoc,
+  doc,
+  collection,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
 
 const displayName = localStorage.getItem("displayName");
 
 function UserInfo() {
+  const [dateJoined, setDateJoined] = useState("");
+  const [Subscribers, setSubscribers] = useState("");
+  const [VidNum, setVidNum] = useState("");
 
-const[dateJoined, setDateJoined] = useState("");
-const[Subscribers, setSubscribers] = useState("");
-const[VidNum, setVidNum]= useState("")
-
-getDoc(doc(db, "Users", displayName)).then(docSnap => {
-  setDateJoined(docSnap.data().DateJoined);
-  setSubscribers(docSnap.data().SubscriberCount);
-  setVidNum(docSnap.data().VideosPosted);
-})
+  getDoc(doc(db, "Users", displayName)).then((docSnap) => {
+    setDateJoined(docSnap.data().DateJoined);
+    setSubscribers(docSnap.data().SubscriberCount);
+    setVidNum(docSnap.data().VideosPosted);
+  });
 
   return (
     <div className="Main-UserInfo-Container">
@@ -26,7 +32,6 @@ getDoc(doc(db, "Users", displayName)).then(docSnap => {
       <p className="about__info">{Subscribers} Subscribers</p>
       <hr />
       <p className="about__info">{VidNum} Videos posted</p>
-
     </div>
   );
 }

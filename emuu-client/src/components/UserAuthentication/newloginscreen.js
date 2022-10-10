@@ -42,11 +42,10 @@ function Login() {
         const user = userCredential.user;
         console.log("User is signed in");
         localStorage.setItem("auth", true);
-         localStorage.setItem("user" , JSON.stringify(userCredential.user))
+        localStorage.setItem("user", JSON.stringify(userCredential.user));
         localStorage.setItem("displayName", user.displayName);
         history.push("/home");
         window.location.reload();
-
       })
       .catch((error) => {
         const errorCode = error.code;
