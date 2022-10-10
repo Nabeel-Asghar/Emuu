@@ -3,8 +3,8 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./Home.scss";
 import storage from "../../Firebase.js";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import "../../Firebase.js";
-import { getFirestore, collection, getDoc } from 'firebase/firestore';
+import db from "../../Firebase.js";
+import { getFirestore, collection, getDoc, doc, query, where } from 'firebase/firestore';
 
 
 const theme = createTheme({
@@ -24,8 +24,8 @@ const theme = createTheme({
   },
 });
 async function getVideo(){
-const db = getFirestore();
-  const docRef = db.collection('Videos').doc('CO3tSCGygwLbSzxRZQFX');
+//const db = getFirestore();
+  const docRef = db.collection('Videos').doc('b0824110-27d4-480f-81b4-cf1689054c68');
 
 const doc = await docRef.get();
 if (!doc.exists) {
@@ -34,20 +34,18 @@ if (!doc.exists) {
   console.log('Document data:', doc.data());
 }
 
+//const q = query(docRef, where("Username", "==", true));
+
+
 }
 
 
 
 
  function Home() {
-/*const videoRef = ref(storage, 'videos/mylivewallpapers.com-Naruto-Shippuden.mp4');
 
-// Get the download URL
-getDownloadURL(videoRef)
-  .then((url) => {
-      console.log(url);
-  }*/
-getVideo();
+//getVideo();
+
   return (
     <ThemeProvider theme={theme}>
       <div className="Home">
