@@ -5,22 +5,14 @@ import (
 	"log"
 	"net/http"
 	"time"
-
+   "cloud.google.com/go/firestore"
 	"firebase.google.com/go/v4/auth"
 	"github.com/gin-gonic/gin"
+	"fmt"
+	"google.golang.org/api/option"
 )
 
-//Headers to allow host connection 3000 with 8081
-// func corsAcceptance(w http.ResponseWriter, r *http.Request) {
-// 	w.Header().Set("Content-Type", "application/json")
-// 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000/Register")
-// 	w.Header().Set("Access-Control-Max-Age", "15")
-// 	w.Header().Set("Access-Control-Allow-Origin", "*")
-// 	w.Header().Set("Access-Control-Allow-Credentials", "true")
-// 	w.Header().Set("Access-Control-Allow-Methods", "GET; POST; OPTIONS")
-// }
 
-//testing to get and output axios data
 
 //set struct for user info
 type RegisterUserInfo struct {
@@ -43,7 +35,6 @@ func CreateUser(c *gin.Context) {
 
     //Firebase connection
 	firebaseAuth := c.MustGet("firebaseAuth").(*auth.Client)
-	//firebaseAuth := firebaseSer.InitAuth()
 
 	//firebases paramaters for user registration
 	params := (&auth.UserToCreate{}).
@@ -51,13 +42,46 @@ func CreateUser(c *gin.Context) {
 		EmailVerified(false).
 		Password(input.User_password).
 		DisplayName(input.User_userName).
+		PhotoURL("https://i.stack.imgur.com/l60Hf.png").
 		Disabled(false)
+
 
 	u, err := firebaseAuth.CreateUser(ctx, params)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
+
+
+        // Firestore initialized
+	  sa := option.WithCredentialsFile("../serviceAccountKey.json")
+       client, err := firestore.NewClient(ctx, "emuu-1ee85", sa)
+       if err != nil {
+            log.Fatalf("firestore client creation error:%s\n", err)
+       }
+       defer client.Close()
+
+
+//Get Time
+   dt := time.Now()
+//Format Time
+  Date := dt.Format("01-02-2006")
+wr, err := client.Collection("Users").Doc(input.User_userName).Create(ctx, map[string]interface{}{
+                "Username": input.User_userName,
+                "SubscriberCount": 0,
+                "LikedVideosList": "",
+                "SubscriberList": "",
+                "BannerUrl": "http://mcentre.lk/frontend/assets/images/default-banner.png",
+                "ProfilePictureUrl": "https://i.stack.imgur.com/l60Hf.png",
+                "VideosPosted": 0,
+                "DateJoined": Date,
+
+        })
+
+        if err != nil {
+                log.Fatalf("firestore doc creation error:%s\n", err)
+        }
+        fmt.Println(wr.UpdateTime)
 
 	log.Println(u)
 
@@ -66,20 +90,3 @@ func CreateUser(c *gin.Context) {
 
 
 
-
-// func handleReqs() {
-// 	// r := mux.NewRouter().StrictSlash(true)
-// 	// r.HandleFunc("/", createUser).Methods("POST")
-// 	// log.Fatal(http.ListenAndServe(":8081", r))
-
-// 	// routes definition for finding and creating artists
-// 	r.GET("/", api.FindArtists)
-// 	r.POST("/artist", api.CreateArtist)
-// }
-
-// func RegisterUser() {
-// 	//allows host connection when running MainTest.go
-// 	http.HandleFunc("/", corsAcceptance)
-// 	//pulls data from register.js and stores it into firebase
-// 	handleReqs()
-// }

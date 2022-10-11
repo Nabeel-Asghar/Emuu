@@ -8,18 +8,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// func corsAcceptance(w http.ResponseWriter, r *http.Request) {
-// // 	w.Header().Set("Content-Type", "application/json")
-// // 	w.Header().Set("Access-Control-Allow-Origin", "http://localhost:3000/Register")
-// // 	w.Header().Set("Access-Control-Max-Age", "15")
-// 	w.Header().Set("Access-Control-Allow-Origin", "*")
-// w.Header().Set("Access-Control-Allow-Credentials", "true")
-// w.Header().Set("Access-Control-Allow-Methods", "GET; POST; OPTIONS")
-// }
+
 const (
 	authorizationHeader = "Authorization"
-// 	apiKeyHeader        = "X-API-Key"
-// 	cronExecutedHeader  = "x-Appengine-Cron"
 	valName             = "FIREBASE_ID_TOKEN"
 )
 
