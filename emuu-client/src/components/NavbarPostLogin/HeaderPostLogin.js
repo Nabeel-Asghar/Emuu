@@ -32,12 +32,12 @@ function HeaderPostLogin() {
     <>
       {[false].map((expand) => (
         <Navbar
-          key={expand}
-          bg="dark"
-          variant="dark"
-          expand={expand}
-          className="mb-3"
-        >
+                  key={expand}
+                  bg="dark"
+                  variant="dark"
+                  expand={expand}
+                  className="mb-3"
+                >
           <Container fluid>
             <Navbar.Brand href="/Home">EMUU</Navbar.Brand>
             <Form className="d-flex">
@@ -76,6 +76,9 @@ function HeaderPostLogin() {
                             SignedOut();
                             localStorage.setItem("auth", false);
                             window.location.reload();
+                            localStorage.setItem("user", null)
+
+
                           }}
                           type="submit"
                           button

@@ -35,19 +35,24 @@ function Login() {
   const handleSubmit = async (e) => {
     console.log("HandleSubmit working");
     const auth = getAuth();
+    const user = auth.currentUser;
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
+      console.log(userCredential)
         // Signed in
         const user = userCredential.user;
+        localStorage.setItem("user" , JSON.stringify(userCredential.user))
         console.log("User is signed in");
         localStorage.setItem("auth", true);
+        localStorage.setItem("user", JSON.stringify(userCredential.user));
+        localStorage.setItem("displayName", user.displayName);
         history.push("/home");
         window.location.reload();
       })
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log("Invalid User Credentials");
+        console.log(errorMessage);
       });
     //testUserStatus();
   };
@@ -114,10 +119,7 @@ function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
+
               <Button
                 onClick={() => handleSubmit()}
                 type="button"
