@@ -3,7 +3,7 @@ import Feeds from "./Feeds";
 import UserInfo from "./UserInfo";
 import React, { useState } from "react";
 import "../../Firebase.js";
-import storage from "../../Firebase.js";
+import {storage} from "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 function Profile() {

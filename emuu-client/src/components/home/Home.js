@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, { useEffect , useState } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./Home.scss";
-import storage from "../../Firebase.js";
+import {storage} from "../../Firebase.js";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import db from "../../Firebase.js";
-import { getFirestore, collection, getDoc, doc, query, where } from 'firebase/firestore';
+import {db} from "../../Firebase.js";
+import { getFirestore, collection, getDocs, doc, query, where } from 'firebase/firestore';
 
 
 const theme = createTheme({
@@ -23,28 +23,33 @@ const theme = createTheme({
     },
   },
 });
-async function getVideo(){
-//const db = getFirestore();
-  const docRef = db.collection('Videos').doc('b0824110-27d4-480f-81b4-cf1689054c68');
 
-const doc = await docRef.get();
-if (!doc.exists) {
-  console.log('No such document!');
-} else {
-  console.log('Document data:', doc.data());
-}
-
-//const q = query(docRef, where("Username", "==", true));
-
-
-}
 
 
 
 
  function Home() {
 
-//getVideo();
+
+ const [videos, setVideos]= useState([]);
+
+async function getVideos(){
+const querySnapshot = await getDocs(collection(db, "Videos"));
+
+const _videos = [];
+querySnapshot.forEach((doc) => {
+console.log(doc);
+  _videos.push(doc.data()["Video url"])
+
+
+});
+setVideos(_videos);
+
+
+ }
+useEffect(async() => {
+await getVideos();
+  }, []);
 
   return (
     <ThemeProvider theme={theme}>
