@@ -31,22 +31,59 @@ const theme = createTheme({
  function Home() {
 
 
- const [videos, setVideos]= useState([]);
+ const [topVideos, setTopVideos]= useState([]);
+ const [recentVideos, setRecentVideos] = useState([]);
 
-async function getVideos(){
+ async function getVideos(){
+ //Get all video data
 const querySnapshot = await getDocs(collection(db, "Videos"));
 
-const _videos = [];
-querySnapshot.forEach((doc) => {
-console.log(doc);
-  _videos.push(doc.data()["Video url"])
+//Create array for top videos and sort by likes
+const querySnapshotTop=[];
+querySnapshot.forEach(doc => querySnapshotTop.push(doc))
+sortVideosByLikes(querySnapshotTop);
+const topVideosArr = [];
+querySnapshotTop.forEach((doc) => {
+topVideosArr.push(doc.data())
+});
+
+//Create array for recent videos and sort by upload date
+  const querySnapshotRecent=[];
+  querySnapshot.forEach(doc => querySnapshotRecent.push(doc))
+  sortVideosByTime(querySnapshotRecent);
+  const recentVideosArr = [];
+  querySnapshotRecent.forEach((doc) => {
+  recentVideosArr.push(doc.data())
 
 
 });
-setVideos(_videos);
+setTopVideos(topVideosArr);
+setRecentVideos(recentVideosArr);
+
+}
 
 
- }
+//Sort function for liked videos
+function sortVideosByLikes(videos){
+for( let i =0 ; i< videos.length-1 ; i++){
+for(let j =0;  j < (videos.length-1-i); j++){
+    if(videos[i].data().Likes < videos[i+1].data().Likes){
+    let temp = videos[i];
+    videos[i] = videos[i+1];
+    videos[i+1]= temp;
+}}}}
+
+//Sort function for date uploaded
+function sortVideosByTime(videos){
+for( let i =0 ; i< videos.length-1 ; i++){
+for(let j =0;  j < (videos.length-1-i); j++){
+    if(videos[i].data().uploadTime< videos[i+1].data().uploadTime){
+    let temp = videos[i];
+    videos[i] = videos[i+1];
+    videos[i+1]= temp;
+}}}}
+
+
 useEffect(async() => {
 await getVideos();
   }, []);
@@ -59,35 +96,9 @@ await getVideos();
           <h2>
             <div class="p-4"> Top Videos </div>
           </h2>
+            <div> {topVideos && topVideos.map(video => <div><video controls height='300' src={video.VideoUrl}></video></div>)}
+         </div>
 
-          <div className="spacer">
-            <video width="382" height="215" controls>
-              <source src="https://firebasestorage.googleapis.com/v0/b/emuu-1ee85.appspot.com/o/videos%2Fmylivewallpapers.com-Naruto-Shippuden.mp4?alt=media&token=a6af4486-e58e-47ff-82fe-e89a1c8721054" type="video/mp4"></source>
-          </video>
-          </div>
-
-          <div className="spacer">
-            <iframe
-              width="382"
-              height="215"
-              src="https://www.youtube.com/embed/rDxv8jkYmb4"
-              title="YouTube video player"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
-          </div>
-          <div className="spacer">
-            <iframe
-              width="382"
-              height="215"
-              src="https://www.youtube.com/embed/0GBiA5JOht4"
-              title="YouTube video player"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
-          </div>
         </p>
 
         <p class="text-start">
@@ -96,41 +107,8 @@ await getVideos();
               <div class="p-4">Newest</div>
             </h2>
           </div>
-
-          <div className="spacer">
-            <iframe
-              width="382"
-              height="215"
-              src="https://www.youtube.com/embed/RrrleE-EREI"
-              title="YouTube video player"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
-          </div>
-
-          <div className="spacer">
-            <iframe
-              width="382"
-              height="215"
-              src="https://www.youtube.com/embed/mybpNuyP9Xw"
-              title="YouTube video player"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
-          </div>
-          <div className="spacer">
-            <iframe
-              width="382"
-              height="215"
-              src="https://www.youtube.com/embed/4XmfNkB8HUY"
-              title="YouTube video player"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
-          </div>
+            <div> {recentVideos && recentVideos.map(video => <div><video controls height='300' src={video.VideoUrl}></video></div>)}
+        </div>
         </p>
       </div>
     </ThemeProvider>
@@ -139,5 +117,6 @@ await getVideos();
     // Get clips
   };
 }
+
 
 export default Home;
