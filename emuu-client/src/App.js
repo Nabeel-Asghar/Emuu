@@ -8,7 +8,7 @@ import Register from "./components/UserAuthentication/newRegister";
 import Home from "./components/home/Home";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Profile from "./components/UserProfile/Profile";
-import FileUpload from "./components/upload/UploadButton";
+import Upload from "./components/upload/UploadButton";
 
 const theme = createTheme({
   palette: {
@@ -28,6 +28,7 @@ const theme = createTheme({
 });
 
 function App() {
+
   const auth = localStorage.getItem("auth");
   //Navigation bar
   return (
@@ -44,17 +45,18 @@ function App() {
           <Route path="/register">
             <Register />
           </Route>
-          {auth === "true" && (
-            <>
-              <Route path="/userprofile">
-                <Profile />
-              </Route>
 
-              <Route path="/upload">
-                <FileUpload />
-              </Route>
-            </>
-          )}
+           {auth === "true" && (
+           <>
+           <Route path="/userprofile">
+           <Profile />
+           </Route>
+
+           <Route path="/upload">
+           <Upload />
+           </Route>
+           </>
+           )}
         </BrowserRouter>
       </div>
     </ThemeProvider>
