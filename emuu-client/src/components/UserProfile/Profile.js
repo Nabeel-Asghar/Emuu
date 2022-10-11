@@ -1,48 +1,27 @@
+
+
+import React, { useState, useEffect } from "react";
+
+import AddIcon from '@mui/icons-material/Add';
 import "./Profile.scss";
+import "../../Firebase.js";
 import Feeds from "./Feeds";
 import UserInfo from "./UserInfo";
-import React, { useState , useEffect } from "react";
-import "../../Firebase.js";
-import {storage, db} from "../../Firebase.js";
 import { ref,getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
-import AddIcon from '@mui/icons-material/Add';
-import { collection, getDocs } from "firebase/firestore";
+import { db, storage } from "../../Firebase.js";
+import {
+  getDoc,
+  getDocs,
+  doc,
+  collection,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
+
 
 function Profile() {
 
-
-  // Store uploaded file
-  //const [file, setFile] = useState("");
-
-
-  //File upload
-  //function handleChange(event) {
-  //  setFile(event.target.files[0]);
-  //}
-  //If a user doesn't choose a file and tries to upload, error will appear
-  //const handleUpload = () => {
-//   if (!file) {
-//      alert("Please upload an image first");
-//    }
-//
-//    //Store into video folder in firebase storage
-//    const storageRef = ref(storage, `/images/${file.name}`);
-//
-//    //Upload to firebase function
-//    const uploadTask = uploadBytesResumable(storageRef, file);
-//
-//    uploadTask.on(
-//      "state_changed",
-//      (snapshot) => {},
-//      (err) => console.log(err),
-//      () => {
-//        // download url
-//        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-//          console.log(url);
-//        });
-//      }
-//    );
-//  };
     useEffect(()=>{console.log(JSON.parse(localStorage.getItem("user")));getDocs(collection(db, "Users")).then(data =>{
     console.log(data)
     })}, [])
@@ -66,10 +45,6 @@ return false;
       uploadBytes(storageRef, file).then((snapshot) => {
    getDownloadURL(storageRef).then(URL => console.log(URL))
       });
-
-
-
-
   }
 
 
@@ -85,30 +60,36 @@ return false;
 
 }
 
+
+const displayName = localStorage.getItem("displayName");
+
+function Profile() {
+  const [Banner, setBanner] = useState("");
+  const [ProfilePic, setProfilePic] = useState("");
+
+  getDoc(doc(db, "Users", displayName)).then((docSnap) => {
+    setBanner(docSnap.data().BannerUrl);
+    setProfilePic(docSnap.data().ProfilePictureUrl);
+  });
+
+
   return (
     <div className="MainProfileDiv">
       <div className="profile-container">
         <div className="top-portion">
           <div className="user-profile-bg-image">
-            <img
-              id="prf-bg-img"
-              src="https://wallpaperaccess.com/full/170249.jpg"
-              alt=""
-              srcSet=""
-            />
+
+             <img id="prf-bg-img" src={Banner} alt="" srcSet="" />
             <input style={{display:"none"}} id="background-inp" type="file" onChange={(e)=> uploadBackground(e)} accept="image/jpeg"/>
           <button id="background-change" onClick= {()=> document.querySelector("#background-inp").click()}>  <AddIcon /></button>
           </div>
+          
           <div className="user-profile-img">
-            <img
-              id="prf-img"
-              src="https://wallpaperaccess.com/full/170249.jpg"
-              alt=""
-              srcSet=""
-            />
-            <input style={{display: "none"}} id="profile-inp" type="file" onChange={(e)=>uploadProfile(e)} accept="image/jpeg"/>
-               <button id="profile-change" onClick= {()=> document.querySelector("#profile-inp").click()}>  <AddIcon /></button>
-            <div className={"userName"}>Moe</div>
+          <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
+          <input style={{display: "none"}} id="profile-inp" type="file" onChange={(e)=>uploadProfile(e)} accept="image/jpeg"/>
+          <button id="profile-change" onClick= {()=> document.querySelector("#profile-inp").click()}>  <AddIcon /></button>
+          <div className={"userName"}> {displayName} </div>
+
           </div>
         </div>
         <div className="bottom-portion">

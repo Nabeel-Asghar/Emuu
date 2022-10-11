@@ -10,7 +10,6 @@ import { Routes, Route, useHistory } from "react-router-dom";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import firebase from "firebase/app";
 
-
 function HeaderPostLogin() {
   //Sign Out Function in Nav Bar
   const history = useHistory();
@@ -78,6 +77,7 @@ function HeaderPostLogin() {
                             localStorage.setItem("auth", false);
                             window.location.reload();
                             localStorage.setItem("user", null)
+
 
                           }}
                           type="submit"
