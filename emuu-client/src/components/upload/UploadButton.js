@@ -8,10 +8,9 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import getData from "../../gameTagAPI.js";
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 import { getAuth } from "firebase/auth";
 import axios from "axios";
-
 
 const theme = createTheme({
   palette: {
@@ -58,7 +57,6 @@ CircularProgressWithLabel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-
 function FileUpload() {
   //use state for registration variables
   const [videoTitle, setVideoTitle] = useState("");
@@ -98,8 +96,7 @@ function FileUpload() {
   //If a user doesn't choose a file and tries to upload, error will appear
   const handleUpload = async (e) => {
     if (!file) {
-          alert("Please upload a video first!");
-
+      alert("Please upload a video first!");
     }
     //Restrict file size to 5 MB ~ equivalent to 30 second video
     if (file.size > 5 * 1024 * 1024) {
