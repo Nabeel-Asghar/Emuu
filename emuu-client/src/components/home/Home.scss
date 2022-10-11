@@ -13,4 +13,15 @@
 .lineBreak {
   margin-top: 225px;
 }
+.video-row {
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  flex-wrap: nowrap;
+  overflow-x: scroll;
+  padding: 20px;
+}
 
+.video-row::-webkit-scrollbar {
+  display: none;
+}

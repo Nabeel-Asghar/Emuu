@@ -10,7 +10,6 @@ import { Routes, Route, useHistory } from "react-router-dom";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import firebase from "firebase/app";
 
-
 function HeaderPostLogin() {
   //Sign Out Function in Nav Bar
   const history = useHistory();
@@ -33,12 +32,12 @@ function HeaderPostLogin() {
     <>
       {[false].map((expand) => (
         <Navbar
-                  key={expand}
-                  bg="dark"
-                  variant="dark"
-                  expand={expand}
-                  className="mb-3"
-                >
+          key={expand}
+          bg="dark"
+          variant="dark"
+          expand={expand}
+          className="mb-3"
+        >
           <Container fluid>
             <Navbar.Brand href="/Home">EMUU</Navbar.Brand>
             <Form className="d-flex">

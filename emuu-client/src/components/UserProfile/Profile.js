@@ -3,15 +3,12 @@ import Feeds from "./Feeds";
 import UserInfo from "./UserInfo";
 import React, { useState } from "react";
 import "../../Firebase.js";
-import {storage} from "../../Firebase.js";
+import { storage } from "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 
 function Profile() {
-
-
   // Store uploaded file
   const [file, setFile] = useState("");
-
 
   //File upload
   function handleChange(event) {
@@ -67,22 +64,24 @@ function Profile() {
         <div className="bottom-portion">
           <div className="right-side"></div>
           <UserInfo />
-           <input type="file" onChange={handleChange} accept="image/jpeg" />
+          <input type="file" onChange={handleChange} accept="image/jpeg" />
 
-                                                 <button onClick={() => handleUpload()}
-                                                 type="submit"
-                                                 className="btn btn-primary">
-                                                  Change Profile Picture
+          <button
+            onClick={() => handleUpload()}
+            type="submit"
+            className="btn btn-primary"
+          >
+            Change Profile Picture
+          </button>
+          <input type="file" onChange={handleChange} accept="image/jpeg" />
 
-                                                  </button>
-                                                  <input type="file" onChange={handleChange} accept="image/jpeg" />
-
-                                                                                                   <button onClick={() => handleUpload()}
-                                                                                                   type="submit"
-                                                                                                   className="btn btn-primary">
-                                                                                                    Change Banner Image
-
-                                                                                                    </button>
+          <button
+            onClick={() => handleUpload()}
+            type="submit"
+            className="btn btn-primary"
+          >
+            Change Banner Image
+          </button>
           <div className="left-side"></div>
           <Feeds />
         </div>

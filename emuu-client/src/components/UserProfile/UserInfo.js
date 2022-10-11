@@ -11,7 +11,6 @@ function UserInfo() {
       <p className="about__info">100 Followers</p>
       <hr />
       <p className="about__info">10 Videos posted</p>
-
     </div>
   );
 }

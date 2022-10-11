@@ -43,7 +43,6 @@ function Login() {
         localStorage.setItem("auth", true);
         history.push("/home");
         window.location.reload();
-
       })
       .catch((error) => {
         const errorCode = error.code;

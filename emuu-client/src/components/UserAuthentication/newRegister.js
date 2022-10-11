@@ -32,8 +32,6 @@ function Register() {
     user_password: password,
   };
 
-
-
   const handleSubmit = async (e) => {
     // store the states in the form data
 
