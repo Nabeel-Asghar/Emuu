@@ -1,13 +1,10 @@
-
-
 import React, { useState, useEffect } from "react";
-
 import AddIcon from '@mui/icons-material/Add';
 import "./Profile.scss";
 import "../../Firebase.js";
 import Feeds from "./Feeds";
 import UserInfo from "./UserInfo";
-import { ref,getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
+ import { ref,getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../../Firebase.js";
 import {
   getDoc,

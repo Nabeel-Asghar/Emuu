@@ -2,6 +2,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useState } from "react";
 import { storage } from "../../Firebase.js";
 import "../../Firebase.js";
+import { storage } from "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -11,7 +12,6 @@ import getData from "../../gameTagAPI.js";
 import Alert from '@mui/material/Alert';
 import { getAuth } from "firebase/auth";
 import axios from "axios";
-
 
 const theme = createTheme({
   palette: {
@@ -81,8 +81,6 @@ function FileUpload() {
   const auth = getAuth();
   const user = auth.currentUser;
 
-  //Gets the RAWG api data for game database
-  //getData();
 
   // Store uploaded file
   const [file, setFile] = useState("");
@@ -101,6 +99,7 @@ function FileUpload() {
           alert("Please upload a video first!");
 
     }
+
     //Restrict file size to 5 MB ~ equivalent to 30 second video
     if (file.size > 5 * 1024 * 1024) {
       alert("File size exceeds maximum allowed!");
