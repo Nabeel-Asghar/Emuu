@@ -1,6 +1,9 @@
 import React, { useEffect } from "react";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import "./Home.scss";
+import storage from "../../Firebase.js";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
+
 
 const theme = createTheme({
   palette: {
@@ -19,7 +22,18 @@ const theme = createTheme({
   },
 });
 
+
+
+
+
 function Home() {
+/*const videoRef = ref(storage, 'videos/mylivewallpapers.com-Naruto-Shippuden.mp4');
+
+// Get the download URL
+getDownloadURL(videoRef)
+  .then((url) => {
+      console.log(url);
+  }*/
   return (
     <ThemeProvider theme={theme}>
       <div className="Home">
@@ -30,15 +44,9 @@ function Home() {
           </h2>
 
           <div className="spacer">
-            <iframe
-              width="382"
-              height="215"
-              src="https://www.youtube.com/embed/UqjRknIf3oI"
-              title="YouTube video player"
-              frameborder="0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowfullscreen
-            ></iframe>
+            <video width="382" height="215" controls>
+              <source src="https://firebasestorage.googleapis.com/v0/b/emuu-1ee85.appspot.com/o/videos%2Fmylivewallpapers.com-Naruto-Shippuden.mp4?alt=media&token=a6af4486-e58e-47ff-82fe-e89a1c8721054" type="video/mp4"></source>
+          </video>
           </div>
 
           <div className="spacer">

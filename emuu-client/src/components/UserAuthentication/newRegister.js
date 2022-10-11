@@ -32,9 +32,69 @@ function Register() {
     user_password: password,
   };
 
-  const handleSubmit = async (e) => {
-    // store the states in the form data
 
+  const videoCollectionData = {};
+
+    const validatePassword= (pass)=>{
+    if(pass.length < 8){
+    document.querySelector("#password-err").innerHTML = "At least 8 characters";
+    document.querySelector("#password-err").style.color = "red";
+    return false;
+
+    }
+
+    let uppercase = false;
+    let specialChar = false;
+        for( let i = 0 ; i< pass.length; i++){
+    if(pass[i].charCodeAt(0) >= 65 && pass[i].charCodeAt(0)<= 90) uppercase = true;
+    }
+    if(!uppercase) {
+                       document.querySelector("#password-err").innerHTML = "At least 1 uppercase letter"
+                        document.querySelector("#password-err").style.color = "red";
+                       return false;
+
+                       }
+    for( let i = 0 ; i< pass.length; i++){
+        if(pass[i].charCodeAt(0) >= 33 && pass[i].charCodeAt(0)<= 64) specialChar = true;
+        }
+       if(!specialChar) {
+                            document.querySelector("#password-err").innerHTML = "At least 1 special character"
+                             document.querySelector("#password-err").style.color = "red";
+                            return false;
+
+                            }
+
+       return true;
+
+    }
+
+
+    function validateEmail(email)
+   {
+
+    let period = false;
+    let at = false;
+    for( let i=0 ; i< email.length; i++){
+    if(email[i]== '@')at = true;
+    if(email[i]== '.')period = true;
+    }
+
+    if(!period || !at){
+
+    document.querySelector("#password-err").innerHTML = "Email invalid";
+     document.querySelector("#password-err").style.color= "red";
+    return false;}
+
+
+    return true;
+   }
+
+
+  const handleSubmit = async (e) => {
+  e.preventDefault();
+    // store the states in the form data
+    if(!validatePassword(userdata.user_password))return
+    if(!validateEmail(userdata.user_email)) return
     history.push("/login");
     await axios
       .post("http://localhost:8080/auth/register", JSON.stringify(userdata))
@@ -64,7 +124,7 @@ function Register() {
           <Box component="form" sx={{ mt: 3 }}>
             <Grid container spacing={0}>
               <Grid item xs={12}>
-                <TextField
+                <input
                   required
                   fullWidth
                   id="username"
@@ -72,10 +132,12 @@ function Register() {
                   name="username"
                   autoComplete="username"
                   value={userName}
+                  className="register-input"
+                  placeholder="Username"
                   onChange={(e) => setUserName(e.target.value)}
                 />
                 <Grid item xs={12}>
-                  <TextField
+                  <input
                     required
                     fullWidth
                     id="email"
@@ -83,11 +145,14 @@ function Register() {
                     name="email"
                     autoComplete="email"
                     value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    className="register-input"
+                    placeholder="Email Address"
+                    onChange={(e) =>{  document.querySelector("#password-err").style.color = "black";document.querySelector("#password-err").innerHTML ="<small> Password must be at least 8 characters with 1 special character and 1 uppercase character </small>";setEmail(e.target.value)}}
                   />
                 </Grid>
+
                 <Grid item xs={12}>
-                  <TextField
+                  <input
                     required
                     fullWidth
                     name="password"
@@ -96,12 +161,16 @@ function Register() {
                     id="password"
                     autoComplete="new-password"
                     value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    className="register-input"
+                    placeholder="Password"
+                    onChange={(e) => {setPassword(e.target.value); document.querySelector("#password-err").style.color = "black";document.querySelector("#password-err").innerHTML = "<small> Password must be at least 8 characters with 1 special character and 1 uppercase character </small>" }}
                   />
+                  <p id="password-err" style={{color: "black", margin: "0"}}><small> Password must be at least 8 characters with 1 special character and 1 uppercase character </small> </p>
+
                 </Grid>
               </Grid>
               <Button
-                onClick={() => handleSubmit()}
+                onClick={(e) => handleSubmit(e)}
                 type="submit"
                 fullWidth
                 variant="contained"
