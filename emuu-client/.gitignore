@@ -24,5 +24,4 @@ yarn-error.log*
 
 serviceAccountKey.json
 .prettierignore
-src/gameTagAPI.js
 .env

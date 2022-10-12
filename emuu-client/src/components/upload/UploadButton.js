@@ -2,13 +2,11 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useState } from "react";
 import { storage } from "../../Firebase.js";
 import "../../Firebase.js";
-import { storage } from "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import getData from "../../gameTagAPI.js";
 import Alert from '@mui/material/Alert';
 import { getAuth } from "firebase/auth";
 import axios from "axios";
@@ -101,7 +99,7 @@ function FileUpload() {
     }
 
     //Restrict file size to 5 MB ~ equivalent to 30 second video
-    if (file.size > 5 * 1024 * 1024) {
+    if (file.size > 20 * 1024 * 1024) {
       alert("File size exceeds maximum allowed!");
       return;
     }

@@ -60,7 +60,6 @@ return false;
 
 const displayName = localStorage.getItem("displayName");
 
-function Profile() {
   const [Banner, setBanner] = useState("");
   const [ProfilePic, setProfilePic] = useState("");
 
