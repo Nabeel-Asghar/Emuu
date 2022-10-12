@@ -2,7 +2,6 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useState } from "react";
 import { storage } from "../../Firebase.js";
 import "../../Firebase.js";
-import { storage } from "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -80,7 +79,6 @@ function FileUpload() {
   const auth = getAuth();
   const user = auth.currentUser;
 
-
   // Store uploaded file
   const [file, setFile] = useState("");
 
@@ -99,7 +97,7 @@ function FileUpload() {
     }
 
     //Restrict file size to 5 MB ~ equivalent to 30 second video
-    if (file.size > 40 * 1024 * 1024) {
+    if (file.size > 100 * 1024 * 1024) {
       alert("File size exceeds maximum allowed!");
       return;
     }
@@ -126,18 +124,24 @@ function FileUpload() {
       (err) => console.log(err),
       () => {
         // download url
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          setVideoUrl(url);
-        });
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then((url) => {
+            setVideoUrl(url);
+          })
+          .then(
+            axios
+              .post(
+                "http://localhost:8080/auth/upload",
+                JSON.stringify(uploadData)
+              )
+              .then((result) => {
+                console.log("User information is sent to firestore");
+              })
+          );
       }
     );
 
     //axios request to post upload information to backend
-    await axios
-      .post("http://localhost:8080/auth/upload", JSON.stringify(uploadData))
-      .then((result) => {
-        console.log("User information is sent to firestore");
-      });
   };
 
   return (

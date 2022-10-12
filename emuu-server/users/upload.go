@@ -75,7 +75,7 @@ func UploadVideo(c *gin.Context) {
                         "Likes": 0,
                         "Views": 0,
                         "Date": currentDate,
-
+                        "uploadTime": currentTimestamp,
 
                 })
 
