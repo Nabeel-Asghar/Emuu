@@ -33,6 +33,7 @@ function Register() {
   };
 
 
+
   const videoCollectionData = {};
 
     const validatePassword= (pass)=>{
