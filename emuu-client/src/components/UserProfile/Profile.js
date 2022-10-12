@@ -21,6 +21,8 @@ import {
 
 
 function Profile() {
+const [Banner, setBanner] = useState("");
+ const [ProfilePic, setProfilePic] = useState("");
 
     useEffect(()=>{console.log(JSON.parse(localStorage.getItem("user")));getDocs(collection(db, "Users")).then(data =>{
     console.log(data)
@@ -39,7 +41,7 @@ return false;
 
   if(!verifyJpeg(file.name))return;
       const storage = getStorage();
-      const storageRef = ref(storage, '/images/'+file.name);
+      const storageRef = ref(storage, '/images/'+file.name+new Date().getTime());
 
       // 'file' comes from the Blob or File API
       uploadBytes(storageRef, file).then((snapshot) => {
@@ -63,14 +65,13 @@ return false;
 
 const displayName = localStorage.getItem("displayName");
 
-function Profile() {
-  const [Banner, setBanner] = useState("");
-  const [ProfilePic, setProfilePic] = useState("");
+//function Profile() {
 
-  getDoc(doc(db, "Users", displayName)).then((docSnap) => {
-    setBanner(docSnap.data().BannerUrl);
-    setProfilePic(docSnap.data().ProfilePictureUrl);
-  });
+//
+//  getDoc(doc(db, "Users", displayName)).then((docSnap) => {
+//    setBanner(docSnap.data().BannerUrl);
+//    setProfilePic(docSnap.data().ProfilePictureUrl);
+//  });
 
 
   return (

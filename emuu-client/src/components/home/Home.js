@@ -27,13 +27,7 @@ const theme = createTheme({
 
 
 function Home() {
-/*const videoRef = ref(storage, 'videos/mylivewallpapers.com-Naruto-Shippuden.mp4');
 
-// Get the download URL
-getDownloadURL(videoRef)
-  .then((url) => {
-      console.log(url);
-  }*/
   return (
     <ThemeProvider theme={theme}>
       <div className="Home">

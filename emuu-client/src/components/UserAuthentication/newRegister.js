@@ -81,7 +81,7 @@ function Register() {
 
     if(!period || !at){
 
-    document.querySelector("#password-err").innerHTML = "Email invalid";
+    document.querySelector("#password-err").innerHTML = "The email address is invalid";
      document.querySelector("#password-err").style.color= "red";
     return false;}
 
