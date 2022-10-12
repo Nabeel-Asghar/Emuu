@@ -19,6 +19,7 @@ import {
 } from "firebase/firestore";
 
 function Profile() {
+  const [percent, setPercent] = useState(0);
   const displayName = localStorage.getItem("displayName");
   const docRef = doc(db, "Users", displayName);
 
@@ -54,8 +55,6 @@ function Profile() {
         )
       );
     });
-
-
   }
 
   function uploadProfile(e) {
@@ -75,12 +74,8 @@ function Profile() {
             merge: true,
           }
         )
-
       );
-
     });
-
-
   }
 
   const [Banner, setBanner] = useState("");
