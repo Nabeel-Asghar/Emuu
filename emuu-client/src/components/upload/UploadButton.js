@@ -99,7 +99,7 @@ function FileUpload() {
       alert("Please upload a video first!");
     }
     //Restrict file size to 5 MB ~ equivalent to 30 second video
-    if (file.size > 5 * 1024 * 1024) {
+    if (file.size > 40 * 1024 * 1024) {
       alert("File size exceeds maximum allowed!");
       return;
     }
