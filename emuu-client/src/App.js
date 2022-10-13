@@ -9,6 +9,8 @@ import Home from "./components/home/Home";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Profile from "./components/UserProfile/Profile";
 import Upload from "./components/upload/UploadButton";
+import Results from "./Results.js"
+import {useState} from "react";
 
 const theme = createTheme({
   palette: {
@@ -30,12 +32,13 @@ const theme = createTheme({
 function App() {
 
   const auth = localStorage.getItem("auth");
+  const [search , setSearch] = useState("");
   //Navigation bar
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
         <BrowserRouter>
-          <HeaderPostLogin />
+          <HeaderPostLogin search={search} setSearch={setSearch} />
           <Route path="/home">
             <Home />
           </Route>
@@ -44,6 +47,9 @@ function App() {
           </Route>
           <Route path="/register">
             <Register />
+          </Route>
+          <Route path="/search">
+          <Results search = {search} />
           </Route>
 
            {auth === "true" && (
@@ -55,6 +61,7 @@ function App() {
            <Route path="/upload">
            <Upload />
            </Route>
+
            </>
            )}
         </BrowserRouter>

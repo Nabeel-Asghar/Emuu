@@ -31,8 +31,6 @@ function Login() {
   const [password, setPassword] = useState("");
   const history = useHistory();
 
-
-
   //Sign in feature
   const handleSubmit = async (e) => {
     console.log("HandleSubmit working");
@@ -51,11 +49,10 @@ function Login() {
         history.push("/home");
         window.location.reload();
       })
-      .catch((error,res) => {
+      .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
         console.log(errorMessage);
-        
       });
     //testUserStatus();
   };
