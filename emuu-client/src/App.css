@@ -41,3 +41,18 @@ color:black}
     transform: rotate(360deg);
   }
 }
+
+.results-user{
+    margin: 20px;
+    display: flex;
+    width: 300px;
+    gap: 20px;
+    align-items: center;
+    }
+    .results-user img{
+        height: 50px;
+        width: 50px;
+        object-fit: cover;
+        border-radius: 50%;}
+
+
