@@ -98,7 +98,7 @@ function FileUpload() {
 
     }
 
-    //Restrict file size to 5 MB ~ equivalent to 30 second video
+    //Restrict file size to 20 MB ~ equivalent to 30 second video
     if (file.size > 20 * 1024 * 1024) {
       alert("File size exceeds maximum allowed!");
       return;
@@ -131,7 +131,6 @@ function FileUpload() {
         });
       }
     );
-
     //axios request to post upload information to backend
     await axios
       .post("http://localhost:8080/auth/upload", JSON.stringify(uploadData))

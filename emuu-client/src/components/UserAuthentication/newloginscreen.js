@@ -46,7 +46,7 @@ function Login() {
         localStorage.setItem("auth", true);
         localStorage.setItem("user", JSON.stringify(userCredential.user));
         localStorage.setItem("displayName", user.displayName);
-        history.push("/home");
+        history.push("/");
         window.location.reload();
       })
       .catch((error) => {
