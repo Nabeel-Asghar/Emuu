@@ -15,7 +15,8 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 const theme = createTheme();
 
 function Register() {
@@ -25,6 +26,7 @@ function Register() {
   const [userName, setUserName] = useState("");
   const [message, setMessage] = useState("");
   const history = useHistory();
+  const [error, setError] = useState("");
 
   const userdata = {
     user_userName: userName,
@@ -36,9 +38,7 @@ function Register() {
 
   const validatePassword = (pass) => {
     if (pass.length < 8) {
-      document.querySelector("#password-err").innerHTML =
-        "At least 8 characters";
-      document.querySelector("#password-err").style.color = "red";
+      setError("At least 8 characters");
       return false;
     }
 
@@ -49,9 +49,7 @@ function Register() {
         uppercase = true;
     }
     if (!uppercase) {
-      document.querySelector("#password-err").innerHTML =
-        "At least 1 uppercase letter";
-      document.querySelector("#password-err").style.color = "red";
+      setError("At least 1 uppercase letter");
       return false;
     }
     for (let i = 0; i < pass.length; i++) {
@@ -59,9 +57,7 @@ function Register() {
         specialChar = true;
     }
     if (!specialChar) {
-      document.querySelector("#password-err").innerHTML =
-        "At least 1 special character";
-      document.querySelector("#password-err").style.color = "red";
+      setError("At least 1 special character");
       return false;
     }
 
@@ -69,17 +65,18 @@ function Register() {
   };
 
   function validateEmail(email) {
-    let period = false;
     let at = false;
-    for (let i = 0; i < email.length; i++) {
+    let checkDotcom = "";
+    for (let i = email.length - 1; i >= 0; i--) {
       if (email[i] == "@") at = true;
-      if (email[i] == ".") period = true;
+      if (i >= email.length - 4) {
+        checkDotcom += email[i];
+      }
     }
+    console.log(checkDotcom);
 
-    if (!period || !at) {
-      document.querySelector("#password-err").innerHTML =
-        "The email address is invalid";
-      document.querySelector("#password-err").style.color = "red";
+    if (!(checkDotcom == "moc.") || !at) {
+      setError("The email address is invalid");
       return false;
     }
 
@@ -89,8 +86,9 @@ function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     // store the states in the form data
-    if (!validatePassword(userdata.user_password)) return;
     if (!validateEmail(userdata.user_email)) return;
+    if (!validatePassword(userdata.user_password)) return;
+
     history.push("/login");
     await axios
       .post("http://localhost:8080/auth/register", JSON.stringify(userdata))
@@ -144,10 +142,7 @@ function Register() {
                     className="register-input"
                     placeholder="Email Address"
                     onChange={(e) => {
-                      document.querySelector("#password-err").style.color =
-                        "black";
-                      document.querySelector("#password-err").innerHTML =
-                        "<small> Password must be at least 8 characters with 1 special character and 1 uppercase character </small>";
+                      setError("");
                       setEmail(e.target.value);
                     }}
                   />
@@ -167,19 +162,29 @@ function Register() {
                     placeholder="Password"
                     onChange={(e) => {
                       setPassword(e.target.value);
-                      document.querySelector("#password-err").style.color =
-                        "black";
-                      document.querySelector("#password-err").innerHTML =
-                        "<small> Password must be at least 8 characters with 1 special character and 1 uppercase character </small>";
+                      setError("");
                     }}
                   />
-                  <p id="password-err" style={{ color: "black", margin: "0" }}>
-                    <small>
+                  {!error && (
+                    <p style={{ color: "black", margin: "0" }}>
+                      <small>
+                        {" "}
+                        <InfoOutlinedIcon />
+                        Password must be at least 8 characters with 1 special
+                        character and 1 uppercase character{" "}
+                      </small>{" "}
+                    </p>
+                  )}
+                  {error && (
+                    <p style={{ color: "red", margin: "0" }}>
                       {" "}
-                      Password must be at least 8 characters with 1 special
-                      character and 1 uppercase character{" "}
-                    </small>{" "}
-                  </p>
+                      <small>
+                        {" "}
+                        <ErrorOutlineIcon />
+                        {error}
+                      </small>
+                    </p>
+                  )}
                 </Grid>
               </Grid>
               <Button

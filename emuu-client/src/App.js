@@ -11,6 +11,7 @@ import Profile from "./components/UserProfile/Profile";
 import Upload from "./components/upload/UploadButton";
 import Results from "./Results.js";
 import { useState } from "react";
+import ViewProfile from "./components/ViewProfile";
 
 const theme = createTheme({
   palette: {
@@ -32,15 +33,14 @@ const theme = createTheme({
 function App() {
   const auth = localStorage.getItem("auth");
   const [search, setSearch] = useState("");
+  const [viewUser, setViewUser] = useState(null);
   //Navigation bar
   return (
     <ThemeProvider theme={theme}>
       <div className="App">
         <BrowserRouter>
           <HeaderPostLogin search={search} setSearch={setSearch} />
-          <Route path="/home">
-            <Home />
-          </Route>
+
           <Route path="/login">
             <Login />
           </Route>
@@ -48,7 +48,10 @@ function App() {
             <Register />
           </Route>
           <Route path="/search">
-            <Results search={search} />
+            <Results setViewUser={setViewUser} search={search} />
+          </Route>
+          <Route path="/view-profile">
+            <ViewProfile viewUser={viewUser} />
           </Route>
 
           {auth === "true" && (
@@ -62,6 +65,9 @@ function App() {
               </Route>
             </>
           )}
+          <Route exact path="/">
+            <Home />
+          </Route>
         </BrowserRouter>
       </div>
     </ThemeProvider>

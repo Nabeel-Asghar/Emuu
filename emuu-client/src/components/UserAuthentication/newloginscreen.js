@@ -10,7 +10,8 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useState, useEffect } from "react";
 import {
@@ -30,7 +31,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const history = useHistory();
-
+  const [error, setError] = useState("");
   //Sign in feature
   const handleSubmit = async (e) => {
     console.log("HandleSubmit working");
@@ -52,7 +53,23 @@ function Login() {
       .catch((error) => {
         const errorCode = error.code;
         const errorMessage = error.message;
-        console.log(errorMessage);
+
+        switch (errorMessage.split(")")[0].split("/")[1]) {
+          case "invalid-email":
+            setError("Email is invalid");
+            break;
+          case "internal-error":
+            setError("Both feilds are required");
+            break;
+          case "user-not-found":
+            setError("User not found");
+            break;
+          case "wrong-password":
+            setError("Wrong password");
+            break;
+          default:
+            setError("An error occured");
+        }
       });
     //testUserStatus();
   };
@@ -120,6 +137,19 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)}
               />
 
+              {!error && (
+                <p>
+                  <pre> </pre>
+                </p>
+              )}
+              {error && (
+                <p style={{ color: "red" }}>
+                  <small>
+                    <ErrorOutlineIcon />
+                    {error}
+                  </small>
+                </p>
+              )}
               <Button
                 onClick={() => handleSubmit()}
                 type="button"
