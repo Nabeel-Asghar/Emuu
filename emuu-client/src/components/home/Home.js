@@ -102,7 +102,7 @@ function Home() {
             {topVideos &&
               topVideos.map((video) => (
                 <div>
-                  <video controls height="250" src={video.VideoUrl}></video>
+                  <img controls height="250" width = "400" src={video.thumbnailUrl}></img>
                   <p>
                     {video.VideoTitle} | {video.Username} | {video.Likes} Likes
                     | {video.Views} Views{" "}
@@ -121,7 +121,7 @@ function Home() {
             {recentVideos &&
               recentVideos.map((video) => (
                 <div>
-                  <video controls height="250" src={video.VideoUrl}></video>
+                  <img controls height="250" width = "400" src={video.thumbnailUrl}></img>
                   <p>
                     {video.VideoTitle} | {video.Username} | {video.Likes} Likes
                     | {video.Views} Views{" "}
