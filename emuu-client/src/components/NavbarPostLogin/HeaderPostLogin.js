@@ -32,14 +32,20 @@ function HeaderPostLogin() {
     <>
       {[false].map((expand) => (
         <Navbar
-                  key={expand}
-                  bg="dark"
-                  variant="dark"
-                  expand={expand}
-                  className="mb-3"
-                >
+          key={expand}
+          bg="dark"
+          variant="dark"
+          expand={expand}
+          className="mb-3"
+        >
           <Container fluid>
-            <Navbar.Brand href="/"><img src="https://firebasestorage.googleapis.com/v0/b/emuu-1ee85.appspot.com/o/images%2FPicture2.png?alt=media&token=73d2ed42-e1a7-41b1-a7f3-ba8527668037" width="140" height="40"></img></Navbar.Brand>
+            <Navbar.Brand href="/">
+              <img
+                src="https://firebasestorage.googleapis.com/v0/b/emuu-1ee85.appspot.com/o/images%2FPicture2.png?alt=media&token=73d2ed42-e1a7-41b1-a7f3-ba8527668037"
+                width="140"
+                height="40"
+              ></img>
+            </Navbar.Brand>
             <Form className="d-flex">
               <Form.Control
                 type="search"
@@ -76,9 +82,7 @@ function HeaderPostLogin() {
                             SignedOut();
                             localStorage.setItem("auth", false);
                             window.location.reload();
-                            localStorage.setItem("user", null)
-
-
+                            localStorage.setItem("user", null);
                           }}
                           type="submit"
                           button

@@ -10,7 +10,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Profile from "./components/UserProfile/Profile";
 import Upload from "./components/upload/UploadButton";
 import Video from "./components/videoPage/videoPage";
-import {useState, useEffect} from 'react'
+import { useState, useEffect } from "react";
 
 const theme = createTheme({
   palette: {
@@ -30,9 +30,8 @@ const theme = createTheme({
 });
 
 function App() {
-
   const auth = localStorage.getItem("auth");
-  const [video , setVideo]= useState("");
+  const [video, setVideo] = useState("");
 
   //Navigation bar
   return (
@@ -47,24 +46,24 @@ function App() {
           <Route path="/register">
             <Register />
           </Route>
-          <Route path ="/video">
-          <Video setVideo={setVideo} video={video}/>
+          <Route path="/video">
+            <Video setVideo={setVideo} video={video} />
           </Route>
 
-           {auth === "true" && (
-           <>
-           <Route path="/userprofile">
-           <Profile setVideo={setVideo} />
-           </Route>
+          {auth === "true" && (
+            <>
+              <Route path="/userprofile">
+                <Profile setVideo={setVideo} />
+              </Route>
 
-           <Route path="/upload">
-           <Upload />
-           </Route>
-           </>
-           )}
-             <Route exact path="/">
-                       <Home setVideo={setVideo} />
-                     </Route>
+              <Route path="/upload">
+                <Upload />
+              </Route>
+            </>
+          )}
+          <Route exact path="/">
+            <Home setVideo={setVideo} />
+          </Route>
         </BrowserRouter>
       </div>
     </ThemeProvider>

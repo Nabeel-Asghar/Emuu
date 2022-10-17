@@ -43,7 +43,10 @@ func UploadVideo(c *gin.Context) {
 
    //Get current date and time
     currentTimestamp := time.Now().Unix()
-    currentDate := time.Unix(currentTimestamp, 0)
+    //Get Time
+       dt := time.Now()
+    //Format Time
+      Date := dt.Format("01-02-2006")
 
     id := uuid.New()
         wr, err := client.Collection("Videos").Doc(id.String()).Create(ctx, map[string]interface{}{
@@ -55,7 +58,7 @@ func UploadVideo(c *gin.Context) {
                 "Comments": "",
                 "Likes": 0,
                 "Views": 0,
-                "Date": currentDate,
+                "Date": Date,
                 "uploadTime": currentTimestamp,
 
         })

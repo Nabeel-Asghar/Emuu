@@ -12,7 +12,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import{Link} from 'react-router-dom'
+import { Link } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
@@ -31,11 +31,7 @@ const theme = createTheme({
   },
 });
 
-
-
-
-
-function Home({setVideo}) {
+function Home({ setVideo }) {
   const [topVideos, setTopVideos] = useState([]);
   const [recentVideos, setRecentVideos] = useState([]);
 
@@ -53,7 +49,6 @@ function Home({setVideo}) {
     });
     setTopVideos(topVideosArr);
 
-
     //Create array for recent videos and sort by upload date
     const querySnapshotRecent = [];
     querySnapshot.forEach((doc) => querySnapshotRecent.push(doc.data()));
@@ -67,8 +62,8 @@ function Home({setVideo}) {
 
   //Sort function for liked videos
   function sortVideosByLikes(videos) {
-    for (let i = 0; i < videos.length-1 ; i++) {
-      for (let j = 0; j < videos.length-1-i ; j++) {
+    for (let i = 0; i < videos.length - 1; i++) {
+      for (let j = 0; j < videos.length - 1 - i; j++) {
         if (videos[j].Likes < videos[j + 1].Likes) {
           let temp = videos[j];
           videos[j] = videos[j + 1];
@@ -76,7 +71,6 @@ function Home({setVideo}) {
         }
       }
     }
-
   }
 
   //Sort function for date uploaded
@@ -86,10 +80,10 @@ function Home({setVideo}) {
         if (videos[j].uploadTime < videos[j + 1].uploadTime) {
           let temp = videos[j];
           videos[j] = videos[j + 1];
-          videos[j+1] = temp;
-  }
-  }
-  }
+          videos[j + 1] = temp;
+        }
+      }
+    }
   }
 
   useEffect(async () => {
@@ -110,8 +104,18 @@ function Home({setVideo}) {
                 <div>
                   <video controls height="250" src={video.VideoUrl}></video>
                   <p>
-                   <Link to="/video"> <span onClick={()=>{setVideo(video); }}>{video.VideoTitle}</span></Link> | {video.Username} | {video.Likes} Likes
-                    | {video.Views} Views{" "}
+                    <Link to="/video">
+                      {" "}
+                      <span
+                        onClick={() => {
+                          setVideo(video);
+                        }}
+                      >
+                        {video.VideoTitle}
+                      </span>
+                    </Link>{" "}
+                    | {video.Username} | {video.Likes} Likes | {video.Views}{" "}
+                    Views{" "}
                   </p>
                 </div>
               ))}
@@ -129,8 +133,17 @@ function Home({setVideo}) {
                 <div>
                   <video controls height="250" src={video.VideoUrl}></video>
                   <p>
-                    <Link to="/video"><span onClick={()=>{setVideo(video) ; }}>{video.VideoTitle}</span></Link> | {video.Username} | {video.Likes} Likes
-                    | {video.Views} Views{" "}
+                    <Link to="/video">
+                      <span
+                        onClick={() => {
+                          setVideo(video);
+                        }}
+                      >
+                        {video.VideoTitle}
+                      </span>
+                    </Link>{" "}
+                    | {video.Username} | {video.Likes} Likes | {video.Views}{" "}
+                    Views{" "}
                   </p>
                 </div>
               ))}

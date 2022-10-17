@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import CircularProgress from "@mui/material/CircularProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import Alert from '@mui/material/Alert';
+import Alert from "@mui/material/Alert";
 import { getAuth } from "firebase/auth";
 import axios from "axios";
 
@@ -56,7 +56,6 @@ CircularProgressWithLabel.propTypes = {
   value: PropTypes.number.isRequired,
 };
 
-
 function FileUpload() {
   //use state for registration variables
   const [videoTitle, setVideoTitle] = useState("");
@@ -79,7 +78,6 @@ function FileUpload() {
   const auth = getAuth();
   const user = auth.currentUser;
 
-
   // Store uploaded file
   const [file, setFile] = useState("");
 
@@ -94,8 +92,7 @@ function FileUpload() {
   //If a user doesn't choose a file and tries to upload, error will appear
   const handleUpload = async (e) => {
     if (!file) {
-          alert("Please upload a video first!");
-
+      alert("Please upload a video first!");
     }
 
     //Restrict file size to 20 MB ~ equivalent to 30 second video
