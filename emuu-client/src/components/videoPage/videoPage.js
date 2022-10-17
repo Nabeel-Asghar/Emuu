@@ -4,6 +4,8 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Favorite from "@material-ui/icons/Favorite";
 import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
+import Button from 'react-bootstrap/Button';
+
 
 function Video({ video, setVideo }) {
   useEffect(() => {
@@ -38,6 +40,8 @@ function Video({ video, setVideo }) {
       <p>Posted By: {video.Username} on </p>
       <p>Game Tag: {video.GameTag}</p>
       <h3> Comments </h3>
+       <textarea id="comments" name="comments" rows="4" cols="50"></textarea>
+        <button class="btn btn-primary" type="submit">Submit</button>
     </div>
   );
 }
