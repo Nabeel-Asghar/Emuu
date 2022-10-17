@@ -19,6 +19,7 @@ type UploadInfo struct {
 	Video_description string `json:"video_description"`
 	Game_tags string `json:"video_gameTags"`
 	Video_url string `json:"video_url"`
+	Thumbnail_url string `json:"thumbnail_url"`
 }
 
 
@@ -57,7 +58,7 @@ func UploadVideo(c *gin.Context) {
                 "Views": 0,
                 "Date": currentDate,
                 "uploadTime": currentTimestamp,
-
+                "thumbnailUrl": input.Thumbnail_url,
 
         })
 
@@ -76,6 +77,7 @@ func UploadVideo(c *gin.Context) {
                         "Views": 0,
                         "Date": currentDate,
                         "uploadTime": currentTimestamp,
+                        "thumbnailUrl": input.Thumbnail_url,
 
                 })
 

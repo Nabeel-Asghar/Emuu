@@ -51,6 +51,7 @@ function Home() {
     const querySnapshotRecent = [];
     querySnapshot.forEach((doc) => querySnapshotRecent.push(doc));
     sortVideosByTime(querySnapshotRecent);
+
     const recentVideosArr = [];
     querySnapshotRecent.forEach((doc) => {
       recentVideosArr.push(doc.data());
