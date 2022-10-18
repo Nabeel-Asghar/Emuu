@@ -1,5 +1,7 @@
+
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+
 import {
   collection,
   query,
@@ -8,7 +10,7 @@ import {
   doc,
   getDoc,
 } from "firebase/firestore";
-import { db } from "./Firebase.js";
+import { db } from "../../Firebase.js";
 function Results({ search, setViewUser }) {
   const [videos, setVideos] = useState([]);
   const [users, setUsers] = useState([]);

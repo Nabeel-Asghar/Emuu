@@ -9,7 +9,7 @@ import Home from "./components/home/Home";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Profile from "./components/UserProfile/Profile";
 import Upload from "./components/upload/UploadButton";
-import Results from "./Results.js";
+import Results from "./components/ReactInstantSearch/Results.js";
 import { useState } from "react";
 import ViewProfile from "./components/ViewProfile";
 
