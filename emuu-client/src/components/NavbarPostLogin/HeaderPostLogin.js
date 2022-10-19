@@ -41,7 +41,7 @@ function HeaderPostLogin() {
           <Container fluid>
             <Navbar.Brand href="/">
               <img
-                src="https://firebasestorage.googleapis.com/v0/b/emuu-1ee85.appspot.com/o/images%2FPicture2.png?alt=media&token=73d2ed42-e1a7-41b1-a7f3-ba8527668037"
+                src="https://firebasestorage.googleapis.com/v0/b/emuu-1ee85.appspot.com/o/images%2FPicture2.png?alt=media&token=c2e0afa7-7f0b-4b75-b9f9-e38043b729bb"
                 width="140"
                 height="40"
               ></img>

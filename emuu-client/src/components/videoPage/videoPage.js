@@ -7,7 +7,7 @@ import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 import Button from 'react-bootstrap/Button';
 import TextField from '@mui/material/TextField';
 import { db } from "../../Firebase.js";
-import {getDocs , getDoc, collection , doc , where, query, updateDoc, increment} from "firebase/firestore"
+import {getDocs , getDoc, collection , doc , where, query, updateDoc, increment, arrayUnion} from "firebase/firestore"
 
 
 function Video({ video, setVideo }) {
@@ -63,8 +63,10 @@ function Video({ video, setVideo }) {
               let id =""
               _doc.forEach(doc => id= doc.id);
               const videoRef = doc(db , "Videos", id);
+              const displayName = localStorage.getItem("displayName");
           if(e.target.checked){
           await updateDoc(videoRef, {Likes: increment(1)});
+          await updateDoc(videoRef, {usersThatLiked: arrayUnion(displayName)});
           }
           else{
           await updateDoc(videoRef, {Likes: increment(-1)});
