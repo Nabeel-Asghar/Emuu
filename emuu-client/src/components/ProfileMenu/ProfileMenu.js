@@ -31,7 +31,7 @@ export default function AccountMenu() {
   const auth = getAuth;
 
   const navAuth = localStorage.getItem("auth");
-    const userFirstInitial=localStorage.getItem("displayName").charAt(0).toUpperCase();
+  const userFirstInitial=localStorage.getItem("displayName").charAt(0).toUpperCase();
   const SignedOut = async (e) => {
     signOut(auth)
       .then(() => {
