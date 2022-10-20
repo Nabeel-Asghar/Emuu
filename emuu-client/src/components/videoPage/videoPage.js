@@ -49,6 +49,8 @@ function Video({ video, setVideo }) {
       _doc.forEach((doc) => (id = doc.id));
       const videoRef = doc(db, "Videos", id);
       setVideo((await getDoc(videoRef)).data());
+      await updateDoc(videoRef, { Views: increment(1) });
+
     }
     if (!video && !localStorage.getItem("video")) {  //if there's no video on this page, redirect to home
       window.location.pathname = "/";

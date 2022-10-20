@@ -21,55 +21,13 @@ type UploadInfo struct {
 	Video_url string `json:"video_url"`
 }
 
-func(u *UploadInfo) SetUploadInfo(username, title, description, tags, url string){
-u.setUsername(username)
-u.setTitle(title)
-u.setDescription(description)
-u.setTags(tags)
-u.setUrl(url)
-
-}
-func(u *UploadInfo) getUsername() string {
-return u.User_userName
-}
-func(u *UploadInfo) getTitle() string {
-return u.Video_title
-}
-func(u *UploadInfo) getDescription() string {
-return u.Video_description
-}
-func(u *UploadInfo) getTags() string {
-return u.Game_tags
-}
-func(u *UploadInfo) getUrl() string {
-return u.Video_url
-}
-func(u *UploadInfo) setUsername(username string){
-u.User_userName= username;
-}
-func(u *UploadInfo) setTitle(title string){
-u.Video_title= title;
-}
-func(u *UploadInfo) setDescription(description string){
-u.Video_description= description;
-}
-func(u *UploadInfo) setTags(tags string){
-u.Game_tags= tags;
-}
-func(u *UploadInfo) setUrl(url string){
-u.Video_url= url;
-}
 
 func UploadVideo(c *gin.Context) {
 	var input UploadInfo
-
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})//writter with particular error
 		return
 	}
-    var u1 UploadInfo
-	u1.setUploadInfo(input.User_userName, input.Video_title, input.Video_description, input.Game_tags, input.Video_url)
-	fmt.Println(u1.getUsername(), ":", u1.getTitle(), ":", u1.getDescription(), ":", u1.getTags(), ":", u1.getUrl())
 
    ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) //setting context with timeout 15
    defer cancel() //after 15 seconds, if the function is not executed it will cancel and throw an error
@@ -90,6 +48,12 @@ func UploadVideo(c *gin.Context) {
     //Format Time
       Date := dt.Format("01-02-2006")
 
+     //Declare comments array
+     commentsArr := []map[string]interface{}
+
+     //Declare usersThatLiked array
+     usersThatLikedArr := [...]string{}
+
     id := uuid.New()
         wr, err := client.Collection("Videos").Doc(id.String()).Create(ctx, map[string]interface{}{
                 "Username": input.User_userName,
@@ -100,15 +64,35 @@ func UploadVideo(c *gin.Context) {
                 "Comments": "",
                 "Likes": 0,
                 "Views": 0,
-                "Date": Date,
+                "Date": currentDate,
                 "uploadTime": currentTimestamp,
+                "Comments": commentsArr,
+                "usersThatLiked": usersThatLikedArr,
 
         })
 
         if err != nil {
                 log.Fatalf("firestore doc creation error:%s\n", err)
         }
-        fmt.Println(wr.UpdateTime)
+
+         uc, err := client.Collection("Users").Doc(input.User_userName).Collection("Videos").Doc(id.String()).Create(ctx, map[string]interface{}{
+                        "Username": input.User_userName,
+                        "VideoTitle": input.Video_title,
+                        "VideoDescription": input.Video_description,
+                        "GameTag": input.Game_tags,
+                        "VideoUrl": input.Video_url,
+                        "Comments": "",
+                        "Likes": 0,
+                        "Views": 0,
+                        "Date": currentDate,
+                        "uploadTime": currentTimestamp,
+
+                })
+
+                if err != nil {
+                        log.Fatalf("firestore doc creation error:%s\n", err)
+                }
+        fmt.Println(wr.UpdateTime, uc.UpdateTime)
         c.JSON(http.StatusOK, gin.H{"message": "User Upload collection successfully created"})
 
 
