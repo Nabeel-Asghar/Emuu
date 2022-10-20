@@ -19,6 +19,7 @@ function HeaderPostLogin() {
     signOut(auth)
       .then(() => {
         console.log("User is signed out");
+        localStorage.clear();
         history.push("/");
         //TestUserStatus()
       })

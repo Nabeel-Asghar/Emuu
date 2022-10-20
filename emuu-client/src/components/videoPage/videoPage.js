@@ -26,10 +26,9 @@ function Video({ video, setVideo }) {
   function checkLiked() {
     let liked = video?.usersThatLiked?.includes(displayName); //check if there is a video and if there are users that liked stored
     if (liked) {
-    setChecked(true);
-    }
-    else {
-    setChecked(false);
+      setChecked(true);
+    } else {
+      setChecked(false);
     }
   }
 
@@ -50,9 +49,9 @@ function Video({ video, setVideo }) {
       const videoRef = doc(db, "Videos", id);
       setVideo((await getDoc(videoRef)).data());
       await updateDoc(videoRef, { Views: increment(1) });
-
     }
-    if (!video && !localStorage.getItem("video")) {  //if there's no video on this page, redirect to home
+    if (!video && !localStorage.getItem("video")) {
+      //if there's no video on this page, redirect to home
       window.location.pathname = "/";
     }
   }, []);
