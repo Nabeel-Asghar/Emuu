@@ -19,6 +19,7 @@ import { getAuth, signOut } from "firebase/auth";
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const profileImage = localStorage.getItem("userImage")
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -31,7 +32,12 @@ export default function AccountMenu() {
   const auth = getAuth;
 
   const navAuth = localStorage.getItem("auth");
-  const userFirstInitial=localStorage.getItem("displayName").charAt(0).toUpperCase();
+  let userFirstInitial;
+  if (auth === true){
+
+    userFirstInitial=localStorage.getItem("displayName").charAt(0).toUpperCase();
+    }
+
   const SignedOut = async (e) => {
     signOut(auth)
       .then(() => {
@@ -60,7 +66,9 @@ export default function AccountMenu() {
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
               >
+
                 <Avatar sx={{ width: 40, height: 40 }}>{userFirstInitial}</Avatar>
+               
               </IconButton>
             </Tooltip>
           </Box>
@@ -125,6 +133,8 @@ export default function AccountMenu() {
                 localStorage.setItem("auth", false);
                 history.push("/")
                 localStorage.setItem("user", null);
+                localStorage.setItem("displayName", null);
+                //localStorage.setItem("userImage", null);
               }}
             >
               <ListItemIcon>

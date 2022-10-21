@@ -12,6 +12,7 @@ import Upload from "./components/upload/UploadButton";
 import Results from "./components/ReactInstantSearch/Results.js";
 import { useState } from "react";
 import ViewProfile from "./components/ViewProfile";
+import TestAlgoliaComponent from "./components/NavbarPostLogin/TestAlgoliaSearchInput.js";
 
 const theme = createTheme({
   palette: {
@@ -53,6 +54,9 @@ function App() {
           <Route path="/view-profile">
             <ViewProfile viewUser={viewUser} />
           </Route>
+          <Route path="/algolia-search">
+                      <TestAlgoliaComponent />
+                    </Route>
 
           {auth === "true" && (
             <>
