@@ -4,7 +4,7 @@ import { storage } from "../../Firebase.js";
 import "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import PropTypes from "prop-types";
-import CircularProgress from "@mui/material/CircularProgress";
+import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import getData from "../../gameTagAPI.js";
@@ -28,34 +28,24 @@ const theme = createTheme({
     },
   },
 });
-function CircularProgressWithLabel(props) {
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
   return (
-    <Box sx={{ position: "relative", display: "inline-flex" }}>
-      <CircularProgress variant="determinate" {...props} />
-      <Box
-        sx={{
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          minWidth: 150,
-          position: "absolute",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Typography variant="subtitle" component="div" color="black">
-          {`${Math.round(props.value)}%`}
-        </Typography>
+    <div class="col-sm-6 offset-sm-3">
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ width: '100%', mr: 1 }}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box sx={{ minWidth: 35 }}>
+        <Typography variant="body2" color="text.secondary">{`${Math.round(
+          props.value,
+        )}%`}</Typography>
       </Box>
     </Box>
+    </div>
   );
 }
 
-CircularProgressWithLabel.propTypes = {
-  value: PropTypes.number.isRequired,
-};
+
 
 function FileUpload() {
   //use state for registration variables
@@ -103,7 +93,7 @@ function FileUpload() {
     }
 
     //Restrict file size to 5 MB ~ equivalent to 30 second video
-    if (file.size > 40 * 1024 * 1024) {
+    if (file.size > 100 * 1024 * 1024) {
       alert("File size exceeds maximum allowed!");
       return;
     }
@@ -127,11 +117,11 @@ function FileUpload() {
       "state_changed",
       (snapshot) => {},
       (err) => console.log(err),
-      () => {
+      (snapshot) => {
         // download url
-        getDownloadURL(uploadTaskThumb.snapshot.ref).then((url) => {
-          console.log(url);
-          setThumbnailUrl(url);
+        getDownloadURL(uploadTaskThumb.snapshot.ref).then((URL) => {
+          setThumbnailUrl(URL);
+          console.log(URL);
         });
       }
     );
@@ -148,12 +138,12 @@ function FileUpload() {
         setPercent(percent);
       },
       (err) => console.log(err),
-      () => {
+      (snapshot) => {
         // download url
         getDownloadURL(uploadTask.snapshot.ref)
-          .then((url) => {
-            console.log(url);
-            setVideoUrl(url);
+          .then((URL) => {
+            setVideoUrl(URL);
+            console.log(URL);
           })
           .then(
             axios
@@ -206,24 +196,25 @@ function FileUpload() {
           <br />
         </div>
       </form>
-      <h1>Please Choose a Video</h1>
+      <h2>Please Choose a Video</h2>
       <input type="file" onChange={handleChange} accept="video/mp4" />
       <br />
       <br />
 
-      <h1>Please Choose a Thumbnail</h1>
+      <h2>Please Choose a Thumbnail</h2>
       <input type="file" onChange={handleThumbnail} accept="image/jpeg" />
-      <button
-        onClick={() => handleUpload()}
-        type="submit"
-        className="btn btn-primary"
-      >
-        Upload
-      </button>
+
       <p>
         {" "}
-        <CircularProgressWithLabel value={percent} />{" "}
+        <LinearProgressWithLabel value={percent} />{" "}
       </p>
+      <button
+              onClick={() => handleUpload()}
+              type="submit"
+              className="btn btn-primary"
+            >
+              Upload
+            </button>
     </div>
   );
 }
