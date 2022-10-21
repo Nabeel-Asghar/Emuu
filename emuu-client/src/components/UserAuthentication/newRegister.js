@@ -65,17 +65,17 @@ function Register() {
   };
 
   function validateEmail(email) {
-    let at = false;
+    let at = 0;
     let checkDotcom = "";
     for (let i = email.length - 1; i >= 0; i--) {
-      if (email[i] == "@") at = true;
+      if (email[i] == "@") at++;
       if (i >= email.length - 4) {
         checkDotcom += email[i];
       }
     }
     console.log(checkDotcom);
 
-    if (!(checkDotcom == "moc.") || !at) {
+    if (!(checkDotcom == "moc.") || !at || at>1) {
       setError("The email address is invalid");
       return false;
     }
