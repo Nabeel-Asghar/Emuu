@@ -4,7 +4,7 @@ import { storage } from "../../Firebase.js";
 import "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import PropTypes from "prop-types";
-import CircularProgress from "@mui/material/CircularProgress";
+import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
@@ -27,34 +27,23 @@ const theme = createTheme({
     },
   },
 });
-function CircularProgressWithLabel(props) {
+function LinearProgressWithLabel(props: LinearProgressProps & { value: number }) {
   return (
-    <Box sx={{ position: "relative", display: "inline-flex" }}>
-      <CircularProgress variant="determinate" {...props} />
-      <Box
-        sx={{
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          minWidth: 150,
-          position: "absolute",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Typography variant="subtitle" component="div" color="black">
-          {`${Math.round(props.value)}%`}
-        </Typography>
+    <div class="col-sm-6 offset-sm-3">
+    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ width: '100%', mr: 1 }}>
+        <LinearProgress variant="determinate" {...props} />
+      </Box>
+      <Box sx={{ minWidth: 35 }}>
+        <Typography variant="body2" color="text.secondary">{`${Math.round(
+          props.value,
+        )}%`}</Typography>
       </Box>
     </Box>
+    </div>
   );
 }
 
-CircularProgressWithLabel.propTypes = {
-  value: PropTypes.number.isRequired,
-};
 
 function FileUpload() {
   //use state for registration variables
@@ -64,6 +53,7 @@ function FileUpload() {
   const [videoDate, setVideoDate] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [userName, setUserName] = useState("");
+  const [thumbnailUrl, setThumbnailUrl] = useState("");
 
   //upload data structure
   const uploadData = {
@@ -72,6 +62,7 @@ function FileUpload() {
     video_description: videoDescription,
     video_gameTags: videoTag,
     video_url: videoUrl,
+    thumbnail_url: thumbnailUrl,
   };
 
   //Gets user authentication
@@ -80,6 +71,7 @@ function FileUpload() {
 
   // Store uploaded file
   const [file, setFile] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
 
   //Store percent
   const [percent, setPercent] = useState(0);
@@ -89,27 +81,55 @@ function FileUpload() {
     setFile(event.target.files[0]);
     setUserName(user.displayName);
   }
+  function handleThumbnail(event) {
+    setThumbnail(event.target.files[0]);
+  }
   //If a user doesn't choose a file and tries to upload, error will appear
   const handleUpload = async (e) => {
     if (!file) {
       alert("Please upload a video first!");
     }
 
+
     //Restrict file size to 20 MB ~ equivalent to 30 second video
     if (file.size > 20 * 1024 * 1024) {
+
+    //Restrict file size to 5 MB ~ equivalent to 30 second video
+    if (file.size > 100 * 1024 * 1024) {
+
       alert("File size exceeds maximum allowed!");
       return;
     }
 
-    //Store into video folder in firebase storage
+    //Store video into video folder in firebase storage
     const storageRef = ref(
       storage,
       `/videos/${file.name + new Date().getTime()}`
     );
-
+    //Store thumbnail in thumbnail folder in firebase storage
+    const storageRefThumb = ref(
+      storage,
+      `/thumbnail/${thumbnail.name + new Date().getTime()}`
+    );
     //Upload to firebase function
     const uploadTask = uploadBytesResumable(storageRef, file);
+    const uploadTaskThumb = uploadBytesResumable(storageRefThumb, thumbnail);
 
+    //thumbnail upload
+    uploadTaskThumb.on(
+      "state_changed",
+      (snapshot) => {},
+      (err) => console.log(err),
+      (snapshot) => {
+        // download url
+        getDownloadURL(uploadTaskThumb.snapshot.ref).then((URL) => {
+          setThumbnailUrl(URL);
+          console.log(URL);
+        });
+      }
+    );
+
+    //Video and axios upload
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -121,19 +141,26 @@ function FileUpload() {
         setPercent(percent);
       },
       (err) => console.log(err),
-      () => {
+      (snapshot) => {
         // download url
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          setVideoUrl(url);
-        });
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then((URL) => {
+            setVideoUrl(URL);
+            console.log(URL);
+          })
+          .then(
+            axios
+              .post(
+                "http://localhost:8080/auth/upload",
+                JSON.stringify(uploadData)
+              )
+              .then((result) => {
+                console.log("User information is sent to firestore");
+              })
+          );
       }
     );
     //axios request to post upload information to backend
-    await axios
-      .post("http://localhost:8080/auth/upload", JSON.stringify(uploadData))
-      .then((result) => {
-        console.log("User information is sent to firestore");
-      });
   };
 
   return (
@@ -171,18 +198,25 @@ function FileUpload() {
           <br />
         </div>
       </form>
+      <h2>Please Choose a Video</h2>
       <input type="file" onChange={handleChange} accept="video/mp4" />
-      <button
-        onClick={() => handleUpload()}
-        type="submit"
-        className="btn btn-primary"
-      >
-        Upload
-      </button>
+      <br />
+      <br />
+
+      <h2>Please Choose a Thumbnail</h2>
+      <input type="file" onChange={handleThumbnail} accept="image/jpeg" />
+
       <p>
         {" "}
-        <CircularProgressWithLabel value={percent} />{" "}
+        <LinearProgressWithLabel value={percent} />{" "}
       </p>
+      <button
+              onClick={() => handleUpload()}
+              type="submit"
+              className="btn btn-primary"
+            >
+              Upload
+            </button>
     </div>
   );
 }

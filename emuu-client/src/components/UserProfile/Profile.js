@@ -9,6 +9,7 @@ import { db, storage } from "../../Firebase.js";
 import {
   getDoc,
   getDocs,
+  setDoc,
   doc,
   collection,
   query,
@@ -17,12 +18,11 @@ import {
 } from "firebase/firestore";
 
 function Profile() {
-  useEffect(() => {
-    console.log(JSON.parse(localStorage.getItem("user")));
-    getDocs(collection(db, "Users")).then((data) => {
-      console.log(data);
-    });
-  }, []);
+
+  const [percent, setPercent] = useState(0);
+  const displayName = localStorage.getItem("displayName");
+  const docRef = doc(db, "Users", displayName);
+
 
   function verifyJpeg(filename) {
     const fnArr = filename.split(".");
@@ -40,7 +40,18 @@ function Profile() {
 
     // 'file' comes from the Blob or File API
     uploadBytes(storageRef, file).then((snapshot) => {
-      getDownloadURL(storageRef).then((URL) => console.log(URL));
+
+      getDownloadURL(storageRef).then((URL) =>
+        setDoc(
+          docRef,
+          {
+            BannerUrl: URL,
+          },
+          {
+            merge: true,
+          }
+        )
+      );
     });
   }
 
@@ -50,17 +61,27 @@ function Profile() {
     const storage = getStorage();
     const storageRef = ref(storage, "/images/" + file.name);
 
+
     uploadBytes(storageRef, file).then((snapshot) => {
-      getDownloadURL(storageRef).then((URL) => console.log(URL));
+      getDownloadURL(storageRef).then((URL) =>
+        setDoc(
+          docRef,
+          {
+            ProfilePictureUrl: URL,
+          },
+          {
+            merge: true,
+          }
+        )
+      );
     });
   }
 
-  const displayName = localStorage.getItem("displayName");
 
   const [Banner, setBanner] = useState("");
   const [ProfilePic, setProfilePic] = useState("");
 
-  getDoc(doc(db, "Users", displayName)).then((docSnap) => {
+  getDoc(docRef).then((docSnap) => {
     setBanner(docSnap.data().BannerUrl);
     setProfilePic(docSnap.data().ProfilePictureUrl);
   });
