@@ -12,6 +12,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import { Link } from "react-router-dom";
 
 const theme = createTheme({
   palette: {
@@ -30,7 +31,9 @@ const theme = createTheme({
   },
 });
 
-function Home() {
+
+function Home({ setVideo }) {
+
   const [topVideos, setTopVideos] = useState([]);
   const [recentVideos, setRecentVideos] = useState([]);
 
@@ -40,22 +43,23 @@ function Home() {
 
     //Create array for top videos and sort by likes
     const querySnapshotTop = [];
-    querySnapshot.forEach((doc) => querySnapshotTop.push(doc));
+    querySnapshot.forEach((doc) => querySnapshotTop.push(doc.data()));
     sortVideosByLikes(querySnapshotTop);
     const topVideosArr = [];
     querySnapshotTop.forEach((doc) => {
-      topVideosArr.push(doc.data());
+      topVideosArr.push(doc);
     });
+    setTopVideos(topVideosArr);
 
     //Create array for recent videos and sort by upload date
     const querySnapshotRecent = [];
-    querySnapshot.forEach((doc) => querySnapshotRecent.push(doc));
+    querySnapshot.forEach((doc) => querySnapshotRecent.push(doc.data()));
     sortVideosByTime(querySnapshotRecent);
+
     const recentVideosArr = [];
     querySnapshotRecent.forEach((doc) => {
-      recentVideosArr.push(doc.data());
+      recentVideosArr.push(doc);
     });
-    setTopVideos(topVideosArr);
     setRecentVideos(recentVideosArr);
   }
 
@@ -63,10 +67,10 @@ function Home() {
   function sortVideosByLikes(videos) {
     for (let i = 0; i < videos.length - 1; i++) {
       for (let j = 0; j < videos.length - 1 - i; j++) {
-        if (videos[i].data().Likes < videos[i + 1].data().Likes) {
-          let temp = videos[i];
-          videos[i] = videos[i + 1];
-          videos[i + 1] = temp;
+        if (videos[j].Likes < videos[j + 1].Likes) {
+          let temp = videos[j];
+          videos[j] = videos[j + 1];
+          videos[j + 1] = temp;
         }
       }
     }
@@ -76,10 +80,10 @@ function Home() {
   function sortVideosByTime(videos) {
     for (let i = 0; i < videos.length - 1; i++) {
       for (let j = 0; j < videos.length - 1 - i; j++) {
-        if (videos[i].data().uploadTime < videos[i + 1].data().uploadTime) {
-          let temp = videos[i];
-          videos[i] = videos[i + 1];
-          videos[i + 1] = temp;
+        if (videos[j].uploadTime < videos[j + 1].uploadTime) {
+          let temp = videos[j];
+          videos[j] = videos[j + 1];
+          videos[j + 1] = temp;
         }
       }
     }
@@ -101,10 +105,20 @@ function Home() {
             {topVideos &&
               topVideos.map((video) => (
                 <div>
-                  <video controls height="250" src={video.VideoUrl}></video>
+                  <img controls height="250" width = "400" src={video.thumbnailUrl}></img>
                   <p>
-                    {video.VideoTitle} | {video.Username} | {video.Likes} Likes
-                    | {video.Views} Views{" "}
+                    <Link to="/video">
+                      {" "}
+                      <span
+                        onClick={() => {
+                          setVideo(video);
+                        }}
+                      >
+                        {video.VideoTitle}
+                      </span>
+                    </Link>{" "}
+                    | {video.Username} | {video.Likes} Likes | {video.Views}{" "}
+                    Views{" "}
                   </p>
                 </div>
               ))}
@@ -120,10 +134,19 @@ function Home() {
             {recentVideos &&
               recentVideos.map((video) => (
                 <div>
-                  <video controls height="250" src={video.VideoUrl}></video>
+                  <img controls height="250" width = "400" src={video.thumbnailUrl}></img>
                   <p>
-                    {video.VideoTitle} | {video.Username} | {video.Likes} Likes
-                    | {video.Views} Views{" "}
+                    <Link to="/video">
+                      <span
+                        onClick={() => {
+                          setVideo(video);
+                        }}
+                      >
+                        {video.VideoTitle}
+                      </span>
+                    </Link>{" "}
+                    | {video.Username} | {video.Likes} Likes | {video.Views}{" "}
+                    Views{" "}
                   </p>
                 </div>
               ))}
