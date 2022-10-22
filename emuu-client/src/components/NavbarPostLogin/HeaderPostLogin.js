@@ -22,7 +22,7 @@ import {
 } from "firebase/firestore";
 import EmuuLogo from "./EmuuLogo.png";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-
+import HeaderSearch from "./TestAlgoliaSearchInput";
 
 import ProfileMenu from "../ProfileMenu/ProfileMenu";
 
@@ -82,32 +82,7 @@ console.log(user,'userData')
             <Navbar.Brand href="/">
               <img src={EmuuLogo} width="140" height="40"></img>
             </Navbar.Brand>
-            <Form className="d-flex">
-              <input
-                value={search}
-                placeholder="search"
-                onChange={(e) => setSearch(e.target.value)}
-                style={{
-                  borderTopLeftRadius: "15px",
-                  borderBottomLeftRadius: "15px",
-                  paddingLeft: "20px",
-                }}
-              />
-              <Button
-                className="search-btn"
-                variant="btn btn-success search-btn"
-                style={{
-                  borderTopLeftRadius: "0px",
-                  borderBottomLeftRadius: "0px",
-                  marginTop: "1px",
-                }}
-              >
-                {" "}
-                <Link className="search-btn__title" to="/search">
-                  Search
-                </Link>
-              </Button>
-            </Form>
+              <HeaderSearch />
             <ProfileMenu />
 
           </Container>
