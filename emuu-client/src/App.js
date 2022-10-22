@@ -53,7 +53,9 @@ function App() {
           {auth === "true" && (
             <>
               <Route path="/userprofile">
+
                 <Profile setVideo={setVideo} />
+
               </Route>
 
               <Route path="/upload">
@@ -61,9 +63,11 @@ function App() {
               </Route>
             </>
           )}
+
           <Route exact path="/">
             <Home setVideo={setVideo} />
           </Route>
+
         </BrowserRouter>
       </div>
     </ThemeProvider>

@@ -19,6 +19,7 @@ type UploadInfo struct {
 	Video_description string `json:"video_description"`
 	Game_tags string `json:"video_gameTags"`
 	Video_url string `json:"video_url"`
+	Thumbnail_url string `json:"thumbnail_url"`
 }
 
 
@@ -72,6 +73,8 @@ func UploadVideo(c *gin.Context) {
                 "uploadTime": currentTimestamp,
                 "Comments": "",
                 "usersThatLiked": usersThatLikedArr,
+                "thumbnailUrl": input.Thumbnail_url,
+
 
         })
 
@@ -80,6 +83,7 @@ func UploadVideo(c *gin.Context) {
         }
 
          uc, err := client.Collection("Users").Doc(input.User_userName).Collection("Videos").Doc(id.String()).Create(ctx, map[string]interface{}{
+
                 "Username": input.User_userName,
                 "VideoTitle": input.Video_title,
                 "VideoDescription": input.Video_description,
@@ -91,6 +95,8 @@ func UploadVideo(c *gin.Context) {
                 "uploadTime": currentTimestamp,
                 "Comments": "",
                 "usersThatLiked": usersThatLikedArr,
+                   "thumbnailUrl": input.Thumbnail_url,
+
                 })
 
                 if err != nil {

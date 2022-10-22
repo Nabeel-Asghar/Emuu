@@ -31,7 +31,9 @@ const theme = createTheme({
   },
 });
 
+
 function Home({ setVideo }) {
+
   const [topVideos, setTopVideos] = useState([]);
   const [recentVideos, setRecentVideos] = useState([]);
 
@@ -53,6 +55,7 @@ function Home({ setVideo }) {
     const querySnapshotRecent = [];
     querySnapshot.forEach((doc) => querySnapshotRecent.push(doc.data()));
     sortVideosByTime(querySnapshotRecent);
+
     const recentVideosArr = [];
     querySnapshotRecent.forEach((doc) => {
       recentVideosArr.push(doc);
@@ -102,7 +105,7 @@ function Home({ setVideo }) {
             {topVideos &&
               topVideos.map((video) => (
                 <div>
-                  <video controls height="250" src={video.VideoUrl}></video>
+                  <img controls height="250" width = "400" src={video.thumbnailUrl}></img>
                   <p>
                     <Link to="/video">
                       {" "}
@@ -131,7 +134,7 @@ function Home({ setVideo }) {
             {recentVideos &&
               recentVideos.map((video) => (
                 <div>
-                  <video controls height="250" src={video.VideoUrl}></video>
+                  <img controls height="250" width = "400" src={video.thumbnailUrl}></img>
                   <p>
                     <Link to="/video">
                       <span
