@@ -38,15 +38,15 @@ function Login() {
     const user = auth.currentUser;
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
-      console.log(userCredential)
+        console.log(userCredential);
         // Signed in
         const user = userCredential.user;
-        localStorage.setItem("user" , JSON.stringify(userCredential.user))
+        localStorage.setItem("user", JSON.stringify(userCredential.user));
         console.log("User is signed in");
         localStorage.setItem("auth", true);
         localStorage.setItem("user", JSON.stringify(userCredential.user));
         localStorage.setItem("displayName", user.displayName);
-        history.push("/home");
+        history.push("/");
         window.location.reload();
       })
       .catch((error) => {
