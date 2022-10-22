@@ -91,8 +91,6 @@ function FileUpload() {
     }
 
 
-    //Restrict file size to 20 MB ~ equivalent to 30 second video
-    if (file.size > 20 * 1024 * 1024) {
 
     //Restrict file size to 5 MB ~ equivalent to 30 second video
     if (file.size > 100 * 1024 * 1024) {
