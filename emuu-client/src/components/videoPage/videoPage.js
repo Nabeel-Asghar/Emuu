@@ -19,8 +19,8 @@ import {
   arrayUnion,
   arrayRemove,
 } from "firebase/firestore";
-
-function Video({ video, setVideo }) {
+import { Link } from "react-router-dom";
+function Video({ video, setVideo, setUserProfile }) {
   const displayName = localStorage.getItem("displayName");
   const [checked, setChecked] = useState(false);
   function checkLiked() {
@@ -110,7 +110,16 @@ function Video({ video, setVideo }) {
           label="Like"
         />
       </p>
-      <p>Posted By: {video.Username} on </p>
+      <p>Posted By:  <Link to="/creator">
+                                          {""}
+                                          <span
+                                            onClick={() => {
+                                              setUserProfile(video);
+                                            }}
+                                          >
+                                            {video.Username}
+                                          </span>
+                                        </Link>{" "} on </p>
       <p>Game Tag: {video.GameTag}</p>
       <TextField
         id="standard-textarea"

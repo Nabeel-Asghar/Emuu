@@ -60,7 +60,12 @@ function Feeds() {
         {recentVideos &&
           recentVideos.map((video) => (
             <div>
-              <img controls height="250" width = "400" src={video.thumbnailUrl}></img>
+              <img
+                controls
+                height="250"
+                width="400"
+                src={video.thumbnailUrl}
+              ></img>
               <p>
                 {video.VideoTitle} | {video.Username} | {video.Likes} Likes |{" "}
                 {video.Views} Views{" "}

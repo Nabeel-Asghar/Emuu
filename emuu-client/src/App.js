@@ -11,7 +11,7 @@ import Profile from "./components/UserProfile/Profile";
 import Upload from "./components/upload/UploadButton";
 import Video from "./components/videoPage/videoPage";
 import { useState, useEffect } from "react";
-
+import Creator from "./components/CreatorsPage/CreatorsPage";
 const theme = createTheme({
   palette: {
     primary: {
@@ -50,12 +50,14 @@ function App() {
             <Video setVideo={setVideo} video={video} />
           </Route>
 
+ <Route path="/creator">
+            <Creator />
+          </Route>
+
           {auth === "true" && (
             <>
               <Route path="/userprofile">
-
                 <Profile setVideo={setVideo} />
-
               </Route>
 
               <Route path="/upload">
@@ -67,7 +69,6 @@ function App() {
           <Route exact path="/">
             <Home setVideo={setVideo} />
           </Route>
-
         </BrowserRouter>
       </div>
     </ThemeProvider>

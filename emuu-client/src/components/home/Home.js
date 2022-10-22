@@ -31,9 +31,7 @@ const theme = createTheme({
   },
 });
 
-
-function Home({ setVideo }) {
-
+function Home({ setVideo }, { setUserProfile }) {
   const [topVideos, setTopVideos] = useState([]);
   const [recentVideos, setRecentVideos] = useState([]);
 
@@ -105,7 +103,12 @@ function Home({ setVideo }) {
             {topVideos &&
               topVideos.map((video) => (
                 <div>
-                  <img controls height="250" width = "400" src={video.thumbnailUrl}></img>
+                  <img
+                    controls
+                    height="250"
+                    width="400"
+                    src={video.thumbnailUrl}
+                  ></img>
                   <p>
                     <Link to="/video">
                       {" "}
@@ -116,9 +119,9 @@ function Home({ setVideo }) {
                       >
                         {video.VideoTitle}
                       </span>
-                    </Link>{" "}
-                    | {video.Username} | {video.Likes} Likes | {video.Views}{" "}
-                    Views{" "}
+                    </Link>
+                    {" "}
+                    | {video.Username} | {video.Likes} Likes | {video.Views} Views{" "}
                   </p>
                 </div>
               ))}
@@ -134,7 +137,12 @@ function Home({ setVideo }) {
             {recentVideos &&
               recentVideos.map((video) => (
                 <div>
-                  <img controls height="250" width = "400" src={video.thumbnailUrl}></img>
+                  <img
+                    controls
+                    height="250"
+                    width="400"
+                    src={video.thumbnailUrl}
+                  ></img>
                   <p>
                     <Link to="/video">
                       <span
