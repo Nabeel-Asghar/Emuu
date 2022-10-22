@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-
 import AddIcon from "@mui/icons-material/Add";
 import "./Profile.scss";
 import "../../Firebase.js";
@@ -19,13 +18,11 @@ import {
 } from "firebase/firestore";
 
 function Profile() {
+
   const [percent, setPercent] = useState(0);
   const displayName = localStorage.getItem("displayName");
   const docRef = doc(db, "Users", displayName);
 
-  //     useEffect(()=>{console.log(JSON.parse(localStorage.getItem("user")));getDocs(collection(db, "Users")).then(data =>{
-  //     console.log(data)
-  //     })}, [])
 
   function verifyJpeg(filename) {
     const fnArr = filename.split(".");
@@ -43,6 +40,7 @@ function Profile() {
 
     // 'file' comes from the Blob or File API
     uploadBytes(storageRef, file).then((snapshot) => {
+
       getDownloadURL(storageRef).then((URL) =>
         setDoc(
           docRef,
@@ -63,6 +61,7 @@ function Profile() {
     const storage = getStorage();
     const storageRef = ref(storage, "/images/" + file.name);
 
+
     uploadBytes(storageRef, file).then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
         setDoc(
@@ -77,6 +76,7 @@ function Profile() {
       );
     });
   }
+
 
   const [Banner, setBanner] = useState("");
   const [ProfilePic, setProfilePic] = useState("");

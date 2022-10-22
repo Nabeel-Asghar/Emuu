@@ -44,7 +44,21 @@ func UploadVideo(c *gin.Context) {
 
    //Get current date and time
     currentTimestamp := time.Now().Unix()
-    currentDate := time.Unix(currentTimestamp, 0)
+    //Get Time
+       dt := time.Now()
+    //Format Time
+      Date := dt.Format("01-02-2006")
+
+     //Declare comments array
+     /*
+     commentsArr := [...]map[string]interface{}{
+     "date": "test",
+     "postedBy": "user",
+     "text": "test",
+     }
+*/
+     //Declare usersThatLiked array
+     usersThatLikedArr := [...]string{}
 
     id := uuid.New()
         wr, err := client.Collection("Videos").Doc(id.String()).Create(ctx, map[string]interface{}{
@@ -53,12 +67,14 @@ func UploadVideo(c *gin.Context) {
                 "VideoDescription": input.Video_description,
                 "GameTag": input.Game_tags,
                 "VideoUrl": input.Video_url,
-                "Comments": "",
                 "Likes": 0,
                 "Views": 0,
-                "Date": currentDate,
+                "Date": Date,
                 "uploadTime": currentTimestamp,
+                "Comments": "",
+                "usersThatLiked": usersThatLikedArr,
                 "thumbnailUrl": input.Thumbnail_url,
+
 
         })
 
@@ -67,17 +83,19 @@ func UploadVideo(c *gin.Context) {
         }
 
          uc, err := client.Collection("Users").Doc(input.User_userName).Collection("Videos").Doc(id.String()).Create(ctx, map[string]interface{}{
-                        "Username": input.User_userName,
-                        "VideoTitle": input.Video_title,
-                        "VideoDescription": input.Video_description,
-                        "GameTag": input.Game_tags,
-                        "VideoUrl": input.Video_url,
-                        "Comments": "",
-                        "Likes": 0,
-                        "Views": 0,
-                        "Date": currentDate,
-                        "uploadTime": currentTimestamp,
-                        "thumbnailUrl": input.Thumbnail_url,
+
+                "Username": input.User_userName,
+                "VideoTitle": input.Video_title,
+                "VideoDescription": input.Video_description,
+                "GameTag": input.Game_tags,
+                "VideoUrl": input.Video_url,
+                "Likes": 0,
+                "Views": 0,
+                "Date": Date,
+                "uploadTime": currentTimestamp,
+                "Comments": "",
+                "usersThatLiked": usersThatLikedArr,
+                   "thumbnailUrl": input.Thumbnail_url,
 
                 })
 

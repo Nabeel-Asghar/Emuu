@@ -7,7 +7,6 @@ import PropTypes from "prop-types";
 import LinearProgress, { LinearProgressProps } from '@mui/material/LinearProgress';
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import getData from "../../gameTagAPI.js";
 import Alert from "@mui/material/Alert";
 import { getAuth } from "firebase/auth";
 import axios from "axios";
@@ -44,7 +43,6 @@ function LinearProgressWithLabel(props: LinearProgressProps & { value: number })
     </div>
   );
 }
-
 
 
 function FileUpload() {
@@ -92,8 +90,13 @@ function FileUpload() {
       alert("Please upload a video first!");
     }
 
+
+    //Restrict file size to 20 MB ~ equivalent to 30 second video
+    if (file.size > 20 * 1024 * 1024) {
+
     //Restrict file size to 5 MB ~ equivalent to 30 second video
     if (file.size > 100 * 1024 * 1024) {
+
       alert("File size exceeds maximum allowed!");
       return;
     }
@@ -157,7 +160,6 @@ function FileUpload() {
           );
       }
     );
-
     //axios request to post upload information to backend
   };
 
