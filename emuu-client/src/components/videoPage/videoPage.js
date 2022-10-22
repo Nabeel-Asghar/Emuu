@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import React from "react";
+import "./videoPage.scss";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 import Favorite from "@material-ui/icons/Favorite";
@@ -47,8 +48,9 @@ function Video({ video, setVideo }) {
       let id = "";
       _doc.forEach((doc) => (id = doc.id));
       const videoRef = doc(db, "Videos", id);
-      setVideo((await getDoc(videoRef)).data());
       await updateDoc(videoRef, { Views: increment(1) });
+      setVideo((await getDoc(videoRef)).data());
+
     }
     if (!video && !localStorage.getItem("video")) {
       //if there's no video on this page, redirect to home
@@ -68,11 +70,12 @@ function Video({ video, setVideo }) {
 
   return (
     <div className="videoPage">
-      <video controls height="500" src={video.VideoUrl}></video>
-      <h2>{video.VideoTitle}</h2>
-      <p>
-        {video.VideoDescription} | {video.Likes} Likes | {video.Views} Views
-        |&ensp;
+      <video controls height="700" src={video.VideoUrl}></video>
+      <div className="title-line">
+      <h1 class='title'>{video.VideoTitle}</h1>
+      <p class = 'videoInfo'>
+       {video.Likes} Likes &#x2022; {video.Views} Views
+        &#x2022;&ensp;
         <FormControlLabel
           control={
             <Checkbox
@@ -110,8 +113,13 @@ function Video({ video, setVideo }) {
           label="Like"
         />
       </p>
+      </div>
+      <div className="about"><h2>About</h2>
+      <div className = "description">{video.VideoDescription}</div>
       <p>Posted By: {video.Username} on </p>
       <p>Game Tag: {video.GameTag}</p>
+      </div>
+      <div className='post-comment'>
       <TextField
         id="standard-textarea"
         label="Enter a comment"
@@ -123,7 +131,7 @@ function Video({ video, setVideo }) {
       />{" "}
       <p></p>
       <button
-        class="btn btn-primary"
+        class="btn btn-lg btn-primary"
         type="submit"
         onClick={async () => {
           setComment("");
@@ -148,6 +156,7 @@ function Video({ video, setVideo }) {
       >
         Submit
       </button>
+      </div>
       {video.Comments && (
         <div className="comments">
           <h2>Comments</h2>

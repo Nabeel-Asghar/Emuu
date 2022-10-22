@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { storage } from "../../Firebase.js";
 import "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -10,6 +10,8 @@ import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import { getAuth } from "firebase/auth";
 import axios from "axios";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
 const theme = createTheme({
   palette: {
@@ -62,7 +64,7 @@ function FileUpload() {
   const [videoDescription, setVideoDescription] = useState("");
   const [videoTag, setVideoTag] = useState("");
   const [videoDate, setVideoDate] = useState("");
-  const [videoUrl, setVideoUrl] = useState("");
+  //const [videoUrl, setVideoUrl] = useState("");
   const [userName, setUserName] = useState("");
 
   //upload data structure
@@ -71,8 +73,10 @@ function FileUpload() {
     video_title: videoTitle,
     video_description: videoDescription,
     video_gameTags: videoTag,
-    video_url: videoUrl,
+    video_url : "",
   };
+
+  const [uploadStatus , setUploadStatus] = useState('');
 
   //Gets user authentication
   const auth = getAuth();
@@ -95,8 +99,8 @@ function FileUpload() {
       alert("Please upload a video first!");
     }
 
-    //Restrict file size to 20 MB ~ equivalent to 30 second video
-    if (file.size > 20 * 1024 * 1024) {
+    //Restrict file size to 5 MB ~ equivalent to 30 second video
+    if (file.size > 5 * 1024 * 1024) {
       alert("File size exceeds maximum allowed!");
       return;
     }
@@ -123,17 +127,22 @@ function FileUpload() {
       (err) => console.log(err),
       () => {
         // download url
-        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
-          setVideoUrl(url);
+        getDownloadURL(uploadTask.snapshot.ref).then(async(url) => {
+        if(!url){setUploadStatus(<span style={{color:"red"}}><ErrorOutlineIcon/> Try again</span>); return}
+
+
+
+                    await axios
+                        .post("http://localhost:8080/auth/upload", JSON.stringify({...uploadData,video_url:url}))
+                        .then((result) => {
+                          setUploadStatus(<span style={{color:"green"}}><CheckCircleOutlineIcon/> Upload successful</span>)
+                        });
         });
       }
     );
+
     //axios request to post upload information to backend
-    await axios
-      .post("http://localhost:8080/auth/upload", JSON.stringify(uploadData))
-      .then((result) => {
-        console.log("User information is sent to firestore");
-      });
+
   };
 
   return (
@@ -183,6 +192,7 @@ function FileUpload() {
         {" "}
         <CircularProgressWithLabel value={percent} />{" "}
       </p>
+      <p id="upload-status">{uploadStatus}</p>
     </div>
   );
 }
