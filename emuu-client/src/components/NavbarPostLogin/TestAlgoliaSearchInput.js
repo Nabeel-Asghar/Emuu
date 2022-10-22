@@ -2,10 +2,6 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { Link } from "react-router-dom";
 
 import { createAutocomplete } from "@algolia/autocomplete-core";
-// import { getAlgoliaResults } from "@algolia/autocomplete-preset-algolia";
-
-//import { Input } from "antd";
-//import { SearchNormal1 } from "iconsax-react";
 
 import { db } from "../../Firebase.js";
 
@@ -22,7 +18,7 @@ export default function HeaderSearch() {
   const [videos, setVideos] = useState([]);
   const [users, setUsers] = useState([]);
   const [autocompleteState, setAutocompleteState] = useState({});
-  // const [searchInput, setSearchInput] = useState("");
+  const [searchInput, setSearchInput] = useState("");
   const abc = videos.concat(users);
 
   const [searchHeader, setSearchHeader] = useState(false);
@@ -32,11 +28,13 @@ export default function HeaderSearch() {
     ref: inputFocusRef,
   };
 
-  const autocomplete = useMemo(
-    () =>
+  const autocomplete =
       createAutocomplete({
         onStateChange({ state }) {
-          setAutocompleteState(state);
+        if(state.query!=="")
+            {setAutocompleteState(state);
+            setSearchInput(state.query);
+            }
         },
         getSources() {
           return [
@@ -51,19 +49,20 @@ export default function HeaderSearch() {
                 if (!query) {
                   return abc;
                 }
-                return abc.filter(
-                  (item) =>
-                    item.VideoTitle?.toLowerCase().includes(
-                      query.toLowerCase()
-                    ) ||
-                    item.Username?.toLowerCase().includes(
-                      query.toLocaleLowerCase()
-                    )
-                );
+                return {Usernames: abc.filter(
+                (item) =>
+                  item.Username?.toLowerCase().includes(
+                  query.toLocaleLowerCase()
+                )
+                ),
+                VideoTitles: abc.filter(
+                (item) =>  item.VideoTitle?.toLowerCase().includes(
+                query.toLowerCase()
+                )
+                )
+                }
               },
-              // getItemUrl({ item }) {
-              //   return item.url;
-              // },
+
               templates: {
                 item({ item }) {
                   return item.VideoTitle || item.Username;
@@ -72,9 +71,7 @@ export default function HeaderSearch() {
             },
           ];
         },
-      }),
-    []
-  );
+      });
 
   function linkHandleClick() {
     autocompleteState.query = "";
@@ -99,57 +96,85 @@ export default function HeaderSearch() {
     setUsers(usersArr);
   }
 
-  useEffect(async () => {
+  useEffect(() => {
+  (async () => {
     await getVideos();
-    //console.log("a");
-  }, []);
+  })();
+  },[]);
 
-  console.log(abc, "s");
-  //console.log(autocompleteState, "auto complete state");
 
-  return (
-    <div {...autocomplete.getRootProps({})}>
+  return (<>
+    <div {...autocomplete.getRootProps({})} className="d-flex" style={{position: "relative"}}>
       <input
         {...inputFocusProp}
         {...autocomplete.getInputProps({})}
         placeholder="Search..."
+//         onChange={(e) => setSearchInput(e.target.value)}
+         value={searchInput}
+         style={{
+                           borderRadius: "15px",
+                           paddingTop: "7px",
+                           paddingBottom: "7px",
+                            paddingLeft: "14px",
+                            paddingRight: "14px",
 
-
-        // onChange={(e) => setSearchInput(e.target.value)}
-        // value={searchInput}
+                         }}
       />
-
-      <div
-        className="hp-header-search-result"
-        {...autocomplete.getPanelProps({})}
+<div className="d-flex" style={{position: "absolute", zIndex: 1, backgroundColor: "#f9f9f9", top: "42px", left: "10px"}}>
+      <div {...autocomplete.getPanelProps({})}
       >
         {autocompleteState.isOpen &&
           autocompleteState.collections.map((collection, index) => {
             const { source, items } = collection;
 
             return (
-              items.length > 0 && (
-                <ul key={index} {...autocomplete.getListProps()}>
-                  {items.map((item, index) => (
-                    // index < 4 &&
-                    <li
-                      key={index}
+              items.length > 0 && items[0]['Usernames'].length > 0 && (
+                <ul key={index} {...autocomplete.getListProps()} style={{listStyleType: "none"}}>
+                  {items[0]['Usernames'].map((item, index2) => (
+                    item['DateJoined'] && <li
+                      key={index2}
                       {...autocomplete.getItemProps({
                         item,
                         source,
                       })}
                       className="hp-font-weight-500"
                     >
-                      <Link to={item.url} onClick={linkHandleClick}>
-                        {item.VideoTitle || item.Username}
-                      </Link>
+                         {" Username:"+ item.Username}
                     </li>
+
+                  ))}
+                </ul>
+              )
+            );
+          })}
+
+        {autocompleteState.isOpen &&
+          autocompleteState.collections.map((collection, index) => {
+            const { source, items } = collection;
+               console.log('autocompleteStateItems',collection);
+            return (
+              items.length > 0 && items[0]['VideoTitles'].length > 0 && (
+                <ul key={index} {...autocomplete.getListProps()}  style={{listStyleType: "none"}}>
+                  {items[0]['VideoTitles'].map((item, index2) => (
+                    // index < 4 &&
+                    item['VideoTitle'] && <li
+                      key={index2}
+                      {...autocomplete.getItemProps({
+                        item,
+                        source,
+                      })}
+                      className="hp-font-weight-500"
+                    >
+                         {" VideoTitle:"+ item.VideoTitle}
+                    </li>
+
                   ))}
                 </ul>
               )
             );
           })}
       </div>
-    </div>
+      </div>
+    </div></>
   );
 }

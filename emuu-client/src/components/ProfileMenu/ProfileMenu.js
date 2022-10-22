@@ -68,7 +68,7 @@ export default function AccountMenu() {
               >
 
                 <Avatar sx={{ width: 40, height: 40 }}>{userFirstInitial}</Avatar>
-               
+
               </IconButton>
             </Tooltip>
           </Box>
