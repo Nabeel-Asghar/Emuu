@@ -17,7 +17,7 @@ import {
 
 function Feeds() {
   const [recentVideos, setRecentVideos] = useState([]);
-  const displayName = localStorage.getItem("displayName");
+  const displayName = localStorage.getItem("CreatorName");
 
   async function getVideos() {
     //Get all video data

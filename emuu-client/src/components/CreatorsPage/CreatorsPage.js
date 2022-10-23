@@ -1,3 +1,7 @@
+import "./UserInfo.scss";
+import "./Feeds.scss";
+import { Avatar } from "@mui/material";
+import { AxiosContext } from "react-axios/lib/components/AxiosProvider";
 import React, { useState, useEffect } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import "./Profile.scss";
@@ -16,31 +20,30 @@ import {
   where,
   onSnapshot,
   increment,
-  updateDoc
+  updateDoc,
 } from "firebase/firestore";
 
-function Creator({video, setUserProfile}) {
 
-   const [creatorName, setCreatorName] = useState("asdfdsf");
+
+
+//Function to display creator page
+function Creator({ video, setUserProfile }) {
+  const [creatorName, setCreatorName] = useState("Temp");
   const docRef = doc(db, "Users", creatorName);
 
-
-useEffect(async () => {
+  useEffect(async () => {
     if (video) {
       localStorage.setItem("video", JSON.stringify(video));
     }
     if (localStorage.getItem("video")) {
       let video = JSON.parse(localStorage.getItem("video"));
       setCreatorName(video.Username);
-
     }
     if (!video && !localStorage.getItem("video")) {
       //if there's no video on this page, redirect to home
       window.location.pathname = "/";
     }
   }, []);
-
-
 
   const [Banner, setBanner] = useState("");
   const [ProfilePic, setProfilePic] = useState("");
@@ -56,7 +59,6 @@ useEffect(async () => {
         <div className="top-portion">
           <div className="user-profile-bg-image">
             <img id="prf-bg-img" src={Banner} alt="" srcSet="" />
-
           </div>
 
           <div className="user-profile-img">

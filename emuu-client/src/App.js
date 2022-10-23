@@ -50,7 +50,7 @@ function App() {
             <Video setVideo={setVideo} video={video} />
           </Route>
 
- <Route path="/creator">
+          <Route path="/creator">
             <Creator />
           </Route>
 

@@ -10,7 +10,7 @@ import {
   onSnapshot,
 } from "firebase/firestore";
 
-const displayName = localStorage.getItem("displayName");
+const displayName = localStorage.getItem("CreatorName");
 
 function UserInfo() {
   const [dateJoined, setDateJoined] = useState("");

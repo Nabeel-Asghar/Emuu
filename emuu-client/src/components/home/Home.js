@@ -119,9 +119,9 @@ function Home({ setVideo }, { setUserProfile }) {
                       >
                         {video.VideoTitle}
                       </span>
-                    </Link>
-                    {" "}
-                    | {video.Username} | {video.Likes} Likes | {video.Views} Views{" "}
+                    </Link>{" "}
+                    | {video.Username} | {video.Likes} Likes | {video.Views}{" "}
+                    Views{" "}
                   </p>
                 </div>
               ))}
