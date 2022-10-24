@@ -21,6 +21,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+import HeaderPostLogin from "./components/NavbarPostLogin/HeaderPostLogin"
 
 const theme = createTheme({
   palette: {
@@ -78,6 +79,7 @@ function App() {
     <AppProvider>
       <ThemeProvider theme={theme}>
         <div className="App">
+
           {/* <Sidebar /> */}
           <BrowserRouter>
             <Route exact path="/">
@@ -93,7 +95,7 @@ function App() {
                         <Video setVideo={setVideo} video={video} />
                       </Route>
             <Route path="/creator">
-                                  <Creator setVideo={setVideo} />
+                                  <Creator setVideo={setVideo} video={video} />
                                 </Route>
 
             {auth === "true" && (

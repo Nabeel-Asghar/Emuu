@@ -25,7 +25,7 @@ import {
 import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js"
 
 //Function to display creator page
-function Creator({ video, setUserProfile }) {
+function Creator({ setVideo, video, setUserProfile }) {
   const [creatorName, setCreatorName] = useState("Temp");
   const docRef = doc(db, "Users", creatorName);
 
@@ -72,7 +72,7 @@ function Creator({ video, setUserProfile }) {
           <UserInfo />
 
           <div className="left-side"></div>
-          <Feeds />
+          <Feeds setVideo={setVideo}/>
         </div>
       </div>
     </div>

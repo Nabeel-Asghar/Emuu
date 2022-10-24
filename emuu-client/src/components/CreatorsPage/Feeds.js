@@ -15,7 +15,7 @@ import {
   where,
 } from "firebase/firestore";
 import { Link } from "react-router-dom";
-function Feeds({ setVideo }, { setUserProfile }) {
+function Feeds({ setVideo , setUserProfile }) {
   const [recentVideos, setRecentVideos] = useState([]);
   const displayName = localStorage.getItem("CreatorName");
 
@@ -68,16 +68,18 @@ function Feeds({ setVideo }, { setUserProfile }) {
                 src={video.thumbnailUrl}
               ></img>
               <p>
+
                 <Link to="/video">
                   {" "}
-                  <span
-                    onClick={() => {
-                      setVideo(video);
-                    }}
-                  >
+ <span   onClick={() => {
+                                              setVideo(video);
+                                            }}>
+
+
                     {video.VideoTitle}
-                  </span>
+   </span>
                 </Link>{" "}
+
                 | {video.Username} | {video.Likes} Likes | {video.Views} Views{" "}
               </p>
             </div>
