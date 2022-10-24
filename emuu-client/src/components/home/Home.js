@@ -15,7 +15,7 @@ import {
   query,
 } from "firebase/firestore";
 import { createAutocomplete } from "@algolia/autocomplete-core";
-import {Link} from 'react-router-dom';
+import { Link } from "react-router-dom";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
 //import Video from "../common/video/Video";
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
@@ -23,14 +23,7 @@ import { db } from "../../Firebase.js";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
 
 import "firebase/firestore";
-// import {
-//   getFirestore,
-//   collection,
-//   getDocs,
-//   doc,
-//   query,
-//   where,
-// } from "firebase/firestore";
+
 import firebase from "firebase/compat/app";
 
 import Sidebar from "../Sidebar/Sidebar";
@@ -176,7 +169,7 @@ function Home({ setVideo }, { setUserProfile }) {
   const userName = localStorage.getItem("displayName");
 
   async function subscribeUser(subscribersName) {
-   console.log(subscribersName);
+    console.log(subscribersName);
   }
 
   return (
@@ -206,39 +199,38 @@ function Home({ setVideo }, { setUserProfile }) {
                       {" "}
                       {searchResultsVideosArr &&
                         searchResultsVideosArr.map((video, index) => (
-//                          <Video
-//                            id={index}
-//                            height={250}
-//                            src={video.VideoUrl}
-//                            title={video.VideoTitle}
-//                            author={video.Username}
-//                            views={video.Views}
-//                            uploadedAgoTime={video.uploadTime}
-//                          />
+                          //                          <Video
+                          //                            id={index}
+                          //                            height={250}
+                          //                            src={video.VideoUrl}
+                          //                            title={video.VideoTitle}
+                          //                            author={video.Username}
+                          //                            views={video.Views}
+                          //                            uploadedAgoTime={video.uploadTime}
+                          //                          />
 
- <div>
-                  <img
-                    controls
-                    height="250"
-                    width="400"
-                    src={video.thumbnailUrl}
-                  ></img>
-                  <p>
-                    <Link to="/video">
-                      {" "}
-                      <span
-                        onClick={() => {
-                          setVideo(video);
-                        }}
-                      >
-                        {video.VideoTitle}
-                      </span>
-                    </Link>{" "}
-                    | {video.Username} | {video.Likes} Likes | {video.Views}{" "}
-                    Views{" "}
-                  </p>
-                </div>
-
+                          <div>
+                            <img
+                              controls
+                              height="250"
+                              width="400"
+                              src={video.thumbnailUrl}
+                            ></img>
+                            <p>
+                              <Link to="/video">
+                                {" "}
+                                <span
+                                  onClick={() => {
+                                    setVideo(video);
+                                  }}
+                                >
+                                  {video.VideoTitle}
+                                </span>
+                              </Link>{" "}
+                              | {video.Username} | {video.Likes} Likes |{" "}
+                              {video.Views} Views{" "}
+                            </p>
+                          </div>
                         ))}
                     </div>
 
@@ -265,38 +257,30 @@ function Home({ setVideo }, { setUserProfile }) {
                     {" "}
                     {topVideos &&
                       topVideos.map((video, index) => (
-//                        <Video
-//                          id={index}
-//                          height={250}
-//                          src={video.VideoUrl}
-//                          title={video.VideoTitle}
-//                          author={video.Username}
-//                          views={video.Views}
-//                          uploadedAgoTime={video.uploadTime}
-//                        />
 
- <div>
-                  <img
-                    controls
-                    height="250"
-                    width="400"
-                    src={video.thumbnailUrl}
-                  ></img>
-                  <p>
-                    <Link to="/video">
-                      {" "}
-                      <span
-                        onClick={() => {
-                          setVideo(video);
-                        }}
-                      >
-                        {video.VideoTitle}
-                      </span>
-                    </Link>{" "}
-                    | {video.Username} | {video.Likes} Likes | {video.Views}{" "}
-                    Views{" "}
-                  </p>
-                </div>
+
+                        <div>
+                          <img
+                            controls
+                            height="250"
+                            width="400"
+                            src={video.thumbnailUrl}
+                          ></img>
+                          <p>
+                            <Link to="/video">
+                              {" "}
+                              <span
+                                onClick={() => {
+                                  setVideo(video);
+                                }}
+                              >
+                                {video.VideoTitle}
+                              </span>
+                            </Link>{" "}
+                            | {video.Username} | {video.Likes} Likes |{" "}
+                            {video.Views} Views{" "}
+                          </p>
+                        </div>
                       ))}
                   </div>
                 </p>
@@ -309,38 +293,30 @@ function Home({ setVideo }, { setUserProfile }) {
                     {" "}
                     {recentVideos &&
                       recentVideos.map((video, index) => (
-//                        <Video
-//                          id={index}
-//                          height={250}
-//                          src={video.VideoUrl}
-//                          title={video.VideoTitle}
-//                          author={video.Username}
-//                          views={video.Views}
-//                          uploadedAgoTime={video.uploadTime}
-//                        />
 
- <div>
-                  <img
-                    controls
-                    height="250"
-                    width="400"
-                    src={video.thumbnailUrl}
-                  ></img>
-                  <p>
-                    <Link to="/video">
-                      {" "}
-                      <span
-                        onClick={() => {
-                          setVideo(video);
-                        }}
-                      >
-                        {video.VideoTitle}
-                      </span>
-                    </Link>{" "}
-                    | {video.Username} | {video.Likes} Likes | {video.Views}{" "}
-                    Views{" "}
-                  </p>
-                </div>
+
+                        <div>
+                          <img
+                            controls
+                            height="250"
+                            width="400"
+                            src={video.thumbnailUrl}
+                          ></img>
+                          <p>
+                            <Link to="/video">
+                              {" "}
+                              <span
+                                onClick={() => {
+                                  setVideo(video);
+                                }}
+                              >
+                                {video.VideoTitle}
+                              </span>
+                            </Link>{" "}
+                            | {video.Username} | {video.Likes} Likes |{" "}
+                            {video.Views} Views{" "}
+                          </p>
+                        </div>
                       ))}
                   </div>
                 </p>

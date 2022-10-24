@@ -1,4 +1,4 @@
-import React, {useState,useEffect} from 'react';
+import React, { useState, useEffect } from "react";
 import "./HeaderPostLogin.scss";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
@@ -31,28 +31,24 @@ function HeaderPostLogin({ search, setSearch }) {
   const [user, setUser] = useState([]);
   const history = useHistory();
   const auth = getAuth;
-  const userName=localStorage.getItem("displayName")
-  console.log(userName, "user name")
-
+  const userName = localStorage.getItem("displayName");
+  console.log(userName, "user name");
 
   async function getUser() {
-      //Get user data
-      const querySnapshotUsers = await getDocs(collection(db, "Users"));
-      console.log(querySnapshotUsers)
-      const usersArr = [];
-      console.log(usersArr)
+    //Get user data
+    const querySnapshotUsers = await getDocs(collection(db, "Users"));
+    console.log(querySnapshotUsers);
+    const usersArr = [];
+    console.log(usersArr);
 
-      querySnapshotUsers.forEach((doc) => {
-        usersArr.push(doc.data());
-      });
-      const userArr = usersArr.filter((user)=>user.Username===userName)
-      console.log(userArr)
-      setUser(userArr);
-      localStorage.setItem("userImage", userArr[0].ProfilePictureUrl);
-
-
-
-    }
+    querySnapshotUsers.forEach((doc) => {
+      usersArr.push(doc.data());
+    });
+    const userArr = usersArr.filter((user) => user.Username === userName);
+    console.log(userArr);
+    setUser(userArr);
+    localStorage.setItem("userImage", userArr[0].ProfilePictureUrl);
+  }
 
   const SignedOut = async (e) => {
     signOut(auth)
@@ -65,8 +61,8 @@ function HeaderPostLogin({ search, setSearch }) {
         // An error happened.
       });
   };
-  useEffect(()=>getUser(), []);
-console.log(user,'userData')
+  useEffect(() => getUser(), []);
+  console.log(user, "userData");
   const navAuth = localStorage.getItem("auth");
   return (
     <>
@@ -82,9 +78,8 @@ console.log(user,'userData')
             <Navbar.Brand href="/">
               <img src={EmuuLogo} width="140" height="40"></img>
             </Navbar.Brand>
-              <HeaderSearch />
+            <HeaderSearch />
             <ProfileMenu />
-
           </Container>
         </Navbar>
       ))}

@@ -22,7 +22,7 @@ import {
   increment,
   updateDoc,
 } from "firebase/firestore";
-import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js"
+import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
 
 //Function to display creator page
 function Creator({ setVideo, video, setUserProfile }) {
@@ -52,30 +52,30 @@ function Creator({ setVideo, video, setUserProfile }) {
   });
 
   return (
-  <>
-  <HeaderPostLogin/>
-    <div className="MainProfileDiv">
-      <div className="profile-container">
-        <div className="top-portion">
-          <div className="user-profile-bg-image">
-            <img id="prf-bg-img" src={Banner} alt="" srcSet="" />
+    <>
+      <HeaderPostLogin />
+      <div className="MainProfileDiv">
+        <div className="profile-container">
+          <div className="top-portion">
+            <div className="user-profile-bg-image">
+              <img id="prf-bg-img" src={Banner} alt="" srcSet="" />
+            </div>
+
+            <div className="user-profile-img">
+              <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
+
+              <div className={"userName"}> {creatorName} </div>
+            </div>
           </div>
+          <div className="bottom-portion">
+            <div className="right-side"></div>
+            <UserInfo />
 
-          <div className="user-profile-img">
-            <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
-
-            <div className={"userName"}> {creatorName} </div>
+            <div className="left-side"></div>
+            <Feeds setVideo={setVideo} />
           </div>
-        </div>
-        <div className="bottom-portion">
-          <div className="right-side"></div>
-          <UserInfo />
-
-          <div className="left-side"></div>
-          <Feeds setVideo={setVideo}/>
         </div>
       </div>
-    </div>
     </>
   );
 }

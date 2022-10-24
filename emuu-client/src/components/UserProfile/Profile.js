@@ -16,7 +16,7 @@ import {
   where,
   onSnapshot,
 } from "firebase/firestore";
-import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js"
+import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
 
 function Profile() {
   const [percent, setPercent] = useState(0);
@@ -83,57 +83,59 @@ function Profile() {
   });
 
   return (
-  <>
-  <HeaderPostLogin/>
-    <div className="MainProfileDiv">
-      <div className="profile-container">
-        <div className="top-portion">
-          <div className="user-profile-bg-image">
-            <img id="prf-bg-img" src={Banner} alt="" srcSet="" />
-            <input
-              style={{ display: "none" }}
-              id="background-inp"
-              type="file"
-              onChange={(e) => uploadBackground(e)}
-              accept="image/jpeg"
-            />
-            <button
-              id="background-change"
-              onClick={() => document.querySelector("#background-inp").click()}
-            >
-              {" "}
-              <AddIcon />
-            </button>
-          </div>
+    <>
+      <HeaderPostLogin />
+      <div className="MainProfileDiv">
+        <div className="profile-container">
+          <div className="top-portion">
+            <div className="user-profile-bg-image">
+              <img id="prf-bg-img" src={Banner} alt="" srcSet="" />
+              <input
+                style={{ display: "none" }}
+                id="background-inp"
+                type="file"
+                onChange={(e) => uploadBackground(e)}
+                accept="image/jpeg"
+              />
+              <button
+                id="background-change"
+                onClick={() =>
+                  document.querySelector("#background-inp").click()
+                }
+              >
+                {" "}
+                <AddIcon />
+              </button>
+            </div>
 
-          <div className="user-profile-img">
-            <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
-            <input
-              style={{ display: "none" }}
-              id="profile-inp"
-              type="file"
-              onChange={(e) => uploadProfile(e)}
-              accept="image/jpeg"
-            />
-            <button
-              id="profile-change"
-              onClick={() => document.querySelector("#profile-inp").click()}
-            >
-              {" "}
-              <AddIcon />
-            </button>
-            <div className={"userName"}> {displayName} </div>
+            <div className="user-profile-img">
+              <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
+              <input
+                style={{ display: "none" }}
+                id="profile-inp"
+                type="file"
+                onChange={(e) => uploadProfile(e)}
+                accept="image/jpeg"
+              />
+              <button
+                id="profile-change"
+                onClick={() => document.querySelector("#profile-inp").click()}
+              >
+                {" "}
+                <AddIcon />
+              </button>
+              <div className={"userName"}> {displayName} </div>
+            </div>
           </div>
-        </div>
-        <div className="bottom-portion">
-          <div className="right-side"></div>
-          <UserInfo />
+          <div className="bottom-portion">
+            <div className="right-side"></div>
+            <UserInfo />
 
-          <div className="left-side"></div>
-          <Feeds />
+            <div className="left-side"></div>
+            <Feeds />
+          </div>
         </div>
       </div>
-    </div>
     </>
   );
 }

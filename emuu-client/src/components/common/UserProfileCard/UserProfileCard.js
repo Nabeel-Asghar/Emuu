@@ -13,7 +13,7 @@ const UserProfileCard = ({
   onClick,
 }) => {
   const isAuthenticated = localStorage.getItem("auth");
-  // const userName = localStorage.getItem("displayName");
+
   console.log(isAuthenticated, "auth status");
   return (
     <div className="video__details__container">

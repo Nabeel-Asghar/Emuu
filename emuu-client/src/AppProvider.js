@@ -3,7 +3,7 @@ import AppContext from "./AppContext";
 
 const AppProvider = (props) => {
   const [isSidebarOpen, setIsSiderbarOpen] = useState(true);
-  console.log(isSidebarOpen, "hellllllllooooooooooo");
+
 
   return (
     <AppContext.Provider

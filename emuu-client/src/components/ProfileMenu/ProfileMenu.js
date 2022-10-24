@@ -15,13 +15,13 @@ import LoginIcon from "@mui/icons-material/Login";
 import Logout from "@mui/icons-material/Logout";
 import { useHistory, Link } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
-import {collection , getDoc , where} from 'firebase/firestore'
-import {db} from '../../Firebase.js'
+import { collection, getDoc, where } from "firebase/firestore";
+import { db } from "../../Firebase.js";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const profileImage = localStorage.getItem("userImage")
+  const profileImage = localStorage.getItem("userImage");
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -36,10 +36,12 @@ export default function AccountMenu() {
   const navAuth = localStorage.getItem("auth");
   let userFirstInitial;
 
-  if (auth === true){
-
-    userFirstInitial=localStorage.getItem("displayName").charAt(0).toUpperCase();
-    }
+  if (auth === true) {
+    userFirstInitial = localStorage
+      .getItem("displayName")
+      .charAt(0)
+      .toUpperCase();
+  }
 
   const SignedOut = async (e) => {
     signOut(auth)
@@ -52,8 +54,6 @@ export default function AccountMenu() {
         console.log(error);
       });
   };
-
-
 
   return (
     <React.Fragment>
@@ -71,9 +71,9 @@ export default function AccountMenu() {
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
               >
-
-                <Avatar sx={{ width: 40, height: 40 }}>{userFirstInitial}</Avatar>
-
+                <Avatar sx={{ width: 40, height: 40 }}>
+                  {userFirstInitial}
+                </Avatar>
               </IconButton>
             </Tooltip>
           </Box>
@@ -136,10 +136,10 @@ export default function AccountMenu() {
               onClick={() => {
                 SignedOut();
                 localStorage.setItem("auth", false);
-                history.push("/")
+                history.push("/");
                 localStorage.setItem("user", null);
                 localStorage.setItem("displayName", null);
-                //localStorage.setItem("userImage", null);
+
               }}
             >
               <ListItemIcon>
@@ -158,7 +158,6 @@ export default function AccountMenu() {
             />
             Login
           </Link>
-
         </div>
       )}
     </React.Fragment>

@@ -78,7 +78,6 @@ function App() {
     <AppProvider>
       <ThemeProvider theme={theme}>
         <div className="App">
-
           {/* <Sidebar /> */}
           <BrowserRouter>
             <Route exact path="/">
@@ -91,11 +90,11 @@ function App() {
               <Register />
             </Route>
             <Route path="/video">
-                        <Video setVideo={setVideo} video={video} />
-                      </Route>
+              <Video setVideo={setVideo} video={video} />
+            </Route>
             <Route path="/creator">
-                                  <Creator setVideo={setVideo} video={video} />
-                                </Route>
+              <Creator setVideo={setVideo} video={video} />
+            </Route>
 
             {auth === "true" && (
               <>
