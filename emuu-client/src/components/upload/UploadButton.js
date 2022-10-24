@@ -14,6 +14,7 @@ import { getAuth } from "firebase/auth";
 import axios from "axios";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin";
 
 const theme = createTheme({
   palette: {
@@ -69,7 +70,6 @@ function FileUpload() {
 
     video_url: videoUrl,
     thumbnail_url: thumbnailUrl,
-
   };
 
   const [uploadStatus, setUploadStatus] = useState("");
@@ -102,7 +102,6 @@ function FileUpload() {
     //Restrict file size to 5 MB ~ equivalent to 30 second video
 
     if (file.size > 100 * 1024 * 1024) {
-
       alert("File size exceeds maximum allowed!");
       return;
     }
@@ -129,6 +128,14 @@ function FileUpload() {
       (snapshot) => {
         // download url
         getDownloadURL(uploadTaskThumb.snapshot.ref).then((URL) => {
+          if (!URL) {
+            setUploadStatus(
+              <span style={{ color: "red" }}>
+                <ErrorOutlineIcon /> Try again
+              </span>
+            );
+            return;
+          }
           setThumbnailUrl(URL);
           console.log(URL);
         });
@@ -150,29 +157,42 @@ function FileUpload() {
       (snapshot) => {
         // download url
 
-        getDownloadURL(uploadTask.snapshot.ref)
-          .then((URL) => {
-            setVideoUrl(URL);
-            console.log(URL);
-          })
-          .then(
-            axios
-              .post(
-                "http://localhost:8080/auth/upload",
-                JSON.stringify(uploadData)
-              )
-              .then((result) => {
-                console.log("User information is sent to firestore");
-              })
-          );
-
+        getDownloadURL(uploadTask.snapshot.ref).then((URL) => {
+          if (!URL) {
+            setUploadStatus(
+              <span style={{ color: "red" }}>
+                <ErrorOutlineIcon /> Try again
+              </span>
+            );
+            return;
+          }
+          setVideoUrl(URL);
+          console.log(URL);
+        });
       }
     );
-
   };
+
+  useEffect(async () => {
+    if (videoUrl && thumbnailUrl) {
+      await axios
+        .post(
+          "http://localhost:8080/auth/upload",
+          JSON.stringify({ ...uploadData })
+        )
+        .then((result) => {
+          setUploadStatus(
+            <span style={{ color: "green" }}>
+              <CheckCircleOutlineIcon /> Upload successful
+            </span>
+          );
+        });
+    }
+  }, [videoUrl, thumbnailUrl]);
 
   return (
     <div>
+      <HeaderPostLogin />
       <h1>Upload a Video</h1>
       <form id="videoUploadForm" method="POST">
         <div className="col-sm-6 offset-sm-3">
@@ -225,6 +245,7 @@ function FileUpload() {
       >
         Upload
       </button>
+      {uploadStatus}
     </div>
   );
 }
