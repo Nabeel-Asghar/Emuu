@@ -173,6 +173,7 @@ function Home({ setVideo }, { setUserProfile }) {
   }
 
   return (
+
     <AppContext.Consumer>
       {(context) => (
         <div style={{ display: "flex", flexDirection: "row" }}>
@@ -196,18 +197,11 @@ function Home({ setVideo }, { setUserProfile }) {
                       Search Results
                     </h2>
                     <div className="video-row">
+
                       {" "}
                       {searchResultsVideosArr &&
                         searchResultsVideosArr.map((video, index) => (
-                          //                          <Video
-                          //                            id={index}
-                          //                            height={250}
-                          //                            src={video.VideoUrl}
-                          //                            title={video.VideoTitle}
-                          //                            author={video.Username}
-                          //                            views={video.Views}
-                          //                            uploadedAgoTime={video.uploadTime}
-                          //                          />
+                      
 
                           <div>
                             <img
