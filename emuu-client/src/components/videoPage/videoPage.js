@@ -20,9 +20,11 @@ import {
   arrayUnion,
   arrayRemove,
 } from "firebase/firestore";
+import { Link } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+function Video({ video, setVideo, setUserProfile }) {
 
-function Video({ video, setVideo }) {
+
   const displayName = localStorage.getItem("displayName");
   const [checked, setChecked] = useState(false);
 
@@ -34,7 +36,7 @@ function Video({ video, setVideo }) {
       setChecked(false);
     }
   }
-
+  localStorage.setItem("CreatorName", video.Username);
   useEffect(async () => {
     console.log(getAuth());
     if (video) {
@@ -124,7 +126,17 @@ function Video({ video, setVideo }) {
         <h2>About</h2>
         <div className="description">{video.VideoDescription}</div>
         <p className="description">
-          Posted By: {video.Username} on {video.Date}
+          Posted By: {" "}
+        <Link to="/creator">
+          {""}
+          <span
+            onClick={() => {
+              setUserProfile(video);
+            }}
+          >
+            {video.Username}
+          </span>
+        </Link>{" "}on {video.Date}
         </p>
         <p className="description">Game Tag: {video.GameTag}</p>
       </div>
@@ -169,6 +181,7 @@ function Video({ video, setVideo }) {
           </button>
         </div>
       )}
+
       {video.Comments && (
         <div className="comment-section">
           <h2>Comments</h2>
