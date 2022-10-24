@@ -50,7 +50,7 @@ func UploadVideo(c *gin.Context) {
       Date := dt.Format("01-02-2006")
 
      //Declare comments array
-     /*
+  /*
      commentsArr := [...]map[string]interface{}{
      "date": "test",
      "postedBy": "user",
