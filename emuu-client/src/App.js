@@ -21,7 +21,6 @@ import {
   query,
   where,
 } from "firebase/firestore";
-import HeaderPostLogin from "./components/NavbarPostLogin/HeaderPostLogin"
 
 const theme = createTheme({
   palette: {

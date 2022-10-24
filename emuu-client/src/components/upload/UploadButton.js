@@ -4,15 +4,17 @@ import { storage } from "../../Firebase.js";
 import "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import PropTypes from "prop-types";
-import CircularProgress from "@mui/material/CircularProgress";
+import LinearProgress, {
+  LinearProgressProps,
+} from "@mui/material/LinearProgress";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import { getAuth } from "firebase/auth";
 import axios from "axios";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js"
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin"
 
 const theme = createTheme({
   palette: {
@@ -30,34 +32,24 @@ const theme = createTheme({
     },
   },
 });
-function CircularProgressWithLabel(props) {
+function LinearProgressWithLabel(
+  props: LinearProgressProps & { value: number }
+) {
   return (
-    <Box sx={{ position: "relative", display: "inline-flex" }}>
-      <CircularProgress variant="determinate" {...props} />
-      <Box
-        sx={{
-          top: 0,
-          left: 0,
-          bottom: 0,
-          right: 0,
-          minWidth: 150,
-          position: "absolute",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
-      >
-        <Typography variant="subtitle" component="div" color="black">
-          {`${Math.round(props.value)}%`}
-        </Typography>
+    <div class="col-sm-6 offset-sm-3">
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box sx={{ width: "100%", mr: 1 }}>
+          <LinearProgress variant="determinate" {...props} />
+        </Box>
+        <Box sx={{ minWidth: 35 }}>
+          <Typography variant="body2" color="text.secondary">{`${Math.round(
+            props.value
+          )}%`}</Typography>
+        </Box>
       </Box>
-    </Box>
+    </div>
   );
 }
-
-CircularProgressWithLabel.propTypes = {
-  value: PropTypes.number.isRequired,
-};
 
 function FileUpload() {
   //use state for registration variables
@@ -65,7 +57,7 @@ function FileUpload() {
   const [videoDescription, setVideoDescription] = useState("");
   const [videoTag, setVideoTag] = useState("");
   const [videoDate, setVideoDate] = useState("");
-  //const [videoUrl, setVideoUrl] = useState("");
+  const [videoUrl, setVideoUrl] = useState("");
   const [userName, setUserName] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
 
@@ -75,11 +67,13 @@ function FileUpload() {
     video_title: videoTitle,
     video_description: videoDescription,
     video_gameTags: videoTag,
-    video_url : "",
+
+    video_url: videoUrl,
     thumbnail_url: thumbnailUrl,
+
   };
 
-  const [uploadStatus , setUploadStatus] = useState('');
+  const [uploadStatus, setUploadStatus] = useState("");
 
   //Gets user authentication
   const auth = getAuth();
@@ -97,6 +91,9 @@ function FileUpload() {
     setFile(event.target.files[0]);
     setUserName(user.displayName);
   }
+  function handleThumbnail(event) {
+    setThumbnail(event.target.files[0]);
+  }
   //If a user doesn't choose a file and tries to upload, error will appear
   const handleUpload = async (e) => {
     if (!file) {
@@ -104,11 +101,14 @@ function FileUpload() {
     }
 
     //Restrict file size to 5 MB ~ equivalent to 30 second video
-    if (file.size > 5 * 1024 * 1024) {
+
+    if (file.size > 100 * 1024 * 1024) {
+
       alert("File size exceeds maximum allowed!");
       return;
     }
-//Store video into video folder in firebase storage
+
+    //Store video into video folder in firebase storage
     const storageRef = ref(
       storage,
       `/videos/${file.name + new Date().getTime()}`
@@ -123,19 +123,21 @@ function FileUpload() {
     const uploadTaskThumb = uploadBytesResumable(storageRefThumb, thumbnail);
 
     //thumbnail upload
-        uploadTaskThumb.on(
-          "state_changed",
-          (snapshot) => {},
-          (err) => console.log(err),
-          (snapshot) => {
-            // download url
-            getDownloadURL(uploadTaskThumb.snapshot.ref).then((URL) => {
-              setThumbnailUrl(URL);
-              console.log(URL);
-            });
-          }
-        );
+    uploadTaskThumb.on(
+      "state_changed",
+      (snapshot) => {},
+      (err) => console.log(err),
+      (snapshot) => {
+        // download url
+        getDownloadURL(uploadTaskThumb.snapshot.ref).then((URL) => {
+           if(!URL){setUploadStatus(<span style={{color:"red"}}><ErrorOutlineIcon/> Try again</span>); return}
+          setThumbnailUrl(URL);
+          console.log(URL);
+        });
+      }
+    );
 
+    //Video and axios upload
     uploadTask.on(
       "state_changed",
       (snapshot) => {
@@ -147,30 +149,35 @@ function FileUpload() {
         setPercent(percent);
       },
       (err) => console.log(err),
-      () => {
+      (snapshot) => {
         // download url
-        getDownloadURL(uploadTask.snapshot.ref).then(async(url) => {
-        if(!url){setUploadStatus(<span style={{color:"red"}}><ErrorOutlineIcon/> Try again</span>); return}
+
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then((URL) => {
+             if(!URL){setUploadStatus(<span style={{color:"red"}}><ErrorOutlineIcon/> Try again</span>); return}
+            setVideoUrl(URL);
+            console.log(URL);
+          })
 
 
-
-                    await axios
-                        .post("http://localhost:8080/auth/upload", JSON.stringify({...uploadData,video_url:url}))
-                        .then((result) => {
-                          setUploadStatus(<span style={{color:"green"}}><CheckCircleOutlineIcon/> Upload successful</span>)
-                        });
-        });
       }
     );
 
-    //axios request to post upload information to backend
-
   };
 
+  useEffect(async()=>{
+  if(videoUrl && thumbnailUrl){
+    await axios
+                          .post("http://localhost:8080/auth/upload", JSON.stringify({...uploadData}))
+                          .then((result) => {
+                            setUploadStatus(<span style={{color:"green"}}><CheckCircleOutlineIcon/> Upload successful</span>)
+                          });}
+
+  }, [videoUrl, thumbnailUrl])
+
   return (
-  <>
-  <HeaderPostLogin/>
     <div>
+    <HeaderPostLogin/>
       <h1>Upload a Video</h1>
       <form id="videoUploadForm" method="POST">
         <div className="col-sm-6 offset-sm-3">
@@ -204,7 +211,18 @@ function FileUpload() {
           <br />
         </div>
       </form>
+      <h2>Please Choose a Video</h2>
       <input type="file" onChange={handleChange} accept="video/mp4" />
+      <br />
+      <br />
+
+      <h2>Please Choose a Thumbnail</h2>
+      <input type="file" onChange={handleThumbnail} accept="image/jpeg" />
+
+      <p>
+        {" "}
+        <LinearProgressWithLabel value={percent} />{" "}
+      </p>
       <button
         onClick={() => handleUpload()}
         type="submit"
@@ -212,13 +230,8 @@ function FileUpload() {
       >
         Upload
       </button>
-      <p>
-        {" "}
-        <CircularProgressWithLabel value={percent} />{" "}
-      </p>
-      <p id="upload-status">{uploadStatus}</p>
+      {uploadStatus}
     </div>
-    </>
   );
 }
 
