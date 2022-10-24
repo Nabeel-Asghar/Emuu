@@ -36,10 +36,7 @@ function Creator({ video, setUserProfile }) {
       let video = JSON.parse(localStorage.getItem("video"));
       setCreatorName(video.Username);
     }
-    if (!video && !localStorage.getItem("video")) {
-      //if there's no video on this page, redirect to home
-      window.location.pathname = "/";
-    }
+
   }, []);
 
   const [Banner, setBanner] = useState("");
