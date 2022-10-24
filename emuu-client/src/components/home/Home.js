@@ -95,7 +95,7 @@ function Home({ setVideo }, { setUserProfile }) {
       <div className="Home">
         <p class="text-start">
           <h2>
-            <div class="p-4"> Top Rated Videos </div>
+            <div class="p-4"> Top Rated Video's </div>
           </h2>
           <div className="video-row">
             {" "}
