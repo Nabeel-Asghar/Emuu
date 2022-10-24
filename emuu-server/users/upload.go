@@ -50,7 +50,7 @@ func UploadVideo(c *gin.Context) {
       Date := dt.Format("01-02-2006")
 
      //Declare comments array
-     /*
+  /*
      commentsArr := [...]map[string]interface{}{
      "date": "test",
      "postedBy": "user",
@@ -82,27 +82,8 @@ func UploadVideo(c *gin.Context) {
                 log.Fatalf("firestore doc creation error:%s\n", err)
         }
 
-         uc, err := client.Collection("Users").Doc(input.User_userName).Collection("Videos").Doc(id.String()).Create(ctx, map[string]interface{}{
 
-                "Username": input.User_userName,
-                "VideoTitle": input.Video_title,
-                "VideoDescription": input.Video_description,
-                "GameTag": input.Game_tags,
-                "VideoUrl": input.Video_url,
-                "Likes": 0,
-                "Views": 0,
-                "Date": Date,
-                "uploadTime": currentTimestamp,
-                "Comments": "",
-                "usersThatLiked": usersThatLikedArr,
-                   "thumbnailUrl": input.Thumbnail_url,
-
-                })
-
-                if err != nil {
-                        log.Fatalf("firestore doc creation error:%s\n", err)
-                }
-        fmt.Println(wr.UpdateTime, uc.UpdateTime)
+        fmt.Println(wr.UpdateTime, wr.UpdateTime)
         c.JSON(http.StatusOK, gin.H{"message": "User Upload collection successfully created"})
 
 

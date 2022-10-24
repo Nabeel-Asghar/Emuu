@@ -1,0 +1,19 @@
+.Main-UserInfo-Container {
+  height: 100%;
+  width: 50%;
+  background: #e9e5df;
+  border-radius: 15px;
+  margin: 50px 20px 0px 20px;
+  text-align: left;
+  padding: 0 20px 0 20px;
+
+  .about {
+    margin-top: 10px;
+    font-weight: normal;
+    padding-bottom: 20px;
+  }
+
+  .about_info {
+    font-size: 18px;
+  }
+}

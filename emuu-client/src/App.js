@@ -9,12 +9,12 @@ import Home from "./components/home/Home";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Profile from "./components/UserProfile/Profile";
 import Upload from "./components/upload/UploadButton";
-import { useState, useEffect } from "react";
 import Video from "./components/videoPage/videoPage";
 import TestAlgoliaComponent from "./components/NavbarPostLogin/TestAlgoliaSearchInput.js";
 import ViewProfile from "./components/ViewProfile";
 import Results from "./components/ReactInstantSearch/Results.js";
-
+import { useState, useEffect } from "react";
+import Creator from "./components/CreatorsPage/CreatorsPage";
 const theme = createTheme({
   palette: {
     primary: {
@@ -33,11 +33,10 @@ const theme = createTheme({
 });
 
 function App() {
-
   const auth = localStorage.getItem("auth");
-  const [search, setSearch] = useState("");
-  const [viewUser, setViewUser] = useState(null);
   const [video, setVideo] = useState("");
+const [search, setSearch] = useState("");
+  const [viewUser, setViewUser] = useState(null);
   //Navigation bar
   return (
     <ThemeProvider theme={theme}>
@@ -45,43 +44,53 @@ function App() {
         <BrowserRouter>
           <HeaderPostLogin search={search} setSearch={setSearch} />
 
-                    <Route path="/login">
-                      <Login />
+          <Route path="/login">
+            <Login />
+          </Route>
+          <Route path="/register">
+            <Register />
+          </Route>
+          <Route path="/video">
+            <Video setVideo={setVideo} video={video} />
+          </Route>
+
+          <Route path="/creator">
+                      <Creator setVideo={setVideo} />
                     </Route>
-                    <Route path="/register">
-                      <Register />
-                    </Route>
-                    <Route path="/video">
-                     <Video setVideo={setVideo} video={video} />
-                     </Route>
+
                     <Route path="/search">
-                      <Results setViewUser={setViewUser} search={search} />
-                    </Route>
-                    <Route path="/view-profile">
-                      <ViewProfile viewUser={viewUser} />
-                    </Route>
-                    <Route path="/algolia-search">
-                                <TestAlgoliaComponent />
-                              </Route>
+                                          <Results setViewUser={setViewUser} search={search} />
+                                        </Route>
+                                        <Route path="/view-profile">
+                                          <ViewProfile viewUser={viewUser} />
+                                        </Route>
+                                        <Route path="/algolia-search">
+                                                    <TestAlgoliaComponent />
+                                                  </Route>
 
-                    {auth === "true" && (
-                      <>
-                        <Route path="/userprofile">
-                          <Profile setVideo={setVideo} />
-                        </Route>
 
-                        <Route path="/upload">
-                          <Upload />
-                        </Route>
-                      </>
-                    )}
-                    <Route exact path="/">
-                      <Home setVideo={setVideo}/>
-                    </Route>
-                  </BrowserRouter>
-                </div>
-              </ThemeProvider>
-            );
-          }
+          {auth === "true" && (
+            <>
+              <Route path="/userprofile">
 
-          export default App;
+                <Profile setVideo={setVideo} />
+
+              </Route>
+
+              <Route path="/upload">
+                <Upload />
+              </Route>
+            </>
+          )}
+
+          <Route exact path="/">
+            <Home setVideo={setVideo} />
+          </Route>
+
+        </BrowserRouter>
+      </div>
+    </ThemeProvider>
+  );
+}
+
+export default App;
