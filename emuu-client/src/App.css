@@ -46,3 +46,10 @@ font-weight:600 !important;
     transform: rotate(360deg);
   }
 }
+
+.App a{
+color: black;
+    text-decoration: underline;
+    font-weight: bold;
+}
+
