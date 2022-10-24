@@ -34,7 +34,6 @@ const theme = createTheme({
 function Home({ setVideo }, { setUserProfile }) {
   const [topVideos, setTopVideos] = useState([]);
   const [recentVideos, setRecentVideos] = useState([]);
-
   async function getVideos() {
     //Get all video data
     const querySnapshot = await getDocs(collection(db, "Videos"));

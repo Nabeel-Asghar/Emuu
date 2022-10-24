@@ -32,7 +32,7 @@ function Video({ video, setVideo, setUserProfile }) {
       setChecked(false);
     }
   }
-localStorage.setItem("CreatorName", video.Username)
+  localStorage.setItem("CreatorName", video.Username);
   useEffect(async () => {
     if (video) {
       localStorage.setItem("video", JSON.stringify(video));

@@ -23,9 +23,6 @@ import {
   updateDoc,
 } from "firebase/firestore";
 
-
-
-
 //Function to display creator page
 function Creator({ video, setUserProfile }) {
   const [creatorName, setCreatorName] = useState("Temp");

@@ -51,7 +51,7 @@ function App() {
           </Route>
 
           <Route path="/creator">
-            <Creator />
+            <Creator setVideo={setVideo} />
           </Route>
 
           {auth === "true" && (
