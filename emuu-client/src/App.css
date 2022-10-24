@@ -23,6 +23,11 @@ font-weight:600 !important;
   }
 }
 
+
+.search-btn a{
+text-decoration: none;
+color:black}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
@@ -46,10 +51,21 @@ font-weight:600 !important;
     transform: rotate(360deg);
   }
 }
-
 .App a{
 color: black;
     text-decoration: underline;
     font-weight: bold;
 }
 
+.results-user{
+    margin: 20px;
+    display: flex;
+    width: 300px;
+    gap: 20px;
+    align-items: center;
+    }
+    .results-user img{
+        height: 50px;
+        width: 50px;
+        object-fit: cover;
+        border-radius: 50%;}
