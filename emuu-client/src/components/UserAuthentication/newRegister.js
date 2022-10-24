@@ -17,6 +17,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js"
 const theme = createTheme();
 
 function Register() {
@@ -98,6 +99,8 @@ function Register() {
   };
 
   return (
+  <>
+  <HeaderPostLogin/>
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -208,6 +211,7 @@ function Register() {
         </Box>
       </Container>
     </ThemeProvider>
+    </>
   );
 }
 

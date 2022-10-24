@@ -13,6 +13,9 @@ import {
   where,
 } from "firebase/firestore";
 import { Link } from "react-router-dom";
+import Sidebar from "../Sidebar/Sidebar";
+import AppContext from "../../AppContext.js"
+import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js"
 
 const theme = createTheme({
   palette: {
@@ -91,6 +94,18 @@ function Home({ setVideo }, { setUserProfile }) {
   }, []);
 
   return (
+  <AppContext.Consumer>
+  {(context) => (
+  <div style={{ display: "flex", flexDirection: "row" }}>
+  <Sidebar />
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                width: context.isSidebarOpen === true ? "84.2%" : "96.6%",
+              }}
+            >
+            <HeaderPostLogin/>
     <ThemeProvider theme={theme}>
       <div className="Home">
         <p class="text-start">
@@ -161,10 +176,11 @@ function Home({ setVideo }, { setUserProfile }) {
         </p>
       </div>
     </ThemeProvider>
+    </div>
+    </div>
+    )}
+    </AppContext.Consumer>
   );
-  useEffect = () => {
-    // Get clips
-  };
 }
 
 export default Home;

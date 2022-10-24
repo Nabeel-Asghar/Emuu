@@ -15,6 +15,8 @@ import LoginIcon from "@mui/icons-material/Login";
 import Logout from "@mui/icons-material/Logout";
 import { useHistory, Link } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
+import {collection , getDoc , where} from 'firebase/firestore'
+import {db} from '../../Firebase.js'
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -33,6 +35,7 @@ export default function AccountMenu() {
 
   const navAuth = localStorage.getItem("auth");
   let userFirstInitial;
+
   if (auth === true){
 
     userFirstInitial=localStorage.getItem("displayName").charAt(0).toUpperCase();
@@ -49,6 +52,8 @@ export default function AccountMenu() {
         console.log(error);
       });
   };
+
+
 
   return (
     <React.Fragment>

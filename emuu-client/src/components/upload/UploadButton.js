@@ -12,6 +12,7 @@ import { getAuth } from "firebase/auth";
 import axios from "axios";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js"
 
 const theme = createTheme({
   palette: {
@@ -66,6 +67,7 @@ function FileUpload() {
   const [videoDate, setVideoDate] = useState("");
   //const [videoUrl, setVideoUrl] = useState("");
   const [userName, setUserName] = useState("");
+  const [thumbnailUrl, setThumbnailUrl] = useState("");
 
   //upload data structure
   const uploadData = {
@@ -74,6 +76,7 @@ function FileUpload() {
     video_description: videoDescription,
     video_gameTags: videoTag,
     video_url : "",
+    thumbnail_url: thumbnailUrl,
   };
 
   const [uploadStatus , setUploadStatus] = useState('');
@@ -84,6 +87,7 @@ function FileUpload() {
 
   // Store uploaded file
   const [file, setFile] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
 
   //Store percent
   const [percent, setPercent] = useState(0);
@@ -104,15 +108,33 @@ function FileUpload() {
       alert("File size exceeds maximum allowed!");
       return;
     }
-
-    //Store into video folder in firebase storage
+//Store video into video folder in firebase storage
     const storageRef = ref(
       storage,
       `/videos/${file.name + new Date().getTime()}`
     );
-
+    //Store thumbnail in thumbnail folder in firebase storage
+    const storageRefThumb = ref(
+      storage,
+      `/thumbnail/${thumbnail.name + new Date().getTime()}`
+    );
     //Upload to firebase function
     const uploadTask = uploadBytesResumable(storageRef, file);
+    const uploadTaskThumb = uploadBytesResumable(storageRefThumb, thumbnail);
+
+    //thumbnail upload
+        uploadTaskThumb.on(
+          "state_changed",
+          (snapshot) => {},
+          (err) => console.log(err),
+          (snapshot) => {
+            // download url
+            getDownloadURL(uploadTaskThumb.snapshot.ref).then((URL) => {
+              setThumbnailUrl(URL);
+              console.log(URL);
+            });
+          }
+        );
 
     uploadTask.on(
       "state_changed",
@@ -146,6 +168,8 @@ function FileUpload() {
   };
 
   return (
+  <>
+  <HeaderPostLogin/>
     <div>
       <h1>Upload a Video</h1>
       <form id="videoUploadForm" method="POST">
@@ -194,6 +218,7 @@ function FileUpload() {
       </p>
       <p id="upload-status">{uploadStatus}</p>
     </div>
+    </>
   );
 }
 

@@ -16,6 +16,7 @@ import {
   where,
   onSnapshot,
 } from "firebase/firestore";
+import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js"
 
 function Profile() {
   const [percent, setPercent] = useState(0);
@@ -82,6 +83,8 @@ function Profile() {
   });
 
   return (
+  <>
+  <HeaderPostLogin/>
     <div className="MainProfileDiv">
       <div className="profile-container">
         <div className="top-portion">
@@ -131,6 +134,7 @@ function Profile() {
         </div>
       </div>
     </div>
+    </>
   );
 }
 

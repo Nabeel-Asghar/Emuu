@@ -31,11 +31,13 @@ export default function HeaderSearch() {
   const autocomplete =
       createAutocomplete({
         onStateChange({ state }) {
-        if(state.query!=="")
-            {setAutocompleteState(state);
+//        if(state.query!=="")
+//            {
+            setAutocompleteState(state);
+//            }
             setSearchInput(state.query);
-            }
-        },
+            },
+//        },
         getSources() {
           return [
             {

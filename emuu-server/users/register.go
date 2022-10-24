@@ -66,11 +66,12 @@ func CreateUser(c *gin.Context) {
    dt := time.Now()
 //Format Time
   Date := dt.Format("01-02-2006")
+  SubscriberListArr := [...]string{}
 wr, err := client.Collection("Users").Doc(input.User_userName).Create(ctx, map[string]interface{}{
                 "Username": input.User_userName,
                 "SubscriberCount": 0,
                 "LikedVideosList": "",
-                "SubscriberList": "",
+                "SubscriberList": SubscriberListArr,
                 "BannerUrl": "http://mcentre.lk/frontend/assets/images/default-banner.png",
                 "ProfilePictureUrl": "https://i.stack.imgur.com/l60Hf.png",
                 "VideosPosted": 0,

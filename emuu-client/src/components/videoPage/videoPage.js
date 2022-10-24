@@ -8,6 +8,7 @@ import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
 import Button from "react-bootstrap/Button";
 import TextField from "@mui/material/TextField";
 import { db } from "../../Firebase.js";
+import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js"
 import {
   getDocs,
   getDoc,
@@ -73,6 +74,8 @@ function Video({ video, setVideo, setUserProfile }) {
   };
 
   return (
+  <>
+  <HeaderPostLogin/>
     <div className="videoPage">
       <video controls height="700" src={video.VideoUrl}></video>
       <div className="title-line">
@@ -197,6 +200,7 @@ function Video({ video, setVideo, setUserProfile }) {
         </div>
       )}
     </div>
+    </>
   );
 }
 

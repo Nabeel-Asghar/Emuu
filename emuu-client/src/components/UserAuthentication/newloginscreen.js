@@ -22,7 +22,7 @@ import {
 import { Routes, Route, useHistory } from "react-router-dom";
 import Home from "../home/Home";
 import "../../Firebase.js";
-
+import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js"
 import firebase from "firebase/app";
 
 const theme = createTheme();
@@ -56,7 +56,7 @@ function Login() {
 
         switch (errorMessage.split(")")[0].split("/")[1]) {
           case "invalid-email":
-            setError("Email is invalid");
+            setError("Invalid Credentials");
             break;
           case "internal-error":
             setError("Both feilds are required");
@@ -65,7 +65,7 @@ function Login() {
             setError("User not found");
             break;
           case "wrong-password":
-            setError("Wrong password");
+            setError("Invalid Credentials");
             break;
           default:
             setError("An error occured");
@@ -75,6 +75,8 @@ function Login() {
   };
 
   return (
+  <>
+  <HeaderPostLogin/>
     <ThemeProvider theme={theme}>
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
@@ -176,6 +178,7 @@ function Login() {
         </Grid>
       </Grid>
     </ThemeProvider>
+    </>
   );
 }
 export default Login;

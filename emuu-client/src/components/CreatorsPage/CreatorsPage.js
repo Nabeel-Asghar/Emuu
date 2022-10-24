@@ -22,6 +22,7 @@ import {
   increment,
   updateDoc,
 } from "firebase/firestore";
+import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js"
 
 //Function to display creator page
 function Creator({ video, setUserProfile }) {
@@ -51,6 +52,8 @@ function Creator({ video, setUserProfile }) {
   });
 
   return (
+  <>
+  <HeaderPostLogin/>
     <div className="MainProfileDiv">
       <div className="profile-container">
         <div className="top-portion">
@@ -73,6 +76,7 @@ function Creator({ video, setUserProfile }) {
         </div>
       </div>
     </div>
+    </>
   );
 }
 
