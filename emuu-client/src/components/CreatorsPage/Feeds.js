@@ -17,13 +17,14 @@ import {
 import { Link } from "react-router-dom";
 function Feeds({ setVideo }, { setUserProfile }) {
   const [recentVideos, setRecentVideos] = useState([]);
-  const displayName = localStorage.getItem("displayName");
+  const displayName = localStorage.getItem("CreatorName");
 
   async function getVideos() {
     //Get all video data
     const docRef = collection(db, "Videos");
     const queryData = await query(docRef, where("Username", "==", displayName));
     const querySnapshot = await getDocs(queryData);
+
     //Create array for recent videos and sort by upload date
     const querySnapshotRecent = [];
     querySnapshot.forEach((doc) => querySnapshotRecent.push(doc));

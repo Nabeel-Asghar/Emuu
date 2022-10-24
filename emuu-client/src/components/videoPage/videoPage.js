@@ -19,10 +19,11 @@ import {
   arrayUnion,
   arrayRemove,
 } from "firebase/firestore";
-
-function Video({ video, setVideo }) {
+import { Link } from "react-router-dom";
+function Video({ video, setVideo, setUserProfile }) {
   const displayName = localStorage.getItem("displayName");
   const [checked, setChecked] = useState(false);
+
   function checkLiked() {
     let liked = video?.usersThatLiked?.includes(displayName); //check if there is a video and if there are users that liked stored
     if (liked) {
@@ -31,7 +32,7 @@ function Video({ video, setVideo }) {
       setChecked(false);
     }
   }
-
+  localStorage.setItem("CreatorName", video.Username);
   useEffect(async () => {
     if (video) {
       localStorage.setItem("video", JSON.stringify(video));
@@ -110,7 +111,20 @@ function Video({ video, setVideo }) {
           label="Like"
         />
       </p>
-      <p>Posted By: {video.Username} on </p>
+      <p>
+        Posted By:{" "}
+        <Link to="/creator">
+          {""}
+          <span
+            onClick={() => {
+              setUserProfile(video);
+            }}
+          >
+            {video.Username}
+          </span>
+        </Link>{" "}
+        on{" "}
+      </p>
       <p>Game Tag: {video.GameTag}</p>
       <TextField
         id="standard-textarea"
