@@ -167,7 +167,7 @@ export default function MiniDrawer({ sideBarState }) {
             </List>
             <Divider />
             <List>
-              {context.isSidebarOpen && (
+              {context.isSidebarOpen && isAuthorized==="true" &&(
                 <Typography
                   className="subscribers"
                   variant="subtitle1"
@@ -177,7 +177,8 @@ export default function MiniDrawer({ sideBarState }) {
                   Subscribers
                 </Typography>
               )}
-              {usersArr.map((user, index) => (
+                {isAuthorized==="true" &&
+              usersArr.map((user, index) => (
                 <ListItem key={index} disablePadding sx={{ display: "block" }}>
                   <ListItemButton
                     sx={{
@@ -204,7 +205,8 @@ export default function MiniDrawer({ sideBarState }) {
                     />
                   </ListItemButton>
                 </ListItem>
-              ))}
+              ))
+              }
             </List>
           </Drawer>
         </Box>
