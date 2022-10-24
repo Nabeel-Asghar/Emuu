@@ -14,15 +14,19 @@ import {
   query,
   where,
 } from "firebase/firestore";
-
-function Feeds() {
+import { Link } from "react-router-dom";
+function Feeds({ setVideo }, { setUserProfile }) {
   const [recentVideos, setRecentVideos] = useState([]);
   const displayName = localStorage.getItem("CreatorName");
 
   async function getVideos() {
     //Get all video data
-    const docRef = collection(db, "Users", displayName, "Videos");
-    const querySnapshot = await getDocs(docRef);
+    const docRef = collection(db, "Videos");
+    const queryData = await query(
+            docRef,
+            where("Username", "==", displayName)
+          );
+    const querySnapshot = await getDocs(queryData);
 
     //Create array for recent videos and sort by upload date
     const querySnapshotRecent = [];
@@ -67,7 +71,16 @@ function Feeds() {
                 src={video.thumbnailUrl}
               ></img>
               <p>
-                {video.VideoTitle} | {video.Username} | {video.Likes} Likes |{" "}
+                  <Link to="/video">
+                                      {" "}
+                                      <span
+                                        onClick={() => {
+                                          setVideo(video);
+                                        }}
+                                      >
+                                        {video.VideoTitle}
+                                      </span>
+                                    </Link>{" "}| {video.Username} | {video.Likes} Likes |{" "}
                 {video.Views} Views{" "}
               </p>
             </div>
