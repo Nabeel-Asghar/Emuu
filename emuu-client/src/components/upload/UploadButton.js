@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { storage } from "../../Firebase.js";
 import "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -12,6 +12,8 @@ import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import { getAuth } from "firebase/auth";
 import axios from "axios";
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 
 const theme = createTheme({
   palette: {
@@ -54,7 +56,7 @@ function FileUpload() {
   const [videoDescription, setVideoDescription] = useState("");
   const [videoTag, setVideoTag] = useState("");
   const [videoDate, setVideoDate] = useState("");
-  const [videoUrl, setVideoUrl] = useState("");
+  //const [videoUrl, setVideoUrl] = useState("");
   const [userName, setUserName] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
 
@@ -64,9 +66,13 @@ function FileUpload() {
     video_title: videoTitle,
     video_description: videoDescription,
     video_gameTags: videoTag,
+
     video_url: videoUrl,
     thumbnail_url: thumbnailUrl,
+
   };
+
+  const [uploadStatus, setUploadStatus] = useState("");
 
   //Gets user authentication
   const auth = getAuth();
@@ -94,7 +100,9 @@ function FileUpload() {
     }
 
     //Restrict file size to 5 MB ~ equivalent to 30 second video
+
     if (file.size > 100 * 1024 * 1024) {
+
       alert("File size exceeds maximum allowed!");
       return;
     }
@@ -141,6 +149,7 @@ function FileUpload() {
       (err) => console.log(err),
       (snapshot) => {
         // download url
+
         getDownloadURL(uploadTask.snapshot.ref)
           .then((URL) => {
             setVideoUrl(URL);
@@ -156,9 +165,10 @@ function FileUpload() {
                 console.log("User information is sent to firestore");
               })
           );
+
       }
     );
-    //axios request to post upload information to backend
+
   };
 
   return (
