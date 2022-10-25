@@ -1,6 +1,6 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
-import { storage } from "../../Firebase.js";
+import { storage, db } from "../../Firebase.js";
 import "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import PropTypes from "prop-types";
@@ -15,7 +15,9 @@ import axios from "axios";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin";
-
+import {
+  setDoc, doc, increment, updateDoc,
+} from "firebase/firestore";
 const theme = createTheme({
   palette: {
     primary: {
@@ -60,7 +62,8 @@ function FileUpload() {
   const [videoUrl, setVideoUrl] = useState("");
   const [userName, setUserName] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
-
+    const displayName = localStorage.getItem("displayName");
+  const docRef = doc(db, "Users", displayName);
   //upload data structure
   const uploadData = {
     user_userName: userName,
@@ -171,6 +174,8 @@ function FileUpload() {
         });
       }
     );
+
+    updateDoc(docRef, { VideosPosted: increment(1) });
   };
 
   useEffect(async () => {
@@ -205,15 +210,16 @@ function FileUpload() {
           />
           <br />
         </div>
+
+
         <div class="col-sm-6 offset-sm-3">
-          <input
-            type="text"
-            value={videoDescription}
-            onChange={(e) => setVideoDescription(e.target.value)}
-            className="form-control"
-            placeholder="Description of Video"
-          />
-          <br />
+          <textarea   type="text"
+                                 value={videoDescription}
+                                 onChange={(e) => setVideoDescription(e.target.value)}
+                                 className="form-control"
+                                 placeholder="Description of Video"
+                                  rows="3"></textarea>
+                                   <br />
         </div>
         <div className="col-sm-6 offset-sm-3">
           <input
