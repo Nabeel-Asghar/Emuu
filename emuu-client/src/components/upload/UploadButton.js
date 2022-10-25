@@ -102,8 +102,8 @@ function FileUpload() {
 
     //Restrict file size to 5 MB ~ equivalent to 30 second video
 
-    if (file.size > 100 * 1024 * 1024) {
-      alert("File size exceeds maximum allowed!");
+    if (file.size > 20 * 1024 * 1024) {
+      alert("File size exceeds maximum allowed (20 MB)!");
       return;
     }
 

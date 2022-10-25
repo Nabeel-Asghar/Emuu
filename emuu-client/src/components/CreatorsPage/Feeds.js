@@ -78,7 +78,7 @@ function Feeds({ setVideo, setUserProfile }) {
                     {video.VideoTitle}
                   </span>
                 </Link>{" "}
-                | {video.Username} | {video.Likes} Likes | {video.Views} Views{" "}
+                | {video.Username} | {video.Views} Views{" "}
               </p>
             </div>
           ))}

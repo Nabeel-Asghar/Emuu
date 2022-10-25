@@ -26,12 +26,16 @@ import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
 
 //Function to display creator page
 function Creator({ setVideo, video}) {
-  const [creatorName, setCreatorName] = useState("Temp");
+  const [creatorName, setCreatorName] = useState("Loading...");
   const docRef = doc(db, "Users", creatorName);
 
   useEffect(async () => {
+
+
     if (video) {
       localStorage.setItem("video", JSON.stringify(video));
+       window.location.reload();
+          return false;
     }
     if (localStorage.getItem("video")) {
       let video = JSON.parse(localStorage.getItem("video"));
@@ -43,8 +47,10 @@ function Creator({ setVideo, video}) {
   const [ProfilePic, setProfilePic] = useState("");
 
   getDoc(docRef).then((docSnap) => {
+
     setBanner(docSnap.data().BannerUrl);
     setProfilePic(docSnap.data().ProfilePictureUrl);
+
   });
 
   return (

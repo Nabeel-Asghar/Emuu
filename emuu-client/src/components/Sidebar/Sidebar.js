@@ -1,5 +1,4 @@
-import React from "react";
-import "./Sidebar.scss";
+import React, { useEffect, useState } from "react";import "./Sidebar.scss";
 import { useHistory } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -22,6 +21,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Avatar } from "@mui/material";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../../Firebase.js";
+import { Link } from "react-router-dom";
 import {
   getDoc,
   getDocs,
@@ -102,7 +102,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer({ sideBarState }) {
+export default function MiniDrawer({ sideBarState, video, setVideo, setUserProfile  }) {
   const theme = useTheme();
   const history = useHistory();
   const [ProfilePic,setProfilePic]=useState('');
@@ -206,7 +206,10 @@ export default function MiniDrawer({ sideBarState }) {
                         : "center",
                       px: 2.5,
                     }}
-                    onClick={() => history.push("/creator")}
+                    onClick={() =>
+                    history.push("/creator")
+
+}
                   >
                     <ListItemIcon
                       sx={{
