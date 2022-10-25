@@ -19,8 +19,6 @@ import {
 import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
 
 function Profile({ setVideo, video }) {
-
-
   const [percent, setPercent] = useState(0);
   const displayName = localStorage.getItem("displayName");
   const docRef = doc(db, "Users", displayName);
@@ -42,7 +40,6 @@ function Profile({ setVideo, video }) {
     // 'file' comes from the Blob or File API
     uploadBytes(storageRef, file).then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
-
         setDoc(
           docRef,
           {
@@ -64,7 +61,6 @@ function Profile({ setVideo, video }) {
 
     uploadBytes(storageRef, file).then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
-
         setDoc(
           docRef,
           {
@@ -77,7 +73,6 @@ function Profile({ setVideo, video }) {
       );
     });
   }
-
 
   const [Banner, setBanner] = useState("");
   const [ProfilePic, setProfilePic] = useState("");
@@ -118,9 +113,8 @@ function Profile({ setVideo, video }) {
                 style={{ display: "none" }}
                 id="profile-inp"
                 type="file"
-                 onChange={async (e) => {
-                 uploadProfile(e)
-
+                onChange={async (e) => {
+                  uploadProfile(e);
                 }}
                 accept="image/jpeg"
               />
@@ -139,7 +133,7 @@ function Profile({ setVideo, video }) {
             <UserInfo />
 
             <div className="left-side"></div>
-            <Feeds setVideo={setVideo}  />
+            <Feeds setVideo={setVideo} />
           </div>
         </div>
       </div>

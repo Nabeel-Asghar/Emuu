@@ -139,7 +139,6 @@ export default function AccountMenu() {
                 history.push("/");
                 localStorage.setItem("user", null);
                 localStorage.setItem("displayName", null);
-
               }}
             >
               <ListItemIcon>

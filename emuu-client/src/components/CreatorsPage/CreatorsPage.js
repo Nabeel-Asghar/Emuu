@@ -37,7 +37,6 @@ function Creator({ setVideo, video, setUserProfile }) {
       let video = JSON.parse(localStorage.getItem("video"));
       setCreatorName(video.Username);
     }
-
   }, []);
 
   const [Banner, setBanner] = useState("");

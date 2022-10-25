@@ -21,7 +21,6 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Avatar } from "@mui/material";
 
-
 import AppContext from "../../AppContext";
 
 const drawerWidth = 240;
@@ -91,7 +90,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer({ sideBarState}) {
+export default function MiniDrawer({ sideBarState }) {
   const theme = useTheme();
   const history = useHistory();
 
@@ -167,7 +166,7 @@ export default function MiniDrawer({ sideBarState}) {
             </List>
             <Divider />
             <List>
-              {context.isSidebarOpen && isAuthorized==="true" &&(
+              {context.isSidebarOpen && isAuthorized === "true" && (
                 <Typography
                   className="subscribers"
                   variant="subtitle1"
@@ -177,38 +176,39 @@ export default function MiniDrawer({ sideBarState}) {
                   Subscriptions
                 </Typography>
               )}
-                {isAuthorized==="true" &&
-              usersArr.map((user, index) => (
-                <ListItem key={index} disablePadding sx={{ display: "block" }}>
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: context.isSidebarOpen
-                        ? "initial"
-                        : "center",
-                      px: 2.5,
-                    }}
-                    onClick={() =>
-
-                    history.push("/creator")}
+              {isAuthorized === "true" &&
+                usersArr.map((user, index) => (
+                  <ListItem
+                    key={index}
+                    disablePadding
+                    sx={{ display: "block" }}
                   >
-                    <ListItemIcon
+                    <ListItemButton
                       sx={{
-                        minWidth: 0,
-                        mr: context.isSidebarOpen ? 3 : "auto",
-                        justifyContent: "center",
+                        minHeight: 48,
+                        justifyContent: context.isSidebarOpen
+                          ? "initial"
+                          : "center",
+                        px: 2.5,
                       }}
+                      onClick={() => history.push("/creator")}
                     >
-                      <Avatar />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={user.Username}
-                      sx={{ opacity: context.isSidebarOpen ? 1 : 0 }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              ))
-              }
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: context.isSidebarOpen ? 3 : "auto",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Avatar />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={user.Username}
+                        sx={{ opacity: context.isSidebarOpen ? 1 : 0 }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
             </List>
           </Drawer>
         </Box>
