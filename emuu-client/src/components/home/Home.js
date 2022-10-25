@@ -130,10 +130,10 @@ function Home({ setVideo }, { setUserProfile }) {
   function sortVideosByLikes(videos) {
     for (let i = 0; i < videos.length - 1; i++) {
       for (let j = 0; j < videos.length - 1 - i; j++) {
-        if (videos[i].data().Likes < videos[i + 1].data().Likes) {
-          let temp = videos[i];
-          videos[i] = videos[i + 1];
-          videos[i + 1] = temp;
+        if (videos[j].data().Likes < videos[j + 1].data().Likes) {
+          let temp = videos[j];
+          videos[j] = videos[j + 1];
+          videos[j + 1] = temp;
         }
       }
     }
@@ -143,10 +143,10 @@ function Home({ setVideo }, { setUserProfile }) {
   function sortVideosByTime(videos) {
     for (let i = 0; i < videos.length - 1; i++) {
       for (let j = 0; j < videos.length - 1 - i; j++) {
-        if (videos[i].data().uploadTime < videos[i + 1].data().uploadTime) {
-          let temp = videos[i];
-          videos[i] = videos[i + 1];
-          videos[i + 1] = temp;
+        if (videos[j].data().uploadTime < videos[j + 1].data().uploadTime) {
+          let temp = videos[j];
+          videos[j] = videos[j + 1];
+          videos[j + 1] = temp;
         }
       }
     }
