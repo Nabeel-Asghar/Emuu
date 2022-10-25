@@ -99,7 +99,7 @@ function App() {
             {auth === "true" && (
               <>
                 <Route path="/userprofile">
-                  <Profile />
+                  <Profile  setVideo={setVideo} video={video} />
                 </Route>
 
                 <Route path="/upload">

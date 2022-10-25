@@ -28,12 +28,12 @@ const UserProfileCard = ({
         />
       </Link>
       <div className="video__description__container" id={id}>
-        <Link to="/UserProfile" className="video__title">
+        <Link to="/creator" className="video__title">
           {username}
         </Link>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Link
-            to="/UserProfile"
+            to="/creator"
             className="video__details"
             style={{ marginTop: "-2.5px" }}
           >

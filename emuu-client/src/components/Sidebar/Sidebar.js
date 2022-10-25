@@ -91,7 +91,7 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer({ sideBarState }) {
+export default function MiniDrawer({ sideBarState}) {
   const theme = useTheme();
   const history = useHistory();
 
@@ -174,7 +174,7 @@ export default function MiniDrawer({ sideBarState }) {
                   align="left"
                   ml={2}
                 >
-                  Subscribers
+                  Subscriptions
                 </Typography>
               )}
                 {isAuthorized==="true" &&
@@ -188,7 +188,9 @@ export default function MiniDrawer({ sideBarState }) {
                         : "center",
                       px: 2.5,
                     }}
-                    onClick={() => history.push("/UserProfile")}
+                    onClick={() =>
+
+                    history.push("/creator")}
                   >
                     <ListItemIcon
                       sx={{
