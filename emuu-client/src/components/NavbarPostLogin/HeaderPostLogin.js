@@ -16,6 +16,7 @@ import {
   getFirestore,
   collection,
   getDocs,
+  getDoc,
   doc,
   query,
   where,
@@ -32,7 +33,9 @@ function HeaderPostLogin({ search, setSearch }) {
   const history = useHistory();
   const auth = getAuth;
   const userName = localStorage.getItem("displayName");
-  console.log(userName, "user name");
+
+
+
 
   async function getUser() {
     //Get user data

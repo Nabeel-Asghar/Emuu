@@ -25,7 +25,7 @@ import {
 import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
 
 //Function to display creator page
-function Creator({ setVideo, video, setUserProfile }) {
+function Creator({ setVideo, video}) {
   const [creatorName, setCreatorName] = useState("Temp");
   const docRef = doc(db, "Users", creatorName);
 
