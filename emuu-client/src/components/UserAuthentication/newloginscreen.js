@@ -47,6 +47,7 @@ function Login() {
         localStorage.setItem("auth", true);
         localStorage.setItem("user", JSON.stringify(userCredential.user));
         localStorage.setItem("displayName", user.displayName);
+        localStorage.setItem("userProfileImg", user.ProfilePictureUrl);
         history.push("/");
         window.location.reload();
       })

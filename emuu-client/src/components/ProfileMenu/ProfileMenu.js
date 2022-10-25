@@ -1,5 +1,5 @@
 import "./ProfileMenu.scss";
-import * as React from "react";
+import React, {useState} from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -21,6 +21,7 @@ import { db } from "../../Firebase.js";
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const [isMenuVisible,setIsMenuVisible]=useState(false);
   const profileImage = localStorage.getItem("userImage");
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -60,95 +61,93 @@ export default function AccountMenu() {
       {navAuth === "true" ? (
         <>
           <Box
-            sx={{ display: "flex", alignItems: "center", textAlign: "center" }}
+            sx={{ display: "flex", flexDirection: "column" }}
           >
-            <Tooltip title="Account options">
               <IconButton
-                onClick={handleClick}
+                onClick={()=>setIsMenuVisible(isMenuVisible=>!isMenuVisible)}
                 size="small"
                 sx={{ ml: 2 }}
                 aria-controls={open ? "account-menu" : undefined}
                 aria-haspopup="true"
                 aria-expanded={open ? "true" : undefined}
               >
-                <Avatar sx={{ width: 40, height: 40 }}>
+                <Avatar sx={ isMenuVisible === true ? { width: 40, height: 40, marginRight: "-155px !important" } : { width: 40, height: 40 }}>
                   {userFirstInitial}
                 </Avatar>
               </IconButton>
-            </Tooltip>
-          </Box>
-          <Menu
-            anchorEl={anchorEl}
-            id="account-menu"
-            open={open}
-            onClose={handleClose}
-            onClick={handleClose}
-            PaperProps={{
-              elevation: 0,
-              sx: {
-                overflow: "visible",
-                filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
-                mt: 1.5,
-                "& .MuiAvatar-root": {
-                  width: 32,
-                  height: 32,
-                  ml: -0.5,
-                  mr: 1,
-                },
-                "&:before": {
-                  content: '""',
-                  display: "block",
-                  position: "absolute",
-                  top: 0,
-                  right: 14,
-                  width: 10,
-                  height: 10,
-                  bgcolor: "background.paper",
-                  transform: "translateY(-50%) rotate(45deg)",
-                  zIndex: 0,
-                },
-              },
-            }}
-            transformOrigin={{ horizontal: "right", vertical: "top" }}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-          >
-            <MenuItem
-              onClick={() => {
-                history.push("/UserProfile");
-              }}
-            >
-              <Avatar />{" "}
-              <Typography sx={{ marginLeft: "5px" }}>Profile</Typography>
-            </MenuItem>
-            <MenuItem
-              onClick={() => {
-                history.push("/Upload");
-              }}
-            >
-              <CloudUploadIcon
-                sx={{ marginLeft: "-5px", marginRight: "12px" }}
-                fontSize="large"
-              />
-              Upload Video
-            </MenuItem>
-            <Divider />
-            <MenuItem
-              onClick={() => {
-                SignedOut();
-                localStorage.setItem("auth", false);
-                history.push("/");
-                localStorage.setItem("user", null);
-                localStorage.setItem("displayName", null);
 
-              }}
-            >
-              <ListItemIcon>
-                <Logout fontSize="small" />
-              </ListItemIcon>
-              Logout
-            </MenuItem>
-          </Menu>
-        </>
+          <div style = {{display: isMenuVisible===false && "none", height: "0px", width: "200px", paddingTop: "0px", background: "red !important"}}>
+
+          <div style = {{display: "flex", flexDirection: "column", backgroundColor: "white", borderTopLeftRadius: "20px", borderTopRightRadius: "15px", paddingTop: "10px", paddingLeft: "10px", paddingBottom: "10px"}}>
+
+          <Link style={{display: "flex", flexDirection: "row", paddingBottom: "5px", textDecoration: "none", color: "black"}} onClick={()=> {history.push("/UserProfile")}}>
+          <Avatar />
+          <Typography sx={{marginLeft: "5px !important", marginTop: "5px !important"}}>Profile</Typography>
+          </Link>
+
+          <Link style={{display: "flex", flexDirection: "row", textDecoration: "none", color: "black"}} onClick={()=> {history.push("/Upload")}}>
+          <CloudUploadIcon
+           sx={{ marginRight: "6px" }}
+           fontSize="large"
+           />
+          <Typography sx={{marginLeft: "5px !important", marginTop: "5px !important"}}>Upload Video</Typography>
+          </Link>
+
+          </div>
+
+          <div style={{backgroundColor: "gray", height: "1px"}} />
+
+
+
+          <Link style={{display: "flex", flexDirection: "row", color: "red", border: "1px solid black", borderTop: "0px transparent", textDecoration: "none", backgroundColor: "white", borderBottomLeftRadius: "15px", borderBottomRightRadius: "15px", paddingLeft: "10px", paddingTop: "10px", paddingBottom: "10px"}} onClick={()=> { SignedOut(); localStorage.setItem("auth", false); history.push("/"); localStorage.setItem("user", null); localStorage.setItem("displayName", null)}}>
+          <Logout sx={{ marginTop: "5px" }} fontSize="small" />
+          <Typography sx={{marginLeft: "5px !important", marginTop: "2.5px !important"}}>Logout</Typography>
+          </Link>
+
+          </div>
+          </Box>
+
+ </>
+//          <div style={{display:'flex',flexDirection:'column'}}>
+//            <MenuItem
+//              onClick={() => {
+//                history.push("/UserProfile");
+//              }}
+//            >
+//              <Avatar />{" "}
+//              <Typography sx={{ marginLeft: "5px" }}>Profile</Typography>
+//            </MenuItem>
+//            <MenuItem
+//              onClick={() => {
+//                history.push("/Upload");
+//              }}
+//            >
+//              <CloudUploadIcon
+//                sx={{ marginLeft: "-5px", marginRight: "12px" }}
+//                fontSize="large"
+//              />
+//              Upload Video
+//            </MenuItem>
+//            </div>
+//            <Divider />
+//            <MenuItem
+//              onClick={() => {
+//                SignedOut();
+//                localStorage.setItem("auth", false);
+//                history.push("/");
+//                localStorage.setItem("user", null);
+//                localStorage.setItem("displayName", null);
+//
+//              }}
+//            >
+//              <ListItemIcon>
+//                <Logout fontSize="small" />
+//              </ListItemIcon>
+//              Logout
+//            </MenuItem>
+//          </Menu>
+
+
       ) : (
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Link className="login__link" to="/login">

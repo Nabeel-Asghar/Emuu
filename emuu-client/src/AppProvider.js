@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import AppContext from "./AppContext";
 
 const AppProvider = (props) => {
-  const [isSidebarOpen, setIsSiderbarOpen] = useState(true);
+  const [isSidebarOpen, setIsSiderbarOpen] = useState(false);
 
 
   return (
