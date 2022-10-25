@@ -95,7 +95,7 @@ function Profile({ setVideo, video }) {
                 type="file"
                 onChange={async (e) => {
                    uploadBackground(e);
-                   setTimeout(() => window.location.reload(), 1100);
+                   setTimeout(() => window.location.reload(), 1500);
                    return false;
                    }}
                 accept="image/jpeg"
@@ -119,7 +119,7 @@ function Profile({ setVideo, video }) {
                 type="file"
                 onChange={async (e) => {
                   uploadProfile(e);
-                 setTimeout(() => window.location.reload(), 1050);
+                 setTimeout(() => window.location.reload(), 1500);
                   return false;
                 }}
                 accept="image/jpeg"

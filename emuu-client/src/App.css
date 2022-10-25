@@ -69,3 +69,7 @@ color: black;
         width: 50px;
         object-fit: cover;
         border-radius: 50%;}
+
+.App mb-3 navbar navbar-dark bg-dark{
+    margin-bottom: 0rem;
+}
