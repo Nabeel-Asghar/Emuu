@@ -99,7 +99,7 @@ export default function MiniDrawer({ sideBarState }) {
   const usersArr = firebaseData.filter(
     (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
   );
-  const authUsersNavigation = ["Home", "UserProfile", "UploadVideo"];
+  const authUsersNavigation = ["Home", "User Profile", "Upload Video"];
   const unAuthorizedNavigation = ["Home"];
   const isAuthorized = localStorage.getItem("auth");
   const currentNavigation =
@@ -174,7 +174,7 @@ export default function MiniDrawer({ sideBarState }) {
                   align="left"
                   ml={2}
                 >
-                  Subscribers
+                  Top Users
                 </Typography>
               )}
                 {isAuthorized==="true" &&
@@ -188,7 +188,7 @@ export default function MiniDrawer({ sideBarState }) {
                         : "center",
                       px: 2.5,
                     }}
-                    onClick={() => history.push("/UserProfile")}
+                    onClick={() => history.push("/creator")}
                   >
                     <ListItemIcon
                       sx={{

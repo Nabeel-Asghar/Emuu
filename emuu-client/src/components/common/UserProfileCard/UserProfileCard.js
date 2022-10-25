@@ -17,7 +17,7 @@ const UserProfileCard = ({
   console.log(isAuthenticated, "auth status");
   return (
     <div className="video__details__container">
-      <Link to="/UserProfile" className="avatar__container">
+      <Link to="/Creator" className="avatar__container">
         <Avatar
           src={
             profileImg
@@ -28,12 +28,12 @@ const UserProfileCard = ({
         />
       </Link>
       <div className="video__description__container" id={id}>
-        <Link to="/UserProfile" className="video__title">
+        <Link to="/Creator" className="video__title">
           {username}
         </Link>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Link
-            to="/UserProfile"
+            to="/Creator"
             className="video__details"
             style={{ marginTop: "-2.5px" }}
           >

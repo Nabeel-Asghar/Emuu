@@ -18,10 +18,11 @@ import {
 } from "firebase/firestore";
 import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
 
-function Profile() {
+function Profile({ setVideo, video}) {
   const [percent, setPercent] = useState(0);
   const displayName = localStorage.getItem("displayName");
   const docRef = doc(db, "Users", displayName);
+
 
   function verifyJpeg(filename) {
     const fnArr = filename.split(".");
@@ -132,7 +133,7 @@ function Profile() {
             <UserInfo />
 
             <div className="left-side"></div>
-            <Feeds />
+            <Feeds setVideo={setVideo}/>
           </div>
         </div>
       </div>

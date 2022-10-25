@@ -18,6 +18,7 @@ import Container from "@mui/material/Container";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
+import "./register.scss";
 const theme = createTheme();
 
 function Register() {
@@ -201,7 +202,7 @@ function Register() {
                 </Button>
                 <Grid container justifyContent="flex-end">
                   <Grid item>
-                    <Link href="/Login" variant="body2">
+                    <Link className="loginLink" href="/Login">
                       Already have an account? Log in
                     </Link>
                   </Grid>
