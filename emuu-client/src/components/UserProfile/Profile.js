@@ -18,11 +18,10 @@ import {
 } from "firebase/firestore";
 import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
 
-function Profile({ setVideo, video}) {
+function Profile({ setVideo, video }) {
   const [percent, setPercent] = useState(0);
   const displayName = localStorage.getItem("displayName");
   const docRef = doc(db, "Users", displayName);
-
 
   function verifyJpeg(filename) {
     const fnArr = filename.split(".");
@@ -77,7 +76,6 @@ function Profile({ setVideo, video}) {
 
   const [Banner, setBanner] = useState("");
   const [ProfilePic, setProfilePic] = useState("");
-
   getDoc(docRef).then((docSnap) => {
     setBanner(docSnap.data().BannerUrl);
     setProfilePic(docSnap.data().ProfilePictureUrl);
@@ -115,7 +113,9 @@ function Profile({ setVideo, video}) {
                 style={{ display: "none" }}
                 id="profile-inp"
                 type="file"
-                onChange={(e) => uploadProfile(e)}
+                onChange={async (e) => {
+                  uploadProfile(e);
+                }}
                 accept="image/jpeg"
               />
               <button
@@ -133,7 +133,7 @@ function Profile({ setVideo, video}) {
             <UserInfo />
 
             <div className="left-side"></div>
-            <Feeds setVideo={setVideo}/>
+            <Feeds setVideo={setVideo} />
           </div>
         </div>
       </div>

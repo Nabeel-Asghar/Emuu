@@ -25,7 +25,7 @@ import {
 import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
 
 //Function to display creator page
-function Creator({ setVideo, video, setUserProfile }) {
+function Creator({ setVideo, video}) {
   const [creatorName, setCreatorName] = useState("Temp");
   const docRef = doc(db, "Users", creatorName);
 
@@ -36,10 +36,6 @@ function Creator({ setVideo, video, setUserProfile }) {
     if (localStorage.getItem("video")) {
       let video = JSON.parse(localStorage.getItem("video"));
       setCreatorName(video.Username);
-    }
-    if (!video && !localStorage.getItem("video")) {
-      //if there's no video on this page, redirect to home
-      window.location.pathname = "/";
     }
   }, []);
 

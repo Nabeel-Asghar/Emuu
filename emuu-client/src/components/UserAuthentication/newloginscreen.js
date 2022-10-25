@@ -72,7 +72,6 @@ function Login() {
             setError("An error occurred");
         }
       });
-
   };
 
   return (

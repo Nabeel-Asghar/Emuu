@@ -246,8 +246,6 @@ function Home({ setVideo }, { setUserProfile }) {
                     {" "}
                     {topVideos &&
                       topVideos.map((video, index) => (
-
-
                         <div>
                           <img
                             controls
@@ -282,8 +280,6 @@ function Home({ setVideo }, { setUserProfile }) {
                     {" "}
                     {recentVideos &&
                       recentVideos.map((video, index) => (
-
-
                         <div>
                           <img
                             controls

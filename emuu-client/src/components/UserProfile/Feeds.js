@@ -15,7 +15,7 @@ import {
   where,
 } from "firebase/firestore";
 import { Link } from "react-router-dom";
-function Feeds({ setVideo }, { setUserProfile }) {
+function Feeds({ setVideo }) {
   const [recentVideos, setRecentVideos] = useState([]);
   const displayName = localStorage.getItem("displayName");
 
