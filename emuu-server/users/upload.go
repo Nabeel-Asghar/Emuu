@@ -76,6 +76,11 @@ func UploadVideo(c *gin.Context) {
                 log.Fatalf("firestore doc creation error:%s\n", err)
         }
 
+            dc := client.Collection("Users").Doc(input.User_userName)
+            _, err = dc.Update(ctx, []firestore.Update{
+                    {Path: "VideosPosted", Value: firestore.Increment(1)},
+            })
+
 
         fmt.Println(wr.UpdateTime, wr.UpdateTime)
         c.JSON(http.StatusOK, gin.H{"message": "User Upload collection successfully created"})

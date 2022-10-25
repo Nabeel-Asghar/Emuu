@@ -173,7 +173,7 @@ function FileUpload() {
       }
     );
 
-    updateDoc(docRef, { VideosPosted: increment(1) });
+
   };
 
   useEffect(async () => {
