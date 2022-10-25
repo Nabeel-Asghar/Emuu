@@ -93,7 +93,11 @@ function Profile({ setVideo, video }) {
                 style={{ display: "none" }}
                 id="background-inp"
                 type="file"
-                onChange={(e) => uploadBackground(e)}
+                onChange={async (e) => {
+                   uploadBackground(e);
+                   setTimeout(() => window.location.reload(), 1100);
+                   return false;
+                   }}
                 accept="image/jpeg"
               />
               <button
@@ -115,6 +119,8 @@ function Profile({ setVideo, video }) {
                 type="file"
                 onChange={async (e) => {
                   uploadProfile(e);
+                 setTimeout(() => window.location.reload(), 1050);
+                  return false;
                 }}
                 accept="image/jpeg"
               />
