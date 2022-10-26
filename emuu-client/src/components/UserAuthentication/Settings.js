@@ -22,12 +22,16 @@ import {
   getAuth,
   signInWithEmailAndPassword,
   onAuthStateChanged,
+  sendPasswordResetEmail
 } from "firebase/auth";
 import "../../Firebase.js";
 import firebase from "firebase/app";
 import "./register.scss";
 import {updatePassword } from "firebase/auth";
 import "./Settings.scss";
+
+
+
 function Settings() {
   //use state for registration variables
   const [password, setPassword] = useState("");
@@ -36,6 +40,8 @@ function Settings() {
   const [message, setMessage] = useState("");
   const history = useHistory();
   const [error, setError] = useState("");
+  const email=useState("");
+
 
 
   const validatePassword = (pass) => {
@@ -75,11 +81,9 @@ const auth = getAuth();
 const user = auth.currentUser;
 console.log(getAuth())
 
-    signInWithEmailAndPassword(auth, userEmail, password).then((user)=>{
-    updatePassword(user, newPassword).then(user => console.log(user))})
+}
 
 
-  };
 
   return (
     <>

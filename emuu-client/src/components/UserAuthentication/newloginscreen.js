@@ -41,6 +41,7 @@ function Login() {
         const user = userCredential.user;
         localStorage.setItem("user", JSON.stringify(userCredential.user));
         localStorage.setItem("auth", true);
+
         localStorage.setItem("user", JSON.stringify(userCredential.user));
         localStorage.setItem("displayName", user.displayName);
         localStorage.setItem("userProfileImg", user.ProfilePictureUrl);
