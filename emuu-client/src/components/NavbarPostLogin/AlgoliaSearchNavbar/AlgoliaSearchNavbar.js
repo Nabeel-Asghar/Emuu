@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useContext } from "react";
 import "../HeaderPostLogin.scss";
 
 import Container from "react-bootstrap/Container";
@@ -6,10 +6,12 @@ import Form from "react-bootstrap/Form";
 import Navbar from "react-bootstrap/Navbar";
 
 import ProfileMenu from "../../ProfileMenu/ProfileMenu";
+import AppContext from "../../../AppContext";
 
 import EmuuLogo from "../EmuuLogo.png";
 
 const AlgoliaSearchNavbar = ({ autocomplete, searchInput }) => {
+  const isMenuOpen = useContext(AppContext).isMenuOpen;
   const inputFocusRef = useRef(null);
   const inputFocusProp = {
     ref: inputFocusRef,
@@ -29,7 +31,11 @@ const AlgoliaSearchNavbar = ({ autocomplete, searchInput }) => {
             <Navbar.Brand href="/">
               <img src={EmuuLogo} width="140" height="40"></img>
             </Navbar.Brand>
-            <Form className="d-flex" {...autocomplete.getRootProps({})}>
+            <Form
+              className="d-flex"
+              {...autocomplete.getRootProps({})}
+              style={isMenuOpen ? { marginRight: "-134px" } : {}}
+            >
               <input
                 {...inputFocusProp}
                 {...autocomplete.getInputProps({})}
