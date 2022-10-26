@@ -1,5 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
+import "../home/Home.scss";
+
 import { storage } from "../../Firebase.js";
 import "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -12,9 +14,15 @@ import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import { getAuth } from "firebase/auth";
 import axios from "axios";
+import { createAutocomplete } from "@algolia/autocomplete-core";
+import { Link } from "react-router-dom";
+import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
+import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
+import Sidebar from "../Sidebar/Sidebar";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin";
+import AppContext from "../../AppContext";
 
 const theme = createTheme({
   palette: {
@@ -51,7 +59,7 @@ function LinearProgressWithLabel(
   );
 }
 
-function FileUpload() {
+function FileUpload({ setVideo }) {
   //use state for registration variables
   const [videoTitle, setVideoTitle] = useState("");
   const [videoDescription, setVideoDescription] = useState("");
@@ -60,6 +68,71 @@ function FileUpload() {
   const [videoUrl, setVideoUrl] = useState("");
   const [userName, setUserName] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
+
+  const [autocompleteState, setAutocompleteState] = useState({});
+  const [searchInput, setSearchInput] = useState("");
+  const [count, setCount] = useState(0);
+
+  const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
+
+  const autocomplete = useMemo(
+    () =>
+      createAutocomplete({
+        onStateChange({ state }) {
+          setAutocompleteState(state);
+          setSearchInput(state.query);
+          if (count === 0) {
+            setCount((count) => count + 1);
+          }
+        },
+        getSources() {
+          return [
+            {
+              sourceId: "pages-source",
+              getItemInputValue({ item }) {
+                // search item
+                return item.query;
+              },
+              getItems({ query }) {
+                // takes your search input and checks if anything that matches it exists in your dataset
+                if (!query) {
+                  return firebaseData;
+                }
+                return firebaseData.filter(
+                  (item) =>
+                    item.VideoTitle?.toLowerCase().includes(
+                      query.toLowerCase()
+                    ) ||
+                    item.Username?.toLowerCase().includes(
+                      query.toLocaleLowerCase()
+                    )
+                );
+              },
+              templates: {
+                item({ item }) {
+                  return item.VideoTitle || item.Username;
+                },
+              },
+            },
+          ];
+        },
+      }),
+    [count]
+  );
+
+  const dataSet = autocompleteState?.collections?.[0]?.items;
+  const searchResultsVideosArr = dataSet?.filter(
+    (obj) => obj.hasOwnProperty("VideoUrl") && obj.hasOwnProperty("Username")
+  );
+  const searchResultsUsersArr = dataSet?.filter(
+    (obj) => !obj.hasOwnProperty("VideoUrl") && obj.hasOwnProperty("Username")
+  );
+  const showSearchResults =
+    searchResultsVideosArr?.length > 0 || searchResultsUsersArr?.length > 0;
+
+  const subscribeUser = () => {
+    console.log("subscribed user.");
+  };
 
   //upload data structure
   const uploadData = {
@@ -191,62 +264,131 @@ function FileUpload() {
   }, [videoUrl, thumbnailUrl]);
 
   return (
-    <div>
-      <HeaderPostLogin />
-      <h1>Upload a Video</h1>
-      <form id="videoUploadForm" method="POST">
-        <div className="col-sm-6 offset-sm-3">
-          <input
-            type="text"
-            value={videoTitle}
-            onChange={(e) => setVideoTitle(e.target.value)}
-            className="form-control"
-            placeholder="Video Title"
-          />
-          <br />
-        </div>
-        <div class="col-sm-6 offset-sm-3">
-          <input
-            type="text"
-            value={videoDescription}
-            onChange={(e) => setVideoDescription(e.target.value)}
-            className="form-control"
-            placeholder="Description of Video"
-          />
-          <br />
-        </div>
-        <div className="col-sm-6 offset-sm-3">
-          <input
-            type="text"
-            value={videoTag}
-            onChange={(e) => setVideoTag(e.target.value)}
-            className="form-control"
-            placeholder="Game Tag"
-          />
-          <br />
-        </div>
-      </form>
-      <h2>Please Choose a Video</h2>
-      <input type="file" onChange={handleChange} accept="video/mp4" />
-      <br />
-      <br />
+    <AppContext.Consumer>
+      {(context) => (
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <Sidebar />
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              width: context.isSidebarOpen === true ? "87.3%" : "96.6%",
+            }}
+          >
+            <AlgoliaSearchNavbar
+              autocomplete={autocomplete}
+              searchInput={searchInput}
+            />
+            {showSearchResults && (
+              <p class="text-start">
+                <h2 className="video__category__title p-4">Search Results</h2>
+                <div className="video-row">
+                  {" "}
+                  {searchResultsVideosArr &&
+                    searchResultsVideosArr.map((video, index) => (
+                      <div>
+                        <img
+                          controls
+                          height="250"
+                          width="400"
+                          src={video.thumbnailUrl}
+                        />
+                        <p>
+                          <Link to="/video">
+                            {" "}
+                            <span
+                              onClick={() => {
+                                setVideo(video);
+                              }}
+                            >
+                              {video.VideoTitle}
+                            </span>
+                          </Link>{" "}
+                          | {video.Username} | {video.Likes} Likes |{" "}
+                          {video.Views} Views{" "}
+                        </p>
+                      </div>
+                    ))}
+                </div>
 
-      <h2>Please Choose a Thumbnail</h2>
-      <input type="file" onChange={handleThumbnail} accept="image/jpeg" />
+                <div className="video-row">
+                  {" "}
+                  {searchResultsUsersArr &&
+                    searchResultsUsersArr.map((user, index) => (
+                      <UserProfileCard
+                        id={index}
+                        profileImg={user.ProfilePictureUrl}
+                        username={user.Username}
+                        subscribersCount={`${user.SubscriberCount} Subscribers`}
+                        onClick={() => subscribeUser(user.Username)}
+                      />
+                    ))}
+                </div>
+              </p>
+            )}
+            <div>
+              <h1>Upload a Video</h1>
+              <form id="videoUploadForm" method="POST">
+                <div className="col-sm-6 offset-sm-3">
+                  <input
+                    type="text"
+                    value={videoTitle}
+                    onChange={(e) => setVideoTitle(e.target.value)}
+                    className="form-control"
+                    placeholder="Video Title"
+                  />
+                  <br />
+                </div>
+                <div class="col-sm-6 offset-sm-3">
+                  <input
+                    type="text"
+                    value={videoDescription}
+                    onChange={(e) => setVideoDescription(e.target.value)}
+                    className="form-control"
+                    placeholder="Description of Video"
+                  />
+                  <br />
+                </div>
+                <div className="col-sm-6 offset-sm-3">
+                  <input
+                    type="text"
+                    value={videoTag}
+                    onChange={(e) => setVideoTag(e.target.value)}
+                    className="form-control"
+                    placeholder="Game Tag"
+                  />
+                  <br />
+                </div>
+              </form>
+              <h2>Please Choose a Video</h2>
+              <input type="file" onChange={handleChange} accept="video/mp4" />
+              <br />
+              <br />
 
-      <p>
-        {" "}
-        <LinearProgressWithLabel value={percent} />{" "}
-      </p>
-      <button
-        onClick={() => handleUpload()}
-        type="submit"
-        className="btn btn-primary"
-      >
-        Upload
-      </button>
-      {uploadStatus}
-    </div>
+              <h2>Please Choose a Thumbnail</h2>
+              <input
+                type="file"
+                onChange={handleThumbnail}
+                accept="image/jpeg"
+              />
+
+              <p>
+                {" "}
+                <LinearProgressWithLabel value={percent} />{" "}
+              </p>
+              <button
+                onClick={() => handleUpload()}
+                type="submit"
+                className="btn btn-primary"
+              >
+                Upload
+              </button>
+              {uploadStatus}
+            </div>
+          </div>
+        </div>
+      )}
+    </AppContext.Consumer>
   );
 }
 
