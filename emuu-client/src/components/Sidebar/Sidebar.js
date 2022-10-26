@@ -107,8 +107,8 @@ export default function MiniDrawer({ sideBarState }) {
   const history = useHistory();
   const [ProfilePic,setProfilePic]=useState('');
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
-  const usersArr = firebaseData.filter(
-    (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
+  const usersArr = firebaseData?.filter(
+    (obj) => obj?.hasOwnProperty("Username") && !obj?.hasOwnProperty("VideoUrl")
   );
   const authUsersNavigation = ["Home", "UserProfile", "UploadVideo"];
   const unAuthorizedNavigation = ["Home"];
@@ -117,11 +117,17 @@ export default function MiniDrawer({ sideBarState }) {
     isAuthorized === "true" ? authUsersNavigation : unAuthorizedNavigation;
   const userProfileImg = localStorage.getItem("userProfileImg");
     const displayName = localStorage.getItem("displayName");
-    const docRef = doc(db, "Users", displayName);
+    let docRef
+    if(displayName){
+      docRef = doc(db, "Users", displayName);
+    }
 
+
+    if(docRef){
     getDoc(docRef).then((docSnap) => {
       setProfilePic(docSnap.data().ProfilePictureUrl);
     });
+    }
     console.log(ProfilePic);
 
 
