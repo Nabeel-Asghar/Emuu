@@ -11,6 +11,7 @@ import Profile from "./components/UserProfile/Profile";
 import UploadVideo from "./components/upload/UploadButton";
 import Video from "./components/videoPage/videoPage";
 import Creator from "./components/CreatorsPage/CreatorsPage";
+import CreatorNew from "./components/CreatorsPage/CreatorsPageNew";
 import AppProvider from "./AppProvider";
 import { db } from "./Firebase.js";
 import {
@@ -95,11 +96,14 @@ function App() {
             <Route path="/creator">
               <Creator setVideo={setVideo} video={video} />
             </Route>
+            <Route path="/creatornew">
+              <CreatorNew setVideo={setVideo} video={video} />
+            </Route>
 
             {auth === "true" && (
               <>
                 <Route path="/userprofile">
-                  <Profile />
+                  <Profile setVideo={setVideo} />
                 </Route>
 
                 <Route path="/upload">
