@@ -1,4 +1,4 @@
-import React,{useState} from "react";
+import React, { useState, useEffect } from "react";
 import "./Sidebar.scss";
 import { useHistory } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
@@ -22,6 +22,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Avatar } from "@mui/material";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../../Firebase.js";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import {
   getDoc,
   getDocs,
@@ -102,13 +103,16 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer({ sideBarState }) {
+export default function MiniDrawer({ sideBarState, setUserProfile, video }) {
   const theme = useTheme();
   const history = useHistory();
-  const [ProfilePic,setProfilePic]=useState('');
+  const [ProfilePic, setProfilePic] = useState("");
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
-  const usersArr = firebaseData?.filter(
-    (obj) => obj?.hasOwnProperty("Username") && !obj?.hasOwnProperty("VideoUrl")
+  const usersArr = firebaseData.filter(
+    (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
+  );
+  const videosArr = firebaseData.filter(
+    (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
   );
   const authUsersNavigation = ["Home", "UserProfile", "UploadVideo"];
   const unAuthorizedNavigation = ["Home"];
@@ -116,21 +120,29 @@ export default function MiniDrawer({ sideBarState }) {
   const currentNavigation =
     isAuthorized === "true" ? authUsersNavigation : unAuthorizedNavigation;
   const userProfileImg = localStorage.getItem("userProfileImg");
-    const displayName = localStorage.getItem("displayName");
-    let docRef
-    if(displayName){
-      docRef = doc(db, "Users", displayName);
-    }
+  const displayName = localStorage.getItem("displayName");
+  const docRef = doc(db, "Users", displayName);
 
+  getDoc(docRef).then((docSnap) => {
+    setProfilePic(docSnap.data().ProfilePictureUrl);
+  });
+  console.log(ProfilePic);
 
-    if(docRef){
-    getDoc(docRef).then((docSnap) => {
-      setProfilePic(docSnap.data().ProfilePictureUrl);
-    });
-    }
-    console.log(ProfilePic);
-
-
+  const handleCreatorProfile = (creatorsName) => {
+    console.log(creatorsName, "creatorsName");
+    const creatorsData = usersArr.filter(
+      (user) => user.Username === creatorsName
+    );
+    const creatorsDataVideos = videosArr.filter(
+      (video) => video.Username === creatorsName
+    );
+    localStorage.setItem("creatorsData", JSON.stringify(creatorsData));
+    localStorage.setItem(
+      "creatorsDataVideos",
+      JSON.stringify(creatorsDataVideos)
+    );
+    history.push("/creatornew");
+  };
 
   return (
     <AppContext.Consumer>
@@ -179,7 +191,11 @@ export default function MiniDrawer({ sideBarState }) {
                       {index === 0 ? (
                         <HomeIcon fontSize="large" />
                       ) : index === 1 ? (
-                        <Avatar src={ProfilePic} fontSize="large" alt="avatar-alt" />
+                        <Avatar
+                          src={ProfilePic}
+                          fontSize="large"
+                          alt="avatar-alt"
+                        />
                       ) : (
                         index === 2 && <CloudUploadIcon fontSize="large" />
                       )}
@@ -194,7 +210,7 @@ export default function MiniDrawer({ sideBarState }) {
             </List>
             <Divider />
             <List>
-              {context.isSidebarOpen && isAuthorized==="true" &&(
+              {context.isSidebarOpen && isAuthorized === "true" && (
                 <Typography
                   className="subscribers"
                   variant="subtitle1"
@@ -204,36 +220,39 @@ export default function MiniDrawer({ sideBarState }) {
                   Subscribers
                 </Typography>
               )}
-                {isAuthorized==="true" &&
-              usersArr.map((user, index) => (
-                <ListItem key={index} disablePadding sx={{ display: "block" }}>
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: context.isSidebarOpen
-                        ? "initial"
-                        : "center",
-                      px: 2.5,
-                    }}
-                    onClick={() => history.push("/User Profile")}
+              {isAuthorized === "true" &&
+                usersArr.map((user, index) => (
+                  <ListItem
+                    key={index}
+                    disablePadding
+                    sx={{ display: "block" }}
                   >
-                    <ListItemIcon
+                    <ListItemButton
                       sx={{
-                        minWidth: 0,
-                        mr: context.isSidebarOpen ? 3 : "auto",
-                        justifyContent: "center",
+                        minHeight: 48,
+                        justifyContent: context.isSidebarOpen
+                          ? "initial"
+                          : "center",
+                        px: 2.5,
                       }}
+                      onClick={() => handleCreatorProfile(user.Username)}
                     >
-                      <Avatar />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={user.Username}
-                      sx={{ opacity: context.isSidebarOpen ? 1 : 0 }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              ))
-              }
+                      <ListItemIcon
+                        sx={{
+                          minWidth: 0,
+                          mr: context.isSidebarOpen ? 3 : "auto",
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Avatar />
+                      </ListItemIcon>
+                      <ListItemText
+                        primary={user.Username}
+                        sx={{ opacity: context.isSidebarOpen ? 1 : 0 }}
+                      />
+                    </ListItemButton>
+                  </ListItem>
+                ))}
             </List>
           </Drawer>
         </Box>
