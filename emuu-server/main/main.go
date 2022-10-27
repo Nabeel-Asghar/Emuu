@@ -8,6 +8,7 @@ import (
     upload "emuu-server/main/users"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
+	video "emuu-server/main/video"
 )
 
 
@@ -29,6 +30,7 @@ func main() {
 	{
  	    auth.POST("/upload", upload.UploadVideo)
 		auth.POST("/register", register.CreateUser)
+		auth.GET("/video", video.SetVideos)
 
 	}
 

@@ -14,7 +14,7 @@ import { getAuth } from "firebase/auth";
 import axios from "axios";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin";
+import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
 import { setDoc, doc, increment, updateDoc } from "firebase/firestore";
 const theme = createTheme({
   palette: {
@@ -195,7 +195,7 @@ function FileUpload() {
 
   return (
     <div>
-      <HeaderPostLogin />
+      <NavBarNoSearch />
       <h1>Upload a Video</h1>
       <form id="videoUploadForm" method="POST">
         <div className="col-sm-6 offset-sm-3">

@@ -192,10 +192,10 @@ export default function MiniDrawer({ sideBarState, video, setVideo, setUserProfi
                   align="left"
                   ml={2}
                 >
-                  Top Users
+                  Subscriptions
                 </Typography>
               )}
-                {isAuthorized==="true" &&
+              {/*  {isAuthorized==="true" &&
               usersArr.map((user, index) => (
                 <ListItem key={index} disablePadding sx={{ display: "block" }}>
                   <ListItemButton
@@ -227,7 +227,7 @@ export default function MiniDrawer({ sideBarState, video, setVideo, setUserProfi
                   </ListItemButton>
                 </ListItem>
               ))
-              }
+             }*/}
             </List>
           </Drawer>
         </Box>

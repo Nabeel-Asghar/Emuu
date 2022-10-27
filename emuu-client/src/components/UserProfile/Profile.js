@@ -16,7 +16,7 @@ import {
   where,
   onSnapshot,
 } from "firebase/firestore";
-import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
+import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
 
 function Profile({ setVideo, video }) {
   const [percent, setPercent] = useState(0);
@@ -83,7 +83,7 @@ function Profile({ setVideo, video }) {
 
   return (
     <>
-      <HeaderPostLogin />
+      <NavBarNoSearch />
       <div className="MainProfileDiv">
         <div className="profile-container">
           <div className="top-portion">
