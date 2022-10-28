@@ -1,106 +1,95 @@
 package video
 
 import (
+	"cloud.google.com/go/firestore"
 	"context"
+
+	"github.com/gin-gonic/gin"
+	"google.golang.org/api/iterator"
+	"google.golang.org/api/option"
 	"log"
 	"net/http"
 	"time"
-   "cloud.google.com/go/firestore"
-	"firebase.google.com/go/v4/auth"
-	"github.com/gin-gonic/gin"
-	"fmt"
-	"google.golang.org/api/option"
 )
 
-
-type Video struct{
-    userName string `firestore:"Username,omitempty"`
-	title string `firestore:"VideoTitle,omitempty"`
-	videoUrl string `firestore:"VideoUrl,omitempty"`
-	thumbnailUrl string `firestore:"thumbnailUrl,omitempty"`
-	Like int `firestore:"Likes,omitempty"`
-	View int `firestore:"Views,omitempty"`
-	upload int `firestore:"uploadTime,omitempty"`
+type Video struct {
+	Username         string                   `firestore:"Username"`
+	Title            string                   `firestore:"VideoTitle"`
+	VideoUrl         string                   `firestore:"VideoUrl"`
+	ThumbnailUrl     string                   `firestore:"thumbnailUrl"`
+	Likes            int                      `firestore:"Likes"`
+	Views            int                      `firestore:"Views"`
+	UploadTime       int                      `firestore:"uploadTime"`
+	Date             string                   `firestore:"Date"`
+	GameTag          string                   `firestore:"GameTag"`
+	VideoDescription string                   `firestore:"VideoDescription"`
+	UsersThatLiked   []string                 `firestore:"usersThatLiked"`
+	Comments         []map[string]interface{} `firestore:"Comments"`
 }
 
-func sortMostViewed(videos[]Video)[]Video{
+func sortMostViewed(videos []Video) []Video {
 
- for i:=0; i< len(videos)-1; i++ {
-      for j:=0; j < len(videos)-i-1; j++ {
-         if (videos[j].View > videos[j+1].View) {
-            videos[j], array[j+1] = videos[j+1], array[j]
-         }
-      }
-   }
-   return videos
+	for i := 0; i < len(videos)-1; i++ {
+		for j := 0; j < len(videos)-i-1; j++ {
+			if videos[j].Views < videos[j+1].Views {
+				videos[j], videos[j+1] = videos[j+1], videos[j]
+			}
+		}
+	}
+	return videos
 }
 
-func sortRecent(videos[]Video)[]Video{
+func sortRecent(videos []Video) []Video {
 
- for i:=0; i< len(videos)-1; i++ {
-      for j:=0; j < len(videos)-i-1; j++ {
-         if (videos[j].upload > videos[j+1].upload) {
-            videos[j], array[j+1] = videos[j+1], array[j]
-         }
-      }
-   }
-   return videos
+	for i := 0; i < len(videos)-1; i++ {
+		for j := 0; j < len(videos)-i-1; j++ {
+			if videos[j].UploadTime < videos[j+1].UploadTime {
+				videos[j], videos[j+1] = videos[j+1], videos[j]
+			}
+		}
+	}
+	return videos
 }
-
-
 
 func SetVideos(c *gin.Context) {
-     mostViewedArr := [...]Video{}
-     recentArr := [...]Video{}
-     var i = 0
-     var j = 0
-
+	mostViewedArr := []Video{}
+	recentArr := []Video{}
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) //setting context with timeout 15
-	defer cancel() //after 15 seconds, if the function is not executed it will cancel and throw an error
+	defer cancel()                                                           //after 15 seconds, if the function is not executed it will cancel and throw an error
+	// Firestore initialized
+	sa := option.WithCredentialsFile("../serviceAccountKey.json")
+	client, err := firestore.NewClient(ctx, "emuu-1ee85", sa)
+	if err != nil {
+		log.Fatalf("firestore client creation error:%s", err)
+	}
+	defer client.Close()
+	iter := client.Collection("Videos").Documents(ctx)
+	for {
+		doc, err := iter.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return
+		}
+		var vid = Video{}
 
-    //Firebase connection
-	firebaseAuth := c.MustGet("firebaseAuth").(*auth.Client)
+		doc.DataTo(&vid)
+		//fmt.Printf("Document data: %#v", vid)
+		//fmt.Println(doc.Data())
+		mostViewedArr = append(mostViewedArr, vid)
+		recentArr = append(recentArr, vid)
+	}
+	sortMostViewed(mostViewedArr)
+	sortRecent(recentArr)
 
-     // Firestore initialized
-	  sa := option.WithCredentialsFile("../serviceAccountKey.json")
-       client, err := firestore.NewClient(ctx, "emuu-1ee85", sa)
-       if err != nil {
-            log.Fatalf("firestore client creation error:%s\n", err)
-       }
-       defer client.Close()
+	response := struct {
+		MostViewed   []Video
+		RecentUpload []Video
+	}{
+		MostViewed:   mostViewedArr[0:8],
+		RecentUpload: recentArr,
+	}
 
-
-iter := client.Collection("Videos").Documents(ctx)
-for {
-        doc, err := iter.Next()
-        if err == iterator.Done {
-                break
-        }
-        if err != nil {
-                return err
-        }
-        fmt.Println(doc.Data())
-        mostViewedArr[i] = doc.Data()
-        i++
+	c.JSON(http.StatusOK, gin.H{"message": response})
 }
-sortMostViewed(mostViewedArr)
-var mV []Video = mostViewedArr[0:8]
-iter2 := client.Collection("Videos").Documents(ctx)
-for {
-        doc, err := iter2.Next()
-        if err == iterator.Done {
-                break
-        }
-        if err != nil {
-                return err
-        }
-        fmt.Println(doc.Data())
-        recentArr[j] = doc.Data()
-        j++
-}
-sortRecent(recentArr)
-	c.JSON(http.StatusOK, gin.H{"message": "Videos successfully added"})
-}
-
-
-

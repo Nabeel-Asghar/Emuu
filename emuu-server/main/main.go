@@ -5,7 +5,7 @@ import (
 	register "emuu-server/main/users"
 	"fmt"
 	"log"
-    upload "emuu-server/main/users"
+	upload "emuu-server/main/users"
 	"github.com/gin-gonic/gin"
 	"github.com/gin-contrib/cors"
 	video "emuu-server/main/video"
@@ -17,7 +17,7 @@ func main() {
 	// initialize new gin engine (for server)
 	r := gin.Default() //default router
 
-	 r.Use(cors.Default())
+	r.Use(cors.Default())
 	// configure firebase
 	firebaseAuth := firebaseSer.InitAuth()//calling firebase auth client
 
@@ -28,7 +28,7 @@ func main() {
 
 	auth := r.Group("auth") //group is in the gin gonic framework,if you want to create login forgot password, you can create it
 	{
- 	    auth.POST("/upload", upload.UploadVideo)
+		auth.POST("/upload", upload.UploadVideo)
 		auth.POST("/register", register.CreateUser)
 		auth.GET("/video", video.SetVideos)
 
