@@ -15,7 +15,7 @@ import Alert from "@mui/material/Alert";
 import { getAuth } from "firebase/auth";
 import axios from "axios";
 import { createAutocomplete } from "@algolia/autocomplete-core";
-import { Link } from "react-router-dom";
+import { Link,useHistory, useLocation } from "react-router-dom";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
 import Sidebar from "../Sidebar/Sidebar";
@@ -61,6 +61,8 @@ function LinearProgressWithLabel(
 
 function FileUpload({ setVideo }) {
   //use state for registration variables
+  const history = useHistory();
+  const location = useLocation();
   const [videoTitle, setVideoTitle] = useState("");
   const [videoDescription, setVideoDescription] = useState("");
   const [videoTag, setVideoTag] = useState("");
@@ -129,6 +131,30 @@ function FileUpload({ setVideo }) {
   );
   const showSearchResults =
     searchResultsVideosArr?.length > 0 || searchResultsUsersArr?.length > 0;
+
+
+  const usersArr = firebaseData.filter(
+    (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
+  );
+  const videosArr = firebaseData.filter(
+    (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
+  );
+
+  const handleCreatorProfile = (creatorsName) => {
+    const creatorsData = usersArr.filter(
+      (user) => user.Username === creatorsName
+    );
+    const creatorsDataVideos = videosArr.filter(
+      (video) => video.Username === creatorsName
+    );
+    localStorage.setItem("creatorsData", JSON.stringify(creatorsData));
+    localStorage.setItem(
+      "creatorsDataVideos",
+      JSON.stringify(creatorsDataVideos)
+    );
+
+    {location.pathname==="/creator" ? window.location.reload():history.push("/creator");}
+  };
 
   const subscribeUser = () => {
     console.log("subscribed user.");
@@ -321,6 +347,7 @@ function FileUpload({ setVideo }) {
                         username={user.Username}
                         subscribersCount={`${user.SubscriberCount} Subscribers`}
                         onClick={() => subscribeUser(user.Username)}
+                        handleUserClick={() => handleCreatorProfile(user.Username)}
                       />
                     ))}
                 </div>

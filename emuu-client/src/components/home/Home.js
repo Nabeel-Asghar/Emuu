@@ -15,7 +15,7 @@ import {
   query,
 } from "firebase/firestore";
 import { createAutocomplete } from "@algolia/autocomplete-core";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
 //import Video from "../common/video/Video";
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
@@ -48,6 +48,7 @@ const theme = createTheme({
 });
 
 function Home({ setVideo }, { setUserProfile }) {
+  const history = useHistory();
   const [topVideos, setTopVideos] = useState([]);
   const [recentVideos, setRecentVideos] = useState([]);
   const [autocompleteState, setAutocompleteState] = useState({});
@@ -168,9 +169,31 @@ function Home({ setVideo }, { setUserProfile }) {
 
   const userName = localStorage.getItem("displayName");
 
-  async function subscribeUser(subscribersName) {
-    console.log(subscribersName);
-  }
+  const usersArr = firebaseData.filter(
+    (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
+  );
+  const videosArr = firebaseData.filter(
+    (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
+  );
+
+  const handleCreatorProfile = (creatorsName) => {
+    const creatorsData = usersArr.filter(
+      (user) => user.Username === creatorsName
+    );
+    const creatorsDataVideos = videosArr.filter(
+      (video) => video.Username === creatorsName
+    );
+    localStorage.setItem("creatorsData", JSON.stringify(creatorsData));
+    localStorage.setItem(
+      "creatorsDataVideos",
+      JSON.stringify(creatorsDataVideos)
+    );
+    history.push("/creator");
+  };
+
+  const subscribeUser = () => {
+    console.log("subscribed");
+  };
 
   return (
     <AppContext.Consumer>
@@ -199,23 +222,13 @@ function Home({ setVideo }, { setUserProfile }) {
                       {" "}
                       {searchResultsVideosArr &&
                         searchResultsVideosArr.map((video, index) => (
-                          //                          <Video
-                          //                            id={index}
-                          //                            height={250}
-                          //                            src={video.VideoUrl}
-                          //                            title={video.VideoTitle}
-                          //                            author={video.Username}
-                          //                            views={video.Views}
-                          //                            uploadedAgoTime={video.uploadTime}
-                          //                          />
-
-                          <div>
+                          <div id={index}>
                             <img
                               controls
                               height="250"
                               width="400"
                               src={video.thumbnailUrl}
-                            ></img>
+                            />
                             <p>
                               <Link to="/video">
                                 {" "}
@@ -243,7 +256,12 @@ function Home({ setVideo }, { setUserProfile }) {
                             profileImg={user.ProfilePictureUrl}
                             username={user.Username}
                             subscribersCount={`${user.SubscriberCount} Subscribers`}
-                            onClick={() => subscribeUser(user.Username)}
+                            onClick={() => {
+                              subscribeUser(user.Username);
+                            }}
+                            handleUserClick={() =>
+                              handleCreatorProfile(user.Username)
+                            }
                           />
                         ))}
                     </div>
@@ -257,8 +275,6 @@ function Home({ setVideo }, { setUserProfile }) {
                     {" "}
                     {topVideos &&
                       topVideos.map((video, index) => (
-
-
                         <div>
                           <img
                             controls
@@ -293,8 +309,6 @@ function Home({ setVideo }, { setUserProfile }) {
                     {" "}
                     {recentVideos &&
                       recentVideos.map((video, index) => (
-
-
                         <div>
                           <img
                             controls

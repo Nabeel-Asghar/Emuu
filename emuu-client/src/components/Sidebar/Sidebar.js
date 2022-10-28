@@ -126,10 +126,9 @@ export default function MiniDrawer({ sideBarState, setUserProfile, video }) {
   getDoc(docRef).then((docSnap) => {
     setProfilePic(docSnap.data().ProfilePictureUrl);
   });
-  console.log(ProfilePic);
+
 
   const handleCreatorProfile = (creatorsName) => {
-    console.log(creatorsName, "creatorsName");
     const creatorsData = usersArr.filter(
       (user) => user.Username === creatorsName
     );
