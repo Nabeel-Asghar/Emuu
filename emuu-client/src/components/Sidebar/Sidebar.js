@@ -140,7 +140,7 @@ export default function MiniDrawer({ sideBarState, setUserProfile, video }) {
       "creatorsDataVideos",
       JSON.stringify(creatorsDataVideos)
     );
-    history.push("/creatornew");
+    history.push("/creator");
   };
 
   return (
