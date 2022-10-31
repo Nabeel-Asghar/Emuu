@@ -30,7 +30,6 @@ export default function HeaderSearch() {
 
   const autocomplete = createAutocomplete({
     onStateChange({ state }) {
-
       setAutocompleteState(state);
 
       setSearchInput(state.query);
@@ -109,7 +108,6 @@ export default function HeaderSearch() {
           {...inputFocusProp}
           {...autocomplete.getInputProps({})}
           placeholder="Search..."
-
           value={searchInput}
           style={{
             borderRadius: "15px",

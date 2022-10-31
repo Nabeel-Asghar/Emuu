@@ -29,11 +29,7 @@ const UserProfileCard = ({
         />
       </Link>
       <div className="video__description__container" id={id}>
-        <Link
-          to="/creator"
-          className="video__title"
-          onClick={handleUserClick}
-        >
+        <Link to="/creator" className="video__title" onClick={handleUserClick}>
           {username}
         </Link>
         <div style={{ display: "flex", flexDirection: "row" }}>

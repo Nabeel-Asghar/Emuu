@@ -1,7 +1,7 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useEffect, useState, useMemo } from "react";
 import "../home/Home.scss";
-
+import "./UploadButton.scss"
 import { storage } from "../../Firebase.js";
 import "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
@@ -15,7 +15,7 @@ import Alert from "@mui/material/Alert";
 import { getAuth } from "firebase/auth";
 import axios from "axios";
 import { createAutocomplete } from "@algolia/autocomplete-core";
-import { Link,useHistory, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
 import Sidebar from "../Sidebar/Sidebar";
@@ -23,6 +23,8 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin";
 import AppContext from "../../AppContext";
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
 
 const theme = createTheme({
   palette: {
@@ -132,7 +134,6 @@ function FileUpload({ setVideo }) {
   const showSearchResults =
     searchResultsVideosArr?.length > 0 || searchResultsUsersArr?.length > 0;
 
-
   const usersArr = firebaseData.filter(
     (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
   );
@@ -153,7 +154,11 @@ function FileUpload({ setVideo }) {
       JSON.stringify(creatorsDataVideos)
     );
 
-    {location.pathname==="/creator" ? window.location.reload():history.push("/creator");}
+    {
+      location.pathname === "/creator"
+        ? window.location.reload()
+        : history.push("/creator");
+    }
   };
 
   const subscribeUser = () => {
@@ -347,72 +352,37 @@ function FileUpload({ setVideo }) {
                         username={user.Username}
                         subscribersCount={`${user.SubscriberCount} Subscribers`}
                         onClick={() => subscribeUser(user.Username)}
-                        handleUserClick={() => handleCreatorProfile(user.Username)}
+                        handleUserClick={() =>
+                          handleCreatorProfile(user.Username)
+                        }
                       />
                     ))}
                 </div>
               </p>
             )}
-            <div>
-              <h1>Upload a Video</h1>
-              <form id="videoUploadForm" method="POST">
-                <div className="col-sm-6 offset-sm-3">
-                  <input
-                    type="text"
-                    value={videoTitle}
-                    onChange={(e) => setVideoTitle(e.target.value)}
-                    className="form-control"
-                    placeholder="Video Title"
-                  />
-                  <br />
-                </div>
-                <div class="col-sm-6 offset-sm-3">
-                  <input
-                    type="text"
-                    value={videoDescription}
-                    onChange={(e) => setVideoDescription(e.target.value)}
-                    className="form-control"
-                    placeholder="Description of Video"
-                  />
-                  <br />
-                </div>
-                <div className="col-sm-6 offset-sm-3">
-                  <input
-                    type="text"
-                    value={videoTag}
-                    onChange={(e) => setVideoTag(e.target.value)}
-                    className="form-control"
-                    placeholder="Game Tag"
-                  />
-                  <br />
-                </div>
-              </form>
-              <h2>Please Choose a Video</h2>
-              <input type="file" onChange={handleChange} accept="video/mp4" />
-              <br />
-              <br />
 
-              <h2>Please Choose a Thumbnail</h2>
-              <input
-                type="file"
-                onChange={handleThumbnail}
-                accept="image/jpeg"
-              />
 
-              <p>
-                {" "}
-                <LinearProgressWithLabel value={percent} />{" "}
-              </p>
-              <button
-                onClick={() => handleUpload()}
-                type="submit"
-                className="btn btn-primary"
-              >
-                Upload
-              </button>
-              {uploadStatus}
-            </div>
+
+
+
+
+          <div  class="film">
+
+          <div class="UploadCard">
+
+
           </div>
+
+          </div>
+          </div>
+
+
+
+
+
+
+
+
         </div>
       )}
     </AppContext.Consumer>
@@ -420,3 +390,66 @@ function FileUpload({ setVideo }) {
 }
 
 export default FileUpload;
+
+
+
+//<div>
+//                        <h1>Upload a Video</h1>
+//                        <form id="videoUploadForm" method="POST">
+//                          <div className="col-sm-6 offset-sm-3">
+//                            <input
+//                              type="text"
+//                              value={videoTitle}
+//                              onChange={(e) => setVideoTitle(e.target.value)}
+//                              className="form-control"
+//                              placeholder="Video Title"
+//                            />
+//                            <br />
+//                          </div>
+//                          <div class="col-sm-6 offset-sm-3">
+//                            <input
+//                              type="text"
+//                              value={videoDescription}
+//                              onChange={(e) => setVideoDescription(e.target.value)}
+//                              className="form-control"
+//                              placeholder="Description of Video"
+//                            />
+//                            <br />
+//                          </div>
+//                          <div className="col-sm-6 offset-sm-3">
+//                            <input
+//                              type="text"
+//                              value={videoTag}
+//                              onChange={(e) => setVideoTag(e.target.value)}
+//                              className="form-control"
+//                              placeholder="Game Tag"
+//                            />
+//                            <br />
+//                          </div>
+//                        </form>
+//                        <h2>Please Choose a Video</h2>
+//                        <input type="file" onChange={handleChange} accept="video/mp4" />
+//                        <br />
+//                        <br />
+//
+//                        <h2>Please Choose a Thumbnail</h2>
+//                        <input
+//                          type="file"
+//                          onChange={handleThumbnail}
+//                          accept="image/jpeg"
+//                        />
+//
+//                        <p>
+//                          {" "}
+//                          <LinearProgressWithLabel value={percent} />{" "}
+//                        </p>
+//                        <button
+//                          onClick={() => handleUpload()}
+//                          type="submit"
+//                          className="btn btn-primary"
+//                        >
+//                          Upload
+//                        </button>
+//                        {uploadStatus}
+//                      </div>*/}
+//                    </div></div>
