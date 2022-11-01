@@ -1,9 +1,9 @@
 .App {
   text-align: center;
 }
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap%27');
 
-*{
+*, Typography:{
 font-family:Montserrat}
 
 h1 , h2 , h3 , h4{
@@ -23,10 +23,10 @@ font-weight:600 !important;
   }
 }
 
+
 .search-btn a{
 text-decoration: none;
 color:black}
-
 
 .App-header {
   background-color: #282c34;
@@ -51,6 +51,11 @@ color:black}
     transform: rotate(360deg);
   }
 }
+.App a{
+color: white;
+    text-decoration: none;
+    font-weight: bold;
+}
 
 .results-user{
     margin: 20px;
@@ -65,4 +70,6 @@ color:black}
         object-fit: cover;
         border-radius: 50%;}
 
-
+.App mb-3 navbar navbar-dark bg-dark{
+    margin-bottom: 0rem;
+}
