@@ -24,7 +24,7 @@ import {
 
 const theme = createTheme({
   palette: {
-   mode: 'dark',
+    mode: "dark",
     primary: {
       light: "#484848",
       main: "#212121",

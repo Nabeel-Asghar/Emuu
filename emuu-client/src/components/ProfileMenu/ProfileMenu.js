@@ -16,7 +16,7 @@ import LoginIcon from "@mui/icons-material/Login";
 import Logout from "@mui/icons-material/Logout";
 import { useHistory, Link } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
-import { collection, getDoc, where, doc, } from "firebase/firestore";
+import { collection, getDoc, where, doc } from "firebase/firestore";
 import { db } from "../../Firebase.js";
 
 export default function AccountMenu() {
@@ -26,9 +26,9 @@ export default function AccountMenu() {
   const docRef = doc(db, "Users", userName);
 
   const [ProfilePic, setProfilePic] = useState("");
-   getDoc(docRef).then((docSnap) => {
-      setProfilePic(docSnap.data().ProfilePictureUrl);
-    });
+  getDoc(docRef).then((docSnap) => {
+    setProfilePic(docSnap.data().ProfilePictureUrl);
+  });
   const profileImage = localStorage.getItem(ProfilePic);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -80,9 +80,13 @@ export default function AccountMenu() {
                 aria-expanded={open ? "true" : undefined}
               >
                 <Avatar sx={{ width: 40, height: 40 }}>
-
-                   <img   className="avatar-profile-img" id="avt-img" src={ProfilePic} alt="" srcSet="" />
-
+                  <img
+                    className="avatar-profile-img"
+                    id="avt-img"
+                    src={ProfilePic}
+                    alt=""
+                    srcSet=""
+                  />
                 </Avatar>
               </IconButton>
             </Tooltip>
