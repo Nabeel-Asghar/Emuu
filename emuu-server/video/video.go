@@ -3,7 +3,7 @@ package video
 import (
 	"cloud.google.com/go/firestore"
 	"context"
-
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
@@ -11,6 +11,12 @@ import (
 	"net/http"
 	"time"
 )
+
+type DisplayName struct {
+	UserName string `json:"displayName"`
+}
+
+var userUN string
 
 type Video struct {
 	Username         string                   `firestore:"Username"`
@@ -50,46 +56,96 @@ func sortRecent(videos []Video) []Video {
 	}
 	return videos
 }
-
+func SetUsername(c *gin.Context) {
+	var res DisplayName
+	c.ShouldBindJSON(&res)
+	c.JSON(http.StatusOK, gin.H{"message": res.UserName})
+	userUN = res.UserName
+	fmt.Println(userUN)
+}
 func SetVideos(c *gin.Context) {
-	mostViewedArr := []Video{}
-	recentArr := []Video{}
-	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) //setting context with timeout 15
-	defer cancel()                                                           //after 15 seconds, if the function is not executed it will cancel and throw an error
-	// Firestore initialized
-	sa := option.WithCredentialsFile("../serviceAccountKey.json")
-	client, err := firestore.NewClient(ctx, "emuu-1ee85", sa)
-	if err != nil {
-		log.Fatalf("firestore client creation error:%s", err)
-	}
-	defer client.Close()
-	iter := client.Collection("Videos").Documents(ctx)
-	for {
-		doc, err := iter.Next()
-		if err == iterator.Done {
-			break
-		}
+	if userUN != "" {
+		mostViewedArr := []Video{}
+		recentArr := []Video{}
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) //setting context with timeout 15
+		defer cancel()                                                           //after 15 seconds, if the function is not executed it will cancel and throw an error
+		// Firestore initialized
+		sa := option.WithCredentialsFile("../serviceAccountKey.json")
+		client, err := firestore.NewClient(ctx, "emuu-1ee85", sa)
 		if err != nil {
-			return
+			log.Fatalf("firestore client creation error:%s", err)
 		}
-		var vid = Video{}
+		defer client.Close()
+		iter := client.Collection("Videos").Where("Username", "==", userUN).Documents(ctx)
+		for {
+			doc, err := iter.Next()
+			if err == iterator.Done {
+				break
+			}
+			if err != nil {
+				return
+			}
+			var vid = Video{}
 
-		doc.DataTo(&vid)
-		//fmt.Printf("Document data: %#v", vid)
-		//fmt.Println(doc.Data())
-		mostViewedArr = append(mostViewedArr, vid)
-		recentArr = append(recentArr, vid)
+			doc.DataTo(&vid)
+			//fmt.Printf("Document data: %#v", vid)
+			//fmt.Println(doc.Data())
+			mostViewedArr = append(mostViewedArr, vid)
+			recentArr = append(recentArr, vid)
+		}
+		sortMostViewed(mostViewedArr)
+		sortRecent(recentArr)
+
+		response := struct {
+			MostViewed   []Video
+			RecentUpload []Video
+		}{
+			//MostViewed:   mostViewedArr[0:8],
+			RecentUpload: recentArr,
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": response})
+
+	} else {
+		mostViewedArr := []Video{}
+		recentArr := []Video{}
+		ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) //setting context with timeout 15
+		defer cancel()                                                           //after 15 seconds, if the function is not executed it will cancel and throw an error
+		// Firestore initialized
+		sa := option.WithCredentialsFile("../serviceAccountKey.json")
+		client, err := firestore.NewClient(ctx, "emuu-1ee85", sa)
+		if err != nil {
+			log.Fatalf("firestore client creation error:%s", err)
+		}
+		defer client.Close()
+		iter := client.Collection("Videos").Documents(ctx)
+		for {
+			doc, err := iter.Next()
+			if err == iterator.Done {
+				break
+			}
+			if err != nil {
+				return
+			}
+			var vid = Video{}
+
+			doc.DataTo(&vid)
+			fmt.Printf("Document data: %#v", vid)
+			fmt.Println(doc.Data())
+			mostViewedArr = append(mostViewedArr, vid)
+			recentArr = append(recentArr, vid)
+		}
+		sortMostViewed(mostViewedArr)
+		sortRecent(recentArr)
+
+		response := struct {
+			MostViewed   []Video
+			RecentUpload []Video
+		}{
+			MostViewed:   mostViewedArr[0:7],
+			RecentUpload: recentArr,
+		}
+
+		c.JSON(http.StatusOK, gin.H{"message": response})
 	}
-	sortMostViewed(mostViewedArr)
-	sortRecent(recentArr)
-
-	response := struct {
-		MostViewed   []Video
-		RecentUpload []Video
-	}{
-		MostViewed:   mostViewedArr[0:8],
-		RecentUpload: recentArr,
-	}
-
-	c.JSON(http.StatusOK, gin.H{"message": response})
 }
