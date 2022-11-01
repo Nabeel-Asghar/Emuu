@@ -19,18 +19,18 @@ type DisplayName struct {
 var userUN string
 
 type Video struct {
-	Username         string                   `firestore:"Username"`
-	Title            string                   `firestore:"VideoTitle"`
-	VideoUrl         string                   `firestore:"VideoUrl"`
-	ThumbnailUrl     string                   `firestore:"thumbnailUrl"`
-	Likes            int                      `firestore:"Likes"`
-	Views            int                      `firestore:"Views"`
-	UploadTime       int                      `firestore:"uploadTime"`
-	Date             string                   `firestore:"Date"`
-	GameTag          string                   `firestore:"GameTag"`
-	VideoDescription string                   `firestore:"VideoDescription"`
-	UsersThatLiked   []string                 `firestore:"usersThatLiked"`
-	Comments         []map[string]interface{} `firestore:"Comments"`
+	Username         string   `firestore:"Username"`
+	Title            string   `firestore:"VideoTitle"`
+	VideoUrl         string   `firestore:"VideoUrl"`
+	ThumbnailUrl     string   `firestore:"thumbnailUrl"`
+	Likes            int      `firestore:"Likes"`
+	Views            int      `firestore:"Views"`
+	UploadTime       int      `firestore:"uploadTime"`
+	Date             string   `firestore:"Date"`
+	GameTag          string   `firestore:"GameTag"`
+	VideoDescription string   `firestore:"VideoDescription"`
+	UsersThatLiked   []string `firestore:"usersThatLiked"`
+	//Comments         []map[string]interface{} `firestore:"Comments"`
 }
 
 func sortMostViewed(videos []Video) []Video {
@@ -85,6 +85,7 @@ func SetVideos(c *gin.Context) {
 			if err != nil {
 				return
 			}
+			fmt.Println(doc.Data())
 			var vid = Video{}
 
 			doc.DataTo(&vid)
