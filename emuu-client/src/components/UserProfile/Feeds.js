@@ -117,6 +117,7 @@ function Feeds({ setVideo }) {
             <Tab label="Videos" value="1" />
             <Tab label="Liked Videos" value="2" />
             <Tab label="Subscriptions" value="3" />
+
           </TabList>
         </Box>
         <TabPanel value="1">
@@ -124,7 +125,7 @@ function Feeds({ setVideo }) {
             <div className="videos__container">
               {recentVideos &&
                 recentVideos.map((video) => (
-                  <Card sx={{ maxWidth: 395, height: 400 }}>
+                  <Card sx={{ maxWidth: 380, height: 400 }}>
                     <CardMedia component="img" image={video.thumbnailUrl} />
                     <CardContent>
                       <CardHeader
