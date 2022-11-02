@@ -35,9 +35,6 @@ function HeaderPostLogin({ search, setSearch }) {
   const auth = getAuth;
   const userName = localStorage.getItem("displayName");
 
-
-
-
   async function getUser() {
     //Get user data
     const querySnapshotUsers = await getDocs(collection(db, "Users"));
