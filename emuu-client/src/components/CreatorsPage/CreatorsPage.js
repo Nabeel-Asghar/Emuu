@@ -58,19 +58,21 @@ function Creator({ setVideo, video }) {
             <div className="user-profile-bg-image">
               <img id="prf-bg-img" src={Banner} alt="" srcSet="" />
             </div>
-            </div>
+          </div>
 
-              <div className="middle-portion">
+          <div className="middle-portion">
             <div className="user-profile-img">
               <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
 
               <div className={"userName"}> {creatorName} </div>
-              <div className={"subscribers-profile"}> {subscriberCount} subscribers </div>
+              <div className={"subscribers-profile"}>
+                {" "}
+                {subscriberCount} subscribers{" "}
+              </div>
             </div>
           </div>
           <div className="bottom-portion">
             <div className="right-side"></div>
-
 
             <div className="left-side"></div>
             <Feeds setVideo={setVideo} />
