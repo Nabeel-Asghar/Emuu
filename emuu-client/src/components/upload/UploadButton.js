@@ -25,7 +25,7 @@ import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin";
 import AppContext from "../../AppContext";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-
+import FileUploadIcon from '@mui/icons-material/FileUpload';
 const theme = createTheme({
   palette: {
     primary: {
@@ -42,24 +42,7 @@ const theme = createTheme({
     },
   },
 });
-function LinearProgressWithLabel(
-  props: LinearProgressProps & { value: number }
-) {
-  return (
-    <div class="col-sm-6 offset-sm-3">
-      <Box sx={{ display: "flex", alignItems: "center" }}>
-        <Box sx={{ width: "100%", mr: 1 }}>
-          <LinearProgress variant="determinate" {...props} />
-        </Box>
-        <Box sx={{ minWidth: 35 }}>
-          <Typography variant="body2" color="text.secondary">{`${Math.round(
-            props.value
-          )}%`}</Typography>
-        </Box>
-      </Box>
-    </div>
-  );
-}
+
 
 function FileUpload({ setVideo }) {
   //use state for registration variables
@@ -76,8 +59,14 @@ function FileUpload({ setVideo }) {
   const [autocompleteState, setAutocompleteState] = useState({});
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
+  const [file, setFile] = useState({});
 
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
+
+  function handleChange(e) {
+    setFile(e.target.files[0])
+  }
+
 
   const autocomplete = useMemo(
     () =>
@@ -166,133 +155,41 @@ function FileUpload({ setVideo }) {
   };
 
   //upload data structure
-  const uploadData = {
-    user_userName: userName,
-    video_title: videoTitle,
-    video_description: videoDescription,
-    video_gameTags: videoTag,
 
-    video_url: videoUrl,
-    thumbnail_url: thumbnailUrl,
-  };
 
-  const [uploadStatus, setUploadStatus] = useState("");
-
-  //Gets user authentication
-  const auth = getAuth();
-  const user = auth.currentUser;
-
-  // Store uploaded file
-  const [file, setFile] = useState("");
-  const [thumbnail, setThumbnail] = useState("");
-
-  //Store percent
-  const [percent, setPercent] = useState(0);
-
-  //File upload
-  function handleChange(event) {
-    setFile(event.target.files[0]);
-    setUserName(user.displayName);
-  }
-  function handleThumbnail(event) {
-    setThumbnail(event.target.files[0]);
-  }
-  //If a user doesn't choose a file and tries to upload, error will appear
-  const handleUpload = async (e) => {
-    if (!file) {
-      alert("Please upload a video first!");
-    }
-
-    //Restrict file size to 5 MB ~ equivalent to 30 second video
-
-    if (file.size > 100 * 1024 * 1024) {
-      alert("File size exceeds maximum allowed!");
-      return;
-    }
-
-    //Store video into video folder in firebase storage
-    const storageRef = ref(
-      storage,
-      `/videos/${file.name + new Date().getTime()}`
-    );
-    //Store thumbnail in thumbnail folder in firebase storage
-    const storageRefThumb = ref(
-      storage,
-      `/thumbnail/${thumbnail.name + new Date().getTime()}`
-    );
-    //Upload to firebase function
-    const uploadTask = uploadBytesResumable(storageRef, file);
-    const uploadTaskThumb = uploadBytesResumable(storageRefThumb, thumbnail);
-
-    //thumbnail upload
-    uploadTaskThumb.on(
-      "state_changed",
-      (snapshot) => {},
-      (err) => console.log(err),
-      (snapshot) => {
-        // download url
-        getDownloadURL(uploadTaskThumb.snapshot.ref).then((URL) => {
-          if (!URL) {
-            setUploadStatus(
-              <span style={{ color: "red" }}>
-                <ErrorOutlineIcon /> Try again
-              </span>
-            );
-            return;
-          }
-          setThumbnailUrl(URL);
-          console.log(URL);
-        });
+  function dropHandler(e) {
+    e.preventDefault();
+    [...e.dataTransfer.items].forEach(i => {
+      if (i.getAsFile().type == "video/mp4") {
+        setFile(i.getAsFile())
       }
-    );
 
-    //Video and axios upload
-    uploadTask.on(
-      "state_changed",
-      (snapshot) => {
-        const percent = Math.round(
-          (snapshot.bytesTransferred / snapshot.totalBytes) * 100 //percent display
-        );
-
-        // update percent
-        setPercent(percent);
-      },
-      (err) => console.log(err),
-      (snapshot) => {
-        // download url
-
-        getDownloadURL(uploadTask.snapshot.ref).then((URL) => {
-          if (!URL) {
-            setUploadStatus(
-              <span style={{ color: "red" }}>
-                <ErrorOutlineIcon /> Try again
-              </span>
-            );
-            return;
-          }
-          setVideoUrl(URL);
-          console.log(URL);
-        });
-      }
-    );
-  };
-
+    })
+  }
   useEffect(async () => {
-    if (videoUrl && thumbnailUrl) {
-      await axios
-        .post(
-          "http://localhost:8080/auth/upload",
-          JSON.stringify({ ...uploadData })
-        )
-        .then((result) => {
-          setUploadStatus(
-            <span style={{ color: "green" }}>
-              <CheckCircleOutlineIcon /> Upload successful
-            </span>
-          );
-        });
-    }
-  }, [videoUrl, thumbnailUrl]);
+    document.querySelector("#file-name").innerHTML = file.name || "";
+
+
+  }, [file])
+
+
+
+  //  useEffect(async () => {
+  //    if (videoUrl && thumbnailUrl) {
+  //      await axios
+  //        .post(
+  //          "http://localhost:8080/auth/upload",
+  //          JSON.stringify({ ...uploadData })
+  //        )
+  //        .then((result) => {
+  //          setUploadStatus(
+  //            <span style={{ color: "green" }}>
+  //              <CheckCircleOutlineIcon /> Upload successful
+  //            </span>
+  //          );
+  //        });
+  //    }
+  //  }, [videoUrl, thumbnailUrl]);
 
   return (
     <AppContext.Consumer>
@@ -366,22 +263,45 @@ function FileUpload({ setVideo }) {
 
 
 
-          <div  class="film">
+            <div className="film">
 
-          <div class="UploadCard">
+              <div className="UploadCard" id="UC1">
 
+                <div className="Container" >
+                  <h3>Upload video</h3>
+                  <div className="drag-area" onDragOver={e => e.preventDefault()} onDrop={e => dropHandler(e)}>
+                    <div className="UploadIcon">
+                      <FileUploadIcon></FileUploadIcon>
+                    </div>
+                    <p className="upload-line1">Drag and drop video files to upload</p>
+                    <p className="upload-line2">The only supported format is mp4.</p>
+                    <button className="SelectFiles" onClick={() => document.querySelector("#upload-video").click()}> SELECT FILES</button>
+
+                    <input type="file" id="upload-video" style={{ display: "none" }} onChange={handleChange} accept="video/mp4" />
+
+                    <p id="file-name"></p>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+              <div className="UploadCard" id="UC2" style={{ display: "None" }}>
+                <div>
+                </div>
+              </div>
+
+
+
+
+
+
+
+
+            </div>
 
           </div>
-
-          </div>
-          </div>
-
-
-
-
-
-
-
 
         </div>
       )}
@@ -393,63 +313,3 @@ export default FileUpload;
 
 
 
-//<div>
-//                        <h1>Upload a Video</h1>
-//                        <form id="videoUploadForm" method="POST">
-//                          <div className="col-sm-6 offset-sm-3">
-//                            <input
-//                              type="text"
-//                              value={videoTitle}
-//                              onChange={(e) => setVideoTitle(e.target.value)}
-//                              className="form-control"
-//                              placeholder="Video Title"
-//                            />
-//                            <br />
-//                          </div>
-//                          <div class="col-sm-6 offset-sm-3">
-//                            <input
-//                              type="text"
-//                              value={videoDescription}
-//                              onChange={(e) => setVideoDescription(e.target.value)}
-//                              className="form-control"
-//                              placeholder="Description of Video"
-//                            />
-//                            <br />
-//                          </div>
-//                          <div className="col-sm-6 offset-sm-3">
-//                            <input
-//                              type="text"
-//                              value={videoTag}
-//                              onChange={(e) => setVideoTag(e.target.value)}
-//                              className="form-control"
-//                              placeholder="Game Tag"
-//                            />
-//                            <br />
-//                          </div>
-//                        </form>
-//                        <h2>Please Choose a Video</h2>
-//                        <input type="file" onChange={handleChange} accept="video/mp4" />
-//                        <br />
-//                        <br />
-//
-//                        <h2>Please Choose a Thumbnail</h2>
-//                        <input
-//                          type="file"
-//                          onChange={handleThumbnail}
-//                          accept="image/jpeg"
-//                        />
-//
-//                        <p>
-//                          {" "}
-//                          <LinearProgressWithLabel value={percent} />{" "}
-//                        </p>
-//                        <button
-//                          onClick={() => handleUpload()}
-//                          type="submit"
-//                          className="btn btn-primary"
-//                        >
-//                          Upload
-//                        </button>
-//                        {uploadStatus}
-//                      </div>*/}
-//                    </div></div>

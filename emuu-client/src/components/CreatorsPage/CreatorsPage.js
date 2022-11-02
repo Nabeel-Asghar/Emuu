@@ -2,7 +2,7 @@ import "./UserInfo.scss";
 import "./Feeds.scss";
 import "../home/Home.scss";
 import React, { useState, useMemo } from "react";
-import { Link, useHistory, useLocation} from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 import { createAutocomplete } from "@algolia/autocomplete-core";
 import "./Profile.scss";
 import "../../Firebase.js";
@@ -15,7 +15,7 @@ import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
 const Creator = ({ setVideo, video }) => {
   const history = useHistory();
   const location = useLocation();
-  console.log(location,"location");
+  console.log(location, "location");
   const creatorsData = JSON.parse(localStorage.getItem("creatorsData"))[0];
   const subscriberVideos = JSON.parse(
     localStorage.getItem("creatorsDataVideos")
@@ -103,7 +103,11 @@ const Creator = ({ setVideo, video }) => {
       JSON.stringify(creatorsDataVideos)
     );
 
-    {location.pathname==="/creator" ? window.location.reload():history.push("/creator");}
+    {
+      location.pathname === "/creator"
+        ? window.location.reload()
+        : history.push("/creator");
+    }
   };
 
   const subscribeUser = () => {
