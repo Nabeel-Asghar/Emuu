@@ -1,6 +1,8 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
+
 import React, { useEffect, useState } from "react";
 import { storage, db } from "../../Firebase.js";
+
 import "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import PropTypes from "prop-types";
@@ -12,10 +14,12 @@ import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import { getAuth } from "firebase/auth";
 import axios from "axios";
+
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin";
 import { setDoc, doc, increment, updateDoc } from "firebase/firestore";
+
 const theme = createTheme({
   palette: {
     primary: {
@@ -68,12 +72,9 @@ function FileUpload() {
     video_title: videoTitle,
     video_description: videoDescription,
     video_gameTags: videoTag,
-
     video_url: videoUrl,
     thumbnail_url: thumbnailUrl,
   };
-
-  const [uploadStatus, setUploadStatus] = useState("");
 
   //Gets user authentication
   const auth = getAuth();
@@ -101,7 +102,6 @@ function FileUpload() {
     }
 
     //Restrict file size to 5 MB ~ equivalent to 30 second video
-
     if (file.size > 100 * 1024 * 1024) {
       alert("File size exceeds maximum allowed!");
       return;
@@ -158,6 +158,7 @@ function FileUpload() {
       (snapshot) => {
         // download url
 
+
         getDownloadURL(uploadTask.snapshot.ref).then((URL) => {
           if (!URL) {
             setUploadStatus(
@@ -172,6 +173,7 @@ function FileUpload() {
         });
       }
     );
+
   };
 
   useEffect(async () => {
