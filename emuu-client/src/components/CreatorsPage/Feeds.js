@@ -4,6 +4,8 @@ import { Avatar } from "@mui/material";
 import YouTubeJSON from "../data/youtube-videos.json";
 import { AxiosContext } from "react-axios/lib/components/AxiosProvider";
 import { storage } from "../../Firebase.js";
+import axios from "axios";
+
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { db } from "../../Firebase.js";
 import {
@@ -41,6 +43,7 @@ function Feeds({ setVideo, setUserProfile }) {
   const displayName = localStorage.getItem("CreatorName");
   const docRef = doc(db, "Users", displayName);
 
+
   const [ProfilePic, setProfilePic] = useState("");
   getDoc(docRef).then((docSnap) => {
     setProfilePic(docSnap.data().ProfilePictureUrl);
@@ -51,7 +54,8 @@ function Feeds({ setVideo, setUserProfile }) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-async function getVideos() {
+
+  async function getVideos() {
     await axios.post("http://localhost:8080/auth/video", JSON.stringify({displayName}))
      .then(function (response){
      console.log(response);
