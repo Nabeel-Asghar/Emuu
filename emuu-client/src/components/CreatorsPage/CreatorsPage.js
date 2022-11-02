@@ -72,9 +72,7 @@ function Creator({ setVideo, video }) {
           </div>
         </div>
       </div>
-
     </>
-
   );
 }
 

@@ -30,11 +30,11 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Box from '@mui/material/Box';
-import Tab from '@material-ui/core/Tab';
-import TabContext from '@material-ui/lab/TabContext';
-import TabList from '@material-ui/lab/TabList';
-import TabPanel from '@material-ui/lab/TabPanel';
+import Box from "@mui/material/Box";
+import Tab from "@material-ui/core/Tab";
+import TabContext from "@material-ui/lab/TabContext";
+import TabList from "@material-ui/lab/TabList";
+import TabPanel from "@material-ui/lab/TabPanel";
 
 function Feeds({ setVideo, setUserProfile }) {
   const [recentVideos, setRecentVideos] = useState([]);
@@ -46,12 +46,11 @@ function Feeds({ setVideo, setUserProfile }) {
     setProfilePic(docSnap.data().ProfilePictureUrl);
   });
 
- const [value, setValue] = React.useState('1');
+  const [value, setValue] = React.useState("1");
 
-    const handleChange = (event, newValue) => {
-      setValue(newValue);
-    };
-
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
   async function getVideos() {
     //Get all video data
@@ -89,69 +88,69 @@ function Feeds({ setVideo, setUserProfile }) {
   }, []);
 
   return (
-    <Box sx={{ width: '100%', typography: 'body1' }}>
-          <TabContext value={value}>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-              <TabList onChange={handleChange} aria-label="lab API tabs example">
-                <Tab label="Videos"  value="1" />
-              </TabList>
-            </Box>
-            <TabPanel value="1">
-    <div className="feed-container">
-      <div className="videos__container">
-        {recentVideos &&
-          recentVideos.map((video) => (
-            <Card sx={{ maxWidth: 395, height: 400  }}>
-              <CardMedia component="img" image={video.thumbnailUrl} />
-              <CardContent>
-                <CardHeader
-                  avatar={
-                    <Avatar
-                      sx={{ width: 60, height: 60 }}
-                      src={ProfilePic}
-                    ></Avatar>
-                  }
-                  title={
-                    <Typography
-                      variant="body2"
-                      color="text.primary"
-                      fontWeight="bold"
-                      fontSize="20px"
-                    >
-                      <Link to="/video">
-                        <span
-                          onClick={() => {
-                            setVideo(video);
-                          }}
-                        >
-                          {video.VideoTitle}
-                        </span>
-                      </Link>
-                    </Typography>
-                  }
-                />
+    <Box sx={{ width: "100%", typography: "body1" }}>
+      <TabContext value={value}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <TabList onChange={handleChange} aria-label="lab API tabs example">
+            <Tab label="Videos" value="1" />
+          </TabList>
+        </Box>
+        <TabPanel value="1">
+          <div className="feed-container">
+            <div className="videos__container">
+              {recentVideos &&
+                recentVideos.map((video) => (
+                  <Card sx={{ maxWidth: 395, height: 400 }}>
+                    <CardMedia component="img" image={video.thumbnailUrl} />
+                    <CardContent>
+                      <CardHeader
+                        avatar={
+                          <Avatar
+                            sx={{ width: 60, height: 60 }}
+                            src={ProfilePic}
+                          ></Avatar>
+                        }
+                        title={
+                          <Typography
+                            variant="body2"
+                            color="text.primary"
+                            fontWeight="bold"
+                            fontSize="20px"
+                          >
+                            <Link to="/video">
+                              <span
+                                onClick={() => {
+                                  setVideo(video);
+                                }}
+                              >
+                                {video.VideoTitle}
+                              </span>
+                            </Link>
+                          </Typography>
+                        }
+                      />
 
-                <div className="videoInfo">
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    fontWeight="medium"
-                    fontSize="18px"
-                  >
-                    {" "}
-                    {video.Username} &ensp;&ensp;&ensp;&ensp;&ensp;{video.Likes}{" "}
-                    Likes &#x2022; {video.Views} Views
-                  </Typography>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-      </div>
-    </div> </TabPanel>
-                                    </TabContext>
-                                  </Box>
+                      <div className="videoInfo">
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          fontWeight="medium"
+                          fontSize="18px"
+                        >
+                          {" "}
+                          {video.Username} &ensp;&ensp;&ensp;&ensp;&ensp;
+                          {video.Likes} Likes &#x2022; {video.Views} Views
+                        </Typography>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+            </div>
+          </div>{" "}
+        </TabPanel>
+      </TabContext>
+    </Box>
   );
 }
 
 export default Feeds;
-

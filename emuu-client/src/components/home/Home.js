@@ -235,7 +235,9 @@ function Home({ setVideo }, { setUserProfile }) {
                 </p>
               )}
               <p class="text-start">
-                <Typography className= {"video__category__title"} >Top Rated Videos</Typography>
+                <Typography className={"video__category__title"}>
+                  Top Rated Videos
+                </Typography>
                 <div className="videos__container">
                   {" "}
                   {topVideos &&
@@ -290,7 +292,7 @@ function Home({ setVideo }, { setUserProfile }) {
                 </div>
               </p>
               <p class="text-start">
-               <Typography className= {"video__category__title"} >
+                <Typography className={"video__category__title"}>
                   Recently Uploaded
                 </Typography>
 

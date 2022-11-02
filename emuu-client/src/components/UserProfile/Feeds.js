@@ -9,7 +9,8 @@ import { db } from "../../Firebase.js";
 import {
   getFirestore,
   collection,
-  getDocs, getDoc,
+  getDocs,
+  getDoc,
   doc,
   query,
   where,
@@ -29,15 +30,15 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import Box from '@mui/material/Box';
-import Tab from '@material-ui/core/Tab';
-import TabContext from '@material-ui/lab/TabContext';
-import TabList from '@material-ui/lab/TabList';
-import TabPanel from '@material-ui/lab/TabPanel';
-
+import Box from "@mui/material/Box";
+import Tab from "@material-ui/core/Tab";
+import TabContext from "@material-ui/lab/TabContext";
+import TabList from "@material-ui/lab/TabList";
+import TabPanel from "@material-ui/lab/TabPanel";
 
 function Feeds({ setVideo }) {
   const [recentVideos, setRecentVideos] = useState([]);
+  const [likedVideos, setLikedVideos] = useState([]);
   const displayName = localStorage.getItem("displayName");
   const docRef = doc(db, "Users", displayName);
 
@@ -46,14 +47,13 @@ function Feeds({ setVideo }) {
     setProfilePic(docSnap.data().ProfilePictureUrl);
   });
 
+  const [value, setValue] = React.useState("1");
 
-   const [value, setValue] = React.useState('1');
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
 
-    const handleChange = (event, newValue) => {
-      setValue(newValue);
-    };
-
-
+  //Videos for Videos feed
   async function getVideos() {
     //Get all video data
     const docRef = collection(db, "Videos");
@@ -71,6 +71,26 @@ function Feeds({ setVideo }) {
     setRecentVideos(recentVideosArr);
   }
 
+  async function getLikedVideos() {
+    //Get all video data
+    const docRef = collection(db, "Videos");
+    const queryData = await query(
+      docRef,
+      where("usersThatLiked", "array-contains", displayName)
+    );
+    const querySnapshot = await getDocs(queryData);
+    //Create array for recent videos and sort by upload date
+    const querySnapshotLikedVideos = [];
+    querySnapshot.forEach((doc) => querySnapshotLikedVideos.push(doc));
+    sortVideosByTime(querySnapshotLikedVideos);
+    const likedVideosArr = [];
+    querySnapshotLikedVideos.forEach((doc) => {
+      likedVideosArr.push(doc.data());
+    });
+
+    setLikedVideos(likedVideosArr);
+  }
+
   //Sort function for date uploaded
   function sortVideosByTime(videos) {
     for (let i = 0; i < videos.length - 1; i++) {
@@ -86,73 +106,127 @@ function Feeds({ setVideo }) {
 
   useEffect(async () => {
     await getVideos();
+    await getLikedVideos();
   }, []);
 
   return (
-
-   <Box sx={{ width: '100%', typography: 'body1' }}>
-        <TabContext value={value}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-            <TabList onChange={handleChange}  aria-label="lab API tabs example">
-              <Tab label="Videos"  value="1" />
-              <Tab label="Liked Videos"  value="2" />
-              <Tab label="Subscriptions"  value="3" />
-            </TabList>
-          </Box>
-          <TabPanel value="1">
-    <div className="feed-container">
-      <div className="videos__container">
-        {recentVideos &&
-          recentVideos.map((video) => (
-         <Card sx={{ maxWidth: 395, height: 400  }}>
-                      <CardMedia component="img" image={video.thumbnailUrl} />
-                      <CardContent>
-                        <CardHeader
-                          avatar={
-                            <Avatar
-                              sx={{ width: 60, height: 60 }}
-                              src={ProfilePic}
-                            ></Avatar>
-                          }
-                          title={
-                            <Typography
-                              variant="body2"
-                              color="text.primary"
-                              fontWeight="bold"
-                              fontSize="20px"
-                            >
-                              <Link to="/video">
-                                <span
-                                  onClick={() => {
-                                    setVideo(video);
-                                  }}
-                                >
-                                  {video.VideoTitle}
-                                </span>
-                              </Link>
-                            </Typography>
-                          }
-                        />
-
-                        <div className="videoInfo">
+    <Box sx={{ width: "100%", typography: "body1" }}>
+      <TabContext value={value}>
+        <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+          <TabList onChange={handleChange} aria-label="lab API tabs example">
+            <Tab label="Videos" value="1" />
+            <Tab label="Liked Videos" value="2" />
+            <Tab label="Subscriptions" value="3" />
+          </TabList>
+        </Box>
+        <TabPanel value="1">
+          <div className="feed-container">
+            <div className="videos__container">
+              {recentVideos &&
+                recentVideos.map((video) => (
+                  <Card sx={{ maxWidth: 395, height: 400 }}>
+                    <CardMedia component="img" image={video.thumbnailUrl} />
+                    <CardContent>
+                      <CardHeader
+                        avatar={
+                          <Avatar
+                            sx={{ width: 60, height: 60 }}
+                            src={ProfilePic}
+                          ></Avatar>
+                        }
+                        title={
                           <Typography
                             variant="body2"
-                            color="text.secondary"
-                            fontWeight="medium"
-                            fontSize="18px"
+                            color="text.primary"
+                            fontWeight="bold"
+                            fontSize="20px"
                           >
-                            {" "}
-                            {video.Username} &ensp;&ensp;&ensp;&ensp;&ensp;{video.Likes}{" "}
-                            Likes &#x2022; {video.Views} Views
+                            <Link to="/video">
+                              <span
+                                onClick={() => {
+                                  setVideo(video);
+                                }}
+                              >
+                                {video.VideoTitle}
+                              </span>
+                            </Link>
                           </Typography>
-                        </div>
-                      </CardContent>
-                    </Card>
-          ))}
-      </div>
-    </div></TabPanel>
-                </TabContext>
-              </Box>
+                        }
+                      />
+
+                      <div className="videoInfo">
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          fontWeight="medium"
+                          fontSize="18px"
+                        >
+                          {" "}
+                          {video.Username} &ensp;&ensp;&ensp;&ensp;&ensp;
+                          {video.Likes} Likes &#x2022; {video.Views} Views
+                        </Typography>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+            </div>
+          </div>
+        </TabPanel>
+        <TabPanel value="2">
+          <div className="feed-container">
+            <div className="videos__container">
+              {likedVideos &&
+                likedVideos.map((video) => (
+                  <Card sx={{ maxWidth: 395, height: 400 }}>
+                    <CardMedia component="img" image={video.thumbnailUrl} />
+                    <CardContent>
+                      <CardHeader
+                        avatar={
+                          <Avatar
+                            sx={{ width: 60, height: 60 }}
+
+                          ></Avatar>
+                        }
+                        title={
+                          <Typography
+                            variant="body2"
+                            color="text.primary"
+                            fontWeight="bold"
+                            fontSize="20px"
+                          >
+                            <Link to="/video">
+                              <span
+                                onClick={() => {
+                                  setVideo(video);
+                                }}
+                              >
+                                {video.VideoTitle}
+                              </span>
+                            </Link>
+                          </Typography>
+                        }
+                      />
+
+                      <div className="videoInfo">
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          fontWeight="medium"
+                          fontSize="18px"
+                        >
+                          {" "}
+                          {video.Username} &ensp;&ensp;&ensp;&ensp;&ensp;
+                          {video.Likes} Likes &#x2022; {video.Views} Views
+                        </Typography>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+            </div>
+          </div>
+        </TabPanel>
+      </TabContext>
+    </Box>
   );
 }
 
