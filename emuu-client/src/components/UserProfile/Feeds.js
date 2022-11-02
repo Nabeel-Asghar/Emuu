@@ -29,6 +29,12 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import Box from '@mui/material/Box';
+import Tab from '@material-ui/core/Tab';
+import TabContext from '@material-ui/lab/TabContext';
+import TabList from '@material-ui/lab/TabList';
+import TabPanel from '@material-ui/lab/TabPanel';
+
 
 function Feeds({ setVideo }) {
   const [recentVideos, setRecentVideos] = useState([]);
@@ -39,6 +45,15 @@ function Feeds({ setVideo }) {
   getDoc(docRef).then((docSnap) => {
     setProfilePic(docSnap.data().ProfilePictureUrl);
   });
+
+
+   const [value, setValue] = React.useState('1');
+
+    const handleChange = (event, newValue) => {
+      setValue(newValue);
+    };
+
+
   async function getVideos() {
     //Get all video data
     const docRef = collection(db, "Videos");
@@ -74,8 +89,18 @@ function Feeds({ setVideo }) {
   }, []);
 
   return (
+
+   <Box sx={{ width: '100%', typography: 'body1' }}>
+        <TabContext value={value}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <TabList onChange={handleChange}  aria-label="lab API tabs example">
+              <Tab label="Videos"  value="1" />
+              <Tab label="Liked Videos"  value="2" />
+              <Tab label="Subscriptions"  value="3" />
+            </TabList>
+          </Box>
+          <TabPanel value="1">
     <div className="feed-container">
-      <h3 className="feed__heading">Feed</h3>
       <div className="videos__container">
         {recentVideos &&
           recentVideos.map((video) => (
@@ -125,7 +150,9 @@ function Feeds({ setVideo }) {
                     </Card>
           ))}
       </div>
-    </div>
+    </div></TabPanel>
+                </TabContext>
+              </Box>
   );
 }
 
