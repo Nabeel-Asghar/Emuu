@@ -50,13 +50,7 @@ func UploadVideo(c *gin.Context) {
       Date := dt.Format("01-02-2006")
 
      //Declare comments array
-  /*
-     commentsArr := [...]map[string]interface{}{
-     "date": "test",
-     "postedBy": "user",
-     "text": "test",
-     }
-*/
+
      //Declare usersThatLiked array
      usersThatLikedArr := [...]string{}
 
@@ -81,6 +75,11 @@ func UploadVideo(c *gin.Context) {
         if err != nil {
                 log.Fatalf("firestore doc creation error:%s\n", err)
         }
+
+            dc := client.Collection("Users").Doc(input.User_userName)
+            _, err = dc.Update(ctx, []firestore.Update{
+                    {Path: "VideosPosted", Value: firestore.Increment(1)},
+            })
 
 
         fmt.Println(wr.UpdateTime, wr.UpdateTime)

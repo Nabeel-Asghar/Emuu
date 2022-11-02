@@ -16,8 +16,9 @@ import {
   where,
   onSnapshot,
 } from "firebase/firestore";
+import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
 
-function Profile() {
+function Profile({ setVideo, video }) {
   const [percent, setPercent] = useState(0);
   const displayName = localStorage.getItem("displayName");
   const docRef = doc(db, "Users", displayName);
@@ -75,62 +76,72 @@ function Profile() {
 
   const [Banner, setBanner] = useState("");
   const [ProfilePic, setProfilePic] = useState("");
-
+    const [subscriberCount, setSubscriberCount] = useState("");
   getDoc(docRef).then((docSnap) => {
     setBanner(docSnap.data().BannerUrl);
     setProfilePic(docSnap.data().ProfilePictureUrl);
+    setSubscriberCount(docSnap.data().SubscriberCount);
   });
 
   return (
-    <div className="MainProfileDiv">
-      <div className="profile-container">
-        <div className="top-portion">
-          <div className="user-profile-bg-image">
-            <img id="prf-bg-img" src={Banner} alt="" srcSet="" />
-            <input
-              style={{ display: "none" }}
-              id="background-inp"
-              type="file"
-              onChange={(e) => uploadBackground(e)}
-              accept="image/jpeg"
-            />
-            <button
-              id="background-change"
-              onClick={() => document.querySelector("#background-inp").click()}
-            >
-              {" "}
-              <AddIcon />
-            </button>
+    <>
+      <HeaderPostLogin />
+      <div className="MainProfileDiv">
+        <div className="profile-container">
+          <div className="top-portion">
+            <div className="user-profile-bg-image">
+              <img id="prf-bg-img" src={Banner} alt="" srcSet="" />
+              <input
+                style={{ display: "none" }}
+                id="background-inp"
+                type="file"
+                onChange={(e) => uploadBackground(e)}
+                accept="image/jpeg"
+              />
+              <button
+                id="background-change"
+                onClick={() =>
+                  document.querySelector("#background-inp").click()
+                }
+              >
+                {" "}
+                <AddIcon />
+              </button>
+            </div>
+            </div>
+             <div className="middle-portion">
+            <div className="user-profile-img">
+              <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
+              <input
+                style={{ display: "none" }}
+                id="profile-inp"
+                type="file"
+                onChange={async (e) => {
+                  uploadProfile(e);
+                }}
+                accept="image/jpeg"
+              />
+              <button
+                id="profile-change"
+                onClick={() => document.querySelector("#profile-inp").click()}
+              >
+                {" "}
+                <AddIcon />
+              </button>
+              <div className={"userName"}> {displayName} </div>
+               <div className={"subscribers-profile"}> {subscriberCount} subscribers </div>
+            </div>
           </div>
+          <div className="bottom-portion">
+            <div className="right-side"></div>
 
-          <div className="user-profile-img">
-            <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
-            <input
-              style={{ display: "none" }}
-              id="profile-inp"
-              type="file"
-              onChange={(e) => uploadProfile(e)}
-              accept="image/jpeg"
-            />
-            <button
-              id="profile-change"
-              onClick={() => document.querySelector("#profile-inp").click()}
-            >
-              {" "}
-              <AddIcon />
-            </button>
-            <div className={"userName"}> {displayName} </div>
+
+            <div className="left-side"></div>
+            <Feeds setVideo={setVideo} />
           </div>
-        </div>
-        <div className="bottom-portion">
-          <div className="right-side"></div>
-          <UserInfo />
-
-          <div className="left-side"></div>
-          <Feeds />
         </div>
       </div>
-    </div>
+    </>
   );
 }
 

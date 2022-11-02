@@ -1,3 +1,5 @@
+import React, { useState, useEffect } from "react";
+import "./HeaderPostLogin.scss";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
@@ -5,21 +7,53 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import Offcanvas from "react-bootstrap/Offcanvas";
-
+import { Link } from "react-router-dom";
 import { Routes, Route, useHistory } from "react-router-dom";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import firebase from "firebase/app";
+import { db } from "../../Firebase.js";
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  getDoc,
+  doc,
+  query,
+  where,
+} from "firebase/firestore";
+import EmuuLogo from "./EmuuLogo.png";
+import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+import HeaderSearch from "./TestAlgoliaSearchInput";
 
-function HeaderPostLogin() {
+import ProfileMenu from "../ProfileMenu/ProfileMenu";
+
+function HeaderPostLogin({ search, setSearch }) {
   //Sign Out Function in Nav Bar
+  const [user, setUser] = useState([]);
   const history = useHistory();
   const auth = getAuth;
+  const userName = localStorage.getItem("displayName");
+
+  async function getUser() {
+    //Get user data
+    const querySnapshotUsers = await getDocs(collection(db, "Users"));
+    console.log(querySnapshotUsers);
+    const usersArr = [];
+    console.log(usersArr);
+
+    querySnapshotUsers.forEach((doc) => {
+      usersArr.push(doc.data());
+    });
+    const userArr = usersArr.filter((user) => user.Username === userName);
+    console.log(userArr);
+    setUser(userArr);
+    localStorage.setItem("userImage", userArr[0].ProfilePictureUrl);
+  }
 
   const SignedOut = async (e) => {
     signOut(auth)
       .then(() => {
         console.log("User is signed out");
-        localStorage.clear();
         history.push("/");
         //TestUserStatus()
       })
@@ -27,7 +61,8 @@ function HeaderPostLogin() {
         // An error happened.
       });
   };
-
+  useEffect(() => getUser(), []);
+  console.log(user, "userData");
   const navAuth = localStorage.getItem("auth");
   return (
     <>
@@ -41,62 +76,10 @@ function HeaderPostLogin() {
         >
           <Container fluid>
             <Navbar.Brand href="/">
-              <img
-                src="https://firebasestorage.googleapis.com/v0/b/emuu-1ee85.appspot.com/o/images%2FPicture2.png?alt=media&token=c2e0afa7-7f0b-4b75-b9f9-e38043b729bb"
-                width="140"
-                height="40"
-              ></img>
+              <img src={EmuuLogo} width="140" height="40"></img>
             </Navbar.Brand>
-            <Form className="d-flex">
-              <Form.Control
-                type="search"
-                placeholder="Search"
-                className="me-2"
-                aria-label="Search"
-              />
-              <Button variant="btn btn-success">Search</Button>
-            </Form>
-            <Navbar.Toggle aria-controls={`offcanvasNavbar-expand-${expand}`} />
-            <Navbar.Offcanvas
-              id={`offcanvasNavbar-expand-${expand}`}
-              aria-labelledby={`offcanvasNavbarLabel-expand-${expand}`}
-              placement="end"
-            >
-              <Offcanvas.Header closeButton>
-                <Offcanvas.Title
-                  id={`offcanvasNavbarLabel-expand-${expand}`}
-                ></Offcanvas.Title>
-              </Offcanvas.Header>
-              <Offcanvas.Body>
-                <Nav className="justify-content-end flex-grow-1 pe-3">
-                  {navAuth === "false" && (
-                    <Nav.Link href="/Login">Login</Nav.Link>
-                  )}
-                  {navAuth === "true" && (
-                    <>
-                      <Nav.Link href="/UserProfile">User Profile</Nav.Link>
-                      <Nav.Link href="/Upload">Upload</Nav.Link>
-
-                      {
-                        <button
-                          onClick={() => {
-                            SignedOut();
-                            localStorage.setItem("auth", false);
-                            window.location.reload();
-                            localStorage.setItem("user", null);
-                          }}
-                          type="submit"
-                          button
-                          class="btn me-4 btn-dark btn-lg"
-                        >
-                          Sign Out
-                        </button>
-                      }
-                    </>
-                  )}
-                </Nav>
-              </Offcanvas.Body>
-            </Navbar.Offcanvas>
+            <HeaderSearch />
+            <ProfileMenu />
           </Container>
         </Navbar>
       ))}

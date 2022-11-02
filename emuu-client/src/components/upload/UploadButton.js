@@ -1,6 +1,8 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import React, { useState } from "react";
-import { storage } from "../../Firebase.js";
+
+import React, { useEffect, useState } from "react";
+import { storage, db } from "../../Firebase.js";
+
 import "../../Firebase.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import PropTypes from "prop-types";
@@ -12,6 +14,11 @@ import Box from "@mui/material/Box";
 import Alert from "@mui/material/Alert";
 import { getAuth } from "firebase/auth";
 import axios from "axios";
+
+import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
+import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin";
+import { setDoc, doc, increment, updateDoc } from "firebase/firestore";
 
 const theme = createTheme({
   palette: {
@@ -57,7 +64,8 @@ function FileUpload() {
   const [videoUrl, setVideoUrl] = useState("");
   const [userName, setUserName] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
-
+  const displayName = localStorage.getItem("displayName");
+  const docRef = doc(db, "Users", displayName);
   //upload data structure
   const uploadData = {
     user_userName: userName,
@@ -121,6 +129,14 @@ function FileUpload() {
       (snapshot) => {
         // download url
         getDownloadURL(uploadTaskThumb.snapshot.ref).then((URL) => {
+          if (!URL) {
+            setUploadStatus(
+              <span style={{ color: "red" }}>
+                <ErrorOutlineIcon /> Try again
+              </span>
+            );
+            return;
+          }
           setThumbnailUrl(URL);
           console.log(URL);
         });
@@ -141,28 +157,45 @@ function FileUpload() {
       (err) => console.log(err),
       (snapshot) => {
         // download url
-        getDownloadURL(uploadTask.snapshot.ref)
-          .then((URL) => {
-            setVideoUrl(URL);
-            console.log(URL);
-          })
-          .then(
-            axios
-              .post(
-                "http://localhost:8080/auth/upload",
-                JSON.stringify(uploadData)
-              )
-              .then((result) => {
-                console.log("User information is sent to firestore");
-              })
-          );
+
+
+        getDownloadURL(uploadTask.snapshot.ref).then((URL) => {
+          if (!URL) {
+            setUploadStatus(
+              <span style={{ color: "red" }}>
+                <ErrorOutlineIcon /> Try again
+              </span>
+            );
+            return;
+          }
+          setVideoUrl(URL);
+          console.log(URL);
+        });
       }
     );
-    //axios request to post upload information to backend
+
   };
+
+  useEffect(async () => {
+    if (videoUrl && thumbnailUrl) {
+      await axios
+        .post(
+          "http://localhost:8080/auth/upload",
+          JSON.stringify({ ...uploadData })
+        )
+        .then((result) => {
+          setUploadStatus(
+            <span style={{ color: "green" }}>
+              <CheckCircleOutlineIcon /> Upload successful
+            </span>
+          );
+        });
+    }
+  }, [videoUrl, thumbnailUrl]);
 
   return (
     <div>
+      <HeaderPostLogin />
       <h1>Upload a Video</h1>
       <form id="videoUploadForm" method="POST">
         <div className="col-sm-6 offset-sm-3">
@@ -175,14 +208,16 @@ function FileUpload() {
           />
           <br />
         </div>
+
         <div class="col-sm-6 offset-sm-3">
-          <input
+          <textarea
             type="text"
             value={videoDescription}
             onChange={(e) => setVideoDescription(e.target.value)}
             className="form-control"
             placeholder="Description of Video"
-          />
+            rows="3"
+          ></textarea>
           <br />
         </div>
         <div className="col-sm-6 offset-sm-3">
@@ -215,6 +250,7 @@ function FileUpload() {
       >
         Upload
       </button>
+      {uploadStatus}
     </div>
   );
 }

@@ -22,9 +22,10 @@ import {
   increment,
   updateDoc,
 } from "firebase/firestore";
+import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
 
 //Function to display creator page
-function Creator({ video, setUserProfile }) {
+function Creator({ setVideo, video }) {
   const [creatorName, setCreatorName] = useState("Temp");
   const docRef = doc(db, "Users", creatorName);
 
@@ -36,43 +37,47 @@ function Creator({ video, setUserProfile }) {
       let video = JSON.parse(localStorage.getItem("video"));
       setCreatorName(video.Username);
     }
-    if (!video && !localStorage.getItem("video")) {
-      //if there's no video on this page, redirect to home
-      window.location.pathname = "/";
-    }
   }, []);
 
   const [Banner, setBanner] = useState("");
   const [ProfilePic, setProfilePic] = useState("");
+  const [subscriberCount, setSubscriberCount] = useState("");
 
   getDoc(docRef).then((docSnap) => {
     setBanner(docSnap.data().BannerUrl);
     setProfilePic(docSnap.data().ProfilePictureUrl);
+    setSubscriberCount(docSnap.data().SubscriberCount);
   });
 
   return (
-    <div className="MainProfileDiv">
-      <div className="profile-container">
-        <div className="top-portion">
-          <div className="user-profile-bg-image">
-            <img id="prf-bg-img" src={Banner} alt="" srcSet="" />
+    <>
+      <HeaderPostLogin />
+      <div className="MainProfileDiv">
+        <div className="profile-container">
+          <div className="top-portion">
+            <div className="user-profile-bg-image">
+              <img id="prf-bg-img" src={Banner} alt="" srcSet="" />
+            </div>
+            </div>
+
+              <div className="middle-portion">
+            <div className="user-profile-img">
+              <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
+
+              <div className={"userName"}> {creatorName} </div>
+              <div className={"subscribers-profile"}> {subscriberCount} subscribers </div>
+            </div>
           </div>
+          <div className="bottom-portion">
+            <div className="right-side"></div>
 
-          <div className="user-profile-img">
-            <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
 
-            <div className={"userName"}> {creatorName} </div>
+            <div className="left-side"></div>
+            <Feeds setVideo={setVideo} />
           </div>
-        </div>
-        <div className="bottom-portion">
-          <div className="right-side"></div>
-          <UserInfo />
-
-          <div className="left-side"></div>
-          <Feeds />
         </div>
       </div>
-    </div>
+    </>
   );
 }
 
