@@ -17,7 +17,7 @@ import axios from "axios";
 
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin";
+import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
 import { setDoc, doc, increment, updateDoc } from "firebase/firestore";
 
 const theme = createTheme({
@@ -101,9 +101,11 @@ function FileUpload() {
       alert("Please upload a video first!");
     }
 
-    //Restrict file size to 5 MB ~ equivalent to 30 second video
-    if (file.size > 100 * 1024 * 1024) {
-      alert("File size exceeds maximum allowed!");
+    //Restrict file size to 20 MB ~ equivalent to 30 second video
+
+    if (file.size > 20 * 1024 * 1024) {
+      alert("File size exceeds maximum allowed (20 MB)!");
+
       return;
     }
 
@@ -195,7 +197,7 @@ function FileUpload() {
 
   return (
     <div>
-      <HeaderPostLogin />
+      <NavBarNoSearch />
       <h1>Upload a Video</h1>
       <form id="videoUploadForm" method="POST">
         <div className="col-sm-6 offset-sm-3">

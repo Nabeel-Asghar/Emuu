@@ -51,23 +51,21 @@ function Feeds({ setVideo, setUserProfile }) {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
-
-  async function getVideos() {
-    //Get all video data
-    const docRef = collection(db, "Videos");
-    const queryData = await query(docRef, where("Username", "==", displayName));
-    const querySnapshot = await getDocs(queryData);
-
-    //Create array for recent videos and sort by upload date
-    const querySnapshotRecent = [];
-    querySnapshot.forEach((doc) => querySnapshotRecent.push(doc));
-    sortVideosByTime(querySnapshotRecent);
-    const recentVideosArr = [];
-    querySnapshotRecent.forEach((doc) => {
-      recentVideosArr.push(doc.data());
-    });
-
-    setRecentVideos(recentVideosArr);
+async function getVideos() {
+    await axios.post("http://localhost:8080/auth/video", JSON.stringify({displayName}))
+     .then(function (response){
+     console.log(response);
+     })
+       try {
+          		const response = await axios.get("http://localhost:8080/auth/video");
+          		console.log(response.data.message);
+          		//setTopVideos(response.data.message.MostViewed)
+          		setRecentVideos(response.data.message.RecentUpload)
+          		//console.log(topVideos)
+          	}
+          	catch (error) {
+          		console.log(error);
+          	}
   }
 
   //Sort function for date uploaded
@@ -101,7 +99,7 @@ function Feeds({ setVideo, setUserProfile }) {
               {recentVideos &&
                 recentVideos.map((video) => (
                   <Card sx={{ maxWidth: 380, height: 400 }}>
-                    <CardMedia component="img" image={video.thumbnailUrl} />
+                    <CardMedia component="img" image={video.ThumbnailUrl} />
                     <CardContent>
                       <CardHeader
                         avatar={
@@ -123,7 +121,7 @@ function Feeds({ setVideo, setUserProfile }) {
                                   setVideo(video);
                                 }}
                               >
-                                {video.VideoTitle}
+                                {video.Title}
                               </span>
                             </Link>
                           </Typography>

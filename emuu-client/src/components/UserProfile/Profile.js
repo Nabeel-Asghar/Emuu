@@ -16,7 +16,7 @@ import {
   where,
   onSnapshot,
 } from "firebase/firestore";
-import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
+import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
 
 function Profile({ setVideo, video }) {
   const [percent, setPercent] = useState(0);
@@ -85,7 +85,7 @@ function Profile({ setVideo, video }) {
 
   return (
     <>
-      <HeaderPostLogin />
+      <NavBarNoSearch />
       <div className="MainProfileDiv">
         <div className="profile-container">
           <div className="top-portion">
@@ -95,7 +95,11 @@ function Profile({ setVideo, video }) {
                 style={{ display: "none" }}
                 id="background-inp"
                 type="file"
-                onChange={(e) => uploadBackground(e)}
+                onChange={async (e) => {
+                   uploadBackground(e);
+                   setTimeout(() => window.location.reload(), 1500);
+                   return false;
+                   }}
                 accept="image/jpeg"
               />
               <button
@@ -118,6 +122,8 @@ function Profile({ setVideo, video }) {
                 type="file"
                 onChange={async (e) => {
                   uploadProfile(e);
+                 setTimeout(() => window.location.reload(), 1500);
+                  return false;
                 }}
                 accept="image/jpeg"
               />

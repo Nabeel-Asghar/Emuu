@@ -54,7 +54,9 @@ color:black}
   }
 }
 .App a{
+
 color: white;
+
     text-decoration: none;
     font-weight: bold;
 }
@@ -75,4 +77,5 @@ color: white;
 .App mb-3 navbar navbar-dark bg-dark{
     margin-bottom: 0rem;
 }
+
 
