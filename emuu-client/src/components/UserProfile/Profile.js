@@ -60,6 +60,7 @@ function Profile({ setVideo, video }, { classes }){
         )
         console.log('donee', { croppedImage })
         setCroppedImage(croppedImage)
+        var file = new File([croppedImage], "UserBackgroundBanner");
       } catch (e) {
         console.error(e)
       }
@@ -150,23 +151,25 @@ function Profile({ setVideo, video }, { classes }){
       <HeaderPostLogin />
       <div className="MainProfileDiv">
         <div className="profile-container">
+           <div className="top-portion">
+            <div className="user-profile-bg-image">
  <div>
       {imageSrc ? (
         <React.Fragment>
-          <div className={styles.cropContainer}>
+          <div className={"reactEasyCrop_Container"}>
             <Cropper
               image={imageSrc}
               crop={crop}
               rotation={rotation}
               zoom={zoom}
-              aspect={4 / 3}
+              aspect={6/ 1}
               onCropChange={setCrop}
               onRotationChange={setRotation}
               onCropComplete={onCropComplete}
               onZoomChange={setZoom}
             />
           </div>
-          <div className={styles.controls}>
+ <div className={"submit_Container"}>
             <div className={styles.sliderContainer}>
               <Typography
                 variant="overline"
@@ -178,42 +181,42 @@ function Profile({ setVideo, video }, { classes }){
                 value={zoom}
                 min={1}
                 max={3}
-                step={0.1}
+                step={0.01}
                 aria-labelledby="Zoom"
                 classes={{ root: styles.slider }}
                 onChange={(e, zoom) => setZoom(zoom)}
               />
             </div>
-            <div className={styles.sliderContainer}>
-              <Typography
-                variant="overline"
-                classes={{ root: styles.sliderLabel }}
-              >
-                Rotation
-              </Typography>
-              <Slider
-                value={rotation}
-                min={0}
-                max={360}
-                step={1}
-                aria-labelledby="Rotation"
-                classes={{ root: styles.slider }}
-                onChange={(e, rotation) => setRotation(rotation)}
-              />
-            </div>
+{/*             <div className={styles.sliderContainer}> */}
+{/*               <Typography */}
+{/*                 variant="overline" */}
+{/*                 classes={{ root: styles.sliderLabel }} */}
+{/*               > */}
+{/*                 Rotation */}
+{/*               </Typography> */}
+{/*               <Slider */}
+{/*                 value={rotation} */}
+{/*                 min={0} */}
+{/*                 max={360} */}
+{/*                 step={1} */}
+{/*                 aria-labelledby="Rotation" */}
+{/*                 classes={{ root: styles.slider }} */}
+{/*                 onChange={(e, rotation) => setRotation(rotation)} */}
+{/*               /> */}
+{/*             </div> */}
             <Button
-              onClick={uploadBackground}
+              onClick={showCroppedImage}
               variant="contained"
               color="primary"
               classes={{ root: styles.cropButton }}
             >
-              Show Result
+              Set Banner
             </Button>
           </div>
           <ImgDialog img={croppedImage} onClose={onClose} />
         </React.Fragment>
       ) : (
-        <div className="top-portion">
+
         <div className="user-profile-bg-image">
           <img id="prf-bg-img" src={Banner} alt="" srcSet="" />
           <input
@@ -233,9 +236,10 @@ function Profile({ setVideo, video }, { classes }){
             <AddIcon />
           </button>
         </div>
-      </div>
+
 
       )}
+      </div> </div>
     </div>
 
 
