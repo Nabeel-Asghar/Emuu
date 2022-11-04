@@ -29,7 +29,7 @@ func main() {
 	{
 		auth.POST("/upload", upload.UploadVideo)
 		auth.POST("/register", register.CreateUser)
-		auth.POST("/video", video.SetUsername)
+		auth.POST("/video", video.SetUsernameAndPage)
 		auth.GET("/video", video.SetVideos)
 
 	}

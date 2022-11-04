@@ -43,7 +43,6 @@ function Feeds({ setVideo, setUserProfile }) {
   const displayName = localStorage.getItem("CreatorName");
   const docRef = doc(db, "Users", displayName);
 
-
   const [ProfilePic, setProfilePic] = useState("");
   getDoc(docRef).then((docSnap) => {
     setProfilePic(docSnap.data().ProfilePictureUrl);
@@ -56,20 +55,20 @@ function Feeds({ setVideo, setUserProfile }) {
   };
 
   async function getVideos() {
-    await axios.post("http://localhost:8080/auth/video", JSON.stringify({displayName}))
-     .then(function (response){
-     console.log(response);
-     })
-       try {
-          		const response = await axios.get("http://localhost:8080/auth/video");
-          		console.log(response.data.message);
-          		//setTopVideos(response.data.message.MostViewed)
-          		setRecentVideos(response.data.message.RecentUpload)
-          		//console.log(topVideos)
-          	}
-          	catch (error) {
-          		console.log(error);
-          	}
+    await axios
+      .post("http://localhost:8080/auth/video", JSON.stringify({ displayName }))
+      .then(function (response) {
+        console.log(response);
+      });
+    try {
+      const response = await axios.get("http://localhost:8080/auth/video");
+      console.log(response.data.message);
+      //setTopVideos(response.data.message.MostViewed)
+      setRecentVideos(response.data.message.RecentUpload);
+      //console.log(topVideos)
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   //Sort function for date uploaded

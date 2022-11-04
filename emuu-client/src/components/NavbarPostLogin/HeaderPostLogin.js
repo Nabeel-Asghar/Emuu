@@ -82,9 +82,7 @@ function HeaderPostLogin({ search, setSearch }) {
             <HeaderSearch />
             <ProfileMenu />
           </Container>
-
         </Navbar>
-
       ))}
     </>
   );

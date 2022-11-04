@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";import "./Sidebar.scss";
+import React, { useEffect, useState } from "react";
+import "./Sidebar.scss";
 import { useHistory } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -102,10 +103,15 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer({ sideBarState, video, setVideo, setUserProfile  }) {
+export default function MiniDrawer({
+  sideBarState,
+  video,
+  setVideo,
+  setUserProfile,
+}) {
   const theme = useTheme();
   const history = useHistory();
-  const [ProfilePic,setProfilePic]=useState('');
+  const [ProfilePic, setProfilePic] = useState("");
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
   const usersArr = firebaseData.filter(
     (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
@@ -115,14 +121,14 @@ export default function MiniDrawer({ sideBarState, video, setVideo, setUserProfi
   const isAuthorized = localStorage.getItem("auth");
   const currentNavigation =
     isAuthorized === "true" ? authUsersNavigation : unAuthorizedNavigation;
- const userProfileImg = localStorage.getItem("userProfileImg");
-    const displayName = localStorage.getItem("displayName");
-    const docRef = doc(db, "Users", displayName);
+  const userProfileImg = localStorage.getItem("userProfileImg");
+  const displayName = localStorage.getItem("displayName");
+  const docRef = doc(db, "Users", displayName);
 
-    getDoc(docRef).then((docSnap) => {
-      setProfilePic(docSnap.data().ProfilePictureUrl);
-    });
-    console.log(ProfilePic);
+  getDoc(docRef).then((docSnap) => {
+    setProfilePic(docSnap.data().ProfilePictureUrl);
+  });
+  console.log(ProfilePic);
   return (
     <AppContext.Consumer>
       {(context) => (
@@ -170,7 +176,11 @@ export default function MiniDrawer({ sideBarState, video, setVideo, setUserProfi
                       {index === 0 ? (
                         <HomeIcon fontSize="large" />
                       ) : index === 1 ? (
-                        <Avatar src={ProfilePic} fontSize="large" alt="avatar-alt" />
+                        <Avatar
+                          src={ProfilePic}
+                          fontSize="large"
+                          alt="avatar-alt"
+                        />
                       ) : (
                         index === 2 && <CloudUploadIcon fontSize="large" />
                       )}
@@ -185,7 +195,7 @@ export default function MiniDrawer({ sideBarState, video, setVideo, setUserProfi
             </List>
             <Divider />
             <List>
-              {context.isSidebarOpen && isAuthorized==="true" &&(
+              {context.isSidebarOpen && isAuthorized === "true" && (
                 <Typography
                   className="subscribers"
                   variant="subtitle1"

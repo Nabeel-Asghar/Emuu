@@ -76,7 +76,7 @@ function Profile({ setVideo, video }) {
 
   const [Banner, setBanner] = useState("");
   const [ProfilePic, setProfilePic] = useState("");
-    const [subscriberCount, setSubscriberCount] = useState("");
+  const [subscriberCount, setSubscriberCount] = useState("");
   getDoc(docRef).then((docSnap) => {
     setBanner(docSnap.data().BannerUrl);
     setProfilePic(docSnap.data().ProfilePictureUrl);
@@ -96,10 +96,10 @@ function Profile({ setVideo, video }) {
                 id="background-inp"
                 type="file"
                 onChange={async (e) => {
-                   uploadBackground(e);
-                   setTimeout(() => window.location.reload(), 1500);
-                   return false;
-                   }}
+                  uploadBackground(e);
+                  setTimeout(() => window.location.reload(), 1500);
+                  return false;
+                }}
                 accept="image/jpeg"
               />
               <button
@@ -112,8 +112,8 @@ function Profile({ setVideo, video }) {
                 <AddIcon />
               </button>
             </div>
-            </div>
-             <div className="middle-portion">
+          </div>
+          <div className="middle-portion">
             <div className="user-profile-img">
               <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
               <input
@@ -122,7 +122,7 @@ function Profile({ setVideo, video }) {
                 type="file"
                 onChange={async (e) => {
                   uploadProfile(e);
-                 setTimeout(() => window.location.reload(), 1500);
+                  setTimeout(() => window.location.reload(), 1500);
                   return false;
                 }}
                 accept="image/jpeg"
@@ -135,12 +135,14 @@ function Profile({ setVideo, video }) {
                 <AddIcon />
               </button>
               <div className={"userName"}> {displayName} </div>
-               <div className={"subscribers-profile"}> {subscriberCount} subscribers </div>
+              <div className={"subscribers-profile"}>
+                {" "}
+                {subscriberCount} subscribers{" "}
+              </div>
             </div>
           </div>
           <div className="bottom-portion">
             <div className="right-side"></div>
-
 
             <div className="left-side"></div>
             <Feeds setVideo={setVideo} />

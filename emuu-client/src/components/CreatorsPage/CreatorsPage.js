@@ -26,18 +26,16 @@ import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
 
 //Function to display creator page
 
-function Creator({ setVideo, video}) {
+function Creator({ setVideo, video }) {
   const [creatorName, setCreatorName] = useState("Loading...");
 
   const docRef = doc(db, "Users", creatorName);
 
   useEffect(async () => {
-
-
     if (video) {
       localStorage.setItem("video", JSON.stringify(video));
-       window.location.reload();
-          return false;
+      window.location.reload();
+      return false;
     }
     if (localStorage.getItem("video")) {
       let video = JSON.parse(localStorage.getItem("video"));
@@ -50,11 +48,9 @@ function Creator({ setVideo, video}) {
   const [subscriberCount, setSubscriberCount] = useState("");
 
   getDoc(docRef).then((docSnap) => {
-
     setBanner(docSnap.data().BannerUrl);
     setProfilePic(docSnap.data().ProfilePictureUrl);
     setSubscriberCount(docSnap.data().SubscriberCount);
-
   });
 
   return (
@@ -66,19 +62,21 @@ function Creator({ setVideo, video}) {
             <div className="user-profile-bg-image">
               <img id="prf-bg-img" src={Banner} alt="" srcSet="" />
             </div>
-            </div>
+          </div>
 
-              <div className="middle-portion">
+          <div className="middle-portion">
             <div className="user-profile-img">
               <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
 
               <div className={"userName"}> {creatorName} </div>
-              <div className={"subscribers-profile"}> {subscriberCount} subscribers </div>
+              <div className={"subscribers-profile"}>
+                {" "}
+                {subscriberCount} subscribers{" "}
+              </div>
             </div>
           </div>
           <div className="bottom-portion">
             <div className="right-side"></div>
-
 
             <div className="left-side"></div>
             <Feeds setVideo={setVideo} />

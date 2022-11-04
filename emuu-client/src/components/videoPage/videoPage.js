@@ -74,7 +74,7 @@ function Video({ video, setVideo, setUserProfile }) {
 
   return (
     <>
-      <NavBarNoSearch />
+      <HeaderPostLogin />
       <div className="videoPage">
         <video controls height="700" src={video.VideoUrl}></video>
         <div className="title-line">
