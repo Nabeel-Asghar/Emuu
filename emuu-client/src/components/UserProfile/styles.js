@@ -1,13 +1,14 @@
 export const styles = theme => ({
   cropContainer: {
-    position: 'relative',
+    position: 'relative' ,
     width: '100%',
-    height: 200,
+    height: 0,
     background: '#333',
     [theme.breakpoints.up('sm')]: {
       height: 400,
     },
   },
+
   cropButton: {
     flexShrink: 0,
     marginLeft: 16,
@@ -26,6 +27,7 @@ export const styles = theme => ({
     display: 'flex',
     flex: '1',
     alignItems: 'center',
+
   },
   sliderLabel: {
     [theme.breakpoints.down('xs')]: {
@@ -38,7 +40,7 @@ export const styles = theme => ({
     [theme.breakpoints.up('sm')]: {
       flexDirection: 'row',
       alignItems: 'center',
-      margin: '0 16px',
+      margin: '20px 16px',
     },
   },
 })
