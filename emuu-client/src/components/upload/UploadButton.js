@@ -292,7 +292,9 @@ function FileUpload({ setVideo }) {
               </div>
 
               <div className="UploadCard" id="UC2" style={{ display: "None" }}>
-             <div className="UC2-header">   <h2>{file?.name?.split(".mp4")[0]}</h2> <CloseIcon/></div>
+             <div className="UC2-header">   <h2>{file?.name?.split(".mp4")[0]}</h2> <CloseIcon/>
+             <hr/></div>
+
                 <div className="UC2-main">
                   <div className="UC2-left">
                     <div className="UC2-details">
