@@ -144,8 +144,10 @@ function Profile({ setVideo, video }) {
           <div className="bottom-portion">
             <div className="right-side"></div>
 
+
             <div className="left-side"></div>
-            <Feeds setVideo={setVideo} />
+
+            <Feeds  setVideo={setVideo} />
           </div>
         </div>
       </div>

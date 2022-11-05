@@ -37,6 +37,16 @@ type Video struct {
 	//Comments         []map[string]interface{} `firestore:"Comments"`
 }
 
+//func removeEmptyStrings(s []Video) []Video {
+//	r := []Video{}
+//	for _, s.UploadTime := range s {
+//		if str != "" {
+//			r = append(r, str)
+//		}
+//	}
+//	return r
+//}
+
 func sortMostViewed(videos []Video) []Video {
 
 	for i := 0; i < len(videos)-1; i++ {
@@ -69,14 +79,6 @@ func SetUsernameAndPage(c *gin.Context) {
 	fmt.Println(userUN)
 	fmt.Println(PageNum)
 }
-
-//func SetPageNumber(c *gin.Context) {
-//	var resp PageNumber
-//	c.ShouldBindJSON(&resp)
-//	c.JSON(http.StatusOK, gin.H{"message": resp.PageNumber})
-//	PageNum = resp.PageNumber
-//	fmt.Println(PageNum)
-//}
 
 func SetVideos(c *gin.Context) {
 	if userUN != "" {
@@ -156,19 +158,38 @@ func SetVideos(c *gin.Context) {
 		}
 		sortMostViewed(mostViewedArr)
 		sortRecent(recentArr)
+		fmt.Println(recentArr)
+
+		//var total = len(recentArr) % 8
 		var pageAmount int
 		pageAmount = int(math.Ceil(float64(len(recentArr)) / 8))
 		if len(recentArr) > 8 {
-			recentArr = recentArr[(PageNum-1)*8 : (PageNum)*8]
+			if len(recentArr) > PageNum*8 {
+				recentArr = recentArr[(PageNum-1)*8 : (PageNum)*8]
+
+			} else {
+				recentArr = recentArr[(PageNum-1)*8 : len(recentArr)]
+
+			}
+			//fmt.Println(recentArr)
 		}
+
 		if len(mostViewedArr) > 8 {
 			mostViewedArr = mostViewedArr[0:8]
 		}
+		for i, a := range recentArr {
+			if a.UploadTime == 0 {
+				recentArr = append(recentArr[:i], recentArr[i+1:]...)
+				fmt.Println(recentArr)
+			}
+		}
+
 		response := struct {
 			MostViewed   []Video
 			RecentUpload []Video
 			Pages        int
 		}{
+
 			MostViewed:   mostViewedArr,
 			RecentUpload: recentArr,
 			Pages:        pageAmount,

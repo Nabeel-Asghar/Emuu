@@ -119,6 +119,7 @@ function Home({ setVideo }, { setUserProfile }) {
     setTopVideos(response.data.message.MostViewed);
     setRecentVideos(response.data.message.RecentUpload);
     setPages(response.data.message.Pages);
+    console.log(response.data.message.RecentUpload)
   }
 
 
