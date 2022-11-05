@@ -54,6 +54,8 @@ function Home({ setVideo }, { setUserProfile }) {
   const [autocompleteState, setAutocompleteState] = useState({});
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
+   const [subscriberActionCount, setSubsciberActionCount] = useState(0);
+     const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
 
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
 
@@ -176,6 +178,64 @@ function Home({ setVideo }, { setUserProfile }) {
     (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
   );
 
+  async function subscribeUser(subscribersName) {
+      const userRef = doc(db, "Users", userName);
+      const getSubscribersListRef = await getDoc(userRef);
+
+      let subscribersList;
+
+      if (getSubscribersListRef.exists()) {
+        subscribersList = getSubscribersListRef.data().SubscriberList;
+      }
+
+      updateDoc(userRef, {
+        SubscriberList: [...subscribersList, subscribersName],
+      });
+
+      let getUpdatedSubscribersListRef = await getDoc(userRef);
+      let updatedSubscribersList;
+
+      if (getUpdatedSubscribersListRef.exists()) {
+        updatedSubscribersList =
+          getUpdatedSubscribersListRef.data().SubscriberList;
+      }
+
+      setSubsciberActionCount(
+        (subscriberActionCount) => subscriberActionCount + 1
+      );
+    }
+
+    async function unSubscribeUser(subscribersName) {
+        const userRef = doc(db, "Users", userName);
+        const getSubscribersListRef = await getDoc(userRef);
+
+        let subscribersList;
+
+        if (getSubscribersListRef.exists()) {
+          subscribersList = getSubscribersListRef.data().SubscriberList;
+        }
+
+        const filteredSubscribersArr = subscribersList.filter(
+          (sub) => sub !== subscribersName
+        );
+
+        updateDoc(userRef, {
+          SubscriberList: filteredSubscribersArr,
+        });
+
+        let getUpdatedSubscribersListRef = await getDoc(userRef);
+        let updatedSubscribersList;
+
+        if (getUpdatedSubscribersListRef.exists()) {
+          updatedSubscribersList =
+            getUpdatedSubscribersListRef.data().SubscriberList;
+        }
+
+        setSubsciberActionCount(
+          (subscriberActionCount) => subscriberActionCount + 1
+        );
+      }
+
   const handleCreatorProfile = (creatorsName) => {
     const creatorsData = usersArr.filter(
       (user) => user.Username === creatorsName
@@ -191,14 +251,22 @@ function Home({ setVideo }, { setUserProfile }) {
     history.push("/creator");
   };
 
-  const subscribeUser = () => {
-    console.log("subscribed");
-  };
+  useEffect(async () => {
+      const userRefInitial = doc(db, "Users", userName);
+      const getSubscribersListRefInitial = await getDoc(userRefInitial);
+      let subscribersListInitial;
+      if (getSubscribersListRefInitial.exists()) {
+        subscribersListInitial =
+          getSubscribersListRefInitial.data().SubscriberList;
+      }
+      setUpdateSubscribersList(subscribersListInitial);
+    }, [subscriberActionCount]);
 
   return (
     <AppContext.Consumer>
       {(context) => (
         <div style={{ display: "flex", flexDirection: "row" }}>
+
           <Sidebar />
           <div
             style={{
@@ -207,6 +275,7 @@ function Home({ setVideo }, { setUserProfile }) {
               width: context.isSidebarOpen === true ? "87.3%" : "96.6%",
             }}
           >
+<>
             <AlgoliaSearchNavbar
               autocomplete={autocomplete}
               searchInput={searchInput}
@@ -257,11 +326,18 @@ function Home({ setVideo }, { setUserProfile }) {
                             username={user.Username}
                             subscribersCount={`${user.SubscriberCount} Subscribers`}
                             onClick={() => {
-                              subscribeUser(user.Username);
+                            updatedSubscribersList?.includes(user.Username)
+                            ? unSubscribeUser(user.Username)
+                            : subscribeUser(user.Username);
                             }}
                             handleUserClick={() =>
                               handleCreatorProfile(user.Username)
                             }
+                              buttonTitle={
+                             updatedSubscribersList?.includes(user.Username)
+                                                            ? "Unsubscribe"
+                                                            : "Subscribe"
+                                                        }
                           />
                         ))}
                     </div>
@@ -336,6 +412,7 @@ function Home({ setVideo }, { setUserProfile }) {
                 </p>
               </div>
             </ThemeProvider>
+            </>
           </div>
         </div>
       )}

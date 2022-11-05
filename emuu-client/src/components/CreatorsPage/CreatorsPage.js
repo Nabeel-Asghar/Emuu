@@ -1,7 +1,7 @@
 import "./UserInfo.scss";
 import "./Feeds.scss";
 import "../home/Home.scss";
-import React, { useState, useMemo } from "react";
+import React, { useState,useEffect, useMemo } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { createAutocomplete } from "@algolia/autocomplete-core";
 import "./Profile.scss";
@@ -10,6 +10,18 @@ import Feed from "./Feeds";
 import UserInfo from "./UserInfo";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
+import SubscribeButton from "../common/Button/Button.js"
+import {
+  getFirestore,
+  collection,
+  getDocs,
+  updateDoc,
+  setDoc,
+  doc,
+  getDoc,
+  query,
+} from "firebase/firestore";
+import { db } from "../../Firebase.js";
 
 //Function to display creator page
 const Creator = ({ setVideo, video }) => {
@@ -23,6 +35,8 @@ const Creator = ({ setVideo, video }) => {
   const [autocompleteState, setAutocompleteState] = useState({});
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
+     const [subscriberActionCount, setSubsciberActionCount] = useState(0);
+     const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
 
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
 
@@ -110,10 +124,75 @@ const Creator = ({ setVideo, video }) => {
     }
   };
 
-  const subscribeUser = () => {
-    console.log("subscribed");
-  };
+  async function subscribeUser(subscribersName) {
+        const userRef = doc(db, "Users", userName);
+        const getSubscribersListRef = await getDoc(userRef);
 
+        let subscribersList;
+
+        if (getSubscribersListRef.exists()) {
+          subscribersList = getSubscribersListRef.data().SubscriberList;
+        }
+
+        updateDoc(userRef, {
+          SubscriberList: [...subscribersList, subscribersName],
+        });
+
+        let getUpdatedSubscribersListRef = await getDoc(userRef);
+        let updatedSubscribersList;
+
+        if (getUpdatedSubscribersListRef.exists()) {
+          updatedSubscribersList =
+            getUpdatedSubscribersListRef.data().SubscriberList;
+        }
+
+        setSubsciberActionCount(
+          (subscriberActionCount) => subscriberActionCount + 1
+        );
+      }
+
+      async function unSubscribeUser(subscribersName) {
+          const userRef = doc(db, "Users", userName);
+          const getSubscribersListRef = await getDoc(userRef);
+
+          let subscribersList;
+
+          if (getSubscribersListRef.exists()) {
+            subscribersList = getSubscribersListRef.data().SubscriberList;
+          }
+
+          const filteredSubscribersArr = subscribersList.filter(
+            (sub) => sub !== subscribersName
+          );
+
+          updateDoc(userRef, {
+            SubscriberList: filteredSubscribersArr,
+          });
+
+          let getUpdatedSubscribersListRef = await getDoc(userRef);
+          let updatedSubscribersList;
+
+          if (getUpdatedSubscribersListRef.exists()) {
+            updatedSubscribersList =
+              getUpdatedSubscribersListRef.data().SubscriberList;
+          }
+
+          setSubsciberActionCount(
+            (subscriberActionCount) => subscriberActionCount + 1
+          );
+        }
+        console.log(updatedSubscribersList,"updated")
+
+        useEffect(async () => {
+              const userRefInitial = doc(db, "Users", userName);
+              const getSubscribersListRefInitial = await getDoc(userRefInitial);
+              let subscribersListInitial;
+              if (getSubscribersListRefInitial.exists()) {
+                subscribersListInitial =
+                  getSubscribersListRefInitial.data().SubscriberList;
+              }
+              setUpdateSubscribersList(subscribersListInitial);
+            }, [subscriberActionCount]);
   return (
     <>
       <AlgoliaSearchNavbar
@@ -193,15 +272,30 @@ const Creator = ({ setVideo, video }) => {
             </div>
           </div>
           <div className="bottom-portion">
-            <div className="right-side"></div>
+            <div className="right-side">
+           <SubscribeButton color="error" onClick={() => {
+            updatedSubscribersList?.includes(creatorsData.Username)
+            ? unSubscribeUser(creatorsData.Username)
+           : subscribeUser(creatorsData.Username);
+           }} buttonTitle={
+             updatedSubscribersList?.includes(creatorsData.Username)
+             ? "Unsubscribe"
+             : "Subscribe"
+             } buttonStyling={{ marginTop: "-20px", marginLeft: "15px" }}/>
+
+
+            </div>
             <UserInfo
               dateJoined={creatorsData.DateJoined}
               subscribers={creatorsData.Subscribers}
               videosPostedCount={creatorsData.VideosPosted}
             />
-            <div className="left-side"></div>
+            <div className="left-side">
+
+            </div>
             <Feed subscriberVideos={subscriberVideos} setVideo={setVideo} />
           </div>
+
         </div>
       </div>
     </>

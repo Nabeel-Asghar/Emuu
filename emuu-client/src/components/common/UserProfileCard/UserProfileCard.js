@@ -12,6 +12,7 @@ const UserProfileCard = ({
   handleUserClick,
   subscribersCount,
   onClick,
+  buttonTitle
 }) => {
   const isAuthenticated = localStorage.getItem("auth");
 
@@ -45,6 +46,7 @@ const UserProfileCard = ({
               buttonStyling={{ marginTop: "-20px", marginLeft: "15px" }}
               color="error"
               onClick={onClick}
+              buttonTitle={buttonTitle}
             />
           )}
         </div>
