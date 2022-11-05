@@ -158,25 +158,13 @@ function Feeds({ setVideo }) {
     setLikedVideos(likedVideosArr);
   }
 
-  //Sort function for date uploaded
-  function sortVideosByTime(videos) {
-    for (let i = 0; i < videos.length - 1; i++) {
-      for (let j = 0; j < videos.length - 1 - i; j++) {
-        if (videos[i].data().uploadTime < videos[i + 1].data().uploadTime) {
-          let temp = videos[i];
-          videos[i] = videos[i + 1];
-          videos[i + 1] = temp;
-        }
-      }
-    }
-  }
 
   useEffect(async () => {
     await getVideos();
     await getLikedVideos();
   }, []);
 
-  useEffect(()=>{console.log( sort)}, [setSort])
+//  useEffect(()=>{console.log( sort)}, [setSort])
 
 
   return (

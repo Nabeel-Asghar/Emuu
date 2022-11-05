@@ -34,18 +34,7 @@ type Video struct {
 	GameTag          string   `firestore:"GameTag"`
 	VideoDescription string   `firestore:"VideoDescription"`
 	UsersThatLiked   []string `firestore:"usersThatLiked"`
-	//Comments         []map[string]interface{} `firestore:"Comments"`
 }
-
-//func removeEmptyStrings(s []Video) []Video {
-//	r := []Video{}
-//	for _, s.UploadTime := range s {
-//		if str != "" {
-//			r = append(r, str)
-//		}
-//	}
-//	return r
-//}
 
 func sortMostViewed(videos []Video) []Video {
 
@@ -102,12 +91,9 @@ func SetVideos(c *gin.Context) {
 			if err != nil {
 				return
 			}
-			//fmt.Println(doc.Data())
 			var vid = Video{}
 
 			doc.DataTo(&vid)
-			//fmt.Printf("Document data: %#v", vid)
-			//fmt.Println(doc.Data())
 			mostViewedArr = append(mostViewedArr, vid)
 			recentArr = append(recentArr, vid)
 		}
@@ -151,8 +137,6 @@ func SetVideos(c *gin.Context) {
 			var vid = Video{}
 
 			doc.DataTo(&vid)
-			//fmt.Printf("Document data: %#v", vid)
-			//fmt.Println(doc.Data())
 			mostViewedArr = append(mostViewedArr, vid)
 			recentArr = append(recentArr, vid)
 		}
@@ -160,7 +144,6 @@ func SetVideos(c *gin.Context) {
 		sortRecent(recentArr)
 		fmt.Println(recentArr)
 
-		//var total = len(recentArr) % 8
 		var pageAmount int
 		pageAmount = int(math.Ceil(float64(len(recentArr)) / 8))
 		if len(recentArr) > 8 {
@@ -171,7 +154,6 @@ func SetVideos(c *gin.Context) {
 				recentArr = recentArr[(PageNum-1)*8 : len(recentArr)]
 
 			}
-			//fmt.Println(recentArr)
 		}
 
 		if len(mostViewedArr) > 8 {
