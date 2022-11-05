@@ -26,6 +26,7 @@ import AppContext from "../../AppContext";
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import CloseIcon from '@mui/icons-material/Close';
 const theme = createTheme({
   palette: {
     primary: {
@@ -167,7 +168,10 @@ function FileUpload({ setVideo }) {
     })
   }
   useEffect(async () => {
-    document.querySelector("#file-name").innerHTML = file.name || "";
+    if (file.name) {
+      document.querySelector("#UC1").style.display = "none";
+      document.querySelector("#UC2").style.display = "flex";
+    }
 
 
   }, [file])
@@ -288,28 +292,46 @@ function FileUpload({ setVideo }) {
               </div>
 
               <div className="UploadCard" id="UC2" style={{ display: "None" }}>
-                <div>
+             <div className="UC2-header">   <h2>{file?.name?.split(".mp4")[0]}</h2> <CloseIcon/></div>
+                <div className="UC2-main">
+                  <div className="UC2-left">
+                    <div className="UC2-details">
+                      <h2> Details </h2></div>
+                        <div className="UC2-thumbnail">
+                          <h2>Thumbnail</h2></div>
+                          </div>
+
+                          <div className="UC2-right">
+                            <h2>Preview</h2>
+
+                          </div>
+                        </div>
+                      </div>
+
+
+
+
+
+
+
+
+                    </div>
+
+                  </div>
+
                 </div>
-              </div>
 
+              
 
-
-
-
-
-
-
-            </div>
-
-          </div>
-
-        </div>
+            
+          
+          
       )}
-    </AppContext.Consumer>
-  );
-}
+        </AppContext.Consumer>
+      )
+      }
 
-export default FileUpload;
+      export default FileUpload;
 
 
 
