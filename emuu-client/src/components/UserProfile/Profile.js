@@ -5,7 +5,9 @@ import "../../Firebase.js";
 import Feeds from "./Feeds";
 import UserInfo from "./UserInfo";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
+import { Blob } from "firebase/firestore";
 import { db, storage } from "../../Firebase.js";
+import { uid } from 'uid';
 import {
   getDoc,
   getDocs,
@@ -27,7 +29,8 @@ import ImgDialog from './imgDialog'
 import { getCroppedImg, getRotatedImage } from './canvasUtils'
 import { styles } from './styles'
 import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
-
+import {uploadString} from "@firebase/storage";
+import { useHistory } from "react-router-dom";
 const ORIENTATION_TO_ANGLE = {
   '3': 180,
   '6': 90,
@@ -41,11 +44,13 @@ function Profile({ setVideo, video }, { classes }){
   const displayName = localStorage.getItem("displayName");
   const docRef = doc(db, "Users", displayName);
   const [imageSrc, setImageSrc] = React.useState(null)
+   const [croppedImageSrc, setCroppedImageSrc] = React.useState(null)
     const [crop, setCrop] = useState({ x: 0, y: 0 })
     const [rotation, setRotation] = useState(0)
     const [zoom, setZoom] = useState(1)
     const [croppedAreaPixels, setCroppedAreaPixels] = useState(null)
     const [croppedImage, setCroppedImage] = useState(null)
+     const history = useHistory();
 
     const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
       setCroppedAreaPixels(croppedAreaPixels)
@@ -59,12 +64,17 @@ function Profile({ setVideo, video }, { classes }){
           rotation
         )
         console.log('donee', { croppedImage })
-        setCroppedImage(croppedImage)
-        var file = new File([croppedImage], "UserBackgroundBanner");
+        setCroppedImageSrc(croppedImage);
+
+
+        uploadBackground(croppedImage);
+        setTimeout(() => window.location.reload(), 1500);
+        return false;
       } catch (e) {
         console.error(e)
       }
     }, [imageSrc, croppedAreaPixels, rotation])
+
 
     const onClose = useCallback(() => {
       setCroppedImage(null)
@@ -75,17 +85,13 @@ function Profile({ setVideo, video }, { classes }){
         const file = e.target.files[0]
         let imageDataUrl = await readFile(file)
 
-        // apply rotation if needed
-        const orientation = await getOrientation(file)
-        const rotation = ORIENTATION_TO_ANGLE[orientation]
-        if (rotation) {
-          imageDataUrl = await getRotatedImage(imageDataUrl, rotation)
-        }
 
-        setImageSrc(imageDataUrl)
+
+setImageSrc(imageDataUrl)
+
+
       }
     }
-
   function verifyJpeg(filename) {
     const fnArr = filename.split(".");
     if (fnArr[fnArr.length - 1] == "jpeg" || fnArr[fnArr.length - 1] == "jpg")
@@ -93,15 +99,16 @@ function Profile({ setVideo, video }, { classes }){
     return false;
   }
 
-  function uploadBackground(e) {
-    let file = e.target.files[0];
+  function uploadBackground(croppedImage) {
 
-    if (!verifyJpeg(file.name)) return;
+// let file = e.target.files[0];
+//  if (!verifyJpeg(file.name)) return;
     const storage = getStorage();
-    const storageRef = ref(storage, "/images/" + file.name);
+    const storageRef = ref(storage, "/images/" + uid());
+
 
     // 'file' comes from the Blob or File API
-    uploadBytes(storageRef, file).then((snapshot) => {
+    uploadString(storageRef, croppedImage,  'data_url').then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
         setDoc(
           docRef,
@@ -111,10 +118,12 @@ function Profile({ setVideo, video }, { classes }){
           {
             merge: true,
           }
+
         )
       );
-    });
-  }
+
+
+  }); }
 
   function uploadProfile(e) {
     let file = e.target.files[0];
@@ -187,23 +196,7 @@ function Profile({ setVideo, video }, { classes }){
                 onChange={(e, zoom) => setZoom(zoom)}
               />
             </div>
-{/*             <div className={styles.sliderContainer}> */}
-{/*               <Typography */}
-{/*                 variant="overline" */}
-{/*                 classes={{ root: styles.sliderLabel }} */}
-{/*               > */}
-{/*                 Rotation */}
-{/*               </Typography> */}
-{/*               <Slider */}
-{/*                 value={rotation} */}
-{/*                 min={0} */}
-{/*                 max={360} */}
-{/*                 step={1} */}
-{/*                 aria-labelledby="Rotation" */}
-{/*                 classes={{ root: styles.slider }} */}
-{/*                 onChange={(e, rotation) => setRotation(rotation)} */}
-{/*               /> */}
-{/*             </div> */}
+
             <Button
               onClick={showCroppedImage}
               variant="contained"
@@ -243,45 +236,6 @@ function Profile({ setVideo, video }, { classes }){
     </div>
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-{/*           <div className="top-portion"> */}
-{/*             <div className="user-profile-bg-image"> */}
-{/*               <img id="prf-bg-img" src={Banner} alt="" srcSet="" /> */}
-{/*               <input */}
-{/*                 style={{ display: "none" }} */}
-{/*                 id="background-inp" */}
-{/*                 type="file" */}
-{/*                 onChange={(e) => uploadBackground(e)} */}
-{/*                 accept="image/jpeg" */}
-{/*               /> */}
-{/*               <button */}
-{/*                id="background-change" */}
-{/*                 onClick={() => */}
-{/*                   document.querySelector("#background-inp").click() */}
-{/*                 } */}
-{/*               > */}
-{/*                 {" "} */}
-{/*                 <AddIcon /> */}
-{/*               </button> */}
-{/*             </div> */}
-{/*           </div> */}
           <div className="middle-portion">
             <div className="user-profile-img">
               <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
@@ -326,6 +280,10 @@ function readFile(file) {
     reader.readAsDataURL(file)
   })
 }
+
+
+
+
 
 const StyledDemo = withStyles(styles)(Profile)
 
