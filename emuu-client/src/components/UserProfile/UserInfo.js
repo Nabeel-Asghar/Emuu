@@ -12,7 +12,7 @@ import {
 
 const displayName = localStorage.getItem("displayName");
 
-function UserInfo() {
+function UserInfo({subscribersCount}) {
   const [dateJoined, setDateJoined] = useState("");
   const [Subscribers, setSubscribers] = useState("");
   const [VidNum, setVidNum] = useState("");
@@ -29,7 +29,7 @@ function UserInfo() {
 
       <p className="about__info">Joined {dateJoined}</p>
       <hr />
-      <p className="about__info">{Subscribers} Subscribers</p>
+      <p className="about__info">{subscribersCount} Subscribers</p>
       <hr />
       <p className="about__info">{VidNum} Videos posted</p>
     </div>

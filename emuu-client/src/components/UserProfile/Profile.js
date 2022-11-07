@@ -4,6 +4,7 @@ import "./Profile.scss";
 import "../../Firebase.js";
 import Feeds from "./Feeds";
 import UserInfo from "./UserInfo";
+import SubscribersList from "./SubscribersList";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../../Firebase.js";
 import { Link, useHistory, useLocation } from "react-router-dom";
@@ -180,6 +181,7 @@ function Profile() {
   const subscribeUser = () => {
     console.log("subscribed");
   };
+const subscribersCount=localStorage.getItem("subscribersCount")
 
   return (
     <>
@@ -278,9 +280,11 @@ function Profile() {
             </div>
           </div>
           <div className="bottom-portion">
-            <div className="right-side"></div>
-            <UserInfo />
-
+            <div className="right-side" />
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              <UserInfo subscribersCount={subscribersCount}/>
+              <SubscribersList />
+            </div>
             <div className="left-side"></div>
             <Feeds />
           </div>
