@@ -14,6 +14,7 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import React, { useState, useEffect } from "react";
+import "./login.scss";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -47,6 +48,7 @@ function Login() {
         localStorage.setItem("auth", true);
         localStorage.setItem("user", JSON.stringify(userCredential.user));
         localStorage.setItem("displayName", user.displayName);
+        localStorage.setItem("userProfileImg", user.ProfilePictureUrl);
         history.push("/");
         window.location.reload();
       })
@@ -56,19 +58,19 @@ function Login() {
 
         switch (errorMessage.split(")")[0].split("/")[1]) {
           case "invalid-email":
-            setError("Invalid Credentials");
+            setError("The email or password entered do not match our existing records.");
             break;
           case "internal-error":
-            setError("Both feilds are required");
+            setError("Both fields are required!");
             break;
           case "user-not-found":
             setError("User not found");
             break;
           case "wrong-password":
-            setError("Invalid Credentials");
+            setError("The email or password entered do not match our existing records.");
             break;
           default:
-            setError("An error occured");
+            setError("An error occurred");
         }
       });
   };
@@ -170,7 +172,7 @@ function Login() {
                 </Button>
                 <Grid container>
                   <Grid item>
-                    <Link href="/Register" variant="body2">
+                    <Link className ="registerLink" href="/Register">
                       Don't have an account? Sign Up
                     </Link>
                   </Grid>

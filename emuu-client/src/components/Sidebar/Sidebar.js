@@ -1,5 +1,4 @@
-import React from "react";
-import "./Sidebar.scss";
+import React, { useEffect, useState } from "react";import "./Sidebar.scss";
 import { useHistory } from "react-router-dom";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -20,6 +19,19 @@ import HomeIcon from "@mui/icons-material/Home";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Avatar } from "@mui/material";
+import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db, storage } from "../../Firebase.js";
+import { Link } from "react-router-dom";
+import {
+  getDoc,
+  getDocs,
+  setDoc,
+  doc,
+  collection,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
 
 import AppContext from "../../AppContext";
 
@@ -90,20 +102,27 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer({ sideBarState }) {
+export default function MiniDrawer({ sideBarState, video, setVideo, setUserProfile  }) {
   const theme = useTheme();
   const history = useHistory();
-
+  const [ProfilePic,setProfilePic]=useState('');
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
   const usersArr = firebaseData.filter(
     (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
   );
-  const authUsersNavigation = ["Home", "UserProfile", "UploadVideo"];
+  const authUsersNavigation = ["Home", "User Profile", "Upload Video"];
   const unAuthorizedNavigation = ["Home"];
   const isAuthorized = localStorage.getItem("auth");
   const currentNavigation =
     isAuthorized === "true" ? authUsersNavigation : unAuthorizedNavigation;
+ const userProfileImg = localStorage.getItem("userProfileImg");
+    const displayName = localStorage.getItem("displayName");
+    const docRef = doc(db, "Users", displayName);
 
+    getDoc(docRef).then((docSnap) => {
+      setProfilePic(docSnap.data().ProfilePictureUrl);
+    });
+    console.log(ProfilePic);
   return (
     <AppContext.Consumer>
       {(context) => (
@@ -151,7 +170,7 @@ export default function MiniDrawer({ sideBarState }) {
                       {index === 0 ? (
                         <HomeIcon fontSize="large" />
                       ) : index === 1 ? (
-                        <AccountCircleIcon fontSize="large" />
+                        <Avatar src={ProfilePic} fontSize="large" alt="avatar-alt" />
                       ) : (
                         index === 2 && <CloudUploadIcon fontSize="large" />
                       )}
@@ -166,7 +185,7 @@ export default function MiniDrawer({ sideBarState }) {
             </List>
             <Divider />
             <List>
-              {context.isSidebarOpen && isAuthorized === "true" && (
+              {context.isSidebarOpen && isAuthorized==="true" &&(
                 <Typography
                   className="subscribers"
                   variant="subtitle1"
@@ -176,39 +195,39 @@ export default function MiniDrawer({ sideBarState }) {
                   Subscriptions
                 </Typography>
               )}
-              {isAuthorized === "true" &&
-                usersArr.map((user, index) => (
-                  <ListItem
-                    key={index}
-                    disablePadding
-                    sx={{ display: "block" }}
+              {/*  {isAuthorized==="true" &&
+              usersArr.map((user, index) => (
+                <ListItem key={index} disablePadding sx={{ display: "block" }}>
+                  <ListItemButton
+                    sx={{
+                      minHeight: 48,
+                      justifyContent: context.isSidebarOpen
+                        ? "initial"
+                        : "center",
+                      px: 2.5,
+                    }}
+                    onClick={() =>
+                    history.push("/creator")
+
+}
                   >
-                    <ListItemButton
+                    <ListItemIcon
                       sx={{
-                        minHeight: 48,
-                        justifyContent: context.isSidebarOpen
-                          ? "initial"
-                          : "center",
-                        px: 2.5,
+                        minWidth: 0,
+                        mr: context.isSidebarOpen ? 3 : "auto",
+                        justifyContent: "center",
                       }}
-                      onClick={() => history.push("/creator")}
                     >
-                      <ListItemIcon
-                        sx={{
-                          minWidth: 0,
-                          mr: context.isSidebarOpen ? 3 : "auto",
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Avatar />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={user.Username}
-                        sx={{ opacity: context.isSidebarOpen ? 1 : 0 }}
-                      />
-                    </ListItemButton>
-                  </ListItem>
-                ))}
+                      <Avatar />
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={user.Username}
+                      sx={{ opacity: context.isSidebarOpen ? 1 : 0 }}
+                    />
+                  </ListItemButton>
+                </ListItem>
+              ))
+             }*/}
             </List>
           </Drawer>
         </Box>

@@ -17,7 +17,6 @@ import {
 import { createAutocomplete } from "@algolia/autocomplete-core";
 import { Link } from "react-router-dom";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
-//import Video from "../common/video/Video";
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
 import { db } from "../../Firebase.js";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";

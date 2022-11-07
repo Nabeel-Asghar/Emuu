@@ -21,6 +21,7 @@ import {
   query,
   where,
 } from "firebase/firestore";
+
 import EmuuLogo from "./EmuuLogo.png";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import HeaderSearch from "./TestAlgoliaSearchInput";
@@ -81,7 +82,9 @@ function HeaderPostLogin({ search, setSearch }) {
             <HeaderSearch />
             <ProfileMenu />
           </Container>
+
         </Navbar>
+
       ))}
     </>
   );

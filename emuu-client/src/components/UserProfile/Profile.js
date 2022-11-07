@@ -18,6 +18,7 @@ import {
   where,
   onSnapshot,
 } from "firebase/firestore";
+
 import ReactDOM from "react-dom";
 import Cropper from "react-easy-crop";
 import Slider from "@material-ui/core/Slider";
@@ -36,6 +37,7 @@ const ORIENTATION_TO_ANGLE = {
   6: 90,
   8: -90,
 };
+
 
 function Profile({ setVideo, video }, { classes }) {
   const [percent, setPercent] = useState(0);
@@ -147,11 +149,12 @@ function Profile({ setVideo, video }, { classes }) {
 
   return (
     <>
-      <HeaderPostLogin />
+      <NavBarNoSearch />
       <div className="MainProfileDiv">
         <div className="profile-container">
           <div className="top-portion">
             <div className="user-profile-bg-image">
+
               <div>
                 {imageSrc ? (
                   <React.Fragment>
@@ -220,6 +223,7 @@ function Profile({ setVideo, video }, { classes }) {
                   </div>
                 )}
               </div>{" "}
+
             </div>
           </div>
 
@@ -232,6 +236,8 @@ function Profile({ setVideo, video }, { classes }) {
                 type="file"
                 onChange={async (e) => {
                   uploadProfile(e);
+                 setTimeout(() => window.location.reload(), 1500);
+                  return false;
                 }}
                 accept="image/jpeg"
               />

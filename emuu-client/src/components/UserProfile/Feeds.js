@@ -35,6 +35,8 @@ import Tab from "@material-ui/core/Tab";
 import TabContext from "@material-ui/lab/TabContext";
 import TabList from "@material-ui/lab/TabList";
 import TabPanel from "@material-ui/lab/TabPanel";
+import axios from "axios";
+
 
 function Feeds({ setVideo }) {
   const [recentVideos, setRecentVideos] = useState([]);
@@ -55,21 +57,23 @@ function Feeds({ setVideo }) {
 
   //Videos for Videos feed
   async function getVideos() {
-    //Get all video data
-    const docRef = collection(db, "Videos");
-    const queryData = await query(docRef, where("Username", "==", displayName));
-    const querySnapshot = await getDocs(queryData);
-    //Create array for recent videos and sort by upload date
-    const querySnapshotRecent = [];
-    querySnapshot.forEach((doc) => querySnapshotRecent.push(doc));
-    sortVideosByTime(querySnapshotRecent);
-    const recentVideosArr = [];
-    querySnapshotRecent.forEach((doc) => {
-      recentVideosArr.push(doc.data());
-    });
 
-    setRecentVideos(recentVideosArr);
-  }
+ await axios.post("http://localhost:8080/auth/video", JSON.stringify({displayName}))
+  .then(function (response){
+  console.log(response);
+  })
+    try {
+       		const response = await axios.get("http://localhost:8080/auth/video");
+       		console.log(response.data.message);
+       		//setTopVideos(response.data.message.MostViewed)
+       		setRecentVideos(response.data.message.RecentUpload)
+       		//console.log(topVideos)
+       	}
+       	catch (error) {
+       		console.log(error);
+       	}
+     }
+
 
   async function getLikedVideos() {
     //Get all video data
@@ -124,8 +128,10 @@ function Feeds({ setVideo }) {
             <div className="videos__container">
               {recentVideos &&
                 recentVideos.map((video) => (
+
                   <Card sx={{ maxWidth: 380, height: 375 }}>
                     <CardMedia component="img" image={video.thumbnailUrl} />
+
                     <CardContent>
                       <CardHeader
                         avatar={
@@ -147,7 +153,7 @@ function Feeds({ setVideo }) {
                                   setVideo(video);
                                 }}
                               >
-                                {video.VideoTitle}
+                                {video.Title}
                               </span>
                             </Link>
                           </Typography>
