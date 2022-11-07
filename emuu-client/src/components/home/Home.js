@@ -115,13 +115,11 @@ function Home({ setVideo }, { setUserProfile }) {
         console.log(response);
       });
     const response = await axios.get("http://localhost:8080/auth/video");
-    console.log(response.data.message);
     setTopVideos(response.data.message.MostViewed);
     setRecentVideos(response.data.message.RecentUpload);
     setPages(response.data.message.Pages);
-    console.log(response.data.message.RecentUpload)
+    console.log(response.data.message.RecentUpload);
   }
-
 
   useEffect(async () => {
     await getVideos();
