@@ -159,7 +159,6 @@ function FileUpload() {
       (snapshot) => {
         // download url
 
-
         getDownloadURL(uploadTask.snapshot.ref).then((URL) => {
           if (!URL) {
             setUploadStatus(
@@ -174,7 +173,6 @@ function FileUpload() {
         });
       }
     );
-
   };
 
   useEffect(async () => {

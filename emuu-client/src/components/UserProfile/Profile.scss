@@ -1,4 +1,4 @@
-$main-color: #4dd6b6;
+$main-color: #0f0f0f;
 $secondary-color: #26343d;
 #prf-bg-img {
   height: 50vh;
@@ -6,12 +6,11 @@ $secondary-color: #26343d;
   margin-top: -12rem;
 }
 .MainProfileDiv {
-  background: black;
-
+  background: #0f0f0f;
 
   .profile-container {
     width: 100%;
-    background: black;
+    background: #0f0f0f;
     margin: auto;
     border-radius: 20px;
 
@@ -19,50 +18,49 @@ $secondary-color: #26343d;
       width: 100%;
       position: relative;
       .reactEasyCrop_CropArea {
-          width: 100vw !important;
-          height: 33vh !important;
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          transform: translate(-50%, -75.4%);
-          border: 1px solid rgba(255, 255, 255, 0.5);
-          box-sizing: border-box;
-          box-shadow: 0 0 0 9999em;
-          color: rgba(0, 0, 0, 0.5);
-          overflow: hidden;
+        width: 100vw !important;
+        height: 33vh !important;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -75.4%);
+        border: 1px solid rgba(255, 255, 255, 0.5);
+        box-sizing: border-box;
+        box-shadow: 0 0 0 9999em;
+        color: rgba(0, 0, 0, 0.5);
+        overflow: hidden;
       }
       .reactEasyCrop_Contain {
-            width: 100vw !important;
-          height: 100% !important;
-           transform: translate(-50%, -75.4%);
-          margin: auto;
-          position: absolute;
-          top: 0;
-          bottom: 0;
-          left: 0;
-          right: 0;
+        width: 100vw !important;
+        height: 100% !important;
+        transform: translate(-50%, -75.4%);
+        margin: auto;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
       }
-      .submit_Container{
-          background: black;
-    padding-inline: 50px;
-
+      .submit_Container {
+        background: black;
+        padding-inline: 50px;
       }
       .reactEasyCrop_Container {
-      background: black;
-          height: 50vh;
-          width: 100vw;
-          position: relative;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
-          overflow: hidden;
-          user-select: none;
-          touch-action: none;
-          cursor: move;
-          display: flex;
-          justify-content: center;
-          align-items: center;
+        background: black;
+        height: 50vh;
+        width: 100vw;
+        position: relative;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        overflow: hidden;
+        user-select: none;
+        touch-action: none;
+        cursor: move;
+        display: flex;
+        justify-content: center;
+        align-items: center;
       }
       .user-profile-bg-image {
         width: 100vw;
@@ -152,7 +150,7 @@ $secondary-color: #26343d;
       display: flex;
       flex-direction: column;
       margin-top: 5rem;
-      background: black;
+      background: #0f0f0f;
       border-radius: 20px;
     }
   }

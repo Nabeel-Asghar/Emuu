@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "./Feeds.scss";
 import { Avatar } from "@mui/material";
-import YouTubeJSON from "../data/youtube-videos.json";
-import { AxiosContext } from "react-axios/lib/components/AxiosProvider";
 import { storage } from "../../Firebase.js";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { db } from "../../Firebase.js";
 import {
   getFirestore,
@@ -100,7 +97,7 @@ function Feeds({ setVideo, setUserProfile }) {
             <div className="videos__container">
               {recentVideos &&
                 recentVideos.map((video) => (
-                  <Card sx={{ maxWidth: 380, height: 400 }}>
+                  <Card sx={{ maxWidth: 380, height: 375 }}>
                     <CardMedia component="img" image={video.thumbnailUrl} />
                     <CardContent>
                       <CardHeader
@@ -137,9 +134,15 @@ function Feeds({ setVideo, setUserProfile }) {
                           fontWeight="medium"
                           fontSize="18px"
                         >
-                          {" "}
-                          {video.Username} &ensp;&ensp;&ensp;&ensp;&ensp;
                           {video.Likes} Likes &#x2022; {video.Views} Views
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          fontWeight="medium"
+                          fontSize="18px"
+                        >
+                          {video.Username}
                         </Typography>
                       </div>
                     </CardContent>
