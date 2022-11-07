@@ -234,7 +234,7 @@ export default function MiniDrawer() {
                   align="left"
                   ml={2}
                 >
-                  Subscribers
+                  Subscriptions
                 </Typography>
               )}
               {updatedSubscribersListCompleteData.map((user, index) => (
