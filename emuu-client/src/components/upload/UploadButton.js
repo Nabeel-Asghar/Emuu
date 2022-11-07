@@ -63,6 +63,7 @@ function FileUpload() {
   const [videoDate, setVideoDate] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [userName, setUserName] = useState("");
+  const [uploadStatus, setUploadStatus] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const displayName = localStorage.getItem("displayName");
   const docRef = doc(db, "Users", displayName);
@@ -160,7 +161,6 @@ function FileUpload() {
       (snapshot) => {
         // download url
 
-
         getDownloadURL(uploadTask.snapshot.ref).then((URL) => {
           if (!URL) {
             setUploadStatus(
@@ -175,7 +175,6 @@ function FileUpload() {
         });
       }
     );
-
   };
 
   useEffect(async () => {

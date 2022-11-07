@@ -1,17 +1,30 @@
 .feed-container {
   height: 100%;
   margin: 0px !important;
-  padding: 1rem;
-  box-shadow: 1rem 1rem 2rem 1rem #262626;
-  border-radius: 0.5rem;
   text-align: left;
 
+  .css-185gdzj-MuiCardHeader-root {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-align-items: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    padding: 5px !important;
+  }
+  .css-46bh2p-MuiCardContent-root {
+    padding: 16px;
+  }
   .feed__heading {
     margin-top: 10px;
     font-weight: normal;
     padding-bottom: 20px;
   }
-
+  .videoInfo {
+    padding-left: 80px;
+  }
   .videos__container {
     display: inline-flex;
     flex-wrap: wrap;

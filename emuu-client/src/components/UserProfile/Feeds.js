@@ -121,7 +121,6 @@ function Feeds({ setVideo }) {
             <Tab label="Videos" value="1" />
             <Tab label="Liked Videos" value="2" />
             <Tab label="Subscriptions" value="3" />
-
           </TabList>
         </Box>
         <TabPanel value="1">
@@ -129,8 +128,10 @@ function Feeds({ setVideo }) {
             <div className="videos__container">
               {recentVideos &&
                 recentVideos.map((video) => (
-                  <Card sx={{ maxWidth: 380, height: 400 }}>
-                    <CardMedia component="img" image={video.ThumbnailUrl} />
+
+                  <Card sx={{ maxWidth: 380, height: 375 }}>
+                    <CardMedia component="img" image={video.thumbnailUrl} />
+
                     <CardContent>
                       <CardHeader
                         avatar={
@@ -166,9 +167,15 @@ function Feeds({ setVideo }) {
                           fontWeight="medium"
                           fontSize="18px"
                         >
-                          {" "}
-                          {video.Username} &ensp;&ensp;&ensp;&ensp;&ensp;
                           {video.Likes} Likes &#x2022; {video.Views} Views
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          fontWeight="medium"
+                          fontSize="18px"
+                        >
+                          {video.Username}
                         </Typography>
                       </div>
                     </CardContent>
@@ -182,15 +189,12 @@ function Feeds({ setVideo }) {
             <div className="videos__container">
               {likedVideos &&
                 likedVideos.map((video) => (
-                  <Card sx={{ maxWidth: 395, height: 400 }}>
+                  <Card sx={{ maxWidth: 380, height: 400 }}>
                     <CardMedia component="img" image={video.thumbnailUrl} />
                     <CardContent>
                       <CardHeader
                         avatar={
-                          <Avatar
-                            sx={{ width: 60, height: 60 }}
-
-                          ></Avatar>
+                          <Avatar sx={{ width: 60, height: 60 }}></Avatar>
                         }
                         title={
                           <Typography
@@ -219,9 +223,15 @@ function Feeds({ setVideo }) {
                           fontWeight="medium"
                           fontSize="18px"
                         >
-                          {" "}
-                          {video.Username} &ensp;&ensp;&ensp;&ensp;&ensp;
                           {video.Likes} Likes &#x2022; {video.Views} Views
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          fontWeight="medium"
+                          fontSize="18px"
+                        >
+                          {video.Username}
                         </Typography>
                       </div>
                     </CardContent>

@@ -242,7 +242,7 @@ function Home({ setVideo }, { setUserProfile }) {
                   {topVideos &&
                     topVideos.map((video, index) => (
                       <div>
-                        <Card sx={{ maxWidth: 395, height: 400 }}>
+                        <Card sx={{ maxWidth: 395, height: 375 }}>
                           <CardMedia
                             component="img"
                             image={video.thumbnailUrl}
@@ -279,9 +279,15 @@ function Home({ setVideo }, { setUserProfile }) {
                                 fontWeight="medium"
                                 fontSize="18px"
                               >
-                                {" "}
-                                {video.Username} &ensp;&ensp;&ensp;&ensp;&ensp;
                                 {video.Likes} Likes &#x2022; {video.Views} Views
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                fontWeight="medium"
+                                fontSize="18px"
+                              >
+                                {video.Username}
                               </Typography>
                             </div>
                           </CardContent>
@@ -337,9 +343,15 @@ function Home({ setVideo }, { setUserProfile }) {
                                 fontWeight="medium"
                                 fontSize="18px"
                               >
-                                {" "}
-                                {video.Username} &ensp;&ensp;&ensp;&ensp;&ensp;
                                 {video.Likes} Likes &#x2022; {video.Views} Views
+                              </Typography>
+                              <Typography
+                                variant="body2"
+                                color="text.secondary"
+                                fontWeight="medium"
+                                fontSize="18px"
+                              >
+                                {video.Username}
                               </Typography>
                             </div>
                           </CardContent>
