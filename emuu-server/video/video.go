@@ -99,16 +99,32 @@ func SetVideos(c *gin.Context) {
 		}
 		sortMostViewed(mostViewedArr)
 		sortRecent(recentArr)
+		var pageAmount int
+		pageAmount = int(math.Ceil(float64(len(recentArr)) / 3))
+		if pageAmount < PageNum {
+			c.JSON(http.StatusOK, gin.H{"message": "No data"})
+		}
+		if len(recentArr) > 3 {
+			if len(recentArr) > PageNum*3 {
+				recentArr = recentArr[(PageNum-1)*3 : (PageNum)*3]
+
+			} else {
+				recentArr = recentArr[(PageNum-1)*3 : len(recentArr)]
+
+			}
+		}
 		if len(mostViewedArr) > 8 {
 			mostViewedArr = mostViewedArr[0:8]
 		}
 		response := struct {
 			MostViewed   []Video
 			RecentUpload []Video
+			Pages        int
 		}{
 
 			MostViewed:   mostViewedArr,
 			RecentUpload: recentArr,
+			Pages:        pageAmount,
 		}
 
 		c.JSON(http.StatusOK, gin.H{"message": response})
@@ -159,12 +175,11 @@ func SetVideos(c *gin.Context) {
 		if len(mostViewedArr) > 8 {
 			mostViewedArr = mostViewedArr[0:8]
 		}
-		for i, a := range recentArr {
-			if a.UploadTime == 0 {
-				recentArr = append(recentArr[:i], recentArr[i+1:]...)
-				fmt.Println(recentArr)
-			}
-		}
+		//for i, a := range recentArr {
+		//	if a.UploadTime == 0 {
+		//		recentArr = append(recentArr[:i], recentArr[i+1:]...)
+		//		fmt.Println(recentArr)
+		//	}
 
 		response := struct {
 			MostViewed   []Video

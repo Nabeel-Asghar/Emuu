@@ -109,6 +109,10 @@ function Feeds({ setVideo }) {
   const docRef = doc(db, "Users", displayName);
   const [ProfilePic, setProfilePic] = useState("");
    const [sort, setSort] = React.useState("Recently Uploaded");
+     const [page, setPage] = useState(1);
+
+
+
 
   getDoc(docRef).then((docSnap) => {
     setProfilePic(docSnap.data().ProfilePictureUrl);
@@ -120,18 +124,41 @@ function Feeds({ setVideo }) {
     setValue(newValue);
   };
 
+
+  window.addEventListener("scroll", ()=>{
+  if(window.scrollY == window.innerHeight)
+  scroll()})
+
+
+  function scroll(e){
+  if(value== '1' && window.location.pathname=="/UserProfile"){
+  //request for more videos
+setPage(page+1)
+
+  }}
+useEffect(async ()=>{
+await getVideos()}, [page])
+
+
+
   //Videos for Videos feed
   async function getVideos() {
+  const disAndPage = {
+        displayName: displayName,
+        pageNumber: page.toString(),
+      };
     await axios
-      .post("http://localhost:8080/auth/video", JSON.stringify({ displayName }))
+      .post("http://localhost:8080/auth/video", JSON.stringify({ ...disAndPage }))
       .then(function (response) {
         console.log(response);
       });
     try {
       const response = await axios.get("http://localhost:8080/auth/video");
       console.log(response.data.message);
+      //if(response.data.message.RecentUpload){
       setTopVideos(response.data.message.MostViewed)
-      setRecentVideos(response.data.message.RecentUpload);
+      setRecentVideos([...recentVideos,...response.data.message.RecentUpload]);
+     // }
       //console.log(topVideos)
     } catch (error) {
       console.log(error);
@@ -158,9 +185,21 @@ function Feeds({ setVideo }) {
     setLikedVideos(likedVideosArr);
   }
 
+  //Sort function for date uploaded
+  function sortVideosByTime(videos) {
+    for (let i = 0; i < videos.length - 1; i++) {
+      for (let j = 0; j < videos.length - 1 - i; j++) {
+        if (videos[i].data().uploadTime < videos[i + 1].data().uploadTime) {
+          let temp = videos[i];
+          videos[i] = videos[i + 1];
+          videos[i + 1] = temp;
+        }
+      }
+    }
+  }
 
   useEffect(async () => {
-    await getVideos();
+
     await getLikedVideos();
   }, []);
 
@@ -181,7 +220,7 @@ function Feeds({ setVideo }) {
           <div className="feed-container">
 
           <LongMenu sort= {sort} setSort={setSort}/>
-            <div className="videos__container">
+            <div className="videos__container" onScroll={e=> console.log(e)}>
 
               {(recentVideos && sort =="Recently Uploaded") &&
                 recentVideos.map((video) => (
