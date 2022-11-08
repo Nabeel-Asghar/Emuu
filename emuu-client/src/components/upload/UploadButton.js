@@ -67,7 +67,7 @@ function FileUpload() {
   const [thumbnailUrl, setThumbnailUrl] = useState("");
   const displayName = localStorage.getItem("displayName");
   const docRef = doc(db, "Users", displayName);
-  const [uploadStatus, setUploadStatus] = useState("");
+
 
   //upload data structure
   const uploadData = {
