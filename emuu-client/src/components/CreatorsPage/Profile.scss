@@ -1,4 +1,4 @@
-$main-color: #4dd6b6;
+$main-color: #0f0f0f;
 $secondary-color: #26343d;
 #prf-bg-img {
   height: 50vh;
@@ -6,12 +6,11 @@ $secondary-color: #26343d;
   margin-top: -12rem;
 }
 .MainProfileDiv {
-  background: black;
-  padding: 20px 0 20px 0;
+  background: #0f0f0f;
 
   .profile-container {
-    width: 90%;
-    background: black;
+    width: 100%;
+    background: #0f0f0f;
     margin: auto;
     border-radius: 20px;
 
@@ -22,7 +21,7 @@ $secondary-color: #26343d;
         width: 100%;
         background: $main-color;
         overflow: hidden;
-        border-radius: 20px 20px 0 0;
+        border-radius: 0px 0px 0 0;
         position: relative;
       }
     }
@@ -82,7 +81,7 @@ $secondary-color: #26343d;
       display: flex;
       flex-direction: column;
       margin-top: 5rem;
-      background: black;
+      background: #0f0f0f;
       border-radius: 20px;
     }
   }

@@ -203,8 +203,10 @@ function Feeds({ setVideo }) {
               {recentVideos &&
                 sort == "Recently Uploaded" &&
                 recentVideos.map((video) => (
-                  <Card sx={{ maxWidth: 380, height: 400 }}>
-                    <CardMedia component="img" image={video.ThumbnailUrl} />
+
+                  <Card sx={{ maxWidth: 380, height: 375 }}>
+                    <CardMedia component="img" image={video.thumbnailUrl} />
+
                     <CardContent>
                       <CardHeader
                         avatar={
@@ -240,9 +242,15 @@ function Feeds({ setVideo }) {
                           fontWeight="medium"
                           fontSize="18px"
                         >
-                          {" "}
-                          {video.Username} &ensp;&ensp;&ensp;&ensp;&ensp;
                           {video.Likes} Likes &#x2022; {video.Views} Views
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          fontWeight="medium"
+                          fontSize="18px"
+                        >
+                          {video.Username}
                         </Typography>
                       </div>
                     </CardContent>
@@ -316,7 +324,7 @@ function Feeds({ setVideo }) {
             <div className="videos__container">
               {likedVideos &&
                 likedVideos.map((video) => (
-                  <Card sx={{ maxWidth: 395, height: 400 }}>
+                  <Card sx={{ maxWidth: 380, height: 400 }}>
                     <CardMedia component="img" image={video.thumbnailUrl} />
                     <CardContent>
                       <CardHeader
@@ -350,9 +358,15 @@ function Feeds({ setVideo }) {
                           fontWeight="medium"
                           fontSize="18px"
                         >
-                          {" "}
-                          {video.Username} &ensp;&ensp;&ensp;&ensp;&ensp;
                           {video.Likes} Likes &#x2022; {video.Views} Views
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          fontWeight="medium"
+                          fontSize="18px"
+                        >
+                          {video.Username}
                         </Typography>
                       </div>
                     </CardContent>
