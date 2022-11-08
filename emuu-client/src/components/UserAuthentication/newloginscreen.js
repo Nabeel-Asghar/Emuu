@@ -58,7 +58,9 @@ function Login() {
 
         switch (errorMessage.split(")")[0].split("/")[1]) {
           case "invalid-email":
-            setError("The email or password entered do not match our existing records.");
+            setError(
+              "The email or password entered do not match our existing records."
+            );
             break;
           case "internal-error":
             setError("Both fields are required!");
@@ -67,7 +69,9 @@ function Login() {
             setError("User not found");
             break;
           case "wrong-password":
-            setError("The email or password entered do not match our existing records.");
+            setError(
+              "The email or password entered do not match our existing records."
+            );
             break;
           default:
             setError("An error occurred");
@@ -172,7 +176,7 @@ function Login() {
                 </Button>
                 <Grid container>
                   <Grid item>
-                    <Link className ="registerLink" href="/Register">
+                    <Link className="registerLink" href="/Register">
                       Don't have an account? Sign Up
                     </Link>
                   </Grid>

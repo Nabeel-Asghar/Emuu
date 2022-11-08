@@ -155,6 +155,7 @@ function Profile({ setVideo, video }, { classes }) {
           <div className="top-portion">
             <div className="user-profile-bg-image">
 
+
               <div>
                 {imageSrc ? (
                   <React.Fragment>
@@ -236,7 +237,7 @@ function Profile({ setVideo, video }, { classes }) {
                 type="file"
                 onChange={async (e) => {
                   uploadProfile(e);
-                 setTimeout(() => window.location.reload(), 1500);
+                  setTimeout(() => window.location.reload(), 1500);
                   return false;
                 }}
                 accept="image/jpeg"
@@ -259,6 +260,7 @@ function Profile({ setVideo, video }, { classes }) {
             <div className="right-side"></div>
 
             <div className="left-side"></div>
+
             <Feeds setVideo={setVideo} />
           </div>
         </div>

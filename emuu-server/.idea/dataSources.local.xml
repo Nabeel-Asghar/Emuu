@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="dataSourceStorageLocal" created-in="GO-222.4345.24">
+    <data-source name="@dev.crdtn1xchbnl.us-east-2.rds.amazonaws.com" uuid="76fa4efb-92a1-46b5-9081-5bce5e992412">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="MYSQL" exact-version="0" />
+      <secret-storage>forget</secret-storage>
+      <schema-mapping />
+    </data-source>
+    <data-source name="envite@dev-pg.crdtn1xchbnl.us-east-2.rds.amazonaws.com" uuid="b6a89516-905e-4c88-9e66-07d53ac68fe7">
+      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="POSTGRES" exact-version="0" />
+      <secret-storage>forget</secret-storage>
+      <schema-mapping />
+    </data-source>
+  </component>
+</project>

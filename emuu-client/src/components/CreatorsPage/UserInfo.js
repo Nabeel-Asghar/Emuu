@@ -13,7 +13,6 @@ import {
 const displayName = localStorage.getItem("CreatorName");
 
 function UserInfo() {
-
   const [dateJoined, setDateJoined] = useState("");
   const [Subscribers, setSubscribers] = useState("");
   const [VidNum, setVidNum] = useState("");
@@ -25,7 +24,6 @@ function UserInfo() {
   });
 
   return (
-
     <div className="Main-UserInfo-Container">
       <h3 className="about">About</h3>
 

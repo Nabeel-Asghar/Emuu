@@ -2374,6 +2374,76 @@
     "prop-types" "^15.7.2"
     "react-is" "^16.8.0 || ^17.0.0"
 
+"@material/animation@^1.0.0":
+  "integrity" "sha512-Ed5/vggn6ZhSJ87yn3ZS1d826VJNFz73jHF2bSsgRtHDoB8KCuOwQMfdgAgDa4lKDF6CDIPCKBZPKrs2ubehdw=="
+  "resolved" "https://registry.npmjs.org/@material/animation/-/animation-1.0.0.tgz"
+  "version" "1.0.0"
+  dependencies:
+    "tslib" "^1.9.3"
+
+"@material/base@^1.0.0":
+  "integrity" "sha512-5dxFp46x5FA+Epg6YHLzN+5zRt9S2wR84UdvVAEJ1egea94m9UHUg7y9tAnNSN16aexRSywmzyLwPr+i8PGEYA=="
+  "resolved" "https://registry.npmjs.org/@material/base/-/base-1.0.0.tgz"
+  "version" "1.0.0"
+  dependencies:
+    "tslib" "^1.9.3"
+
+"@material/dom@^1.1.0":
+  "integrity" "sha512-+HWW38ZaM2UBPu4+7QCusLDSf4tFT31rsEXHkTkxYSg/QpDivfPx6YDz4OmYtafmhPR1d1YjqB3MYysUHdodyw=="
+  "resolved" "https://registry.npmjs.org/@material/dom/-/dom-1.1.0.tgz"
+  "version" "1.1.0"
+  dependencies:
+    "tslib" "^1.9.3"
+
+"@material/feature-targeting@^0.44.1":
+  "integrity" "sha512-90cc7njn4aHbH9UxY8qgZth1W5JgOgcEdWdubH1t7sFkwqFxS5g3zgxSBt46TygFBVIXNZNq35Xmg80wgqO7Pg=="
+  "resolved" "https://registry.npmjs.org/@material/feature-targeting/-/feature-targeting-0.44.1.tgz"
+  "version" "0.44.1"
+
+"@material/ripple@^2.3.0":
+  "integrity" "sha512-ejXR0nstERofFhssRyFlwOLgebwm2uGbarHtWZ2/+7QY2Th/Z1wOqNb2h/WRoShsJXK11RUsochb6BJrg30u7w=="
+  "resolved" "https://registry.npmjs.org/@material/ripple/-/ripple-2.3.0.tgz"
+  "version" "2.3.0"
+  dependencies:
+    "@material/animation" "^1.0.0"
+    "@material/base" "^1.0.0"
+    "@material/dom" "^1.1.0"
+    "@material/feature-targeting" "^0.44.1"
+    "@material/theme" "^1.1.0"
+    "tslib" "^1.9.3"
+
+"@material/rtl@^0.42.0":
+  "integrity" "sha512-VrnrKJzhmspsN8WXHuxxBZ69yM5IwhCUqWr1t1eNfw3ZEvEj7i1g3P31HGowKThIN1dc1Wh4LE14rCISWCtv5w=="
+  "resolved" "https://registry.npmjs.org/@material/rtl/-/rtl-0.42.0.tgz"
+  "version" "0.42.0"
+
+"@material/tabs@^2.3.0":
+  "integrity" "sha512-EeLy/w8foV3+NT1K0hb86CZk+Z4zatamfDUQICYyNeEDSytq4INaMwzw0n2By1Zy0mM4e0fRrnSeSgznyXqRdg=="
+  "resolved" "https://registry.npmjs.org/@material/tabs/-/tabs-2.3.0.tgz"
+  "version" "2.3.0"
+  dependencies:
+    "@material/animation" "^1.0.0"
+    "@material/base" "^1.0.0"
+    "@material/ripple" "^2.3.0"
+    "@material/rtl" "^0.42.0"
+    "@material/theme" "^1.1.0"
+    "@material/typography" "^2.3.0"
+    "tslib" "^1.9.3"
+
+"@material/theme@^1.1.0":
+  "integrity" "sha512-YYUV9Rhbx4r/EMb/zoOYJUWjhXChNaLlH1rqt3vpNVyxRcxGqoVMGp5u1XALBCFiD9dACPKLIkKyRYa928nmPQ=="
+  "resolved" "https://registry.npmjs.org/@material/theme/-/theme-1.1.0.tgz"
+  "version" "1.1.0"
+  dependencies:
+    "@material/feature-targeting" "^0.44.1"
+
+"@material/typography@^2.3.0":
+  "integrity" "sha512-NtWVVvwG9Te6/kuIl4fEwDcXGCS7mfPgo5CKPyxcK6y0hJHv6yRHpipJT9D4ZlXw0sQx9B33doOK7iYJtwBBZw=="
+  "resolved" "https://registry.npmjs.org/@material/typography/-/typography-2.3.0.tgz"
+  "version" "2.3.0"
+  dependencies:
+    "@material/feature-targeting" "^0.44.1"
+
 "@mui/base@5.0.0-alpha.102":
   "integrity" "sha512-5e/qAIP+DlkrZxIt/cwnDw/A3ii22WkoEoWKHyu4+oeGs3/1Flh7qLaN4h5EAIBB9TvTEZEUzvmsTInmIj6ghg=="
   "resolved" "https://registry.npmjs.org/@mui/base/-/base-5.0.0-alpha.102.tgz"
@@ -13193,6 +13263,11 @@
   "integrity" "sha512-aZW88SY8kQbU7gpV19lN24LtXh/yD4ZZg6qieAJDDg+YBsJcSmLGK9QpnUjAKVG/xefmvJGd1WUmfpT/g6AJGA=="
   "resolved" "https://registry.npmjs.org/tslib/-/tslib-1.11.1.tgz"
   "version" "1.11.1"
+
+"tslib@^1.9.3":
+  "integrity" "sha512-Xni35NKzjgMrwevysHTCArtLDpPvye8zV/0E4EyYn43P7/7qvQwPh9BGkHewbMulVntbigmcT7rdX3BNo9wRJg=="
+  "resolved" "https://registry.npmjs.org/tslib/-/tslib-1.14.1.tgz"
+  "version" "1.14.1"
 
 "tslib@^2.0.1", "tslib@^2.0.3", "tslib@^2.1.0":
   "integrity" "sha512-77EbyPPpMz+FRFRuAFlWMtmgUWGe9UOG2Z25NqCwiIjRhOf5iKGuzSe5P2w1laq+FkRy4p+PCuVkJSGkzTEKVw=="

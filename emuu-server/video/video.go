@@ -8,15 +8,19 @@ import (
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 	"log"
+	"math"
 	"net/http"
+	"strconv"
 	"time"
 )
 
-type DisplayName struct {
-	UserName string `json:"displayName"`
+type DisplayNameAndPage struct {
+	UserName   string `json:"displayName"`
+	PageNumber string `json:"pageNumber"`
 }
 
 var userUN string
+var PageNum int
 
 type Video struct {
 	Username         string   `firestore:"Username"`
@@ -30,7 +34,6 @@ type Video struct {
 	GameTag          string   `firestore:"GameTag"`
 	VideoDescription string   `firestore:"VideoDescription"`
 	UsersThatLiked   []string `firestore:"usersThatLiked"`
-	//Comments         []map[string]interface{} `firestore:"Comments"`
 }
 
 func sortMostViewed(videos []Video) []Video {
@@ -56,13 +59,16 @@ func sortRecent(videos []Video) []Video {
 	}
 	return videos
 }
-func SetUsername(c *gin.Context) {
-	var res DisplayName
+func SetUsernameAndPage(c *gin.Context) {
+	var res DisplayNameAndPage
 	c.ShouldBindJSON(&res)
-	c.JSON(http.StatusOK, gin.H{"message": res.UserName})
+	c.JSON(http.StatusOK, gin.H{"message": res})
 	userUN = res.UserName
+	PageNum, _ = strconv.Atoi(res.PageNumber)
 	fmt.Println(userUN)
+	fmt.Println(PageNum)
 }
+
 func SetVideos(c *gin.Context) {
 	if userUN != "" {
 		mostViewedArr := []Video{}
@@ -85,24 +91,42 @@ func SetVideos(c *gin.Context) {
 			if err != nil {
 				return
 			}
-			fmt.Println(doc.Data())
 			var vid = Video{}
 
 			doc.DataTo(&vid)
-			//fmt.Printf("Document data: %#v", vid)
-			//fmt.Println(doc.Data())
 			mostViewedArr = append(mostViewedArr, vid)
 			recentArr = append(recentArr, vid)
 		}
 		sortMostViewed(mostViewedArr)
 		sortRecent(recentArr)
+		var pageAmount int
+		pageAmount = int(math.Ceil(float64(len(recentArr)) / 6))
+		if len(recentArr) > 3 {
+			if len(recentArr) > PageNum*6 {
+				recentArr = recentArr[(PageNum-1)*6 : (PageNum)*6]
 
+			} else {
+				recentArr = recentArr[(PageNum-1)*6 : len(recentArr)]
+
+			}
+		}
+		if len(mostViewedArr) > 6 {
+			if len(mostViewedArr) > PageNum*6 {
+				mostViewedArr = mostViewedArr[(PageNum-1)*6 : (PageNum)*6]
+
+			} else {
+				mostViewedArr = mostViewedArr[(PageNum-1)*6 : len(mostViewedArr)]
+			}
+		}
 		response := struct {
 			MostViewed   []Video
 			RecentUpload []Video
+			Pages        int
 		}{
-			//MostViewed:   mostViewedArr[0:8],
+
+			MostViewed:   mostViewedArr,
 			RecentUpload: recentArr,
+			Pages:        pageAmount,
 		}
 
 		c.JSON(http.StatusOK, gin.H{"message": response})
@@ -131,20 +155,43 @@ func SetVideos(c *gin.Context) {
 			var vid = Video{}
 
 			doc.DataTo(&vid)
-			fmt.Printf("Document data: %#v", vid)
-			fmt.Println(doc.Data())
 			mostViewedArr = append(mostViewedArr, vid)
 			recentArr = append(recentArr, vid)
 		}
 		sortMostViewed(mostViewedArr)
 		sortRecent(recentArr)
+		fmt.Println(recentArr)
+
+		var pageAmount int
+		pageAmount = int(math.Ceil(float64(len(recentArr)) / 8))
+		if len(recentArr) > 8 {
+			if len(recentArr) > PageNum*8 {
+				recentArr = recentArr[(PageNum-1)*8 : (PageNum)*8]
+
+			} else {
+				recentArr = recentArr[(PageNum-1)*8 : len(recentArr)]
+
+			}
+		}
+
+		if len(mostViewedArr) > 8 {
+			mostViewedArr = mostViewedArr[0:8]
+		}
+		//for i, a := range recentArr {
+		//	if a.UploadTime == 0 {
+		//		recentArr = append(recentArr[:i], recentArr[i+1:]...)
+		//		fmt.Println(recentArr)
+		//	}
 
 		response := struct {
 			MostViewed   []Video
 			RecentUpload []Video
+			Pages        int
 		}{
-			MostViewed:   mostViewedArr[0:7],
+
+			MostViewed:   mostViewedArr,
 			RecentUpload: recentArr,
+			Pages:        pageAmount,
 		}
 
 		c.JSON(http.StatusOK, gin.H{"message": response})

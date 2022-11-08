@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { Avatar } from "@mui/material";
 import "./Home.scss";
 import "../UserProfile/Feeds.scss";
-
+import axios from "axios";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   getFirestore,
@@ -34,7 +34,8 @@ import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 import "firebase/firestore";
 
 import firebase from "firebase/compat/app";
@@ -49,6 +50,8 @@ function Home({ setVideo }, { setUserProfile }) {
   const [autocompleteState, setAutocompleteState] = useState({});
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
+  const [pages, setPages] = useState(undefined);
+  const [page, setPage] = useState(1);
 
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
 
@@ -98,59 +101,29 @@ function Home({ setVideo }, { setUserProfile }) {
   );
 
   async function getVideos() {
-    //Get all video data
-    const querySnapshot = await getDocs(collection(db, "Videos"));
-
-    //Create array for top videos and sort by likes
-    const querySnapshotTop = [];
-    querySnapshot.forEach((doc) => querySnapshotTop.push(doc));
-    sortVideosByLikes(querySnapshotTop);
-    const topVideosArr = [];
-    querySnapshotTop.forEach((doc) => {
-      topVideosArr.push(doc.data());
-    });
-
-    //Create array for recent videos and sort by upload date
-    const querySnapshotRecent = [];
-    querySnapshot.forEach((doc) => querySnapshotRecent.push(doc));
-    sortVideosByTime(querySnapshotRecent);
-    const recentVideosArr = [];
-    querySnapshotRecent.forEach((doc) => {
-      recentVideosArr.push(doc.data());
-    });
-    setTopVideos(topVideosArr);
-    setRecentVideos(recentVideosArr);
-  }
-
-  //Sort function for liked videos
-  function sortVideosByLikes(videos) {
-    for (let i = 0; i < videos.length - 1; i++) {
-      for (let j = 0; j < videos.length - 1 - i; j++) {
-        if (videos[j].data().Likes < videos[j + 1].data().Likes) {
-          let temp = videos[j];
-          videos[j] = videos[j + 1];
-          videos[j + 1] = temp;
-        }
-      }
-    }
-  }
-
-  //Sort function for date uploaded
-  function sortVideosByTime(videos) {
-    for (let i = 0; i < videos.length - 1; i++) {
-      for (let j = 0; j < videos.length - 1 - i; j++) {
-        if (videos[j].data().uploadTime < videos[j + 1].data().uploadTime) {
-          let temp = videos[j];
-          videos[j] = videos[j + 1];
-          videos[j + 1] = temp;
-        }
-      }
-    }
+    const display = "";
+    const disAndPage = {
+      displayName: display,
+      pageNumber: page.toString(),
+    };
+    await axios
+      .post(
+        "http://localhost:8080/auth/video",
+        JSON.stringify({ ...disAndPage })
+      )
+      .then(function (response) {
+        console.log(response);
+      });
+    const response = await axios.get("http://localhost:8080/auth/video");
+    setTopVideos(response.data.message.MostViewed);
+    setRecentVideos(response.data.message.RecentUpload);
+    setPages(response.data.message.Pages);
+    console.log(response.data.message.RecentUpload);
   }
 
   useEffect(async () => {
     await getVideos();
-  }, []);
+  }, [page]);
 
   const dataSet = autocompleteState?.collections?.[0]?.items;
   const searchResultsVideosArr = dataSet?.filter(
@@ -245,7 +218,7 @@ function Home({ setVideo }, { setUserProfile }) {
                         <Card sx={{ maxWidth: 395, height: 375 }}>
                           <CardMedia
                             component="img"
-                            image={video.thumbnailUrl}
+                            image={video.ThumbnailUrl}
                           />
                           <CardContent>
                             <CardHeader
@@ -265,7 +238,7 @@ function Home({ setVideo }, { setUserProfile }) {
                                         setVideo(video);
                                       }}
                                     >
-                                      {video.VideoTitle}
+                                      {video.Title}
                                     </span>
                                   </Link>
                                 </Typography>
@@ -309,7 +282,7 @@ function Home({ setVideo }, { setUserProfile }) {
                         <Card sx={{ maxWidth: 395, height: 400 }}>
                           <CardMedia
                             component="img"
-                            image={video.thumbnailUrl}
+                            image={video.ThumbnailUrl}
                           />
                           <CardContent>
                             <CardHeader
@@ -329,7 +302,7 @@ function Home({ setVideo }, { setUserProfile }) {
                                         setVideo(video);
                                       }}
                                     >
-                                      {video.VideoTitle}
+                                      {video.Title}
                                     </span>
                                   </Link>
                                 </Typography>
@@ -360,6 +333,17 @@ function Home({ setVideo }, { setUserProfile }) {
                     ))}
                 </div>
               </p>
+              {pages && (
+                <Stack spacing={2}>
+                  <Pagination
+                    count={pages}
+                    size="large"
+                    onChange={(e, p) => {
+                      setPage(p);
+                    }}
+                  />
+                </Stack>
+              )}
             </div>
           </div>
         </div>

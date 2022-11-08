@@ -36,15 +36,80 @@ import TabContext from "@material-ui/lab/TabContext";
 import TabList from "@material-ui/lab/TabList";
 import TabPanel from "@material-ui/lab/TabPanel";
 import axios from "axios";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import Pagination from "@mui/material/Pagination";
+import Stack from "@mui/material/Stack";
 
+const options = ["Recently Uploaded", "Most Viewed"];
+
+const ITEM_HEIGHT = 48;
+
+function LongMenu({ sort, setSort }) {
+  const [anchorEl, setAnchorEl] = React.useState(null);
+
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = (e) => {
+    setSort(e.target.innerText);
+    setAnchorEl(null);
+  };
+
+  return (
+    <div>
+      Sort By
+      <IconButton
+        aria-label="more"
+        id="long-button"
+        aria-controls={open ? "long-menu" : undefined}
+        aria-expanded={open ? "true" : undefined}
+        aria-haspopup="true"
+        onClick={handleClick}
+      >
+        <MoreVertIcon />
+      </IconButton>
+      <Menu
+        id="long-menu"
+        MenuListProps={{
+          "aria-labelledby": "long-button",
+        }}
+        anchorEl={anchorEl}
+        open={open}
+        onClose={handleClose}
+        PaperProps={{
+          style: {
+            maxHeight: ITEM_HEIGHT * 4.5,
+            width: "20ch",
+          },
+        }}
+      >
+        {options.map((option) => (
+          <MenuItem
+            key={option}
+            selected={option === sort}
+            onClick={handleClose}
+          >
+            {option}
+          </MenuItem>
+        ))}
+      </Menu>
+    </div>
+  );
+}
 
 function Feeds({ setVideo }) {
   const [recentVideos, setRecentVideos] = useState([]);
+  const [topVideos, setTopVideos] = useState([]);
   const [likedVideos, setLikedVideos] = useState([]);
   const displayName = localStorage.getItem("displayName");
   const docRef = doc(db, "Users", displayName);
-
   const [ProfilePic, setProfilePic] = useState("");
+  const [sort, setSort] = React.useState("Recently Uploaded");
+  const [pages, setPages] = useState(undefined);
+  const [page, setPage] = useState(1);
+
   getDoc(docRef).then((docSnap) => {
     setProfilePic(docSnap.data().ProfilePictureUrl);
   });
@@ -57,23 +122,32 @@ function Feeds({ setVideo }) {
 
   //Videos for Videos feed
   async function getVideos() {
-
- await axios.post("http://localhost:8080/auth/video", JSON.stringify({displayName}))
-  .then(function (response){
-  console.log(response);
-  })
+    const disAndPage = {
+      displayName: displayName,
+      pageNumber: page.toString(),
+    };
+    await axios
+      .post(
+        "http://localhost:8080/auth/video",
+        JSON.stringify({ ...disAndPage })
+      )
+      .then(function (response) {
+        console.log(response);
+      });
     try {
-       		const response = await axios.get("http://localhost:8080/auth/video");
-       		console.log(response.data.message);
-       		//setTopVideos(response.data.message.MostViewed)
-       		setRecentVideos(response.data.message.RecentUpload)
-       		//console.log(topVideos)
-       	}
-       	catch (error) {
-       		console.log(error);
-       	}
-     }
+      const response = await axios.get("http://localhost:8080/auth/video");
 
+      setTopVideos(response.data.message.MostViewed);
+      setRecentVideos(response.data.message.RecentUpload);
+      setPages(response.data.message.Pages);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(async () => {
+    await getVideos();
+  }, [page]);
 
   async function getLikedVideos() {
     //Get all video data
@@ -109,7 +183,6 @@ function Feeds({ setVideo }) {
   }
 
   useEffect(async () => {
-    await getVideos();
     await getLikedVideos();
   }, []);
 
@@ -125,8 +198,10 @@ function Feeds({ setVideo }) {
         </Box>
         <TabPanel value="1">
           <div className="feed-container">
-            <div className="videos__container">
+            <LongMenu sort={sort} setSort={setSort} />
+            <div className="videos__container" onScroll={(e) => console.log(e)}>
               {recentVideos &&
+                sort == "Recently Uploaded" &&
                 recentVideos.map((video) => (
 
                   <Card sx={{ maxWidth: 380, height: 375 }}>
@@ -181,7 +256,67 @@ function Feeds({ setVideo }) {
                     </CardContent>
                   </Card>
                 ))}
+
+              {topVideos &&
+                sort == "Most Viewed" &&
+                topVideos.map((video) => (
+                  <Card sx={{ maxWidth: 380, height: 400 }}>
+                    <CardMedia component="img" image={video.ThumbnailUrl} />
+                    <CardContent>
+                      <CardHeader
+                        avatar={
+                          <Avatar
+                            sx={{ width: 60, height: 60 }}
+                            src={ProfilePic}
+                          ></Avatar>
+                        }
+                        title={
+                          <Typography
+                            variant="body2"
+                            color="text.primary"
+                            fontWeight="bold"
+                            fontSize="20px"
+                          >
+                            <Link to="/video">
+                              <span
+                                onClick={() => {
+                                  setVideo(video);
+                                }}
+                              >
+                                {video.Title}
+                              </span>
+                            </Link>
+                          </Typography>
+                        }
+                      />
+
+                      <div className="videoInfo">
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          fontWeight="medium"
+                          fontSize="18px"
+                        >
+                          {" "}
+                          {video.Username} &ensp;&ensp;&ensp;&ensp;&ensp;
+                          {video.Likes} Likes &#x2022; {video.Views} Views
+                        </Typography>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
             </div>
+            {pages && (
+              <Stack spacing={2}>
+                <Pagination
+                  count={pages}
+                  size="large"
+                  onChange={(e, p) => {
+                    setPage(p);
+                  }}
+                />
+              </Stack>
+            )}
           </div>
         </TabPanel>
         <TabPanel value="2">
