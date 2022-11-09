@@ -24,6 +24,7 @@ import {
 
 const theme = createTheme({
   palette: {
+    mode: "dark",
     primary: {
       light: "#484848",
       main: "#212121",
@@ -99,7 +100,9 @@ function App() {
             {auth === "true" && (
               <>
                 <Route path="/userprofile">
-                  <Profile setVideo={setVideo} />
+
+                  <Profile setVideo={setVideo} video={video} />
+
                 </Route>
 
                 <Route path="/upload">

@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState, useMemo } from "react";
 
 import "../home/Home.scss";
@@ -5,6 +6,7 @@ import "./UploadButton.scss";
 
 import axios from "axios";
 import { Link, useHistory, useLocation } from "react-router-dom";
+
 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
@@ -40,6 +42,7 @@ import AppContext from "../../AppContext";
 
 import { storage } from "../../Firebase.js";
 import "../../Firebase.js";
+
 
 const theme = createTheme({
   palette: {
@@ -101,7 +104,11 @@ const FileUpload = ({ setVideo }) => {
   const [videoDate, setVideoDate] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [userName, setUserName] = useState("");
+  const [uploadStatus, setUploadStatus] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
+  const displayName = localStorage.getItem("displayName");
+  const docRef = doc(db, "Users", displayName);
+  const [uploadStatus, setUploadStatus] = useState("");
 
   const [autocompleteState, setAutocompleteState] = useState({});
   const [searchInput, setSearchInput] = useState("");
@@ -321,10 +328,10 @@ const FileUpload = ({ setVideo }) => {
     video_title: videoTitle,
     video_description: videoDescription,
     video_gameTags: videoTag,
-
     video_url: videoUrl,
     thumbnail_url: thumbnailUrl,
   };
+
 
   function dropHandler(e) {
     e.preventDefault();
@@ -340,6 +347,7 @@ const FileUpload = ({ setVideo }) => {
       document.querySelector("#UC2").style.display = "flex";
     }
   }, [file]);
+
 
   useEffect(async () => {
     if (videoUrl && thumbnailUrl) {
@@ -364,10 +372,11 @@ const FileUpload = ({ setVideo }) => {
       alert("Please upload a video first!");
     }
 
-    //Restrict file size to 5 MB ~ equivalent to 30 second video
+    //Restrict file size to 20 MB ~ equivalent to 30 second video
 
-    if (file.size > 100 * 1024 * 1024) {
-      alert("File size exceeds maximum allowed!");
+    if (file.size > 20 * 1024 * 1024) {
+      alert("File size exceeds maximum allowed (20 MB)!");
+
       return;
     }
 
@@ -470,6 +479,7 @@ const FileUpload = ({ setVideo }) => {
   }, [videoUrl, thumbnailUrl]);
 
   return (
+
     <AppContext.Consumer>
       {(context) => (
         <div style={{ display: "flex", flexDirection: "row" }}>
@@ -788,6 +798,7 @@ const FileUpload = ({ setVideo }) => {
               </div>
             </Dialog>
           </div>
+
         </div>
       )}
     </AppContext.Consumer>

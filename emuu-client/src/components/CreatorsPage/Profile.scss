@@ -1,17 +1,16 @@
-$main-color: #4dd6b6;
+$main-color: #0f0f0f;
 $secondary-color: #26343d;
 #prf-bg-img {
-  height: 70vh;
+  height: 50vh;
   width: 100vw;
   margin-top: -12rem;
 }
 .MainProfileDiv {
-  background: lightgray;
-  padding: 20px 0 20px 0;
+  background: #0f0f0f;
 
   .profile-container {
-    width: 90%;
-    background: white;
+    width: 100%;
+    background: #0f0f0f;
     margin: auto;
     border-radius: 20px;
 
@@ -22,45 +21,31 @@ $secondary-color: #26343d;
         width: 100%;
         background: $main-color;
         overflow: hidden;
-        border-radius: 20px 20px 0 0;
+        border-radius: 0px 0px 0 0;
         position: relative;
-        #background-change {
-          border-radius: 50%;
-          height: 34px;
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          background-color: skyblue;
-          width: 34px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-        }
       }
+    }
+
+    .middle-portion {
+      display: flex;
+      flex-direction: column;
+      margin-top: 5rem;
+      background: black;
+      border-radius: 100px;
+
       .user-profile-img {
         position: relative;
         display: flex;
         flex-direction: column;
         position: absolute;
-        height: 250px;
-        width: 250px;
+        height: 150px;
+        width: 150px;
         border-radius: 50%;
         transform: translate(50%);
         background-color: $secondary-color;
-        bottom: -2rem;
-        border: 5px solid white;
-        #profile-change {
-          position: absolute;
-          bottom: 10px;
-          right: 25px;
-          border-radius: 50%;
-          height: 34px;
-          width: 34px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background-color: skyblue;
-        }
+
+        border: 3px solid white;
+
         #prf-img {
           height: 100%;
           width: 100%;
@@ -71,18 +56,32 @@ $secondary-color: #26343d;
       .userName {
         width: 100%;
         position: absolute;
-        bottom: -4.5rem;
+        bottom: 3rem;
+        right: -9rem;
         font-size: 2rem;
         font-style: strong;
         font-weight: bold;
-        color: black;
+        color: white;
+        padding: 20px;
+      }
+      .subscribers-profile {
+        position: absolute;
+        bottom: 3rem;
+        white-space: nowrap;
+        font-size: 2rem;
+        font-style: secondary;
+        font-weight: light;
+        font-size: 20px;
+        color: lightgray;
+        padding-left: 166px;
       }
     }
     .bottom-portion {
+      padding-top: 100px;
       display: flex;
       flex-direction: column;
       margin-top: 5rem;
-      background: white;
+      background: #0f0f0f;
       border-radius: 20px;
     }
   }

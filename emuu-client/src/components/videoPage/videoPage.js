@@ -9,9 +9,11 @@ import Button from "react-bootstrap/Button";
 import TextField from "@mui/material/TextField";
 import { createAutocomplete } from "@algolia/autocomplete-core";
 import { db } from "../../Firebase.js";
+
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
 import UserInfoNew from "../CreatorsPage/UserInfo";
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
+
 import {
   getDocs,
   getDoc,

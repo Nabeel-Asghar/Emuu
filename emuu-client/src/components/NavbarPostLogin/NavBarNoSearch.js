@@ -28,7 +28,7 @@ import HeaderSearch from "./TestAlgoliaSearchInput";
 
 import ProfileMenu from "../ProfileMenu/ProfileMenu";
 
-function HeaderPostLogin({ search, setSearch }) {
+function NavBarNoSearch({ search, setSearch }) {
   //Sign Out Function in Nav Bar
   const [user, setUser] = useState([]);
   const history = useHistory();
@@ -73,13 +73,13 @@ function HeaderPostLogin({ search, setSearch }) {
           bg="dark"
           variant="dark"
           expand={expand}
-          className=""
+          className="mb-3"
         >
           <Container fluid>
             <Navbar.Brand href="/">
               <img src={EmuuLogo} width="140" height="40"></img>
             </Navbar.Brand>
-            <HeaderSearch />
+
             <ProfileMenu />
           </Container>
         </Navbar>
@@ -88,4 +88,4 @@ function HeaderPostLogin({ search, setSearch }) {
   );
 }
 
-export default HeaderPostLogin;
+export default NavBarNoSearch;

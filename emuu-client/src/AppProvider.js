@@ -3,7 +3,9 @@ import AppContext from "./AppContext";
 
 const AppProvider = (props) => {
   const [isSidebarOpen, setIsSiderbarOpen] = useState(false);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
 
   return (
     <AppContext.Provider

@@ -132,6 +132,7 @@ const Creator = ({ setVideo, video }) => {
 
     if (getSubscribersListRef.exists()) {
       subscribersList = getSubscribersListRef.data().SubscriberList;
+
     }
 
     updateDoc(userRef, {
@@ -145,6 +146,7 @@ const Creator = ({ setVideo, video }) => {
       updatedSubscribersList =
         getUpdatedSubscribersListRef.data().SubscriberList;
     }
+
 
     setSubsciberActionCount(
       (subscriberActionCount) => subscriberActionCount + 1
@@ -182,6 +184,18 @@ const Creator = ({ setVideo, video }) => {
     );
   }
   console.log(updatedSubscribersList, "updated");
+  }, []);
+
+  const [Banner, setBanner] = useState("");
+  const [ProfilePic, setProfilePic] = useState("");
+  const [subscriberCount, setSubscriberCount] = useState("");
+
+  getDoc(docRef).then((docSnap) => {
+    setBanner(docSnap.data().BannerUrl);
+    setProfilePic(docSnap.data().ProfilePictureUrl);
+    setSubscriberCount(docSnap.data().SubscriberCount);
+  });
+
 
   useEffect(async () => {
     const userRefInitial = doc(db, "Users", userName);
@@ -195,10 +209,12 @@ const Creator = ({ setVideo, video }) => {
   }, [subscriberActionCount]);
   return (
     <>
+
       <AlgoliaSearchNavbar
         autocomplete={autocomplete}
         searchInput={searchInput}
       />
+
       <div className="MainProfileDiv">
         {showSearchResults && (
           <p class="text-start">
@@ -258,20 +274,22 @@ const Creator = ({ setVideo, video }) => {
                 srcSet=""
               />
             </div>
+
+          </div>
+
+          <div className="middle-portion">
             <div className="user-profile-img">
-              <img
-                id="prf-img"
-                src={creatorsData.ProfilePictureUrl}
-                alt=""
-                srcSet=""
-              />
-              <div className="userName" style={{ marginRight: "500px" }}>
+              <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
+
+              <div className={"userName"}> {creatorName} </div>
+              <div className={"subscribers-profile"}>
                 {" "}
-                {creatorsData.Username}{" "}
+                {subscriberCount} subscribers{" "}
               </div>
             </div>
           </div>
           <div className="bottom-portion">
+
             <div className="right-side">
               <SubscribeButton
                 color="error"
@@ -293,6 +311,7 @@ const Creator = ({ setVideo, video }) => {
               subscribers={creatorsData.Subscribers}
               videosPostedCount={creatorsData.VideosPosted}
             />
+
             <div className="left-side"></div>
             <Feed
               subscriberVideos={subscriberVideos}

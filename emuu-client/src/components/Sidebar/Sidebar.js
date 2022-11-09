@@ -1,4 +1,6 @@
+
 import React, { useState, useEffect } from "react";
+
 import "./Sidebar.scss";
 
 import { useHistory } from "react-router-dom";
@@ -22,6 +24,21 @@ import HomeIcon from "@mui/icons-material/Home";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Avatar } from "@mui/material";
+
+import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
+import { db, storage } from "../../Firebase.js";
+import { Link } from "react-router-dom";
+import {
+  getDoc,
+  getDocs,
+  setDoc,
+  doc,
+  collection,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
+
 
 import AppContext from "../../AppContext";
 
@@ -96,7 +113,14 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer() {
+
+export default function MiniDrawer({
+  sideBarState,
+  video,
+  setVideo,
+  setUserProfile,
+}) {
+
   const theme = useTheme();
   const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
   const [
@@ -105,12 +129,15 @@ export default function MiniDrawer() {
   ] = useState([]);
   const [users, setUsers] = useState([]);
   const history = useHistory();
+
   const authUsersNavigation = ["Home", "UserProfile", "UploadVideo"];
+
   const unAuthorizedNavigation = ["Home"];
   const isAuthorized = localStorage.getItem("auth");
   const userName = localStorage.getItem("displayName");
   const currentNavigation =
     isAuthorized === "true" ? authUsersNavigation : unAuthorizedNavigation;
+
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
   let subscribersListCompleteData;
   useEffect(async () => {
@@ -165,6 +192,11 @@ export default function MiniDrawer() {
     history.push("/creator");
   };
 
+
+  getDoc(docRef).then((docSnap) => {
+    setProfilePic(docSnap.data().ProfilePictureUrl);
+  });
+  console.log(ProfilePic);
   return (
     <AppContext.Consumer>
       {(context) => (
@@ -212,7 +244,9 @@ export default function MiniDrawer() {
                       {index === 0 ? (
                         <HomeIcon fontSize="large" />
                       ) : index === 1 ? (
+
                         <AccountCircleIcon fontSize="large" />
+
                       ) : (
                         index === 2 && <CloudUploadIcon fontSize="large" />
                       )}
@@ -227,7 +261,9 @@ export default function MiniDrawer() {
             </List>
             <Divider />
             <List>
+
               {context.isSidebarOpen && (
+
                 <Typography
                   className="subscribers"
                   variant="subtitle1"
@@ -237,7 +273,9 @@ export default function MiniDrawer() {
                   Subscriptions
                 </Typography>
               )}
+
               {updatedSubscribersListCompleteData.map((user, index) => (
+
                 <ListItem key={index} disablePadding sx={{ display: "block" }}>
                   <ListItemButton
                     sx={{
@@ -247,7 +285,9 @@ export default function MiniDrawer() {
                         : "center",
                       px: 2.5,
                     }}
+
                     onClick={() => handleCreatorProfile(user.Username)}
+
                   >
                     <ListItemIcon
                       sx={{
@@ -271,7 +311,9 @@ export default function MiniDrawer() {
                     />
                   </ListItemButton>
                 </ListItem>
+
               ))}
+
             </List>
           </Drawer>
         </Box>
