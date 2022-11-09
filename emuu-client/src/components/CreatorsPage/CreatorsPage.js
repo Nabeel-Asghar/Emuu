@@ -265,11 +265,14 @@ const Creator = ({ setVideo, video }) => {
                 alt=""
                 srcSet=""
               />
-              <div className="userName" style={{marginRight:"500px"}}> {creatorsData.Username} </div>
+              <div className="userName" style={{ marginRight: "500px" }}>
+                {" "}
+                {creatorsData.Username}{" "}
+              </div>
             </div>
           </div>
           <div className="bottom-portion">
-            <div className="right-side" >
+            <div className="right-side">
               <SubscribeButton
                 color="error"
                 onClick={() => {
@@ -282,7 +285,7 @@ const Creator = ({ setVideo, video }) => {
                     ? "Unsubscribe"
                     : "Subscribe"
                 }
-                buttonStyling={{ marginTop: "-22.5px"}}
+                buttonStyling={{ marginTop: "-22.5px" }}
               />
             </div>
             <UserInfo

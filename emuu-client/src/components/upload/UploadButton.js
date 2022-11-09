@@ -341,23 +341,22 @@ const FileUpload = ({ setVideo }) => {
     }
   }, [file]);
 
-    useEffect(async () => {
-      if (videoUrl && thumbnailUrl) {
-        await axios
-          .post(
-            "http://localhost:8080/auth/upload",
-            JSON.stringify({ ...uploadData })
-          )
-          .then((result) => {
-//            setUploadStatus(
-//              <span style={{ color: "green" }}>
-//                <CheckCircleOutlineIcon /> Upload successful
-//              </span>
- alert("Uploaded Successfully"
-            );
-          });
-      }
-    }, [videoUrl, thumbnailUrl]);
+  useEffect(async () => {
+    if (videoUrl && thumbnailUrl) {
+      await axios
+        .post(
+          "http://localhost:8080/auth/upload",
+          JSON.stringify({ ...uploadData })
+        )
+        .then((result) => {
+          //            setUploadStatus(
+          //              <span style={{ color: "green" }}>
+          //                <CheckCircleOutlineIcon /> Upload successful
+          //              </span>
+          alert("Uploaded Successfully");
+        });
+    }
+  }, [videoUrl, thumbnailUrl]);
 
   //If a user doesn't choose a file and tries to upload, error will appear
   const handleUpload = async (e) => {
@@ -757,7 +756,7 @@ const FileUpload = ({ setVideo }) => {
                           UPLOAD THUMBNAIL
                         </Button>
 
-                           {thumbnail && (
+                        {thumbnail && (
                           <img
                             src={thumbnailPreview}
                             alt="thumbnail-alt"

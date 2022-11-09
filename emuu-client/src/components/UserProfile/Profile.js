@@ -181,7 +181,7 @@ function Profile() {
   const subscribeUser = () => {
     console.log("subscribed");
   };
-const subscribersCount=localStorage.getItem("subscribersCount")
+  const subscribersCount = localStorage.getItem("subscribersCount");
 
   return (
     <>
@@ -282,7 +282,7 @@ const subscribersCount=localStorage.getItem("subscribersCount")
           <div className="bottom-portion">
             <div className="right-side" />
             <div style={{ display: "flex", flexDirection: "row" }}>
-              <UserInfo subscribersCount={subscribersCount}/>
+              <UserInfo subscribersCount={subscribersCount} />
               <SubscribersList />
             </div>
             <div className="left-side"></div>

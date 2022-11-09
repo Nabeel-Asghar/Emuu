@@ -12,7 +12,7 @@ const UserProfileCard = ({
   handleUserClick,
   subscribersCount,
   onClick,
-  buttonTitle
+  buttonTitle,
 }) => {
   const isAuthenticated = localStorage.getItem("auth");
 

@@ -54,8 +54,8 @@ function Home({ setVideo }, { setUserProfile }) {
   const [autocompleteState, setAutocompleteState] = useState({});
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
-   const [subscriberActionCount, setSubsciberActionCount] = useState(0);
-     const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
+  const [subscriberActionCount, setSubsciberActionCount] = useState(0);
+  const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
 
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
 
@@ -179,62 +179,62 @@ function Home({ setVideo }, { setUserProfile }) {
   );
 
   async function subscribeUser(subscribersName) {
-      const userRef = doc(db, "Users", userName);
-      const getSubscribersListRef = await getDoc(userRef);
+    const userRef = doc(db, "Users", userName);
+    const getSubscribersListRef = await getDoc(userRef);
 
-      let subscribersList;
+    let subscribersList;
 
-      if (getSubscribersListRef.exists()) {
-        subscribersList = getSubscribersListRef.data().SubscriberList;
-      }
-
-      updateDoc(userRef, {
-        SubscriberList: [...subscribersList, subscribersName],
-      });
-
-      let getUpdatedSubscribersListRef = await getDoc(userRef);
-      let updatedSubscribersList;
-
-      if (getUpdatedSubscribersListRef.exists()) {
-        updatedSubscribersList =
-          getUpdatedSubscribersListRef.data().SubscriberList;
-      }
-
-      setSubsciberActionCount(
-        (subscriberActionCount) => subscriberActionCount + 1
-      );
+    if (getSubscribersListRef.exists()) {
+      subscribersList = getSubscribersListRef.data().SubscriberList;
     }
 
-    async function unSubscribeUser(subscribersName) {
-        const userRef = doc(db, "Users", userName);
-        const getSubscribersListRef = await getDoc(userRef);
+    updateDoc(userRef, {
+      SubscriberList: [...subscribersList, subscribersName],
+    });
 
-        let subscribersList;
+    let getUpdatedSubscribersListRef = await getDoc(userRef);
+    let updatedSubscribersList;
 
-        if (getSubscribersListRef.exists()) {
-          subscribersList = getSubscribersListRef.data().SubscriberList;
-        }
+    if (getUpdatedSubscribersListRef.exists()) {
+      updatedSubscribersList =
+        getUpdatedSubscribersListRef.data().SubscriberList;
+    }
 
-        const filteredSubscribersArr = subscribersList.filter(
-          (sub) => sub !== subscribersName
-        );
+    setSubsciberActionCount(
+      (subscriberActionCount) => subscriberActionCount + 1
+    );
+  }
 
-        updateDoc(userRef, {
-          SubscriberList: filteredSubscribersArr,
-        });
+  async function unSubscribeUser(subscribersName) {
+    const userRef = doc(db, "Users", userName);
+    const getSubscribersListRef = await getDoc(userRef);
 
-        let getUpdatedSubscribersListRef = await getDoc(userRef);
-        let updatedSubscribersList;
+    let subscribersList;
 
-        if (getUpdatedSubscribersListRef.exists()) {
-          updatedSubscribersList =
-            getUpdatedSubscribersListRef.data().SubscriberList;
-        }
+    if (getSubscribersListRef.exists()) {
+      subscribersList = getSubscribersListRef.data().SubscriberList;
+    }
 
-        setSubsciberActionCount(
-          (subscriberActionCount) => subscriberActionCount + 1
-        );
-      }
+    const filteredSubscribersArr = subscribersList.filter(
+      (sub) => sub !== subscribersName
+    );
+
+    updateDoc(userRef, {
+      SubscriberList: filteredSubscribersArr,
+    });
+
+    let getUpdatedSubscribersListRef = await getDoc(userRef);
+    let updatedSubscribersList;
+
+    if (getUpdatedSubscribersListRef.exists()) {
+      updatedSubscribersList =
+        getUpdatedSubscribersListRef.data().SubscriberList;
+    }
+
+    setSubsciberActionCount(
+      (subscriberActionCount) => subscriberActionCount + 1
+    );
+  }
 
   const handleCreatorProfile = (creatorsName) => {
     const creatorsData = usersArr.filter(
@@ -252,21 +252,20 @@ function Home({ setVideo }, { setUserProfile }) {
   };
 
   useEffect(async () => {
-      const userRefInitial = doc(db, "Users", userName);
-      const getSubscribersListRefInitial = await getDoc(userRefInitial);
-      let subscribersListInitial;
-      if (getSubscribersListRefInitial.exists()) {
-        subscribersListInitial =
-          getSubscribersListRefInitial.data().SubscriberList;
-      }
-      setUpdateSubscribersList(subscribersListInitial);
-    }, [subscriberActionCount]);
+    const userRefInitial = doc(db, "Users", userName);
+    const getSubscribersListRefInitial = await getDoc(userRefInitial);
+    let subscribersListInitial;
+    if (getSubscribersListRefInitial.exists()) {
+      subscribersListInitial =
+        getSubscribersListRefInitial.data().SubscriberList;
+    }
+    setUpdateSubscribersList(subscribersListInitial);
+  }, [subscriberActionCount]);
 
   return (
     <AppContext.Consumer>
       {(context) => (
         <div style={{ display: "flex", flexDirection: "row" }}>
-
           <Sidebar />
           <div
             style={{
@@ -275,29 +274,89 @@ function Home({ setVideo }, { setUserProfile }) {
               width: context.isSidebarOpen === true ? "87.3%" : "96.6%",
             }}
           >
-<>
-            <AlgoliaSearchNavbar
-              autocomplete={autocomplete}
-              searchInput={searchInput}
-            />
-            <ThemeProvider theme={theme}>
-              <div className="Home">
-                {showSearchResults && (
+            <>
+              <AlgoliaSearchNavbar
+                autocomplete={autocomplete}
+                searchInput={searchInput}
+              />
+              <ThemeProvider theme={theme}>
+                <div className="Home">
+                  {showSearchResults && (
+                    <p class="text-start">
+                      <h2 className="video__category__title p-4">
+                        Search Results
+                      </h2>
+                      <div className="video-row">
+                        {" "}
+                        {searchResultsVideosArr &&
+                          searchResultsVideosArr.map((video, index) => (
+                            <div id={index}>
+                              <img
+                                controls
+                                height="250"
+                                width="400"
+                                src={video.thumbnailUrl}
+                              />
+                              <p>
+                                <Link to="/video">
+                                  {" "}
+                                  <span
+                                    onClick={() => {
+                                      setVideo(video);
+                                    }}
+                                  >
+                                    {video.VideoTitle}
+                                  </span>
+                                </Link>{" "}
+                                | {video.Username} | {video.Likes} Likes |{" "}
+                                {video.Views} Views{" "}
+                              </p>
+                            </div>
+                          ))}
+                      </div>
+
+                      <div className="video-row">
+                        {" "}
+                        {searchResultsUsersArr &&
+                          searchResultsUsersArr.map((user, index) => (
+                            <UserProfileCard
+                              id={index}
+                              profileImg={user.ProfilePictureUrl}
+                              username={user.Username}
+                              subscribersCount={`${user.SubscriberCount} Subscribers`}
+                              onClick={() => {
+                                updatedSubscribersList?.includes(user.Username)
+                                  ? unSubscribeUser(user.Username)
+                                  : subscribeUser(user.Username);
+                              }}
+                              handleUserClick={() =>
+                                handleCreatorProfile(user.Username)
+                              }
+                              buttonTitle={
+                                updatedSubscribersList?.includes(user.Username)
+                                  ? "Unsubscribe"
+                                  : "Subscribe"
+                              }
+                            />
+                          ))}
+                      </div>
+                    </p>
+                  )}
                   <p class="text-start">
                     <h2 className="video__category__title p-4">
-                      Search Results
+                      Top Rated Videos
                     </h2>
                     <div className="video-row">
                       {" "}
-                      {searchResultsVideosArr &&
-                        searchResultsVideosArr.map((video, index) => (
-                          <div id={index}>
+                      {topVideos &&
+                        topVideos.map((video, index) => (
+                          <div>
                             <img
                               controls
                               height="250"
                               width="400"
                               src={video.thumbnailUrl}
-                            />
+                            ></img>
                             <p>
                               <Link to="/video">
                                 {" "}
@@ -315,103 +374,43 @@ function Home({ setVideo }, { setUserProfile }) {
                           </div>
                         ))}
                     </div>
+                  </p>
+                  <p class="text-start">
+                    <h2 className="video__category__title p-4">
+                      Recently Uploaded
+                    </h2>
 
                     <div className="video-row">
                       {" "}
-                      {searchResultsUsersArr &&
-                        searchResultsUsersArr.map((user, index) => (
-                          <UserProfileCard
-                            id={index}
-                            profileImg={user.ProfilePictureUrl}
-                            username={user.Username}
-                            subscribersCount={`${user.SubscriberCount} Subscribers`}
-                            onClick={() => {
-                            updatedSubscribersList?.includes(user.Username)
-                            ? unSubscribeUser(user.Username)
-                            : subscribeUser(user.Username);
-                            }}
-                            handleUserClick={() =>
-                              handleCreatorProfile(user.Username)
-                            }
-                              buttonTitle={
-                             updatedSubscribersList?.includes(user.Username)
-                                                            ? "Unsubscribe"
-                                                            : "Subscribe"
-                                                        }
-                          />
+                      {recentVideos &&
+                        recentVideos.map((video, index) => (
+                          <div>
+                            <img
+                              controls
+                              height="250"
+                              width="400"
+                              src={video.thumbnailUrl}
+                            ></img>
+                            <p>
+                              <Link to="/video">
+                                {" "}
+                                <span
+                                  onClick={() => {
+                                    setVideo(video);
+                                  }}
+                                >
+                                  {video.VideoTitle}
+                                </span>
+                              </Link>{" "}
+                              | {video.Username} | {video.Likes} Likes |{" "}
+                              {video.Views} Views{" "}
+                            </p>
+                          </div>
                         ))}
                     </div>
                   </p>
-                )}
-                <p class="text-start">
-                  <h2 className="video__category__title p-4">
-                    Top Rated Videos
-                  </h2>
-                  <div className="video-row">
-                    {" "}
-                    {topVideos &&
-                      topVideos.map((video, index) => (
-                        <div>
-                          <img
-                            controls
-                            height="250"
-                            width="400"
-                            src={video.thumbnailUrl}
-                          ></img>
-                          <p>
-                            <Link to="/video">
-                              {" "}
-                              <span
-                                onClick={() => {
-                                  setVideo(video);
-                                }}
-                              >
-                                {video.VideoTitle}
-                              </span>
-                            </Link>{" "}
-                            | {video.Username} | {video.Likes} Likes |{" "}
-                            {video.Views} Views{" "}
-                          </p>
-                        </div>
-                      ))}
-                  </div>
-                </p>
-                <p class="text-start">
-                  <h2 className="video__category__title p-4">
-                    Recently Uploaded
-                  </h2>
-
-                  <div className="video-row">
-                    {" "}
-                    {recentVideos &&
-                      recentVideos.map((video, index) => (
-                        <div>
-                          <img
-                            controls
-                            height="250"
-                            width="400"
-                            src={video.thumbnailUrl}
-                          ></img>
-                          <p>
-                            <Link to="/video">
-                              {" "}
-                              <span
-                                onClick={() => {
-                                  setVideo(video);
-                                }}
-                              >
-                                {video.VideoTitle}
-                              </span>
-                            </Link>{" "}
-                            | {video.Username} | {video.Likes} Likes |{" "}
-                            {video.Views} Views{" "}
-                          </p>
-                        </div>
-                      ))}
-                  </div>
-                </p>
-              </div>
-            </ThemeProvider>
+                </div>
+              </ThemeProvider>
             </>
           </div>
         </div>

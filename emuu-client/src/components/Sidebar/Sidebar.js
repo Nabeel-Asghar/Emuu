@@ -111,7 +111,7 @@ export default function MiniDrawer() {
   const userName = localStorage.getItem("displayName");
   const currentNavigation =
     isAuthorized === "true" ? authUsersNavigation : unAuthorizedNavigation;
-    const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
+  const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
   let subscribersListCompleteData;
   useEffect(async () => {
     const timer = async () => {
@@ -144,26 +144,26 @@ export default function MiniDrawer() {
   }, []);
 
   const usersArr = firebaseData.filter(
-      (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
-    );
-    const videosArr = firebaseData.filter(
-      (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
-    );
+    (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
+  );
+  const videosArr = firebaseData.filter(
+    (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
+  );
 
   const handleCreatorProfile = (creatorsName) => {
-      const creatorsData = usersArr.filter(
-        (user) => user.Username === creatorsName
-      );
-      const creatorsDataVideos = videosArr.filter(
-        (video) => video.Username === creatorsName
-      );
-      localStorage.setItem("creatorsData", JSON.stringify(creatorsData));
-      localStorage.setItem(
-        "creatorsDataVideos",
-        JSON.stringify(creatorsDataVideos)
-      );
-      history.push("/creator");
-    };
+    const creatorsData = usersArr.filter(
+      (user) => user.Username === creatorsName
+    );
+    const creatorsDataVideos = videosArr.filter(
+      (video) => video.Username === creatorsName
+    );
+    localStorage.setItem("creatorsData", JSON.stringify(creatorsData));
+    localStorage.setItem(
+      "creatorsDataVideos",
+      JSON.stringify(creatorsDataVideos)
+    );
+    history.push("/creator");
+  };
 
   return (
     <AppContext.Consumer>
@@ -195,7 +195,7 @@ export default function MiniDrawer() {
                     onClick={() =>
                       history.push(
                         index === 0
-                         ? "/"
+                          ? "/"
                           : index === 1
                           ? "/UserProfile"
                           : index === 2 && "/Upload"
@@ -247,7 +247,8 @@ export default function MiniDrawer() {
                         : "center",
                       px: 2.5,
                     }}
-onClick={() => handleCreatorProfile(user.Username)}>
+                    onClick={() => handleCreatorProfile(user.Username)}
+                  >
                     <ListItemIcon
                       sx={{
                         minWidth: 0,

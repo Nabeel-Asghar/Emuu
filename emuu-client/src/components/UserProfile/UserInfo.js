@@ -12,7 +12,7 @@ import {
 
 const displayName = localStorage.getItem("displayName");
 
-function UserInfo({subscribersCount}) {
+function UserInfo({ subscribersCount }) {
   const [dateJoined, setDateJoined] = useState("");
   const [Subscribers, setSubscribers] = useState("");
   const [VidNum, setVidNum] = useState("");
