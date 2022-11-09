@@ -723,7 +723,7 @@ const FileUpload = ({ setVideo }) => {
                           <MenuItem value="Action">Action</MenuItem>
                           <MenuItem value="Adventure">Adventure</MenuItem>
                           <MenuItem value="Fighting">Fighting</MenuItem>
-                          <MenuItem value="First Petson Shooting">
+                          <MenuItem value="First Person Shooting">
                             First Person Shooter
                           </MenuItem>
                           <MenuItem value="Platformer">Platformer</MenuItem>
