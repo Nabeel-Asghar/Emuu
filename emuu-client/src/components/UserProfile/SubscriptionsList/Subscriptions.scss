@@ -1,0 +1,10 @@
+.subscribers-list {
+  height: 225px !important;
+  overflow-y: scroll;
+}
+.subscribers-list::-webkit-scrollbar {
+  width: 0px;
+}
+.subscribers {
+  margin-bottom: -10px;
+}

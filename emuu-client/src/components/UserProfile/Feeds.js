@@ -10,6 +10,7 @@ import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
+import Subscriptions from "./SubscriptionsList/Subscriptions.js";
 import {
   getFirestore,
   collection,
@@ -208,7 +209,7 @@ const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
     };
     const interval = setInterval(() => {
       timer();
-    }, 5000);
+    }, 500);
     return () => clearTimeout(interval);
   }, []);
 
@@ -480,6 +481,13 @@ const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
 
 
 
+          </div>
+          </TabPanel>
+          <TabPanel value="4">
+          <div className="feed-container">
+           <div className="subs__container">
+          <Subscriptions />
+          </div>
           </div>
           </TabPanel>
       </TabContext>
