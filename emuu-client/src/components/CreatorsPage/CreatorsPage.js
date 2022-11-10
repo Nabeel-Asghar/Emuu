@@ -29,10 +29,11 @@ import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
 //Function to display creator page
 
 function Creator({ setVideo, video }) {
+
   const [creatorName, setCreatorName] = useState("Loading...");
   const [subscriberActionCount, setSubsciberActionCount] = useState(0);
   const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
-
+  const displayName = localStorage.getItem("displayName");
   const docRef = doc(db, "Users", creatorName);
 
   async function subscribeUser(subscribersName) {
@@ -147,11 +148,11 @@ useEffect(async () => {
                               color="error"
                               onClick={() => {
                                 updatedSubscribersList?.includes(creatorName)
-                                  ? unSubscribeUser(creatorName)
-                                  : subscribeUser(creatorName);
+                                  ? unSubscribeUser(displayName)
+                                  : subscribeUser(displayName);
                               }}
                               buttonTitle={
-                                updatedSubscribersList?.includes(creatorName)
+                                updatedSubscribersList?.includes(displayName)
                                   ? "Unsubscribe"
                                   : "Subscribe"
                               }
