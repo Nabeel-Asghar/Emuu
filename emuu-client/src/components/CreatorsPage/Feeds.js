@@ -165,7 +165,6 @@ function Feeds({ setVideo, setUserProfile }) {
               {recentVideos &&
                 sort == "Recently Uploaded" &&
                 recentVideos.map((video) => (
-
                   <Card sx={{ maxWidth: 380, height: 375 }}>
                     <CardMedia component="img" image={video.ThumbnailUrl} />
 
