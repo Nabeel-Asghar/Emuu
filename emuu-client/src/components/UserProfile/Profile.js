@@ -149,7 +149,7 @@ function Profile({ setVideo, video }, { classes }) {
 
   return (
     <>
-      <NavBarNoSearch />
+      <HeaderPostLogin />
       <div className="MainProfileDiv">
         <div className="profile-container">
           <div className="top-portion">

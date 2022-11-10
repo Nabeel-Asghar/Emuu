@@ -1,0 +1,67 @@
+.feed-container {
+  height: 100%;
+  margin: 50px 20px 50px 20px;
+  padding: 1rem;
+  box-shadow: 1rem 1rem 2rem 1rem lightgray;
+  border-radius: 0.5rem;
+  text-align: left;
+}
+
+.feed__heading {
+  margin-top: 10px;
+  font-weight: normal;
+  padding-bottom: 20px;
+}
+
+.videos__container {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.video__details__container {
+  display: flex;
+  flex-direction: row;
+}
+
+.avatar__container {
+  margin-top: 5px;
+}
+
+.video__description__container {
+  display: flex;
+  flex-direction: column;
+  margin-left: 15px;
+}
+
+.video__title {
+  margin-top: 2.5px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+}
+
+.video__stats {
+  display: flex;
+  flex-direction: row;
+}
+
+.video__details {
+  color: #606060;
+  margin-top: -18px;
+  text-decoration: none;
+}
+
+.dot {
+  height: 5px;
+  width: 5px;
+  background-color: #bbb;
+  border-radius: 50%;
+  margin: -7.5px 5px 0 5px;
+}
+.register-input {
+  padding: 10px;
+  width: 100%;
+  margin: 10px 0;
+}

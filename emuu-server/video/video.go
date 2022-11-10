@@ -100,22 +100,22 @@ func SetVideos(c *gin.Context) {
 		sortMostViewed(mostViewedArr)
 		sortRecent(recentArr)
 		var pageAmount int
-		pageAmount = int(math.Ceil(float64(len(recentArr)) / 6))
+		pageAmount = int(math.Ceil(float64(len(recentArr)) / 8))
 		if len(recentArr) > 3 {
-			if len(recentArr) > PageNum*6 {
-				recentArr = recentArr[(PageNum-1)*6 : (PageNum)*6]
+			if len(recentArr) > PageNum*8 {
+				recentArr = recentArr[(PageNum-1)*8 : (PageNum)*8]
 
 			} else {
-				recentArr = recentArr[(PageNum-1)*6 : len(recentArr)]
+				recentArr = recentArr[(PageNum-1)*8 : len(recentArr)]
 
 			}
 		}
-		if len(mostViewedArr) > 6 {
-			if len(mostViewedArr) > PageNum*6 {
-				mostViewedArr = mostViewedArr[(PageNum-1)*6 : (PageNum)*6]
+		if len(mostViewedArr) > 8 {
+			if len(mostViewedArr) > PageNum*8 {
+				mostViewedArr = mostViewedArr[(PageNum-1)*8 : (PageNum)*8]
 
 			} else {
-				mostViewedArr = mostViewedArr[(PageNum-1)*6 : len(mostViewedArr)]
+				mostViewedArr = mostViewedArr[(PageNum-1)*8 : len(mostViewedArr)]
 			}
 		}
 		response := struct {
@@ -177,11 +177,6 @@ func SetVideos(c *gin.Context) {
 		if len(mostViewedArr) > 8 {
 			mostViewedArr = mostViewedArr[0:8]
 		}
-		//for i, a := range recentArr {
-		//	if a.UploadTime == 0 {
-		//		recentArr = append(recentArr[:i], recentArr[i+1:]...)
-		//		fmt.Println(recentArr)
-		//	}
 
 		response := struct {
 			MostViewed   []Video
