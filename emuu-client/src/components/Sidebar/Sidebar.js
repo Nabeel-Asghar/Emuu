@@ -98,6 +98,8 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer() {
   const theme = useTheme();
+    const [ProfilePic, setProfilePic] = useState("");
+
   const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
   const [
     updatedSubscribersListCompleteData,
@@ -164,7 +166,12 @@ export default function MiniDrawer() {
     );
     history.push("/creator");
   };
+    const displayName = localStorage.getItem("displayName");
 
+    const docRef = doc(db, "Users", displayName);
+getDoc(docRef).then((docSnap) => {
+    setProfilePic(docSnap.data().ProfilePictureUrl);
+  });
   return (
     <AppContext.Consumer>
       {(context) => (
@@ -212,7 +219,11 @@ export default function MiniDrawer() {
                       {index === 0 ? (
                         <HomeIcon fontSize="large" />
                       ) : index === 1 ? (
-                        <AccountCircleIcon fontSize="large" />
+                        <Avatar
+                                                  src={ProfilePic}
+                                                  fontSize="large"
+                                                  alt="avatar-alt"
+                                                />
                       ) : (
                         index === 2 && <CloudUploadIcon fontSize="large" />
                       )}
