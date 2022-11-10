@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./Sidebar.scss";
 
 import { useHistory } from "react-router-dom";
-
+import Subscriptions from "../UserProfile/SubscriptionsList/Subscriptions.js";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -237,41 +237,7 @@ export default function MiniDrawer() {
                   Subscriptions
                 </Typography>
               )}
-              {updatedSubscribersListCompleteData.map((user, index) => (
-                <ListItem key={index} disablePadding sx={{ display: "block" }}>
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: context.isSidebarOpen
-                        ? "initial"
-                        : "center",
-                      px: 2.5,
-                    }}
-                    onClick={() => handleCreatorProfile(user.Username)}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        mr: context.isSidebarOpen ? 3 : "auto",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Avatar
-                        src={
-                          user.ProfilePictureUrl
-                            ? user.ProfilePictureUrl
-                            : "https://wallpaperaccess.com/full/170249.jpg"
-                        }
-                        alt="avatar-alt"
-                      />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={user.Username}
-                      sx={{ opacity: context.isSidebarOpen ? 1 : 0 }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              ))}
+             <Subscriptions />
             </List>
           </Drawer>
         </Box>
