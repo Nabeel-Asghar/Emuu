@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Sidebar.scss";
+
 import { useHistory } from "react-router-dom";
+import Subscriptions from "../UserProfile/SubscriptionsList/Subscriptions.js";
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import MuiDrawer from "@mui/material/Drawer";
@@ -20,21 +22,12 @@ import HomeIcon from "@mui/icons-material/Home";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Avatar } from "@mui/material";
-import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db, storage } from "../../Firebase.js";
-import { Link } from "react-router-dom";
-import {
-  getDoc,
-  getDocs,
-  setDoc,
-  doc,
-  collection,
-  query,
-  where,
-  onSnapshot,
-} from "firebase/firestore";
 
 import AppContext from "../../AppContext";
+
+import { collection, getDocs, doc, getDoc } from "firebase/firestore";
+
+import { db } from "../../Firebase.js";
 
 const drawerWidth = 240;
 
@@ -103,32 +96,82 @@ const Drawer = styled(MuiDrawer, {
   }),
 }));
 
-export default function MiniDrawer({
-  sideBarState,
-  video,
-  setVideo,
-  setUserProfile,
-}) {
+export default function MiniDrawer() {
   const theme = useTheme();
-  const history = useHistory();
   const [ProfilePic, setProfilePic] = useState("");
-  const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
-  const usersArr = firebaseData.filter(
-    (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
-  );
+
+  const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
+  const [
+    updatedSubscribersListCompleteData,
+    setUpdateSubscribersListCompleteData,
+  ] = useState([]);
+  const [users, setUsers] = useState([]);
+  const history = useHistory();
   const authUsersNavigation = ["Home", "User Profile", "Upload Video"];
   const unAuthorizedNavigation = ["Home"];
   const isAuthorized = localStorage.getItem("auth");
+  const userName = localStorage.getItem("displayName");
   const currentNavigation =
     isAuthorized === "true" ? authUsersNavigation : unAuthorizedNavigation;
-  const userProfileImg = localStorage.getItem("userProfileImg");
-  const displayName = localStorage.getItem("displayName");
-  const docRef = doc(db, "Users", displayName);
+  const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
+  let subscribersListCompleteData;
+  useEffect(async () => {
+    const timer = async () => {
+      const userRefInitial = doc(db, "Users", userName);
+      const getSubscribersListRefInitial = await getDoc(userRefInitial);
+      let subscribersListInitial;
+      if (getSubscribersListRefInitial.exists()) {
+        subscribersListInitial =
+          getSubscribersListRefInitial.data().SubscriberList;
+      }
+      setUpdateSubscribersList(subscribersListInitial);
+      const querySnapshotUsers = await getDocs(collection(db, "Users"));
+      const usersArr = [];
+      querySnapshotUsers.forEach((doc) => {
+        usersArr.push(doc.data());
+      });
+      setUsers(usersArr);
+      subscribersListCompleteData = usersArr.filter(
+        (record) =>
+          !record.hasOwnProperty("VideoUrl") &&
+          record.hasOwnProperty("Username") &&
+          subscribersListInitial.includes(record.Username)
+      );
+      setUpdateSubscribersListCompleteData(subscribersListCompleteData);
+    };
+    const interval = setInterval(() => {
+      timer();
+    }, 500);
+    return () => clearTimeout(interval);
+  }, []);
 
+  const usersArr = firebaseData.filter(
+    (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
+  );
+  const videosArr = firebaseData.filter(
+    (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
+  );
+
+  const handleCreatorProfile = (creatorsName) => {
+    const creatorsData = usersArr.filter(
+      (user) => user.Username === creatorsName
+    );
+    const creatorsDataVideos = videosArr.filter(
+      (video) => video.Username === creatorsName
+    );
+    localStorage.setItem("creatorsData", JSON.stringify(creatorsData));
+    localStorage.setItem(
+      "creatorsDataVideos",
+      JSON.stringify(creatorsDataVideos)
+    );
+    history.push("/creator");
+  };
+  const displayName = localStorage.getItem("displayName");
+
+  const docRef = doc(db, "Users", displayName);
   getDoc(docRef).then((docSnap) => {
     setProfilePic(docSnap.data().ProfilePictureUrl);
   });
-  console.log(ProfilePic);
   return (
     <AppContext.Consumer>
       {(context) => (
@@ -195,7 +238,7 @@ export default function MiniDrawer({
             </List>
             <Divider />
             <List>
-              {context.isSidebarOpen && isAuthorized === "true" && (
+              {context.isSidebarOpen && (
                 <Typography
                   className="subscribers"
                   variant="subtitle1"
@@ -205,39 +248,7 @@ export default function MiniDrawer({
                   Subscriptions
                 </Typography>
               )}
-              {/*  {isAuthorized==="true" &&
-              usersArr.map((user, index) => (
-                <ListItem key={index} disablePadding sx={{ display: "block" }}>
-                  <ListItemButton
-                    sx={{
-                      minHeight: 48,
-                      justifyContent: context.isSidebarOpen
-                        ? "initial"
-                        : "center",
-                      px: 2.5,
-                    }}
-                    onClick={() =>
-                    history.push("/creator")
-
-}
-                  >
-                    <ListItemIcon
-                      sx={{
-                        minWidth: 0,
-                        mr: context.isSidebarOpen ? 3 : "auto",
-                        justifyContent: "center",
-                      }}
-                    >
-                      <Avatar />
-                    </ListItemIcon>
-                    <ListItemText
-                      primary={user.Username}
-                      sx={{ opacity: context.isSidebarOpen ? 1 : 0 }}
-                    />
-                  </ListItemButton>
-                </ListItem>
-              ))
-             }*/}
+              <Subscriptions />
             </List>
           </Drawer>
         </Box>

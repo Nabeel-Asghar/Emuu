@@ -1,6 +1,6 @@
 import "./ProfileMenu.scss";
 import * as React from "react";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -18,6 +18,7 @@ import { useHistory, Link } from "react-router-dom";
 import { getAuth, signOut } from "firebase/auth";
 import { collection, getDoc, where, doc } from "firebase/firestore";
 import { db } from "../../Firebase.js";
+import AppContext from "../../AppContext";
 
 export default function AccountMenu() {
   const userName = localStorage.getItem("displayName");

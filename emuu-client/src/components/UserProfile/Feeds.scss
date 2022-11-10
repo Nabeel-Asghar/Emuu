@@ -35,7 +35,10 @@
     display: flex;
     flex-direction: row;
   }
-
+  .subs__container {
+    flex-wrap: wrap;
+    gap: 20px;
+  }
   .avatar__container {
     margin-top: 5px;
   }

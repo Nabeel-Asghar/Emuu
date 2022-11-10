@@ -6,6 +6,11 @@ import { AxiosContext } from "react-axios/lib/components/AxiosProvider";
 import { storage } from "../../Firebase.js";
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { db } from "../../Firebase.js";
+import ListItem from "@mui/material/ListItem";
+import ListItemButton from "@mui/material/ListItemButton";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import ListItemText from "@mui/material/ListItemText";
+import Subscriptions from "./SubscriptionsList/Subscriptions.js";
 import {
   getFirestore,
   collection,
@@ -40,7 +45,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-
+import { useHistory } from "react-router-dom";
 const options = ["Recently Uploaded", "Most Viewed"];
 
 const ITEM_HEIGHT = 48;
@@ -109,7 +114,13 @@ function Feeds({ setVideo }) {
   const [sort, setSort] = React.useState("Recently Uploaded");
   const [pages, setPages] = useState(undefined);
   const [page, setPage] = useState(1);
-
+  const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
+  const [
+    updatedSubscribersListCompleteData,
+    setUpdateSubscribersListCompleteData,
+  ] = useState([]);
+  const [users, setUsers] = useState([]);
+  const history = useHistory();
   getDoc(docRef).then((docSnap) => {
     setProfilePic(docSnap.data().ProfilePictureUrl);
   });
@@ -169,6 +180,39 @@ function Feeds({ setVideo }) {
     setLikedVideos(likedVideosArr);
   }
 
+  const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
+  let subscribersListCompleteData;
+
+  useEffect(async () => {
+    const timer = async () => {
+      const userRefInitial = doc(db, "Users", displayName);
+      const getSubscribersListRefInitial = await getDoc(userRefInitial);
+      let subscribersListInitial;
+      if (getSubscribersListRefInitial.exists()) {
+        subscribersListInitial =
+          getSubscribersListRefInitial.data().SubscriberList;
+      }
+      setUpdateSubscribersList(subscribersListInitial);
+      const querySnapshotUsers = await getDocs(collection(db, "Users"));
+      const usersArr = [];
+      querySnapshotUsers.forEach((doc) => {
+        usersArr.push(doc.data());
+      });
+      setUsers(usersArr);
+      subscribersListCompleteData = usersArr.filter(
+        (record) =>
+          !record.hasOwnProperty("VideoUrl") &&
+          record.hasOwnProperty("Username") &&
+          subscribersListInitial.includes(record.Username)
+      );
+      setUpdateSubscribersListCompleteData(subscribersListCompleteData);
+    };
+    const interval = setInterval(() => {
+      timer();
+    }, 500);
+    return () => clearTimeout(interval);
+  }, []);
+
   //Sort function for date uploaded
   function sortVideosByTime(videos) {
     for (let i = 0; i < videos.length - 1; i++) {
@@ -182,6 +226,28 @@ function Feeds({ setVideo }) {
     }
   }
 
+  const usersArr = firebaseData.filter(
+    (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
+  );
+  const videosArr = firebaseData.filter(
+    (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
+  );
+
+  const handleCreatorProfile = (creatorsName) => {
+    const creatorsData = usersArr.filter(
+      (user) => user.Username === creatorsName
+    );
+    const creatorsDataVideos = videosArr.filter(
+      (video) => video.Username === creatorsName
+    );
+    localStorage.setItem("creatorsData", JSON.stringify(creatorsData));
+    localStorage.setItem(
+      "creatorsDataVideos",
+      JSON.stringify(creatorsDataVideos)
+    );
+    history.push("/creator");
+  };
+
   useEffect(async () => {
     await getLikedVideos();
   }, []);
@@ -193,7 +259,8 @@ function Feeds({ setVideo }) {
           <TabList onChange={handleChange} aria-label="lab API tabs example">
             <Tab label="Videos" value="1" />
             <Tab label="Liked Videos" value="2" />
-            <Tab label="Subscriptions" value="3" />
+            <Tab label="Subscribers" value="3" />
+            <Tab label="Subscriptions" value="4" />
           </TabList>
         </Box>
         <TabPanel value="1">
@@ -203,9 +270,8 @@ function Feeds({ setVideo }) {
               {recentVideos &&
                 sort == "Recently Uploaded" &&
                 recentVideos.map((video) => (
-
                   <Card sx={{ maxWidth: 380, height: 375 }}>
-                    <CardMedia component="img" image={video.thumbnailUrl} />
+                    <CardMedia component="img" image={video.ThumbnailUrl} />
 
                     <CardContent>
                       <CardHeader
@@ -372,6 +438,47 @@ function Feeds({ setVideo }) {
                     </CardContent>
                   </Card>
                 ))}
+            </div>
+          </div>
+        </TabPanel>
+        <TabPanel value="3">
+          <div>
+            {updatedSubscribersListCompleteData.map((user, index) => (
+              <ListItem key={index} disablePadding sx={{ display: "block" }}>
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: "initial",
+                    px: 2.5,
+                  }}
+                  onClick={() => handleCreatorProfile(user.Username)}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: 3,
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Avatar
+                      src={
+                        user.ProfilePictureUrl
+                          ? user.ProfilePictureUrl
+                          : "https://wallpaperaccess.com/full/170249.jpg"
+                      }
+                      alt="avatar-alt"
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary={user.Username} sx={{ opacity: 1 }} />
+                </ListItemButton>
+              </ListItem>
+            ))}
+          </div>
+        </TabPanel>
+        <TabPanel value="4">
+          <div className="feed-container">
+            <div className="subs__container">
+              <Subscriptions />
             </div>
           </div>
         </TabPanel>
