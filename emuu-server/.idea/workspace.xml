@@ -5,7 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8493d53e-db58-4626-b4e8-fbf4ec91baf5" name="Changes" comment="Added firebase integration">
+      <change beforePath="$PROJECT_DIR$/../emuu-client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/Feeds.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/Feeds.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Feeds.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Feeds.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Profile.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/upload/UploadButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/upload/UploadButton.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/yarn.lock" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/yarn.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/video/video.go" beforeDir="false" afterPath="$PROJECT_DIR$/video/video.go" afterDir="false" />
     </list>

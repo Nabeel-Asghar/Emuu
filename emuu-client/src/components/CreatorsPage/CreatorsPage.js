@@ -7,6 +7,8 @@ import AddIcon from "@mui/icons-material/Add";
 import "./Profile.scss";
 import "../../Firebase.js";
 import Feeds from "./Feeds";
+import SubscribeButton from "./Button.js";
+
 import UserInfo from "./UserInfo";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../../Firebase.js";
@@ -28,8 +30,80 @@ import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
 
 function Creator({ setVideo, video }) {
   const [creatorName, setCreatorName] = useState("Loading...");
+  const [subscriberActionCount, setSubsciberActionCount] = useState(0);
+  const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
 
   const docRef = doc(db, "Users", creatorName);
+
+  async function subscribeUser(subscribersName) {
+      const userRef = doc(db, "Users", creatorName);
+      const getSubscribersListRef = await getDoc(userRef);
+
+      let subscribersList;
+
+      if (getSubscribersListRef.exists()) {
+        subscribersList = getSubscribersListRef.data().SubscriberList;
+      }
+
+      updateDoc(userRef, {
+        SubscriberList: [...subscribersList, subscribersName],
+      });
+
+      let getUpdatedSubscribersListRef = await getDoc(userRef);
+      let updatedSubscribersList;
+
+      if (getUpdatedSubscribersListRef.exists()) {
+        updatedSubscribersList =
+          getUpdatedSubscribersListRef.data().SubscriberList;
+      }
+
+      setSubsciberActionCount(
+        (subscriberActionCount) => subscriberActionCount + 1
+      );
+    }
+
+    async function unSubscribeUser(subscribersName) {
+      const userRef = doc(db, "Users", creatorName);
+      const getSubscribersListRef = await getDoc(userRef);
+
+      let subscribersList;
+
+      if (getSubscribersListRef.exists()) {
+        subscribersList = getSubscribersListRef.data().SubscriberList;
+      }
+
+      const filteredSubscribersArr = subscribersList.filter(
+        (sub) => sub !== subscribersName
+      );
+
+      updateDoc(userRef, {
+        SubscriberList: filteredSubscribersArr,
+      });
+
+      let getUpdatedSubscribersListRef = await getDoc(userRef);
+      let updatedSubscribersList;
+
+      if (getUpdatedSubscribersListRef.exists()) {
+        updatedSubscribersList =
+          getUpdatedSubscribersListRef.data().SubscriberList;
+      }
+
+      setSubsciberActionCount(
+        (subscriberActionCount) => subscriberActionCount + 1
+      );
+    }
+    console.log(updatedSubscribersList, "updated");
+
+useEffect(async () => {
+    const userRefInitial = doc(db, "Users", creatorName);
+    const getSubscribersListRefInitial = await getDoc(userRefInitial);
+    let subscribersListInitial;
+    if (getSubscribersListRefInitial.exists()) {
+      subscribersListInitial =
+        getSubscribersListRefInitial.data().SubscriberList;
+    }
+    setUpdateSubscribersList(subscribersListInitial);
+  }, [subscriberActionCount]);
 
   useEffect(async () => {
     if (video) {
@@ -69,6 +143,20 @@ function Creator({ setVideo, video }) {
               <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
 
               <div className={"userName"}> {creatorName} </div>
+              <SubscribeButton
+                              color="error"
+                              onClick={() => {
+                                updatedSubscribersList?.includes(creatorName)
+                                  ? unSubscribeUser(creatorName)
+                                  : subscribeUser(creatorName);
+                              }}
+                              buttonTitle={
+                                updatedSubscribersList?.includes(creatorName)
+                                  ? "Unsubscribe"
+                                  : "Subscribe"
+                              }
+                              buttonStyling={{ marginTop: "-22.5px" }}
+                            />
               <div className={"subscribers-profile"}>
                 {" "}
                 {subscriberCount} subscribers{" "}
