@@ -98,7 +98,7 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer() {
   const theme = useTheme();
-    const [ProfilePic, setProfilePic] = useState("");
+  const [ProfilePic, setProfilePic] = useState("");
 
   const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
   const [
@@ -166,10 +166,10 @@ export default function MiniDrawer() {
     );
     history.push("/creator");
   };
-    const displayName = localStorage.getItem("displayName");
+  const displayName = localStorage.getItem("displayName");
 
-    const docRef = doc(db, "Users", displayName);
-getDoc(docRef).then((docSnap) => {
+  const docRef = doc(db, "Users", displayName);
+  getDoc(docRef).then((docSnap) => {
     setProfilePic(docSnap.data().ProfilePictureUrl);
   });
   return (
@@ -220,10 +220,10 @@ getDoc(docRef).then((docSnap) => {
                         <HomeIcon fontSize="large" />
                       ) : index === 1 ? (
                         <Avatar
-                                                  src={ProfilePic}
-                                                  fontSize="large"
-                                                  alt="avatar-alt"
-                                                />
+                          src={ProfilePic}
+                          fontSize="large"
+                          alt="avatar-alt"
+                        />
                       ) : (
                         index === 2 && <CloudUploadIcon fontSize="large" />
                       )}
@@ -248,7 +248,7 @@ getDoc(docRef).then((docSnap) => {
                   Subscriptions
                 </Typography>
               )}
-             <Subscriptions />
+              <Subscriptions />
             </List>
           </Drawer>
         </Box>

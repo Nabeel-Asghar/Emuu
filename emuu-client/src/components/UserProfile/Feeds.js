@@ -45,7 +45,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
-import {  useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 const options = ["Recently Uploaded", "Most Viewed"];
 
 const ITEM_HEIGHT = 48;
@@ -114,7 +114,7 @@ function Feeds({ setVideo }) {
   const [sort, setSort] = React.useState("Recently Uploaded");
   const [pages, setPages] = useState(undefined);
   const [page, setPage] = useState(1);
- const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
+  const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
   const [
     updatedSubscribersListCompleteData,
     setUpdateSubscribersListCompleteData,
@@ -180,8 +180,8 @@ function Feeds({ setVideo }) {
     setLikedVideos(likedVideosArr);
   }
 
-const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
- let subscribersListCompleteData;
+  const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
+  let subscribersListCompleteData;
 
   useEffect(async () => {
     const timer = async () => {
@@ -213,7 +213,6 @@ const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
     return () => clearTimeout(interval);
   }, []);
 
-
   //Sort function for date uploaded
   function sortVideosByTime(videos) {
     for (let i = 0; i < videos.length - 1; i++) {
@@ -234,7 +233,7 @@ const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
     (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
   );
 
- const handleCreatorProfile = (creatorsName) => {
+  const handleCreatorProfile = (creatorsName) => {
     const creatorsData = usersArr.filter(
       (user) => user.Username === creatorsName
     );
@@ -248,7 +247,6 @@ const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
     );
     history.push("/creator");
   };
-
 
   useEffect(async () => {
     await getLikedVideos();
@@ -272,7 +270,6 @@ const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
               {recentVideos &&
                 sort == "Recently Uploaded" &&
                 recentVideos.map((video) => (
-
                   <Card sx={{ maxWidth: 380, height: 375 }}>
                     <CardMedia component="img" image={video.ThumbnailUrl} />
 
@@ -444,52 +441,47 @@ const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
             </div>
           </div>
         </TabPanel>
-         <TabPanel value="3">
+        <TabPanel value="3">
           <div>
-
-         {updatedSubscribersListCompleteData.map((user, index) => (
-          <ListItem key={index} disablePadding sx={{ display: "block" }}>
-            <ListItemButton
-              sx={{
-                minHeight: 48,
-                justifyContent: "initial",
-                px: 2.5,
-              }}
-              onClick={() => handleCreatorProfile(user.Username)}
-            >
-              <ListItemIcon
-                sx={{
-                  minWidth: 0,
-                  mr: 3,
-                  justifyContent: "center",
-                }}
-              >
-                <Avatar
-                  src={
-                    user.ProfilePictureUrl
-                      ? user.ProfilePictureUrl
-                      : "https://wallpaperaccess.com/full/170249.jpg"
-                  }
-                  alt="avatar-alt"
-                />
-              </ListItemIcon>
-              <ListItemText primary={user.Username} sx={{ opacity: 1 }} />
-            </ListItemButton>
-          </ListItem>
-        ))}
-
-
-
-
+            {updatedSubscribersListCompleteData.map((user, index) => (
+              <ListItem key={index} disablePadding sx={{ display: "block" }}>
+                <ListItemButton
+                  sx={{
+                    minHeight: 48,
+                    justifyContent: "initial",
+                    px: 2.5,
+                  }}
+                  onClick={() => handleCreatorProfile(user.Username)}
+                >
+                  <ListItemIcon
+                    sx={{
+                      minWidth: 0,
+                      mr: 3,
+                      justifyContent: "center",
+                    }}
+                  >
+                    <Avatar
+                      src={
+                        user.ProfilePictureUrl
+                          ? user.ProfilePictureUrl
+                          : "https://wallpaperaccess.com/full/170249.jpg"
+                      }
+                      alt="avatar-alt"
+                    />
+                  </ListItemIcon>
+                  <ListItemText primary={user.Username} sx={{ opacity: 1 }} />
+                </ListItemButton>
+              </ListItem>
+            ))}
           </div>
-          </TabPanel>
-          <TabPanel value="4">
+        </TabPanel>
+        <TabPanel value="4">
           <div className="feed-container">
-           <div className="subs__container">
-          <Subscriptions />
+            <div className="subs__container">
+              <Subscriptions />
+            </div>
           </div>
-          </div>
-          </TabPanel>
+        </TabPanel>
       </TabContext>
     </Box>
   );

@@ -30,101 +30,100 @@ function Video({ video, setVideo, setUserProfile }) {
   const displayName = localStorage.getItem("displayName");
   const [checked, setChecked] = useState(false);
   const history = useHistory();
-    const location = useLocation();
-    const [autocompleteState, setAutocompleteState] = useState({});
-    const [searchInput, setSearchInput] = useState("");
-    const [count, setCount] = useState(0);
+  const location = useLocation();
+  const [autocompleteState, setAutocompleteState] = useState({});
+  const [searchInput, setSearchInput] = useState("");
+  const [count, setCount] = useState(0);
 
-    const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
+  const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
 
-    const autocomplete = useMemo(
-      () =>
-        createAutocomplete({
-          onStateChange({ state }) {
-            setAutocompleteState(state);
-            setSearchInput(state.query);
-            if (count === 0) {
-              setCount((count) => count + 1);
-            }
-          },
-          getSources() {
-            return [
-              {
-                sourceId: "pages-source",
-                getItemInputValue({ item }) {
-                  // search item
-                  return item.query;
-                },
-                getItems({ query }) {
-                  // takes your search input and checks if anything that matches it exists in your dataset
-                  if (!query) {
-                    return firebaseData;
-                  }
-                  return firebaseData.filter(
-                    (item) =>
-                      item.VideoTitle?.toLowerCase().includes(
-                        query.toLowerCase()
-                      ) ||
-                      item.Username?.toLowerCase().includes(
-                        query.toLocaleLowerCase()
-                      )
-                  );
-                },
-                templates: {
-                  item({ item }) {
-                    return item.VideoTitle || item.Username;
-                  },
+  const autocomplete = useMemo(
+    () =>
+      createAutocomplete({
+        onStateChange({ state }) {
+          setAutocompleteState(state);
+          setSearchInput(state.query);
+          if (count === 0) {
+            setCount((count) => count + 1);
+          }
+        },
+        getSources() {
+          return [
+            {
+              sourceId: "pages-source",
+              getItemInputValue({ item }) {
+                // search item
+                return item.query;
+              },
+              getItems({ query }) {
+                // takes your search input and checks if anything that matches it exists in your dataset
+                if (!query) {
+                  return firebaseData;
+                }
+                return firebaseData.filter(
+                  (item) =>
+                    item.VideoTitle?.toLowerCase().includes(
+                      query.toLowerCase()
+                    ) ||
+                    item.Username?.toLowerCase().includes(
+                      query.toLocaleLowerCase()
+                    )
+                );
+              },
+              templates: {
+                item({ item }) {
+                  return item.VideoTitle || item.Username;
                 },
               },
-            ];
-          },
-        }),
-      [count]
+            },
+          ];
+        },
+      }),
+    [count]
+  );
+
+  const dataSet = autocompleteState?.collections?.[0]?.items;
+  const searchResultsVideosArr = dataSet?.filter(
+    (obj) => obj.hasOwnProperty("VideoUrl") && obj.hasOwnProperty("Username")
+  );
+  const searchResultsUsersArr = dataSet?.filter(
+    (obj) => !obj.hasOwnProperty("VideoUrl") && obj.hasOwnProperty("Username")
+  );
+  const showSearchResults =
+    searchResultsVideosArr?.length > 0 || searchResultsUsersArr?.length > 0;
+
+  const userName = localStorage.getItem("displayName");
+
+  const usersArr = firebaseData.filter(
+    (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
+  );
+  const videosArr = firebaseData.filter(
+    (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
+  );
+
+  const handleCreatorProfile = (creatorsName) => {
+    const creatorsData = usersArr.filter(
+      (user) => user.Username === creatorsName
+    );
+    const creatorsDataVideos = videosArr.filter(
+      (video) => video.Username === creatorsName
+    );
+    localStorage.setItem("creatorsData", JSON.stringify(creatorsData));
+    localStorage.setItem(
+      "creatorsDataVideos",
+      JSON.stringify(creatorsDataVideos)
     );
 
-    const dataSet = autocompleteState?.collections?.[0]?.items;
-    const searchResultsVideosArr = dataSet?.filter(
-      (obj) => obj.hasOwnProperty("VideoUrl") && obj.hasOwnProperty("Username")
-    );
-    const searchResultsUsersArr = dataSet?.filter(
-      (obj) => !obj.hasOwnProperty("VideoUrl") && obj.hasOwnProperty("Username")
-    );
-    const showSearchResults =
-      searchResultsVideosArr?.length > 0 || searchResultsUsersArr?.length > 0;
+    {
+      location.pathname === "/creator"
+        ? window.location.reload()
+        : history.push("/creator");
+    }
+  };
 
-    const userName = localStorage.getItem("displayName");
-
-    const usersArr = firebaseData.filter(
-      (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
-    );
-    const videosArr = firebaseData.filter(
-      (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
-    );
-
-    const handleCreatorProfile = (creatorsName) => {
-      const creatorsData = usersArr.filter(
-        (user) => user.Username === creatorsName
-      );
-      const creatorsDataVideos = videosArr.filter(
-        (video) => video.Username === creatorsName
-      );
-      localStorage.setItem("creatorsData", JSON.stringify(creatorsData));
-      localStorage.setItem(
-        "creatorsDataVideos",
-        JSON.stringify(creatorsDataVideos)
-      );
-
-      {
-        location.pathname === "/creator"
-          ? window.location.reload()
-          : history.push("/creator");
-      }
-    };
-
-    const subscribeUser = () => {
-      console.log("subscribed");
-    };
-
+  const subscribeUser = () => {
+    console.log("subscribed");
+  };
 
   function checkLiked() {
     let liked = video?.usersThatLiked?.includes(displayName); //check if there is a video and if there are users that liked stored
@@ -173,58 +172,58 @@ function Video({ video, setVideo, setUserProfile }) {
   return (
     <>
       <AlgoliaSearchNavbar
-              autocomplete={autocomplete}
-              searchInput={searchInput}
-            />
+        autocomplete={autocomplete}
+        searchInput={searchInput}
+      />
       <div className="videoPage">
-      {showSearchResults && (
-                <p class="text-start">
-                  <h2 className="video__category__title p-4">Search Results</h2>
-                  <div className="video-row">
-                    {searchResultsVideosArr &&
-                      searchResultsVideosArr.map((video, index) => (
-                        <div id={index}>
-                          <img
-                            controls
-                            height="250"
-                            width="400"
-                            src={video.thumbnailUrl}
-                          />
-                          <p>
-                            <Link to="/video">
-                              {" "}
-                              <span
-                                onClick={() => {
-                                  setVideo(video);
-                                }}
-                              >
-                                {video.VideoTitle}
-                              </span>
-                            </Link>{" "}
-                            | {video.Username} | {video.Likes} Likes | {video.Views}{" "}
-                            Views{" "}
-                          </p>
-                        </div>
-                      ))}
-                  </div>
-
-                  <div className="video-row">
-                    {searchResultsUsersArr &&
-                      searchResultsUsersArr.map((user, index) => (
-                        <UserProfileCard
-                          id={index}
-                          profileImg={user.ProfilePictureUrl}
-                          username={user.Username}
-                          subscribersCount={`${user.SubscriberCount} Subscribers`}
+        {showSearchResults && (
+          <p class="text-start">
+            <h2 className="video__category__title p-4">Search Results</h2>
+            <div className="video-row">
+              {searchResultsVideosArr &&
+                searchResultsVideosArr.map((video, index) => (
+                  <div id={index}>
+                    <img
+                      controls
+                      height="250"
+                      width="400"
+                      src={video.thumbnailUrl}
+                    />
+                    <p>
+                      <Link to="/video">
+                        {" "}
+                        <span
                           onClick={() => {
-                            subscribeUser(user.Username);
+                            setVideo(video);
                           }}
-                          handleUserClick={() => handleCreatorProfile(user.Username)}
-                        />
-                      ))}
+                        >
+                          {video.VideoTitle}
+                        </span>
+                      </Link>{" "}
+                      | {video.Username} | {video.Likes} Likes | {video.Views}{" "}
+                      Views{" "}
+                    </p>
                   </div>
-                </p>
-              )}
+                ))}
+            </div>
+
+            <div className="video-row">
+              {searchResultsUsersArr &&
+                searchResultsUsersArr.map((user, index) => (
+                  <UserProfileCard
+                    id={index}
+                    profileImg={user.ProfilePictureUrl}
+                    username={user.Username}
+                    subscribersCount={`${user.SubscriberCount} Subscribers`}
+                    onClick={() => {
+                      subscribeUser(user.Username);
+                    }}
+                    handleUserClick={() => handleCreatorProfile(user.Username)}
+                  />
+                ))}
+            </div>
+          </p>
+        )}
         <video controls height="700" src={video.VideoUrl}></video>
         <div className="title-line">
           <h1 class="title">{video.VideoTitle}</h1>

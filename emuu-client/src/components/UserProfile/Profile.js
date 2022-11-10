@@ -41,7 +41,6 @@ const ORIENTATION_TO_ANGLE = {
   8: -90,
 };
 
-
 function Profile({ setVideo, video }, { classes }) {
   const [percent, setPercent] = useState(0);
   const displayName = localStorage.getItem("displayName");
@@ -56,10 +55,9 @@ function Profile({ setVideo, video }, { classes }) {
   const history = useHistory();
   //const location = useLocation();
 
-   const [autocompleteState, setAutocompleteState] = useState({});
-    const [searchInput, setSearchInput] = useState("");
-    const [count, setCount] = useState(0);
-
+  const [autocompleteState, setAutocompleteState] = useState({});
+  const [searchInput, setSearchInput] = useState("");
+  const [count, setCount] = useState(0);
 
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
 
@@ -142,8 +140,8 @@ function Profile({ setVideo, video }, { classes }) {
 
     {
       //location.pathname === "/creator"
-     //  ? window.location.reload()
-         history.push("/creator");
+      //  ? window.location.reload()
+      history.push("/creator");
     }
   };
 
@@ -249,64 +247,62 @@ function Profile({ setVideo, video }, { classes }) {
 
   return (
     <>
-     <AlgoliaSearchNavbar
-             autocomplete={autocomplete}
-             searchInput={searchInput}
-           />
+      <AlgoliaSearchNavbar
+        autocomplete={autocomplete}
+        searchInput={searchInput}
+      />
       <div className="MainProfileDiv">
-      {showSearchResults && (
-                <p class="text-start">
-                  <h2 className="video__category__title p-4">Search Results</h2>
-                  <div className="video-row">
-                    {searchResultsVideosArr &&
-                      searchResultsVideosArr.map((video, index) => (
-                        <div id={index}>
-                          <img
-                            controls
-                            height="250"
-                            width="400"
-                            src={video.thumbnailUrl}
-                          />
-                          <p>
-                            <Link to="/video">
-                              {" "}
-                              <span
-                                onClick={() => {
-                                  setVideo(video);
-                                }}
-                              >
-                                {video.VideoTitle}
-                              </span>
-                            </Link>{" "}
-                            | {video.Username} | {video.Likes} Likes | {video.Views}{" "}
-                            Views{" "}
-                          </p>
-                        </div>
-                      ))}
-                  </div>
-
-                  <div className="video-row">
-                    {searchResultsUsersArr &&
-                      searchResultsUsersArr.map((user, index) => (
-                        <UserProfileCard
-                          id={index}
-                          profileImg={user.ProfilePictureUrl}
-                          username={user.Username}
-                          subscribersCount={`${user.SubscriberCount} Subscribers`}
+        {showSearchResults && (
+          <p class="text-start">
+            <h2 className="video__category__title p-4">Search Results</h2>
+            <div className="video-row">
+              {searchResultsVideosArr &&
+                searchResultsVideosArr.map((video, index) => (
+                  <div id={index}>
+                    <img
+                      controls
+                      height="250"
+                      width="400"
+                      src={video.thumbnailUrl}
+                    />
+                    <p>
+                      <Link to="/video">
+                        {" "}
+                        <span
                           onClick={() => {
-                            subscribeUser(user.Username);
+                            setVideo(video);
                           }}
-                          handleUserClick={() => handleCreatorProfile(user.Username)}
-                        />
-                      ))}
+                        >
+                          {video.VideoTitle}
+                        </span>
+                      </Link>{" "}
+                      | {video.Username} | {video.Likes} Likes | {video.Views}{" "}
+                      Views{" "}
+                    </p>
                   </div>
-                </p>
-              )}
+                ))}
+            </div>
+
+            <div className="video-row">
+              {searchResultsUsersArr &&
+                searchResultsUsersArr.map((user, index) => (
+                  <UserProfileCard
+                    id={index}
+                    profileImg={user.ProfilePictureUrl}
+                    username={user.Username}
+                    subscribersCount={`${user.SubscriberCount} Subscribers`}
+                    onClick={() => {
+                      subscribeUser(user.Username);
+                    }}
+                    handleUserClick={() => handleCreatorProfile(user.Username)}
+                  />
+                ))}
+            </div>
+          </p>
+        )}
         <div className="profile-container">
           <div className="top-portion">
             <div className="user-profile-bg-image">
-
-
               <div>
                 {imageSrc ? (
                   <React.Fragment>
@@ -375,7 +371,6 @@ function Profile({ setVideo, video }, { classes }) {
                   </div>
                 )}
               </div>{" "}
-
             </div>
           </div>
 

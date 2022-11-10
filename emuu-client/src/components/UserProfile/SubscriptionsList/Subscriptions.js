@@ -20,8 +20,6 @@ function Subscriptions() {
   const [count, setCount] = useState(0);
   const history = useHistory();
 
-
-
   const userName = localStorage.getItem("displayName");
 
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
@@ -79,10 +77,11 @@ function Subscriptions() {
       JSON.stringify(subscribersDataVideos)
     );
     history.push("/creator");
-  };localStorage.setItem("subscribersCount",subscribersData?.length)
+  };
+  localStorage.setItem("subscribersCount", subscribersData?.length);
 
   return (
-    <div >
+    <div>
       {subscribersData?.map((user, index) => (
         <ListItem key={index} disablePadding sx={{ display: "block" }}>
           <ListItemButton
