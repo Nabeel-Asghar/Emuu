@@ -26,7 +26,6 @@ import "../../Firebase.js";
 import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
 import firebase from "firebase/app";
 
-const theme = createTheme();
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -82,7 +81,6 @@ function Login() {
   return (
     <>
       <HeaderPostLogin />
-      <ThemeProvider theme={theme}>
         <Grid container component="main" sx={{ height: "100vh" }}>
           <CssBaseline />
           <Grid
@@ -185,7 +183,6 @@ function Login() {
             </Box>
           </Grid>
         </Grid>
-      </ThemeProvider>
     </>
   );
 }

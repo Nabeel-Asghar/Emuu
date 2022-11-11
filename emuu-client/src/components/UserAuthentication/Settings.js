@@ -19,23 +19,19 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
 import "./register.scss";
+import { getAuth, updatePassword } from "firebase/auth";
 
-function Register() {
+
+function Settings() {
   //use state for registration variables
   const [password, setPassword] = useState("");
-  const [email, setEmail] = useState("");
-  const [userName, setUserName] = useState("");
+  const [newPassword, setNewPassword] = useState("");
   const [message, setMessage] = useState("");
   const history = useHistory();
   const [error, setError] = useState("");
+  const auth = getAuth();
+  const user = auth.currentUser;
 
-  const userdata = {
-    user_userName: userName,
-    user_email: email,
-    user_password: password,
-  };
-
-  const videoCollectionData = {};
 
   const validatePassword = (pass) => {
     if (pass.length < 8) {
@@ -65,37 +61,17 @@ function Register() {
     return true;
   };
 
-  function validateEmail(email) {
-    let at = 0;
-    let checkDotcom = "";
-    for (let i = email.length - 1; i >= 0; i--) {
-      if (email[i] == "@") at++;
-      if (i >= email.length - 4) {
-        checkDotcom += email[i];
-      }
-    }
-    console.log(checkDotcom);
-
-    if (!(checkDotcom == "moc.") || !at || at > 1) {
-      setError("The email address is invalid");
-      return false;
-    }
-
-    return true;
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // store the states in the form data
-    if (!validateEmail(userdata.user_email)) return;
-    if (!validatePassword(userdata.user_password)) return;
+    if (!validatePassword(newPassword)) return;
 
-    history.push("/login");
-    await axios
-      .post("http://localhost:8080/auth/register", JSON.stringify(userdata))
-      .then((result) => {
-        console.log("User is registered");
-      });
+
+    updatePassword(user, newPassword).then(() => {
+      history.push("/login");
+    })
+
   };
 
   return (
@@ -115,55 +91,39 @@ function Register() {
               <LockOutlinedIcon />
             </Avatar>
             <Typography component="h1" variant="h5">
-              Register
+              Change Password
             </Typography>
             <Box component="form" sx={{ mt: 3 }}>
               <Grid container spacing={0}>
                 <Grid item xs={12}>
                   <input
-                    required
-                    fullWidth
-                    id="username"
-                    label="Username"
-                    name="username"
-                    autoComplete="username"
-                    value={userName}
-                    className="register-input"
-                    placeholder="Username"
-                    onChange={(e) => setUserName(e.target.value)}
+                     required
+                                          fullWidth
+                                          name="password"
+                                          label="Password"
+                                          type="password"
+                                          id="password"
+                                          autoComplete="password"
+                                          value={password}
+                                          className="register-input"
+                                          placeholder="Current Password"
+                                          onChange={(e) => {
+                                            setPassword(e.target.value);}}
                   />
                   <Grid item xs={12}>
                     <input
                       required
                       fullWidth
-                      id="email"
-                      label="Email Address"
-                      name="email"
-                      autoComplete="email"
-                      value={email}
-                      className="register-input"
-                      placeholder="Email Address"
-                      onChange={(e) => {
-                        setError("");
-                        setEmail(e.target.value);
-                      }}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <input
-                      required
-                      fullWidth
-                      name="password"
-                      label="Password"
-                      type="password"
-                      id="password"
+                      name="newpassword"
+                      label="newPassword"
+                      type="newpassword"
+                      id="newpassword"
                       autoComplete="new-password"
-                      value={password}
+                      value={newPassword}
                       className="register-input"
-                      placeholder="Password"
+                      placeholder="New Password"
                       onChange={(e) => {
-                        setPassword(e.target.value);
+                        setNewPassword(e.target.value);
                         setError("");
                       }}
                     />
@@ -196,15 +156,8 @@ function Register() {
                   variant="contained"
                   sx={{ mt: 3, mb: 2 }}
                 >
-                  Sign Up
+                  Change Password
                 </Button>
-                <Grid container justifyContent="flex-end">
-                  <Grid item>
-                    <Link className="loginLink" href="/Login">
-                      Already have an account? Log in
-                    </Link>
-                  </Grid>
-                </Grid>
               </Grid>
             </Box>
           </Box>
@@ -213,4 +166,4 @@ function Register() {
   );
 }
 
-export default Register;
+export default Settings;
