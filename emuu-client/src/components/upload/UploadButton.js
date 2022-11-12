@@ -481,7 +481,7 @@ const FileUpload = ({ setVideo }) => {
   return (
     <AppContext.Consumer>
       {(context) => (
-        <div style={{ display: "flex", flexDirection: "row" }}>
+        <div style={{ display: "flex", flexDirection: "row", height: "100vh"}}>
           <Sidebar />
           <div
             style={{

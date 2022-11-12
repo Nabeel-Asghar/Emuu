@@ -7,13 +7,13 @@ $secondary-color: #26343d;
 }
 .MainProfileDiv {
   background: #0f0f0f;
-
+    height:100% !important;
   .profile-container {
     width: 100%;
     background: #0f0f0f;
     margin: auto;
     border-radius: 20px;
-
+    height: 100vh !important;
     .top-portion {
       width: 100%;
       position: relative;
