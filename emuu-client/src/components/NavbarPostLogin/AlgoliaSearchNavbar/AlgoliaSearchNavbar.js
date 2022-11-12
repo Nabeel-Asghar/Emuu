@@ -24,7 +24,6 @@ const AlgoliaSearchNavbar = ({ autocomplete, searchInput }) => {
           variant="dark"
           expand={expand}
           className="mb-3"
-
         >
           <Container fluid>
             <Navbar.Brand href="/">

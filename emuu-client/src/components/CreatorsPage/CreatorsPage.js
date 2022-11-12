@@ -243,58 +243,55 @@ function Creator({ setVideo, video }) {
             <div className="video-row">
               {searchResultsVideosArr &&
                 searchResultsVideosArr.map((video, index) => (
-                 <div>
-                                         <Card sx={{ width: 385, height: 375 }}>
-                                           <CardMedia
-                                             component="img"
-                                             image={video.thumbnailUrl}
-                                           />
-                                           <CardContent>
-                                             <CardHeader
-                                               avatar={
-                                                 <Avatar sx={{ width: 60, height: 60 }}></Avatar>
-                                               }
-                                               title={
-                                                 <Typography
-                                                   variant="body2"
-                                                   color="text.primary"
-                                                   fontWeight="bold"
-                                                   fontSize="20px"
-                                                 >
-                                                   <Link to="/video">
-                                                     <span
-                                                       onClick={() => {
-                                                         setVideo(video);
-                                                       }}
-                                                     >
-                                                       {video.VideoTitle}
-                                                     </span>
-                                                   </Link>
-                                                 </Typography>
-                                               }
-                                             />
+                  <div>
+                    <Card sx={{ width: 385, height: 375 }}>
+                      <CardMedia component="img" image={video.thumbnailUrl} />
+                      <CardContent>
+                        <CardHeader
+                          avatar={
+                            <Avatar sx={{ width: 60, height: 60 }}></Avatar>
+                          }
+                          title={
+                            <Typography
+                              variant="body2"
+                              color="text.primary"
+                              fontWeight="bold"
+                              fontSize="20px"
+                            >
+                              <Link to="/video">
+                                <span
+                                  onClick={() => {
+                                    setVideo(video);
+                                  }}
+                                >
+                                  {video.VideoTitle}
+                                </span>
+                              </Link>
+                            </Typography>
+                          }
+                        />
 
-                                             <div className="videoInfo">
-                                               <Typography
-                                                 variant="body2"
-                                                 color="text.secondary"
-                                                 fontWeight="medium"
-                                                 fontSize="18px"
-                                               >
-                                                 {video.Likes} Likes &#x2022; {video.Views} Views
-                                               </Typography>
-                                               <Typography
-                                                 variant="body2"
-                                                 color="text.secondary"
-                                                 fontWeight="medium"
-                                                 fontSize="18px"
-                                               >
-                                                 {video.Username}
-                                               </Typography>
-                                             </div>
-                                           </CardContent>
-                                         </Card>
-                                       </div>
+                        <div className="videoInfo">
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            fontWeight="medium"
+                            fontSize="18px"
+                          >
+                            {video.Likes} Likes &#x2022; {video.Views} Views
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            fontWeight="medium"
+                            fontSize="18px"
+                          >
+                            {video.Username}
+                          </Typography>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  </div>
                 ))}
             </div>
 
@@ -324,7 +321,6 @@ function Creator({ setVideo, video }) {
             </div>
 
             <div className="middle-portion">
-
               <div className="user-profile-img">
                 <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
 
@@ -334,30 +330,27 @@ function Creator({ setVideo, video }) {
                   {" "}
                   {subscriberCount} subscribers{" "}
                 </div>
-                 <div className="right-side">
-                                <SubscribeButton
-                                                            color="error"
-                                                            onClick={() => {
-                                                              updatedSubscribersList?.includes(creatorName)
-                                                                ? unSubscribeUser(displayName)
-                                                                : subscribeUser(displayName);
-                                                            }}
-                                                            buttonTitle={
-                                                              updatedSubscribersList?.includes(displayName)
-                                                                ? "Unsubscribe"
-                                                                : "Subscribe"
-                                                            }
-                                                            buttonStyling={{ marginTop: "-22.5px"
-                                                              }}
-                                                          />
+                <div className="right-side">
+                  <SubscribeButton
+                    color="error"
 
+                    onClick={() => {
+                      updatedSubscribersList?.includes(creatorName)
+                        ? unSubscribeUser(displayName)
+                        : subscribeUser(displayName);
+                    }}
 
-                              </div>
+                    buttonTitle={
+                      updatedSubscribersList?.includes(displayName)
+                        ? "Unsubscribe"
+                        : "Subscribe"
+                    }
+                    buttonStyling={{ marginTop: "-22.5px" }}
+                  />
+                </div>
               </div>
             </div>
             <div className="bottom-portion">
-
-
               <div className="left-side"></div>
               <Feeds setVideo={setVideo} />
             </div>
