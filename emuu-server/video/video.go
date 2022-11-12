@@ -10,6 +10,7 @@ import (
 	"log"
 	"math"
 	"net/http"
+	//"reflect"
 	"strconv"
 	"time"
 )
@@ -34,6 +35,10 @@ type Video struct {
 	GameTag          string   `firestore:"GameTag"`
 	VideoDescription string   `firestore:"VideoDescription"`
 	UsersThatLiked   []string `firestore:"usersThatLiked"`
+	ProfilePic       string
+}
+type User struct {
+	ProfilePicture string `firestore:"ProfilePictureUrl"`
 }
 
 func sortMostViewed(videos []Video) []Video {
@@ -157,7 +162,25 @@ func SetVideos(c *gin.Context) {
 			doc.DataTo(&vid)
 			mostViewedArr = append(mostViewedArr, vid)
 			recentArr = append(recentArr, vid)
+
+			iter := client.Collection("Users").Where("Username", "==", vid.Username).Documents(ctx)
+			for {
+				doc, err := iter.Next()
+				if err == iterator.Done {
+					break
+				}
+				if err != nil {
+					return
+				}
+				var profilePic User
+				doc.DataTo(&profilePic)
+				fmt.Println(profilePic)
+				//recentArr = append(recentArr, Video{ProfilePic: profilePic.ProfilePicture})
+				//reflect.ValueOf(&recentArr).Elem().FieldByName("ProfilePic").SetString(profilePic.ProfilePicture)
+
+			}
 		}
+
 		sortMostViewed(mostViewedArr)
 		sortRecent(recentArr)
 		fmt.Println(recentArr)

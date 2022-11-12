@@ -223,7 +223,9 @@ function Home({ setVideo }, { setUserProfile }) {
                           <CardContent>
                             <CardHeader
                               avatar={
-                                <Avatar sx={{ width: 60, height: 60 }}></Avatar>
+                                <Avatar sx={{ width: 60, height: 60 }}
+                                src={video.ProfilePic}
+                                ></Avatar>
                               }
                               title={
                                 <Typography
@@ -287,7 +289,9 @@ function Home({ setVideo }, { setUserProfile }) {
                           <CardContent>
                             <CardHeader
                               avatar={
-                                <Avatar sx={{ width: 60, height: 60 }}></Avatar>
+                                <Avatar sx={{ width: 60, height: 60 }}
+                                src={video.ProfilePic}
+                                ></Avatar>
                               }
                               title={
                                 <Typography
