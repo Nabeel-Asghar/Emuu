@@ -11,7 +11,15 @@ import { db } from "../../Firebase.js";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
 import { createAutocomplete } from "@algolia/autocomplete-core";
-
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
+import { Avatar } from "@mui/material";
+import Typography from "@material-ui/core/Typography";
 import {
   getDocs,
   getDoc,
@@ -182,28 +190,58 @@ function Video({ video, setVideo, setUserProfile }) {
             <div className="video-row">
               {searchResultsVideosArr &&
                 searchResultsVideosArr.map((video, index) => (
-                  <div id={index}>
-                    <img
-                      controls
-                      height="250"
-                      width="400"
-                      src={video.thumbnailUrl}
-                    />
-                    <p>
-                      <Link to="/video">
-                        {" "}
-                        <span
-                          onClick={() => {
-                            setVideo(video);
-                          }}
-                        >
-                          {video.VideoTitle}
-                        </span>
-                      </Link>{" "}
-                      | {video.Username} | {video.Likes} Likes | {video.Views}{" "}
-                      Views{" "}
-                    </p>
-                  </div>
+                   <div>
+                                                                                                  <Card sx={{ width: 385, height: 375 }}>
+                                                                                                    <CardMedia
+                                                                                                      component="img"
+                                                                                                      image={video.thumbnailUrl}
+                                                                                                    />
+                                                                                                    <CardContent>
+                                                                                                      <CardHeader
+                                                                                                        avatar={
+                                                                                                          <Avatar sx={{ width: 60, height: 60 }}></Avatar>
+                                                                                                        }
+                                                                                                        title={
+                                                                                                          <Typography
+                                                                                                            variant="body2"
+                                                                                                            color="text.primary"
+                                                                                                            fontWeight="bold"
+                                                                                                            fontSize="20px"
+                                                                                                          >
+                                                                                                            <Link to="/video">
+                                                                                                              <span
+                                                                                                                onClick={() => {
+                                                                                                                  setVideo(video);
+                                                                                                                }}
+                                                                                                              >
+                                                                                                                {video.VideoTitle}
+                                                                                                              </span>
+                                                                                                            </Link>
+                                                                                                          </Typography>
+                                                                                                        }
+                                                                                                      />
+
+                                                                                                      <div className="videoInfo">
+                                                                                                        <Typography
+                                                                                                          variant="body2"
+                                                                                                          color="text.secondary"
+                                                                                                          fontWeight="medium"
+                                                                                                          fontSize="18px"
+                                                                                                        >
+                                                                                                          {video.Likes} Likes &#x2022; {video.Views} Views
+                                                                                                        </Typography>
+                                                                                                        <Typography
+                                                                                                          variant="body2"
+                                                                                                          color="text.secondary"
+                                                                                                          fontWeight="medium"
+                                                                                                          fontSize="18px"
+                                                                                                        >
+                                                                                                          {video.Username}
+                                                                                                        </Typography>
+                                                                                                      </div>
+                                                                                                    </CardContent>
+                                                                                                  </Card>
+                                                                                                </div>
                 ))}
             </div>
 
