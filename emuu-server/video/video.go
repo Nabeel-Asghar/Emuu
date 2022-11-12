@@ -10,7 +10,7 @@ import (
 	"log"
 	"math"
 	"net/http"
-	//"reflect"
+	"reflect"
 	"strconv"
 	"time"
 )
@@ -160,9 +160,6 @@ func SetVideos(c *gin.Context) {
 			var vid = Video{}
 
 			doc.DataTo(&vid)
-			mostViewedArr = append(mostViewedArr, vid)
-			recentArr = append(recentArr, vid)
-
 			iter := client.Collection("Users").Where("Username", "==", vid.Username).Documents(ctx)
 			for {
 				doc, err := iter.Next()
@@ -174,11 +171,14 @@ func SetVideos(c *gin.Context) {
 				}
 				var profilePic User
 				doc.DataTo(&profilePic)
-				fmt.Println(profilePic)
-				//recentArr = append(recentArr, Video{ProfilePic: profilePic.ProfilePicture})
-				//reflect.ValueOf(&recentArr).Elem().FieldByName("ProfilePic").SetString(profilePic.ProfilePicture)
+				//fmt.Println(profilePic)
+				reflect.ValueOf(&vid).Elem().FieldByName("ProfilePic").SetString(profilePic.ProfilePicture)
+				reflect.ValueOf(&vid).Elem().FieldByName("ProfilePic").SetString(profilePic.ProfilePicture)
 
 			}
+			mostViewedArr = append(mostViewedArr, vid)
+			recentArr = append(recentArr, vid)
+
 		}
 
 		sortMostViewed(mostViewedArr)
