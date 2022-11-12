@@ -324,32 +324,39 @@ function Creator({ setVideo, video }) {
             </div>
 
             <div className="middle-portion">
+
               <div className="user-profile-img">
                 <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
 
                 <div className={"userName"}> {creatorName} </div>
-                <SubscribeButton
-                  color="error"
-                  onClick={() => {
-                    updatedSubscribersList?.includes(creatorName)
-                      ? unSubscribeUser(displayName)
-                      : subscribeUser(displayName);
-                  }}
-                  buttonTitle={
-                    updatedSubscribersList?.includes(displayName)
-                      ? "Unsubscribe"
-                      : "Subscribe"
-                  }
-                  buttonStyling={{ marginTop: "-22.5px" }}
-                />
+
                 <div className={"subscribers-profile"}>
                   {" "}
                   {subscriberCount} subscribers{" "}
                 </div>
+                 <div className="right-side">
+                                <SubscribeButton
+                                                            color="error"
+                                                            onClick={() => {
+                                                              updatedSubscribersList?.includes(creatorName)
+                                                                ? unSubscribeUser(displayName)
+                                                                : subscribeUser(displayName);
+                                                            }}
+                                                            buttonTitle={
+                                                              updatedSubscribersList?.includes(displayName)
+                                                                ? "Unsubscribe"
+                                                                : "Subscribe"
+                                                            }
+                                                            buttonStyling={{ marginTop: "-22.5px"
+                                                              }}
+                                                          />
+
+
+                              </div>
               </div>
             </div>
             <div className="bottom-portion">
-              <div className="right-side"></div>
+
 
               <div className="left-side"></div>
               <Feeds setVideo={setVideo} />
