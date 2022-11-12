@@ -88,7 +88,7 @@ function Subscriptions() {
             sx={{
               minHeight: 48,
               justifyContent: "initial",
-              px: 2.5,
+              px: 1.5,
             }}
             onClick={() => handleSubscribersProfile(user.Username)}
           >
