@@ -5,6 +5,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { BrowserRouter, Route } from "react-router-dom";
 import Login from "./components/UserAuthentication/newloginscreen";
 import Register from "./components/UserAuthentication/newRegister";
+import Settings from "./components/UserAuthentication/Settings";
 import Home from "./components/home/Home";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 import Profile from "./components/UserProfile/Profile";
@@ -106,6 +107,9 @@ function App() {
                 <Route path="/upload">
                   <UploadVideo />
                 </Route>
+                <Route path="/settings">
+                                  <Settings />
+                                </Route>
               </>
             )}
           </BrowserRouter>
