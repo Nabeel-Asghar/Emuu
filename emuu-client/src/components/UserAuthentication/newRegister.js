@@ -74,7 +74,6 @@ function Register() {
         checkDotcom += email[i];
       }
     }
-    console.log(checkDotcom);
 
     if (!(checkDotcom == "moc.") || !at || at > 1) {
       setError("The email address is invalid");
@@ -94,7 +93,6 @@ function Register() {
     await axios
       .post("http://localhost:8080/auth/register", JSON.stringify(userdata))
       .then((result) => {
-        console.log("User is registered");
       });
   };
 

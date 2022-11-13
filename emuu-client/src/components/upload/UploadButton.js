@@ -321,7 +321,6 @@ const FileUpload = ({ setVideo }) => {
   };
 
   const subscribeUser = () => {
-    console.log("subscribed user.");
   };
 
   //upload data structure
@@ -412,7 +411,6 @@ const FileUpload = ({ setVideo }) => {
             return;
           }
           setThumbnailUrl(URL);
-          console.log(URL);
         });
       }
     );
@@ -442,7 +440,6 @@ const FileUpload = ({ setVideo }) => {
             return;
           }
           setVideoUrl(URL);
-          console.log(URL);
         });
       }
     );

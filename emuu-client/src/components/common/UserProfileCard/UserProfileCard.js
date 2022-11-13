@@ -14,7 +14,6 @@ const UserProfileCard = ({
 }) => {
   const isAuthenticated = localStorage.getItem("auth");
 
-  console.log(isAuthenticated, "auth status");
   return (
     <div className="video__details__container">
       <Link to="/UserProfile" className="avatar__container">

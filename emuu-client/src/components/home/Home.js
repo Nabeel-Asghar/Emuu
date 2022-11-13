@@ -113,13 +113,11 @@ function Home({ setVideo }, { setUserProfile }) {
         JSON.stringify({ ...disAndPage })
       )
       .then(function (response) {
-        console.log(response);
       });
     const response = await axios.get("http://localhost:8080/auth/video");
     setTopVideos(response.data.message.MostViewed);
     setRecentVideos(response.data.message.RecentUpload);
     setPages(response.data.message.Pages);
-    console.log(response.data.message.RecentUpload);
   }
 
   useEffect(async () => {
@@ -139,7 +137,6 @@ function Home({ setVideo }, { setUserProfile }) {
   const userName = localStorage.getItem("displayName");
 
   async function subscribeUser(subscribersName) {
-    console.log(subscribersName);
   }
 
   return (

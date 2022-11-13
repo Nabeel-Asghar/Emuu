@@ -195,7 +195,6 @@ function Creator({ setVideo, video }) {
       (subscriberActionCount) => subscriberActionCount + 1
     );
   }
-  console.log(updatedSubscribersList, "updated");
 
   useEffect(async () => {
     const userRefInitial = doc(db, "Users", creatorName);

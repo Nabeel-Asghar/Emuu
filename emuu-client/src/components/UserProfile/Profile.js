@@ -154,7 +154,6 @@ function Profile({ setVideo, video }, { classes }) {
   };
 
   const subscribeUser = () => {
-    console.log("subscribed");
   };
   const subscribersCount = localStorage.getItem("subscribersCount");
 
@@ -169,7 +168,6 @@ function Profile({ setVideo, video }, { classes }) {
         croppedAreaPixels,
         rotation
       );
-      console.log("donee", { croppedImage });
       setCroppedImageSrc(croppedImage);
 
       uploadBackground(croppedImage);

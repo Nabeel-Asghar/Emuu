@@ -130,7 +130,6 @@ function Video({ video, setVideo, setUserProfile }) {
   };
 
   const subscribeUser = () => {
-    console.log("subscribed");
   };
 
   function checkLiked() {
@@ -143,7 +142,6 @@ function Video({ video, setVideo, setUserProfile }) {
   }
   localStorage.setItem("CreatorName", video.Username);
   useEffect(async () => {
-    console.log(getAuth());
     if (video) {
       localStorage.setItem("video", JSON.stringify(video));
     }

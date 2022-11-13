@@ -55,12 +55,10 @@ export default function AccountMenu() {
   const SignedOut = async (e) => {
     signOut(auth)
       .then(() => {
-        console.log("User is signed out");
         history.push("/");
       })
       .catch((error) => {
         // An error happened.
-        console.log(error);
       });
   };
 

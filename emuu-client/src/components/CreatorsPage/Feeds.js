@@ -133,7 +133,6 @@ function Feeds({ setVideo, setUserProfile }) {
         JSON.stringify({ ...disAndPage })
       )
       .then(function (response) {
-        console.log(response);
       });
     try {
       const response = await axios.get("http://localhost:8080/auth/video");
@@ -142,7 +141,6 @@ function Feeds({ setVideo, setUserProfile }) {
       setRecentVideos(response.data.message.RecentUpload);
       setPages(response.data.message.Pages);
     } catch (error) {
-      console.log(error);
     }
   }
 
