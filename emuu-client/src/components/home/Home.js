@@ -242,7 +242,7 @@ function Home({ setVideo }, { setUserProfile }) {
               )}
               <p class="text-start">
                 <Typography className={"video__category__title"}>
-                  Top Rated Videos
+                  Most Viewed Videos
                 </Typography>
                 <div className="videos__container">
                   {" "}

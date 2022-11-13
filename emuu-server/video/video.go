@@ -183,7 +183,7 @@ func SetVideos(c *gin.Context) {
 
 		sortMostViewed(mostViewedArr)
 		sortRecent(recentArr)
-		fmt.Println(recentArr)
+		//fmt.Println(recentArr)
 
 		var pageAmount int
 		pageAmount = int(math.Ceil(float64(len(recentArr)) / 8))
