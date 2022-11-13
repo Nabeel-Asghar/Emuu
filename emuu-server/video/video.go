@@ -3,7 +3,6 @@ package video
 import (
 	"cloud.google.com/go/firestore"
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
@@ -70,8 +69,7 @@ func SetUsernameAndPage(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": res})
 	userUN = res.UserName
 	PageNum, _ = strconv.Atoi(res.PageNumber)
-	fmt.Println(userUN)
-	fmt.Println(PageNum)
+
 }
 
 func SetVideos(c *gin.Context) {
@@ -171,7 +169,6 @@ func SetVideos(c *gin.Context) {
 				}
 				var profilePic User
 				doc.DataTo(&profilePic)
-				//fmt.Println(profilePic)
 				reflect.ValueOf(&vid).Elem().FieldByName("ProfilePic").SetString(profilePic.ProfilePicture)
 				reflect.ValueOf(&vid).Elem().FieldByName("ProfilePic").SetString(profilePic.ProfilePicture)
 
@@ -183,7 +180,6 @@ func SetVideos(c *gin.Context) {
 
 		sortMostViewed(mostViewedArr)
 		sortRecent(recentArr)
-		//fmt.Println(recentArr)
 
 		var pageAmount int
 		pageAmount = int(math.Ceil(float64(len(recentArr)) / 8))

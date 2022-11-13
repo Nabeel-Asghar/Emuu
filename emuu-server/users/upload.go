@@ -3,7 +3,6 @@ package users
 import (
 	"cloud.google.com/go/firestore"
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"google.golang.org/api/option"
@@ -95,9 +94,6 @@ func UploadVideo(c *gin.Context) {
 	//Format Time
 	Date := dt.Format("01-02-2006")
 
-	//Declare comments array
-	//commentsArr := []map[string]interface{}
-
 	//Declare usersThatLiked array
 	usersThatLikedArr := [...]string{}
 
@@ -119,6 +115,7 @@ func UploadVideo(c *gin.Context) {
 
 	if err != nil {
 		log.Fatalf("firestore doc creation error:%s\n", err)
+		log.Println(wr)
 	}
 
 	dc := client.Collection("Users").Doc(input.User_userName)
@@ -126,7 +123,6 @@ func UploadVideo(c *gin.Context) {
 		{Path: "VideosPosted", Value: firestore.Increment(1)},
 	})
 
-	fmt.Println(wr.UpdateTime, wr.UpdateTime)
 	c.JSON(http.StatusOK, gin.H{"message": "User Upload collection successfully created"})
 
 }
