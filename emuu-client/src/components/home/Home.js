@@ -17,6 +17,7 @@ import {
 import { createAutocomplete } from "@algolia/autocomplete-core";
 import { Link } from "react-router-dom";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
+
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
 import { db } from "../../Firebase.js";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -167,26 +168,59 @@ function Home({ setVideo }, { setUserProfile }) {
                     {searchResultsVideosArr &&
                       searchResultsVideosArr.map((video, index) => (
                         <div>
-                          <img
-                            controls
-                            height="250"
-                            width="400"
-                            src={video.thumbnailUrl}
-                          ></img>
-                          <p>
-                            <Link to="/video">
-                              {" "}
-                              <span
-                                onClick={() => {
-                                  setVideo(video);
-                                }}
-                              >
-                                {video.VideoTitle}
-                              </span>
-                            </Link>{" "}
-                            | {video.Username} | {video.Likes} Likes |{" "}
-                            {video.Views} Views{" "}
-                          </p>
+                          <Card sx={{ width: 385, height: 375 }}>
+                            <CardMedia
+                              component="img"
+                              image={video.thumbnailUrl}
+                            />
+                            <CardContent>
+                              <CardHeader
+                                avatar={
+                                  <Avatar
+                                    sx={{ width: 60, height: 60 }}
+                                  ></Avatar>
+                                }
+                                title={
+                                  <Typography
+                                    variant="body2"
+                                    color="text.primary"
+                                    fontWeight="bold"
+                                    fontSize="20px"
+                                  >
+                                    <Link to="/video">
+                                      <span
+                                        onClick={() => {
+                                          setVideo(video);
+                                        }}
+                                      >
+                                        {video.VideoTitle}
+                                      </span>
+                                    </Link>
+                                  </Typography>
+                                }
+                              />
+
+                              <div className="videoInfo">
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                  fontWeight="medium"
+                                  fontSize="18px"
+                                >
+                                  {video.Likes} Likes &#x2022; {video.Views}{" "}
+                                  Views
+                                </Typography>
+                                <Typography
+                                  variant="body2"
+                                  color="text.secondary"
+                                  fontWeight="medium"
+                                  fontSize="18px"
+                                >
+                                  {video.Username}
+                                </Typography>
+                              </div>
+                            </CardContent>
+                          </Card>
                         </div>
                       ))}
                   </div>
@@ -215,7 +249,7 @@ function Home({ setVideo }, { setUserProfile }) {
                   {topVideos &&
                     topVideos.map((video, index) => (
                       <div>
-                        <Card sx={{ maxWidth: 395, height: 375 }}>
+                        <Card sx={{ maxWidth: 385, height: 375 }}>
                           <CardMedia
                             component="img"
                             image={video.ThumbnailUrl}
@@ -281,7 +315,7 @@ function Home({ setVideo }, { setUserProfile }) {
                   {recentVideos &&
                     recentVideos.map((video, index) => (
                       <div>
-                        <Card sx={{ maxWidth: 395, height: 400 }}>
+                        <Card sx={{ maxWidth: 385, height: 375 }}>
                           <CardMedia
                             component="img"
                             image={video.ThumbnailUrl}

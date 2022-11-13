@@ -1,9 +1,8 @@
 $main-color: #0f0f0f;
 $secondary-color: #26343d;
 #prf-bg-img {
-  height: 50vh;
+  height: 33vh;
   width: 100vw;
-  margin-top: -12rem;
 }
 .MainProfileDiv {
   background: #0f0f0f;
@@ -74,6 +73,17 @@ $secondary-color: #26343d;
         font-size: 20px;
         color: lightgray;
         padding-left: 166px;
+      }
+      .right-side {
+        width: 100%;
+        position: absolute;
+        bottom: 3rem;
+        left: 80vw;
+        font-size: 2rem;
+        font-style: strong;
+        font-weight: bold;
+        color: white;
+        padding: 20px;
       }
     }
     .bottom-portion {

@@ -11,6 +11,14 @@ import Feeds from "./Feeds";
 import SubscribeButton from "./Button.js";
 import { createAutocomplete } from "@algolia/autocomplete-core";
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
+import Card from "@mui/material/Card";
+import CardHeader from "@mui/material/CardHeader";
+import CardMedia from "@mui/material/CardMedia";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
+import Typography from "@mui/material/Typography";
 
 import UserInfo from "./UserInfo";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -235,27 +243,54 @@ function Creator({ setVideo, video }) {
             <div className="video-row">
               {searchResultsVideosArr &&
                 searchResultsVideosArr.map((video, index) => (
-                  <div id={index}>
-                    <img
-                      controls
-                      height="250"
-                      width="400"
-                      src={video.thumbnailUrl}
-                    />
-                    <p>
-                      <Link to="/video">
-                        {" "}
-                        <span
-                          onClick={() => {
-                            setVideo(video);
-                          }}
-                        >
-                          {video.VideoTitle}
-                        </span>
-                      </Link>{" "}
-                      | {video.Username} | {video.Likes} Likes | {video.Views}{" "}
-                      Views{" "}
-                    </p>
+                  <div>
+                    <Card sx={{ width: 385, height: 375 }}>
+                      <CardMedia component="img" image={video.thumbnailUrl} />
+                      <CardContent>
+                        <CardHeader
+                          avatar={
+                            <Avatar sx={{ width: 60, height: 60 }}></Avatar>
+                          }
+                          title={
+                            <Typography
+                              variant="body2"
+                              color="text.primary"
+                              fontWeight="bold"
+                              fontSize="20px"
+                            >
+                              <Link to="/video">
+                                <span
+                                  onClick={() => {
+                                    setVideo(video);
+                                  }}
+                                >
+                                  {video.VideoTitle}
+                                </span>
+                              </Link>
+                            </Typography>
+                          }
+                        />
+
+                        <div className="videoInfo">
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            fontWeight="medium"
+                            fontSize="18px"
+                          >
+                            {video.Likes} Likes &#x2022; {video.Views} Views
+                          </Typography>
+                          <Typography
+                            variant="body2"
+                            color="text.secondary"
+                            fontWeight="medium"
+                            fontSize="18px"
+                          >
+                            {video.Username}
+                          </Typography>
+                        </div>
+                      </CardContent>
+                    </Card>
                   </div>
                 ))}
             </div>
@@ -290,29 +325,32 @@ function Creator({ setVideo, video }) {
                 <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
 
                 <div className={"userName"}> {creatorName} </div>
-                <SubscribeButton
-                  color="error"
-                  onClick={() => {
-                    updatedSubscribersList?.includes(creatorName)
-                      ? unSubscribeUser(displayName)
-                      : subscribeUser(displayName);
-                  }}
-                  buttonTitle={
-                    updatedSubscribersList?.includes(displayName)
-                      ? "Unsubscribe"
-                      : "Subscribe"
-                  }
-                  buttonStyling={{ marginTop: "-22.5px" }}
-                />
+
                 <div className={"subscribers-profile"}>
                   {" "}
                   {subscriberCount} subscribers{" "}
                 </div>
+                <div className="right-side">
+                  <SubscribeButton
+                    color="error"
+
+                    onClick={() => {
+                      updatedSubscribersList?.includes(creatorName)
+                        ? unSubscribeUser(displayName)
+                        : subscribeUser(displayName);
+                    }}
+
+                    buttonTitle={
+                      updatedSubscribersList?.includes(displayName)
+                        ? "Unsubscribe"
+                        : "Subscribe"
+                    }
+                    buttonStyling={{ marginTop: "-22.5px" }}
+                  />
+                </div>
               </div>
             </div>
             <div className="bottom-portion">
-              <div className="right-side"></div>
-
               <div className="left-side"></div>
               <Feeds setVideo={setVideo} />
             </div>
