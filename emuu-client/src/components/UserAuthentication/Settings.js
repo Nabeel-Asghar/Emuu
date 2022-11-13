@@ -21,7 +21,6 @@ import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
 import "./register.scss";
 import { getAuth, updatePassword } from "firebase/auth";
 
-
 function Settings() {
   //use state for registration variables
   const [password, setPassword] = useState("");
@@ -31,7 +30,6 @@ function Settings() {
   const [error, setError] = useState("");
   const auth = getAuth();
   const user = auth.currentUser;
-
 
   const validatePassword = (pass) => {
     if (pass.length < 8) {
@@ -61,107 +59,105 @@ function Settings() {
     return true;
   };
 
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     // store the states in the form data
     if (!validatePassword(newPassword)) return;
 
-
     updatePassword(user, newPassword).then(() => {
       history.push("/login");
-    })
-
+    });
   };
 
   return (
     <>
       <HeaderPostLogin />
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <Box
-            sx={{
-              marginTop: 8,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Change Password
-            </Typography>
-            <Box component="form" sx={{ mt: 3 }}>
-              <Grid container spacing={0}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Change Password
+          </Typography>
+          <Box component="form" sx={{ mt: 3 }}>
+            <Grid container spacing={0}>
+              <Grid item xs={12}>
+                <input
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="password"
+                  value={password}
+                  className="register-input"
+                  placeholder="Current Password"
+                  onChange={(e) => {
+                    setPassword(e.target.value);
+                  }}
+                />
                 <Grid item xs={12}>
                   <input
-                     required
-                                          fullWidth
-                                          name="password"
-                                          label="Password"
-                                          type="password"
-                                          id="password"
-                                          autoComplete="password"
-                                          value={password}
-                                          className="register-input"
-                                          placeholder="Current Password"
-                                          onChange={(e) => {
-                                            setPassword(e.target.value);}}
+                    required
+                    fullWidth
+                    name="newpassword"
+                    label="newPassword"
+                    type="newpassword"
+                    id="newpassword"
+                    autoComplete="new-password"
+                    value={newPassword}
+                    className="register-input"
+                    placeholder="New Password"
+                    onChange={(e) => {
+                      setNewPassword(e.target.value);
+                      setError("");
+                    }}
                   />
-                  <Grid item xs={12}>
-                    <input
-                      required
-                      fullWidth
-                      name="newpassword"
-                      label="newPassword"
-                      type="newpassword"
-                      id="newpassword"
-                      autoComplete="new-password"
-                      value={newPassword}
-                      className="register-input"
-                      placeholder="New Password"
-                      onChange={(e) => {
-                        setNewPassword(e.target.value);
-                        setError("");
-                      }}
-                    />
-                    {!error && (
-                      <p style={{ color: "black", margin: "0" }}>
-                        <small>
-                          {" "}
-                          <InfoOutlinedIcon />
-                          Password must be at least 8 characters with 1 special
-                          character and 1 uppercase character{" "}
-                        </small>{" "}
-                      </p>
-                    )}
-                    {error && (
-                      <p style={{ color: "red", margin: "0" }}>
+                  {!error && (
+                    <p style={{ color: "black", margin: "0" }}>
+                      <small>
                         {" "}
-                        <small>
-                          {" "}
-                          <ErrorOutlineIcon />
-                          {error}
-                        </small>
-                      </p>
-                    )}
-                  </Grid>
+                        <InfoOutlinedIcon />
+                        Password must be at least 8 characters with 1 special
+                        character and 1 uppercase character{" "}
+                      </small>{" "}
+                    </p>
+                  )}
+                  {error && (
+                    <p style={{ color: "red", margin: "0" }}>
+                      {" "}
+                      <small>
+                        {" "}
+                        <ErrorOutlineIcon />
+                        {error}
+                      </small>
+                    </p>
+                  )}
                 </Grid>
-                <Button
-                  onClick={(e) => handleSubmit(e)}
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  Change Password
-                </Button>
               </Grid>
-            </Box>
+              <Button
+                onClick={(e) => handleSubmit(e)}
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Change Password
+              </Button>
+            </Grid>
           </Box>
-        </Container>
+        </Box>
+      </Container>
     </>
   );
 }

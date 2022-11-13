@@ -332,13 +332,11 @@ function Creator({ setVideo, video }) {
                 <div className="right-side">
                   <SubscribeButton
                     color="error"
-
                     onClick={() => {
                       updatedSubscribersList?.includes(creatorName)
                         ? unSubscribeUser(displayName)
                         : subscribeUser(displayName);
                     }}
-
                     buttonTitle={
                       updatedSubscribersList?.includes(displayName)
                         ? "Unsubscribe"

@@ -129,8 +129,7 @@ function Video({ video, setVideo, setUserProfile }) {
     }
   };
 
-  const subscribeUser = () => {
-  };
+  const subscribeUser = () => {};
 
   function checkLiked() {
     let liked = video?.usersThatLiked?.includes(displayName); //check if there is a video and if there are users that liked stored

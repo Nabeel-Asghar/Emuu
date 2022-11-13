@@ -146,13 +146,11 @@ function Profile({ setVideo, video }, { classes }) {
     );
 
     {
-
       history.push("/creator");
     }
   };
 
-  const subscribeUser = () => {
-  };
+  const subscribeUser = () => {};
   const subscribersCount = localStorage.getItem("subscribersCount");
 
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
@@ -196,7 +194,6 @@ function Profile({ setVideo, video }, { classes }) {
   }
 
   function uploadBackground(croppedImage) {
-
     const storage = getStorage();
     const storageRef = ref(storage, "/images/" + uid());
 

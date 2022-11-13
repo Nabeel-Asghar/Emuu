@@ -112,8 +112,7 @@ function Home({ setVideo }, { setUserProfile }) {
         "http://localhost:8080/auth/video",
         JSON.stringify({ ...disAndPage })
       )
-      .then(function (response) {
-      });
+      .then(function (response) {});
     const response = await axios.get("http://localhost:8080/auth/video");
     setTopVideos(response.data.message.MostViewed);
     setRecentVideos(response.data.message.RecentUpload);
@@ -136,8 +135,7 @@ function Home({ setVideo }, { setUserProfile }) {
 
   const userName = localStorage.getItem("displayName");
 
-  async function subscribeUser(subscribersName) {
-  }
+  async function subscribeUser(subscribersName) {}
 
   return (
     <AppContext.Consumer>
@@ -254,8 +252,9 @@ function Home({ setVideo }, { setUserProfile }) {
                           <CardContent>
                             <CardHeader
                               avatar={
-                                <Avatar sx={{ width: 60, height: 60 }}
-                                src={video.ProfilePic}
+                                <Avatar
+                                  sx={{ width: 60, height: 60 }}
+                                  src={video.ProfilePic}
                                 ></Avatar>
                               }
                               title={
@@ -320,8 +319,9 @@ function Home({ setVideo }, { setUserProfile }) {
                           <CardContent>
                             <CardHeader
                               avatar={
-                                <Avatar sx={{ width: 60, height: 60 }}
-                                src={video.ProfilePic}
+                                <Avatar
+                                  sx={{ width: 60, height: 60 }}
+                                  src={video.ProfilePic}
                                 ></Avatar>
                               }
                               title={

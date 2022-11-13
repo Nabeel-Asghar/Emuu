@@ -299,8 +299,7 @@ const FileUpload = ({ setVideo }) => {
     }
   };
 
-  const subscribeUser = () => {
-  };
+  const subscribeUser = () => {};
 
   //upload data structure
   const uploadData = {

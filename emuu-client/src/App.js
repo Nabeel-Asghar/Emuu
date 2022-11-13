@@ -108,8 +108,8 @@ function App() {
                   <UploadVideo />
                 </Route>
                 <Route path="/settings">
-                                  <Settings />
-                                </Route>
+                  <Settings />
+                </Route>
               </>
             )}
           </BrowserRouter>
