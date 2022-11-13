@@ -112,14 +112,11 @@ function Home({ setVideo }, { setUserProfile }) {
         "http://localhost:8080/auth/video",
         JSON.stringify({ ...disAndPage })
       )
-      .then(function (response) {
-        console.log(response);
-      });
+      .then(function (response) {});
     const response = await axios.get("http://localhost:8080/auth/video");
     setTopVideos(response.data.message.MostViewed);
     setRecentVideos(response.data.message.RecentUpload);
     setPages(response.data.message.Pages);
-    console.log(response.data.message.RecentUpload);
   }
 
   useEffect(async () => {
@@ -138,9 +135,7 @@ function Home({ setVideo }, { setUserProfile }) {
 
   const userName = localStorage.getItem("displayName");
 
-  async function subscribeUser(subscribersName) {
-    console.log(subscribersName);
-  }
+  async function subscribeUser(subscribersName) {}
 
   return (
     <AppContext.Consumer>
@@ -242,7 +237,7 @@ function Home({ setVideo }, { setUserProfile }) {
               )}
               <p class="text-start">
                 <Typography className={"video__category__title"}>
-                  Top Rated Videos
+                  Most Viewed Videos
                 </Typography>
                 <div className="videos__container">
                   {" "}
@@ -257,7 +252,10 @@ function Home({ setVideo }, { setUserProfile }) {
                           <CardContent>
                             <CardHeader
                               avatar={
-                                <Avatar sx={{ width: 60, height: 60 }}></Avatar>
+                                <Avatar
+                                  sx={{ width: 60, height: 60 }}
+                                  src={video.ProfilePic}
+                                ></Avatar>
                               }
                               title={
                                 <Typography
@@ -321,7 +319,10 @@ function Home({ setVideo }, { setUserProfile }) {
                           <CardContent>
                             <CardHeader
                               avatar={
-                                <Avatar sx={{ width: 60, height: 60 }}></Avatar>
+                                <Avatar
+                                  sx={{ width: 60, height: 60 }}
+                                  src={video.ProfilePic}
+                                ></Avatar>
                               }
                               title={
                                 <Typography

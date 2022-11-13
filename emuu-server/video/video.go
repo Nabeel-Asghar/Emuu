@@ -3,13 +3,13 @@ package video
 import (
 	"cloud.google.com/go/firestore"
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 	"log"
 	"math"
 	"net/http"
+	"reflect"
 	"strconv"
 	"time"
 )
@@ -34,6 +34,10 @@ type Video struct {
 	GameTag          string   `firestore:"GameTag"`
 	VideoDescription string   `firestore:"VideoDescription"`
 	UsersThatLiked   []string `firestore:"usersThatLiked"`
+	ProfilePic       string
+}
+type User struct {
+	ProfilePicture string `firestore:"ProfilePictureUrl"`
 }
 
 func sortMostViewed(videos []Video) []Video {
@@ -65,8 +69,7 @@ func SetUsernameAndPage(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"message": res})
 	userUN = res.UserName
 	PageNum, _ = strconv.Atoi(res.PageNumber)
-	fmt.Println(userUN)
-	fmt.Println(PageNum)
+
 }
 
 func SetVideos(c *gin.Context) {
@@ -155,12 +158,28 @@ func SetVideos(c *gin.Context) {
 			var vid = Video{}
 
 			doc.DataTo(&vid)
+			iter := client.Collection("Users").Where("Username", "==", vid.Username).Documents(ctx)
+			for {
+				doc, err := iter.Next()
+				if err == iterator.Done {
+					break
+				}
+				if err != nil {
+					return
+				}
+				var profilePic User
+				doc.DataTo(&profilePic)
+				reflect.ValueOf(&vid).Elem().FieldByName("ProfilePic").SetString(profilePic.ProfilePicture)
+				reflect.ValueOf(&vid).Elem().FieldByName("ProfilePic").SetString(profilePic.ProfilePicture)
+
+			}
 			mostViewedArr = append(mostViewedArr, vid)
 			recentArr = append(recentArr, vid)
+
 		}
+
 		sortMostViewed(mostViewedArr)
 		sortRecent(recentArr)
-		fmt.Println(recentArr)
 
 		var pageAmount int
 		pageAmount = int(math.Ceil(float64(len(recentArr)) / 8))

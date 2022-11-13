@@ -129,9 +129,7 @@ function Video({ video, setVideo, setUserProfile }) {
     }
   };
 
-  const subscribeUser = () => {
-    console.log("subscribed");
-  };
+  const subscribeUser = () => {};
 
   function checkLiked() {
     let liked = video?.usersThatLiked?.includes(displayName); //check if there is a video and if there are users that liked stored
@@ -143,7 +141,6 @@ function Video({ video, setVideo, setUserProfile }) {
   }
   localStorage.setItem("CreatorName", video.Username);
   useEffect(async () => {
-    console.log(getAuth());
     if (video) {
       localStorage.setItem("video", JSON.stringify(video));
     }

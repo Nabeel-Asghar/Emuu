@@ -74,7 +74,6 @@ function Register() {
         checkDotcom += email[i];
       }
     }
-    console.log(checkDotcom);
 
     if (!(checkDotcom == "moc.") || !at || at > 1) {
       setError("The email address is invalid");
@@ -93,122 +92,120 @@ function Register() {
     history.push("/login");
     await axios
       .post("http://localhost:8080/auth/register", JSON.stringify(userdata))
-      .then((result) => {
-        console.log("User is registered");
-      });
+      .then((result) => {});
   };
 
   return (
     <>
       <HeaderPostLogin />
-        <Container component="main" maxWidth="xs">
-          <CssBaseline />
-          <Box
-            sx={{
-              marginTop: 8,
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-            }}
-          >
-            <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
-              <LockOutlinedIcon />
-            </Avatar>
-            <Typography component="h1" variant="h5">
-              Register
-            </Typography>
-            <Box component="form" sx={{ mt: 3 }}>
-              <Grid container spacing={0}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Register
+          </Typography>
+          <Box component="form" sx={{ mt: 3 }}>
+            <Grid container spacing={0}>
+              <Grid item xs={12}>
+                <input
+                  required
+                  fullWidth
+                  id="username"
+                  label="Username"
+                  name="username"
+                  autoComplete="username"
+                  value={userName}
+                  className="register-input"
+                  placeholder="Username"
+                  onChange={(e) => setUserName(e.target.value)}
+                />
                 <Grid item xs={12}>
                   <input
                     required
                     fullWidth
-                    id="username"
-                    label="Username"
-                    name="username"
-                    autoComplete="username"
-                    value={userName}
+                    id="email"
+                    label="Email Address"
+                    name="email"
+                    autoComplete="email"
+                    value={email}
                     className="register-input"
-                    placeholder="Username"
-                    onChange={(e) => setUserName(e.target.value)}
+                    placeholder="Email Address"
+                    onChange={(e) => {
+                      setError("");
+                      setEmail(e.target.value);
+                    }}
                   />
-                  <Grid item xs={12}>
-                    <input
-                      required
-                      fullWidth
-                      id="email"
-                      label="Email Address"
-                      name="email"
-                      autoComplete="email"
-                      value={email}
-                      className="register-input"
-                      placeholder="Email Address"
-                      onChange={(e) => {
-                        setError("");
-                        setEmail(e.target.value);
-                      }}
-                    />
-                  </Grid>
-
-                  <Grid item xs={12}>
-                    <input
-                      required
-                      fullWidth
-                      name="password"
-                      label="Password"
-                      type="password"
-                      id="password"
-                      autoComplete="new-password"
-                      value={password}
-                      className="register-input"
-                      placeholder="Password"
-                      onChange={(e) => {
-                        setPassword(e.target.value);
-                        setError("");
-                      }}
-                    />
-                    {!error && (
-                      <p style={{ color: "black", margin: "0" }}>
-                        <small>
-                          {" "}
-                          <InfoOutlinedIcon />
-                          Password must be at least 8 characters with 1 special
-                          character and 1 uppercase character{" "}
-                        </small>{" "}
-                      </p>
-                    )}
-                    {error && (
-                      <p style={{ color: "red", margin: "0" }}>
-                        {" "}
-                        <small>
-                          {" "}
-                          <ErrorOutlineIcon />
-                          {error}
-                        </small>
-                      </p>
-                    )}
-                  </Grid>
                 </Grid>
-                <Button
-                  onClick={(e) => handleSubmit(e)}
-                  type="submit"
-                  fullWidth
-                  variant="contained"
-                  sx={{ mt: 3, mb: 2 }}
-                >
-                  Sign Up
-                </Button>
-                <Grid container justifyContent="flex-end">
-                  <Grid item>
-                    <Link className="loginLink" href="/Login">
-                      Already have an account? Log in
-                    </Link>
-                  </Grid>
+
+                <Grid item xs={12}>
+                  <input
+                    required
+                    fullWidth
+                    name="password"
+                    label="Password"
+                    type="password"
+                    id="password"
+                    autoComplete="new-password"
+                    value={password}
+                    className="register-input"
+                    placeholder="Password"
+                    onChange={(e) => {
+                      setPassword(e.target.value);
+                      setError("");
+                    }}
+                  />
+                  {!error && (
+                    <p style={{ color: "black", margin: "0" }}>
+                      <small>
+                        {" "}
+                        <InfoOutlinedIcon />
+                        Password must be at least 8 characters with 1 special
+                        character and 1 uppercase character{" "}
+                      </small>{" "}
+                    </p>
+                  )}
+                  {error && (
+                    <p style={{ color: "red", margin: "0" }}>
+                      {" "}
+                      <small>
+                        {" "}
+                        <ErrorOutlineIcon />
+                        {error}
+                      </small>
+                    </p>
+                  )}
                 </Grid>
               </Grid>
-            </Box>
+              <Button
+                onClick={(e) => handleSubmit(e)}
+                type="submit"
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2 }}
+              >
+                Sign Up
+              </Button>
+              <Grid container justifyContent="flex-end">
+                <Grid item>
+                  <Link className="loginLink" href="/Login">
+                    Already have an account? Log in
+                  </Link>
+                </Grid>
+              </Grid>
+            </Grid>
           </Box>
-        </Container>
+        </Box>
+      </Container>
     </>
   );
 }

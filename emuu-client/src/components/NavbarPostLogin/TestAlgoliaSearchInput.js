@@ -163,7 +163,6 @@ export default function HeaderSearch() {
             {autocompleteState.isOpen &&
               autocompleteState.collections.map((collection, index) => {
                 const { source, items } = collection;
-                console.log("autocompleteStateItems", collection);
                 return (
                   items.length > 0 &&
                   items[0]["VideoTitles"].length > 0 && (

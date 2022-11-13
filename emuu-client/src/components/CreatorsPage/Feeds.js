@@ -132,18 +132,14 @@ function Feeds({ setVideo, setUserProfile }) {
         "http://localhost:8080/auth/video",
         JSON.stringify({ ...disAndPage })
       )
-      .then(function (response) {
-        console.log(response);
-      });
+      .then(function (response) {});
     try {
       const response = await axios.get("http://localhost:8080/auth/video");
 
       setTopVideos(response.data.message.MostViewed);
       setRecentVideos(response.data.message.RecentUpload);
       setPages(response.data.message.Pages);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
   useEffect(async () => {

@@ -55,12 +55,10 @@ export default function AccountMenu() {
   const SignedOut = async (e) => {
     signOut(auth)
       .then(() => {
-        console.log("User is signed out");
         history.push("/");
       })
       .catch((error) => {
         // An error happened.
-        console.log(error);
       });
   };
 
@@ -147,16 +145,16 @@ export default function AccountMenu() {
               Upload Video
             </MenuItem>
             <MenuItem
-                          onClick={() => {
-                            history.push("/Settings");
-                          }}
-                        >
-                          <CloudUploadIcon
-                            sx={{ marginLeft: "-5px", marginRight: "12px" }}
-                            fontSize="large"
-                          />
-                          Settings
-                        </MenuItem>
+              onClick={() => {
+                history.push("/Settings");
+              }}
+            >
+              <CloudUploadIcon
+                sx={{ marginLeft: "-5px", marginRight: "12px" }}
+                fontSize="large"
+              />
+              Settings
+            </MenuItem>
             <Divider />
             <MenuItem
               onClick={() => {

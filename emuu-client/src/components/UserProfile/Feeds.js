@@ -142,18 +142,14 @@ function Feeds({ setVideo }) {
         "http://localhost:8080/auth/video",
         JSON.stringify({ ...disAndPage })
       )
-      .then(function (response) {
-        console.log(response);
-      });
+      .then(function (response) {});
     try {
       const response = await axios.get("http://localhost:8080/auth/video");
 
       setTopVideos(response.data.message.MostViewed);
       setRecentVideos(response.data.message.RecentUpload);
       setPages(response.data.message.Pages);
-    } catch (error) {
-      console.log(error);
-    }
+    } catch (error) {}
   }
 
   useEffect(async () => {
@@ -266,7 +262,7 @@ function Feeds({ setVideo }) {
         <TabPanel value="1">
           <div className="feed-container">
             <LongMenu sort={sort} setSort={setSort} />
-            <div className="videos__container" onScroll={(e) => console.log(e)}>
+            <div className="videos__container">
               {recentVideos &&
                 sort == "Recently Uploaded" &&
                 recentVideos.map((video) => (

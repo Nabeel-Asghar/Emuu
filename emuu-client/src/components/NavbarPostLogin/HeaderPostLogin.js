@@ -38,15 +38,12 @@ function HeaderPostLogin({ search, setSearch }) {
   async function getUser() {
     //Get user data
     const querySnapshotUsers = await getDocs(collection(db, "Users"));
-    console.log(querySnapshotUsers);
     const usersArr = [];
-    console.log(usersArr);
 
     querySnapshotUsers.forEach((doc) => {
       usersArr.push(doc.data());
     });
     const userArr = usersArr.filter((user) => user.Username === userName);
-    console.log(userArr);
     setUser(userArr);
     localStorage.setItem("userImage", userArr[0].ProfilePictureUrl);
   }
@@ -54,16 +51,13 @@ function HeaderPostLogin({ search, setSearch }) {
   const SignedOut = async (e) => {
     signOut(auth)
       .then(() => {
-        console.log("User is signed out");
         history.push("/");
-        //TestUserStatus()
       })
       .catch((error) => {
         // An error happened.
       });
   };
   useEffect(() => getUser(), []);
-  console.log(user, "userData");
   const navAuth = localStorage.getItem("auth");
   return (
     <>

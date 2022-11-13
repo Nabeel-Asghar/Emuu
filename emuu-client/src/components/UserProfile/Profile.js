@@ -61,7 +61,6 @@ function Profile({ setVideo, video }, { classes }) {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
   const history = useHistory();
-  //const location = useLocation();
 
   const [autocompleteState, setAutocompleteState] = useState({});
   const [searchInput, setSearchInput] = useState("");
@@ -147,15 +146,11 @@ function Profile({ setVideo, video }, { classes }) {
     );
 
     {
-      //location.pathname === "/creator"
-      //  ? window.location.reload()
       history.push("/creator");
     }
   };
 
-  const subscribeUser = () => {
-    console.log("subscribed");
-  };
+  const subscribeUser = () => {};
   const subscribersCount = localStorage.getItem("subscribersCount");
 
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
@@ -169,7 +164,6 @@ function Profile({ setVideo, video }, { classes }) {
         croppedAreaPixels,
         rotation
       );
-      console.log("donee", { croppedImage });
       setCroppedImageSrc(croppedImage);
 
       uploadBackground(croppedImage);
@@ -200,8 +194,6 @@ function Profile({ setVideo, video }, { classes }) {
   }
 
   function uploadBackground(croppedImage) {
-    // let file = e.target.files[0];
-    //  if (!verifyJpeg(file.name)) return;
     const storage = getStorage();
     const storageRef = ref(storage, "/images/" + uid());
 
