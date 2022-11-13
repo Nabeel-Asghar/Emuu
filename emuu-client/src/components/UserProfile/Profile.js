@@ -61,7 +61,6 @@ function Profile({ setVideo, video }, { classes }) {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
   const history = useHistory();
-  //const location = useLocation();
 
   const [autocompleteState, setAutocompleteState] = useState({});
   const [searchInput, setSearchInput] = useState("");
@@ -147,8 +146,7 @@ function Profile({ setVideo, video }, { classes }) {
     );
 
     {
-      //location.pathname === "/creator"
-      //  ? window.location.reload()
+
       history.push("/creator");
     }
   };
@@ -198,8 +196,7 @@ function Profile({ setVideo, video }, { classes }) {
   }
 
   function uploadBackground(croppedImage) {
-    // let file = e.target.files[0];
-    //  if (!verifyJpeg(file.name)) return;
+
     const storage = getStorage();
     const storageRef = ref(storage, "/images/" + uid());
 

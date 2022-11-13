@@ -52,7 +52,6 @@ function HeaderPostLogin({ search, setSearch }) {
     signOut(auth)
       .then(() => {
         history.push("/");
-        //TestUserStatus()
       })
       .catch((error) => {
         // An error happened.

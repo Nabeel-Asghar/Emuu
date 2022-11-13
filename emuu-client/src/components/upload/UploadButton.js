@@ -49,23 +49,6 @@ import AppContext from "../../AppContext";
 
 import { storage } from "../../Firebase.js";
 import "../../Firebase.js";
-//
-//const theme = createTheme({
-//  palette: {
-//    primary: {
-//      light: "#484848",
-//      main: "#212121",
-//      dark: "#000000",
-//      contrastText: "#fff",
-//    },
-//    secondary: {
-//      light: "#6bffff",
-//      main: "#0be9d0",
-//      dark: "#00b69f",
-//      contrastText: "#000",
-//    },
-//  },
-//});
 
 const useStyles = makeStyles({
   btnClass: {
@@ -89,11 +72,7 @@ const useStyles = makeStyles({
 
 const FileUpload = ({ setVideo }) => {
   const classes = useStyles();
-  // const [title, setTitle] = useState("");
-  // const [description, setDescription] = useState("");
-  // const [gameTag, setGameTag] = useState("");
   const [open, setOpen] = useState(false);
-
   const handleClose = () => {
     setOpen((open) => !open);
   };
@@ -357,10 +336,6 @@ const FileUpload = ({ setVideo }) => {
           JSON.stringify({ ...uploadData })
         )
         .then((result) => {
-          //            setUploadStatus(
-          //              <span style={{ color: "green" }}>
-          //                <CheckCircleOutlineIcon /> Upload successful
-          //              </span>
           alert("Uploaded Successfully");
         });
     }
@@ -372,9 +347,9 @@ const FileUpload = ({ setVideo }) => {
       alert("Please upload a video first!");
     }
 
-    //Restrict file size to 5 MB ~ equivalent to 30 second video
+    //Restrict file size to 40 MB ~ equivalent to 30 second video
 
-    if (file.size > 100 * 1024 * 1024) {
+    if (file.size > 40 * 1024 * 1024) {
       alert("File size exceeds maximum allowed!");
       return;
     }
