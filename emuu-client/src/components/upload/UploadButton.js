@@ -327,7 +327,6 @@ const FileUpload = ({ setVideo }) => {
     }
   }, [file]);
 
-
   //If a user doesn't choose a file and tries to upload, error will appear
   const handleUpload = async (e) => {
     if (!file) {

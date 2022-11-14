@@ -16,7 +16,13 @@ const UserProfileCard = ({
 
   return (
     <div className="video__details__container">
-      <Link to="/creator" className="avatar__container" onClick={() => {localStorage.setItem("Creator", username);}}>
+      <Link
+        to="/creator"
+        className="avatar__container"
+        onClick={() => {
+          localStorage.setItem("Creator", username);
+        }}
+      >
         <Avatar
           src={
             profileImg
@@ -27,7 +33,13 @@ const UserProfileCard = ({
         />
       </Link>
       <div className="video__description__container" id={id}>
-        <Link to="/creator" className="video__title" onClick={() => {localStorage.setItem("Creator", username);}}>
+        <Link
+          to="/creator"
+          className="video__title"
+          onClick={() => {
+            localStorage.setItem("Creator", username);
+          }}
+        >
           {username}
         </Link>
         <div style={{ display: "flex", flexDirection: "row" }}>
@@ -35,7 +47,9 @@ const UserProfileCard = ({
             to="/creator"
             className="video__details"
             style={{ marginTop: "-2.5px" }}
-            onClick={() => {localStorage.setItem("Creator", username);}}
+            onClick={() => {
+              localStorage.setItem("Creator", username);
+            }}
           >
             {subscribersCount}
           </Link>

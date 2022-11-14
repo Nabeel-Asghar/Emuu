@@ -231,7 +231,7 @@ function Feeds({ setVideo }) {
 
   const handleCreatorProfile = (creatorsName) => {
     localStorage.setItem("Creator", creatorsName);
-        history.push("/creator");
+    history.push("/creator");
   };
 
   useEffect(async () => {

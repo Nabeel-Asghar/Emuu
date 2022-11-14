@@ -120,9 +120,7 @@ function Creator({ setVideo, video }) {
   const videosArr = firebaseData.filter(
     (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
   );
- const creatorsData = usersArr.filter(
-      (user) => user.Username === creatorName
-    );
+  const creatorsData = usersArr.filter((user) => user.Username === creatorName);
 
   const handleCreatorProfile = (creatorsName) => {
     const creatorsData = usersArr.filter(
@@ -144,8 +142,7 @@ function Creator({ setVideo, video }) {
     }
   };
 
-function checkSubscribed() {
-
+  function checkSubscribed() {
     let subscribed = creatorsData[0]?.SubscriberList?.includes(displayName); //check if there is a video and if there are users that liked stored
     console.log(subscribed);
     if (subscribed) {
@@ -153,12 +150,9 @@ function checkSubscribed() {
     } else {
       setChecked(false);
     }
-
   }
 
-
   useEffect(async () => {
-
     const userRefInitial = doc(db, "Users", creatorName);
     const getSubscribersListRefInitial = await getDoc(userRefInitial);
     let subscribersListInitial;
@@ -170,10 +164,8 @@ function checkSubscribed() {
   }, [subscriberActionCount]);
 
   useEffect(async () => {
-
-       setCreatorName(localStorage.getItem("Creator"));
-        checkSubscribed();
-
+    setCreatorName(localStorage.getItem("Creator"));
+    checkSubscribed();
   }, []);
 
   const [Banner, setBanner] = useState("");
@@ -259,9 +251,7 @@ function checkSubscribed() {
                     profileImg={user.ProfilePictureUrl}
                     username={user.Username}
                     subscribersCount={`${user.SubscriberCount} Subscribers`}
-                    onClick={() => {
-
-                    }}
+                    onClick={() => {}}
                     handleUserClick={() => handleCreatorProfile(user.Username)}
                   />
                 ))}
@@ -287,58 +277,50 @@ function checkSubscribed() {
                   {subscriberCount} subscribers{" "}
                 </div>
                 <div className="right-side">
-
-        <Checkbox
-                      icon={<SubscribeButton
-                       color="error"
-                       buttonTitle={
-
-                                             "Subscribe"
-                                          }
-                                          buttonStyling={{ marginTop: "-22.5px" }}
-                      />}
-                      checkedIcon={<SubscribeButton
-                                                          color="error"
-                                                          buttonTitle={
-                                                                           "Unsubscribe"
-
-                                                                             }
-                                                                             buttonStyling={{ marginTop: "-22.5px" }}
-                                                         />}
-
-                      checked={checked}
-                      onChange={async (e) => {
-                        setChecked(!checked);
-                        const collectionRef = collection(db, "Users");
-                        const queryData = await query(
-                          collectionRef,
-                          where("Username", "==", creatorName)
-                        );
-                        const _doc = await getDocs(queryData);
-                        let id = "";
-                        _doc.forEach((doc) => (id = doc.id));
-                        const creatorRef = doc(db, "Users", id);
-                        if (e.target.checked) {
-                          await updateDoc(creatorRef, { SubscriberCount: increment(1) });
-                          await updateDoc(creatorRef, {
-                            SubscriberList: arrayUnion(displayName),
-                          });
-                        } else {
-                          await updateDoc(creatorRef, { SubscriberCount: increment(-1) });
-                          await updateDoc(creatorRef, {
-                            SubscriberList: arrayRemove(displayName),
-                          });
-                        }
-
-                      }}
-                    />
-
-
-
-
-
-
-
+                  <Checkbox
+                    icon={
+                      <SubscribeButton
+                        color="error"
+                        buttonTitle={"Subscribe"}
+                        buttonStyling={{ marginTop: "-22.5px" }}
+                      />
+                    }
+                    checkedIcon={
+                      <SubscribeButton
+                        color="error"
+                        buttonTitle={"Unsubscribe"}
+                        buttonStyling={{ marginTop: "-22.5px" }}
+                      />
+                    }
+                    checked={checked}
+                    onChange={async (e) => {
+                      setChecked(!checked);
+                      const collectionRef = collection(db, "Users");
+                      const queryData = await query(
+                        collectionRef,
+                        where("Username", "==", creatorName)
+                      );
+                      const _doc = await getDocs(queryData);
+                      let id = "";
+                      _doc.forEach((doc) => (id = doc.id));
+                      const creatorRef = doc(db, "Users", id);
+                      if (e.target.checked) {
+                        await updateDoc(creatorRef, {
+                          SubscriberCount: increment(1),
+                        });
+                        await updateDoc(creatorRef, {
+                          SubscriberList: arrayUnion(displayName),
+                        });
+                      } else {
+                        await updateDoc(creatorRef, {
+                          SubscriberCount: increment(-1),
+                        });
+                        await updateDoc(creatorRef, {
+                          SubscriberList: arrayRemove(displayName),
+                        });
+                      }
+                    }}
+                  />
                 </div>
               </div>
             </div>
