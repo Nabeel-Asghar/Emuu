@@ -16,7 +16,7 @@ const UserProfileCard = ({
 
   return (
     <div className="video__details__container">
-      <Link to="/UserProfile" className="avatar__container">
+      <Link to="/creator" className="avatar__container" onClick={() => {localStorage.setItem("Creator", username);}}>
         <Avatar
           src={
             profileImg
