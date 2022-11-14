@@ -165,7 +165,7 @@ function Register() {
                     }}
                   />
                   {!error && (
-                    <p style={{ color: "black", margin: "0" }}>
+                    <p style={{ color: "white", margin: "0" }}>
                       <small>
                         {" "}
                         <InfoOutlinedIcon />
