@@ -170,7 +170,6 @@ func SetVideos(c *gin.Context) {
 				var profilePic User
 				doc.DataTo(&profilePic)
 				reflect.ValueOf(&vid).Elem().FieldByName("ProfilePic").SetString(profilePic.ProfilePicture)
-				reflect.ValueOf(&vid).Elem().FieldByName("ProfilePic").SetString(profilePic.ProfilePicture)
 
 			}
 			mostViewedArr = append(mostViewedArr, vid)
