@@ -144,7 +144,6 @@ function Creator({ setVideo, video }) {
 
   function checkSubscribed() {
     let subscribed = creatorsData[0]?.SubscriberList?.includes(displayName); //check if there is a video and if there are users that liked stored
-    console.log(subscribed);
     if (subscribed) {
       setChecked(true);
     } else {
