@@ -4,6 +4,7 @@ import { useState, useEffect, useContext } from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
+import SettingsIcon from '@mui/icons-material/Settings';
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import ListItemIcon from "@mui/material/ListItemIcon";
@@ -149,7 +150,7 @@ export default function AccountMenu() {
                 history.push("/Settings");
               }}
             >
-              <CloudUploadIcon
+              <SettingsIcon
                 sx={{ marginLeft: "-5px", marginRight: "12px" }}
                 fontSize="large"
               />
