@@ -6,6 +6,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import "./Profile.scss";
+import Checkbox from "@material-ui/core/Checkbox";
 import "../../Firebase.js";
 import Feeds from "./Feeds";
 import SubscribeButton from "./Button.js";
@@ -24,6 +25,8 @@ import UserInfo from "./UserInfo";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../../Firebase.js";
 import {
+  arrayUnion,
+  arrayRemove,
   getDoc,
   getDocs,
   setDoc,
@@ -49,7 +52,7 @@ function Creator({ setVideo, video }) {
   const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
   const [autocompleteState, setAutocompleteState] = useState({});
   const [count, setCount] = useState(0);
-
+  const [checked, setChecked] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
 
@@ -117,6 +120,9 @@ function Creator({ setVideo, video }) {
   const videosArr = firebaseData.filter(
     (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
   );
+ const creatorsData = usersArr.filter(
+      (user) => user.Username === creatorName
+    );
 
   const handleCreatorProfile = (creatorsName) => {
     const creatorsData = usersArr.filter(
@@ -138,65 +144,21 @@ function Creator({ setVideo, video }) {
     }
   };
 
-  async function subscribeUser(subscribersName) {
-    const userRef = doc(db, "Users", creatorName);
-    const getSubscribersListRef = await getDoc(userRef);
+function checkSubscribed() {
 
-    let subscribersList;
-
-    if (getSubscribersListRef.exists()) {
-      subscribersList = getSubscribersListRef.data().SubscriberList;
+    let subscribed = creatorsData[0]?.SubscriberList?.includes(displayName); //check if there is a video and if there are users that liked stored
+    console.log(subscribed);
+    if (subscribed) {
+      setChecked(true);
+    } else {
+      setChecked(false);
     }
 
-    updateDoc(userRef, {
-      SubscriberList: [...subscribersList, subscribersName],
-    });
-
-    let getUpdatedSubscribersListRef = await getDoc(userRef);
-    let updatedSubscribersList;
-
-    if (getUpdatedSubscribersListRef.exists()) {
-      updatedSubscribersList =
-        getUpdatedSubscribersListRef.data().SubscriberList;
-    }
-
-    setSubsciberActionCount(
-      (subscriberActionCount) => subscriberActionCount + 1
-    );
   }
 
-  async function unSubscribeUser(subscribersName) {
-    const userRef = doc(db, "Users", creatorName);
-    const getSubscribersListRef = await getDoc(userRef);
-
-    let subscribersList;
-
-    if (getSubscribersListRef.exists()) {
-      subscribersList = getSubscribersListRef.data().SubscriberList;
-    }
-
-    const filteredSubscribersArr = subscribersList.filter(
-      (sub) => sub !== subscribersName
-    );
-
-    updateDoc(userRef, {
-      SubscriberList: filteredSubscribersArr,
-    });
-
-    let getUpdatedSubscribersListRef = await getDoc(userRef);
-    let updatedSubscribersList;
-
-    if (getUpdatedSubscribersListRef.exists()) {
-      updatedSubscribersList =
-        getUpdatedSubscribersListRef.data().SubscriberList;
-    }
-
-    setSubsciberActionCount(
-      (subscriberActionCount) => subscriberActionCount + 1
-    );
-  }
 
   useEffect(async () => {
+
     const userRefInitial = doc(db, "Users", creatorName);
     const getSubscribersListRefInitial = await getDoc(userRefInitial);
     let subscribersListInitial;
@@ -208,16 +170,10 @@ function Creator({ setVideo, video }) {
   }, [subscriberActionCount]);
 
   useEffect(async () => {
-    if (video) {
-      localStorage.setItem("video", JSON.stringify(video));
-      window.location.reload();
-      return false;
-    }
-    if (localStorage.getItem("video")) {
-      let video = JSON.parse(localStorage.getItem("video"));
-       setCreatorName(localStorage.getItem("Creator"));
 
-    }
+       setCreatorName(localStorage.getItem("Creator"));
+        checkSubscribed();
+
   }, []);
 
   const [Banner, setBanner] = useState("");
@@ -304,7 +260,7 @@ function Creator({ setVideo, video }) {
                     username={user.Username}
                     subscribersCount={`${user.SubscriberCount} Subscribers`}
                     onClick={() => {
-                      subscribeUser(user.Username);
+
                     }}
                     handleUserClick={() => handleCreatorProfile(user.Username)}
                   />
@@ -331,20 +287,58 @@ function Creator({ setVideo, video }) {
                   {subscriberCount} subscribers{" "}
                 </div>
                 <div className="right-side">
-                  <SubscribeButton
-                    color="error"
-                    onClick={() => {
-                      updatedSubscribersList?.includes(creatorName)
-                        ? unSubscribeUser(displayName)
-                        : subscribeUser(displayName);
-                    }}
-                    buttonTitle={
-                      updatedSubscribersList?.includes(displayName)
-                        ? "Unsubscribe"
-                        : "Subscribe"
-                    }
-                    buttonStyling={{ marginTop: "-22.5px" }}
-                  />
+
+        <Checkbox
+                      icon={<SubscribeButton
+                       color="error"
+                       buttonTitle={
+
+                                             "Subscribe"
+                                          }
+                                          buttonStyling={{ marginTop: "-22.5px" }}
+                      />}
+                      checkedIcon={<SubscribeButton
+                                                          color="error"
+                                                          buttonTitle={
+                                                                           "Unsubscribe"
+
+                                                                             }
+                                                                             buttonStyling={{ marginTop: "-22.5px" }}
+                                                         />}
+
+                      checked={checked}
+                      onChange={async (e) => {
+                        setChecked(!checked);
+                        const collectionRef = collection(db, "Users");
+                        const queryData = await query(
+                          collectionRef,
+                          where("Username", "==", creatorName)
+                        );
+                        const _doc = await getDocs(queryData);
+                        let id = "";
+                        _doc.forEach((doc) => (id = doc.id));
+                        const creatorRef = doc(db, "Users", id);
+                        if (e.target.checked) {
+                          await updateDoc(creatorRef, { SubscriberCount: increment(1) });
+                          await updateDoc(creatorRef, {
+                            SubscriberList: arrayUnion(displayName),
+                          });
+                        } else {
+                          await updateDoc(creatorRef, { SubscriberCount: increment(-1) });
+                          await updateDoc(creatorRef, {
+                            SubscriberList: arrayRemove(displayName),
+                          });
+                        }
+
+                      }}
+                    />
+
+
+
+
+
+
+
                 </div>
               </div>
             </div>
