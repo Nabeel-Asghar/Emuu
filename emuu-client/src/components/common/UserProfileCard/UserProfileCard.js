@@ -38,13 +38,6 @@ const UserProfileCard = ({
           >
             {subscribersCount}
           </Link>
-          {isAuthenticated === "true" && (
-            <SubscribeButton
-              buttonStyling={{ marginTop: "-20px", marginLeft: "15px" }}
-              color="error"
-              onClick={onClick}
-            />
-          )}
         </div>
       </div>
     </div>
