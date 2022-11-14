@@ -1,6 +1,19 @@
 .App {
+background: #171616;
   text-align: center;
+  color: white;
+
 }
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap%27');
+
+*, Typography:{
+font-family:Montserrat}
+
+h1 , h2 , h3 , h4{
+font-weight:600 !important;
+}
+
+
 
 .App-logo {
   height: 40vmin;
@@ -12,6 +25,11 @@
     animation: App-logo-spin infinite 20s linear;
   }
 }
+
+
+.search-btn a{
+text-decoration: none;
+color:black}
 
 .App-header {
   background-color: #282c34;
@@ -36,3 +54,29 @@
     transform: rotate(360deg);
   }
 }
+.App a{
+
+color: white;
+
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.results-user{
+    margin: 20px;
+    display: flex;
+    width: 300px;
+    gap: 20px;
+    align-items: center;
+    }
+    .results-user img{
+        height: 50px;
+        width: 50px;
+        object-fit: cover;
+        border-radius: 50%;}
+
+.App mb-3 navbar navbar-dark bg-dark{
+    margin-bottom: 0rem;
+}
+
+

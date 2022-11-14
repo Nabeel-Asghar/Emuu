@@ -2,7 +2,6 @@ package firebase
 
 import (
 	"context"
-	"log"
 	"path/filepath"
 
 	firebase "firebase.google.com/go/v4"
@@ -26,13 +25,11 @@ func InitAuth() *auth.Client { //client library
 	app, err := firebase.NewApp(context.Background(), nil, opt)
 	if err != nil {
 		panic("Firebase load error")
-		//return nil, errors.Wrap(err, "error initializing firebase auth (create firebase app")
 	}
 
 	//Firebase Auth
 	auth, err := app.Auth(context.Background()) //this is the auth client refer to line 17
 	if err != nil {
-		log.Println(err)
 		panic("Firebase load error")
 	}
 	return auth
