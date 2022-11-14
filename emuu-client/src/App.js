@@ -80,7 +80,6 @@ function App() {
     <AppProvider>
       <ThemeProvider theme={theme}>
         <div className="App">
-
           <BrowserRouter>
             <Route exact path="/">
               <Home setVideo={setVideo} />

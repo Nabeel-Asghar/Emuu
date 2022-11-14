@@ -3,7 +3,7 @@ import "../HeaderPostLogin.scss";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Navbar from "react-bootstrap/Navbar";
-import "./AlgoliaSearchNavbar.scss"
+import "./AlgoliaSearchNavbar.scss";
 import ProfileMenu from "../../ProfileMenu/ProfileMenu";
 
 import EmuuLogo from "../EmuuLogo.png";
@@ -35,7 +35,6 @@ const AlgoliaSearchNavbar = ({ autocomplete, searchInput }) => {
                 className="search__input"
                 value={searchInput}
                 placeholder="Search..."
-
               />
             </Form>
             <ProfileMenu />

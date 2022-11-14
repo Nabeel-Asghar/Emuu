@@ -20,7 +20,7 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
 import "./register.scss";
 import { getAuth, updatePassword } from "firebase/auth";
-import "./Settings.scss"
+import "./Settings.scss";
 function Settings() {
   //use state for registration variables
   const [password, setPassword] = useState("");
@@ -124,7 +124,7 @@ function Settings() {
                     }}
                   />
                   {!error && (
-                    <p >
+                    <p>
                       <small>
                         {" "}
                         <InfoOutlinedIcon />
@@ -151,7 +151,6 @@ function Settings() {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
-
               >
                 Change Password
               </Button>
