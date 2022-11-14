@@ -21,7 +21,6 @@ import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
 import "./register.scss";
 import { getAuth, updatePassword } from "firebase/auth";
 
-
 function Settings() {
   //use state for registration variables
   const [password, setPassword] = useState("");
@@ -70,10 +69,9 @@ function Settings() {
     });
   };
 
-
   return (
     <>
-    <NavBarNoSearch/>
+      <NavBarNoSearch />
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box

@@ -80,7 +80,7 @@ function Subscriptions() {
               justifyContent: "initial",
               px: 1.5,
             }}
-             onClick={() => handleSubscribersProfile(user.Username)}
+            onClick={() => handleSubscribersProfile(user.Username)}
           >
             <ListItemIcon
               sx={{

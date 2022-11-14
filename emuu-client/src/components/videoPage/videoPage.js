@@ -309,10 +309,14 @@ function Video({ video, setVideo, setUserProfile }) {
           <div className="description">{video.VideoDescription}</div>
           <p className="description">
             Posted By:{" "}
-            <Link to="/creator"  onClick={() => {localStorage.setItem("Creator", video.Username);}}>
+            <Link
+              to="/creator"
+              onClick={() => {
+                localStorage.setItem("Creator", video.Username);
+              }}
+            >
               {""}
-                {video.Username}
-
+              {video.Username}
             </Link>{" "}
             on {video.Date}
           </p>
