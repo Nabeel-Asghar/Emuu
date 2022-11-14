@@ -65,17 +65,7 @@ function Subscriptions() {
   );
 
   const handleSubscribersProfile = (subscribersName) => {
-    const subscribersData = usersArr.filter(
-      (user) => user.Username === subscribersName
-    );
-    const subscribersDataVideos = videosArr.filter(
-      (video) => video.Username === subscribersName
-    );
-    localStorage.setItem("creatorsData", JSON.stringify(subscribersData));
-    localStorage.setItem(
-      "creatorsDataVideos",
-      JSON.stringify(subscribersDataVideos)
-    );
+    localStorage.setItem("Creator", subscribersName);
     history.push("/creator");
   };
   localStorage.setItem("subscribersCount", subscribersData?.length);
@@ -90,7 +80,7 @@ function Subscriptions() {
               justifyContent: "initial",
               px: 1.5,
             }}
-            onClick={() => handleSubscribersProfile(user.Username)}
+             onClick={() => handleSubscribersProfile(user.Username)}
           >
             <ListItemIcon
               sx={{
