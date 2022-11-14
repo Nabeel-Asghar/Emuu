@@ -215,7 +215,8 @@ function Creator({ setVideo, video }) {
     }
     if (localStorage.getItem("video")) {
       let video = JSON.parse(localStorage.getItem("video"));
-      setCreatorName(video.Username);
+       setCreatorName(localStorage.getItem("Creator"));
+
     }
   }, []);
 

@@ -105,7 +105,7 @@ function Feeds({ setVideo, setUserProfile }) {
   const [pages, setPages] = useState(undefined);
   const [page, setPage] = useState(1);
 
-  const displayName = localStorage.getItem("CreatorName");
+  const displayName = localStorage.getItem("Creator");
   const [sort, setSort] = React.useState("Recently Uploaded");
 
   const docRef = doc(db, "Users", displayName);

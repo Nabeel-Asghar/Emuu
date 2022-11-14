@@ -42,7 +42,7 @@ function Video({ video, setVideo, setUserProfile }) {
   const [autocompleteState, setAutocompleteState] = useState({});
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
-
+  const creatorRouteName = video.Username;
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
 
   const autocomplete = useMemo(
@@ -309,15 +309,10 @@ function Video({ video, setVideo, setUserProfile }) {
           <div className="description">{video.VideoDescription}</div>
           <p className="description">
             Posted By:{" "}
-            <Link to="/creator">
+            <Link to="/creator"  onClick={() => {localStorage.setItem("Creator", video.Username);}}>
               {""}
-              <span
-                onClick={() => {
-                  setUserProfile(video);
-                }}
-              >
                 {video.Username}
-              </span>
+
             </Link>{" "}
             on {video.Date}
           </p>
