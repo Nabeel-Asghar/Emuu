@@ -230,18 +230,8 @@ function Feeds({ setVideo }) {
   );
 
   const handleCreatorProfile = (creatorsName) => {
-    const creatorsData = usersArr.filter(
-      (user) => user.Username === creatorsName
-    );
-    const creatorsDataVideos = videosArr.filter(
-      (video) => video.Username === creatorsName
-    );
-    localStorage.setItem("creatorsData", JSON.stringify(creatorsData));
-    localStorage.setItem(
-      "creatorsDataVideos",
-      JSON.stringify(creatorsDataVideos)
-    );
-    history.push("/creator");
+    localStorage.setItem("Creator", creatorsName);
+        history.push("/creator");
   };
 
   useEffect(async () => {
