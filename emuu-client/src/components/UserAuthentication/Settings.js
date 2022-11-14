@@ -1,5 +1,5 @@
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { React, useState, Component } from "react";
+import { React, useState, Component, useMemo } from "react";
 import axios from "axios";
 import Login from "./newloginscreen";
 import { Routes, Route, useHistory } from "react-router-dom";
@@ -17,9 +17,10 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
+import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
 import "./register.scss";
 import { getAuth, updatePassword } from "firebase/auth";
+
 
 function Settings() {
   //use state for registration variables
@@ -69,9 +70,10 @@ function Settings() {
     });
   };
 
+
   return (
     <>
-      <HeaderPostLogin />
+    <NavBarNoSearch/>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
