@@ -8,6 +8,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	creator "emuu-server/main/users"
+    cropImage "emuu-server/main/users"
 )
 
 func main() {
@@ -31,6 +32,7 @@ func main() {
 		auth.GET("/video", video.SetVideos)
 		auth.POST("/creator", creator.SetUsername)
         auth.GET("/creator", creator.SetUser)
+        auth.POST("/updateBanner", cropImage.UpdateBanner)
 
 	}
 
