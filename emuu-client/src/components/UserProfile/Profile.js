@@ -114,7 +114,7 @@ function Profile({ setVideo, video }, { classes }) {
       }),
     [count]
   );
-async function getUser() {
+  async function getUser() {
     const dis = {
       displayName: displayName,
     };
@@ -256,8 +256,6 @@ async function getUser() {
     setTimeout(() => window.location.reload(), 1500);
     return false;
   }
-
-
 
   return (
     <>

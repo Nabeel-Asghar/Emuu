@@ -31,26 +31,23 @@ export default function AccountMenu() {
   const [ProfilePic, setProfilePic] = useState("");
 
   async function getMainUser() {
-      const dis = {
-        displayName: userName,
-      };
-      await axios
-        .post("http://localhost:8080/auth/creator", JSON.stringify({ ...dis }))
-        .then(function (response) {});
+    const dis = {
+      displayName: userName,
+    };
+    await axios
+      .post("http://localhost:8080/auth/creator", JSON.stringify({ ...dis }))
+      .then(function (response) {});
 
-      const response = await axios.get("http://localhost:8080/auth/creator");
+    const response = await axios.get("http://localhost:8080/auth/creator");
 
-      const user = response.data.message.UserDetails;
+    const user = response.data.message.UserDetails;
 
+    setProfilePic(user[0].ProfilePictureUrl);
+  }
 
-      setProfilePic(user[0].ProfilePictureUrl);
-
-    }
-
-    useEffect(async () => {
-      await getMainUser();
-    }, [localStorage.setItem("ProfilePictureUrl", ProfilePic)]);
-
+  useEffect(async () => {
+    await getMainUser();
+  }, [localStorage.setItem("ProfilePictureUrl", ProfilePic)]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

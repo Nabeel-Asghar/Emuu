@@ -56,7 +56,7 @@ function Creator({ setVideo, video }) {
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
 
   const docRef = doc(db, "Users", creatorName);
- const [Banner, setBanner] = useState("");
+  const [Banner, setBanner] = useState("");
   const [ProfilePic, setProfilePic] = useState("");
   const [subscriberCount, setSubscriberCount] = useState("");
   const autocomplete = useMemo(
@@ -104,38 +104,27 @@ function Creator({ setVideo, video }) {
     [count]
   );
 
-
   async function getUser() {
+    const dis = {
+      displayName: creatorName,
+    };
+    await axios
+      .post("http://localhost:8080/auth/creator", JSON.stringify({ ...dis }))
+      .then(function (response) {});
 
+    const response = await axios.get("http://localhost:8080/auth/creator");
 
-      const dis = {
-        displayName: creatorName,
-      };
-      await axios
-        .post(
-          "http://localhost:8080/auth/creator",
-          JSON.stringify({ ...dis })
-        )
-        .then(function (response) {});
+    const user = response.data.message.UserDetails;
 
+    setBanner(user[0].BannerUrl);
 
-      const response = await axios.get("http://localhost:8080/auth/creator");
+    setProfilePic(user[0].ProfilePictureUrl);
 
-     const user = response.data.message.UserDetails;
-
-      setBanner(user[0].BannerUrl);
-
-      setProfilePic(user[0].ProfilePictureUrl);
-
-      setSubscriberCount(user[0].SubscriberCount);
-
-
-    }
+    setSubscriberCount(user[0].SubscriberCount);
+  }
 
   useEffect(async () => {
-   await getUser();
-
-
+    await getUser();
   }, []);
 
   const dataSet = autocompleteState?.collections?.[0]?.items;
@@ -188,8 +177,6 @@ function Creator({ setVideo, video }) {
   }
 
   useEffect(async () => {
-
-
     const userRefInitial = doc(db, "Users", creatorName);
     const getSubscribersListRefInitial = await getDoc(userRefInitial);
     let subscribersListInitial;
@@ -199,13 +186,6 @@ function Creator({ setVideo, video }) {
     }
     setUpdateSubscribersList(subscribersListInitial);
   }, [subscriberActionCount]);
-
-
-
-
-
-
-
 
   return (
     <>

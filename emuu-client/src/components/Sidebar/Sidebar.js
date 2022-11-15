@@ -99,7 +99,6 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer() {
   const theme = useTheme();
 
-
   const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
   const [
     updatedSubscribersListCompleteData,
@@ -116,9 +115,9 @@ export default function MiniDrawer() {
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
   let subscribersListCompleteData;
 
-      const ProfilePic = localStorage.getItem("ProfilePictureUrl");
-console.log("1");
-console.log(ProfilePic);
+  const ProfilePic = localStorage.getItem("ProfilePictureUrl");
+  console.log("1");
+  console.log(ProfilePic);
 
   useEffect(async () => {
     const timer = async () => {
@@ -172,9 +171,6 @@ console.log(ProfilePic);
     history.push("/creator");
   };
   const displayName = localStorage.getItem("displayName");
-
-
-
 
   return (
     <AppContext.Consumer>
