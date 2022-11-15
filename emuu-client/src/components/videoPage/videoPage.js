@@ -258,7 +258,7 @@ function Video({ video, setVideo, setUserProfile }) {
         )}
         <video controls height="700" src={video.VideoUrl}></video>
         <div className="title-line">
-          <h1 class="title">{video.VideoTitle}</h1>
+          <h1 class="title">{video.Title}</h1>
           <p class="videoInfo">
             {video.Likes} Likes &#x2022; {video.Views} Views
             {localStorage.getItem("auth") == "true" && (

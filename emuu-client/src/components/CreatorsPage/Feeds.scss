@@ -1,97 +1,97 @@
 .feed-container {
-  height: 100%;
-  margin: 0px !important;
-  text-align: left;
-  background: #0f0f0f;
+  height:100%;
+  margin:0px !important;
+  text-align:left;
+  background:#0f0f0f;
   .css-185gdzj-MuiCardHeader-root {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-align-items: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 5px !important;
+    display:-webkit-box;
+    display:-webkit-flex;
+    display:-ms-flexbox;
+    display:flex;
+    -webkit-align-items:center;
+    -webkit-box-align:center;
+    -ms-flex-align:center;
+    align-items:center;
+    padding:5px !important;
   }
   .feed__heading {
-    margin-top: 10px;
-    font-weight: normal;
-    padding-bottom: 20px;
-    color: white;
+    margin-top:10px;
+    font-weight:normal;
+    padding-bottom:20px;
+    color:white;
   }
   .css-46bh2p-MuiCardContent-root {
-    padding-top: 8px;
+    padding-top:8px;
 
-    padding-left: 0px;
-    padding-bottom: 0px;
+    padding-left:0px;
+    padding-bottom:0px;
   }
   .videoInfo {
-    padding-left: 80px;
+    padding-left:80px;
   }
   .css-46bh2p-MuiCardContent-root {
-    padding: 16px;
+    padding:16px;
   }
   .css-et1ao3-MuiTypography-root {
-    margin: 0;
-    font-family: "Roboto", "Helvetica", "Arial", sans-serif;
-    font-size: 1.2rem;
-    line-height: 1.43;
-    letter-spacing: 0.01071em;
-    display: block;
-    font-weight: 550;
+    margin:0;
+    font-family:"Roboto", "Helvetica", "Arial", sans-serif;
+    font-size:1.2rem;
+    line-height:1.43;
+    letter-spacing:0.01071em;
+    display:block;
+    font-weight:550;
   }
   .videos__container {
-    display: inline-flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    display:inline-flex;
+    flex-wrap:wrap;
+    gap:20px;
   }
 
   .video__details__container {
-    display: flex;
-    flex-direction: row;
+    display:flex;
+    flex-direction:row;
   }
 
   .avatar__container {
-    margin-top: 5px;
+    margin-top:5px;
   }
 
   .video__description__container {
-    display: flex;
-    flex-direction: column;
-    margin-left: 15px;
+    display:flex;
+    flex-direction:column;
+    margin-left:15px;
   }
 
   .video__title {
-    margin-top: 5px;
-    font-size: 18px;
-    font-weight: bold;
+    margin-top:5px;
+    font-size:18px;
+    font-weight:bold;
   }
 
   .video__stats {
-    display: flex;
-    flex-direction: row;
+    display:flex;
+    flex-direction:row;
   }
 
   .video__details {
-    color: #606060;
-    margin-top: -18px;
+    color:#606060;
+    margin-top:-18px;
   }
 
   .dot {
-    height: 5px;
-    width: 5px;
-    background-color: #bbb;
-    border-radius: 50%;
-    margin: -7.5px 5px 0 5px;
+    height:5px;
+    width:5px;
+    background-color:#bbb;
+    border-radius:50%;
+    margin:-7.5px 5px 0 5px;
   }
 }
 .register-input {
-  padding: 10px;
-  width: 100%;
-  margin: 10px 0;
+  padding:10px;
+  width:100%;
+  margin:10px 0;
 }
 .MuiPagination-ul {
-  margin: auto !important;
-  width: fit-content !important;
+  margin:auto !important;
+  width:fit-content !important;
 }
