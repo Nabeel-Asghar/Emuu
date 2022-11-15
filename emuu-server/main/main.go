@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	creator "emuu-server/main/users"
     cropImage "emuu-server/main/users"
+    profilePic "emuu-server/main/users"
 )
 
 func main() {
@@ -33,6 +34,7 @@ func main() {
 		auth.POST("/creator", creator.SetUsername)
         auth.GET("/creator", creator.SetUser)
         auth.POST("/updateBanner", cropImage.UpdateBanner)
+        auth.POST("/updateProfilePic", profilePic.UpdateProfile)
 
 	}
 

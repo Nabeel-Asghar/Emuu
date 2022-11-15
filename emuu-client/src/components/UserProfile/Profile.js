@@ -242,15 +242,9 @@ function Profile({ setVideo, video }, { classes }) {
 
     uploadBytes(storageRef, file).then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
-        setDoc(
-          docRef,
-          {
-            ProfilePictureUrl: URL,
-          },
-          {
-            merge: true,
-          }
-        )
+          axios.post("http://localhost:8080/auth/updateProfilePic", JSON.stringify({displayName: displayName,
+                                                                                                      profileImageUrl: URL, }))
+                      .then(console.log("DOne"))
       );
     });
     setTimeout(() => window.location.reload(), 1500);
