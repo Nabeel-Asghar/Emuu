@@ -46,6 +46,7 @@ function App() {
   const [video, setVideo] = useState("");
   const [videos, setVideos] = useState([]);
   const [users, setUsers] = useState([]);
+
   const completeFirebaseData = videos.concat(users);
 
   async function getVideos() {
@@ -85,7 +86,7 @@ function App() {
               <Home setVideo={setVideo} />
             </Route>
             <Route path="/login">
-              <Login />
+              <Login  />
             </Route>
             <Route path="/register">
               <Register />

@@ -18,18 +18,25 @@ import Container from "@mui/material/Container";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+} from "firebase/auth";
+import "../../Firebase.js";
+import firebase from "firebase/app";
 import "./register.scss";
-import { getAuth, updatePassword } from "firebase/auth";
+import {updatePassword } from "firebase/auth";
 import "./Settings.scss";
 function Settings() {
   //use state for registration variables
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword , setConfirmNewPassword] = useState("");
   const [message, setMessage] = useState("");
   const history = useHistory();
   const [error, setError] = useState("");
-  const auth = getAuth();
-  const user = auth.currentUser;
+
 
   const validatePassword = (pass) => {
     if (pass.length < 8) {
@@ -63,10 +70,15 @@ function Settings() {
     e.preventDefault();
     // store the states in the form data
     if (!validatePassword(newPassword)) return;
+    const userEmail = localStorage.getItem("userEmail");
+const auth = getAuth();
+const user = auth.currentUser;
+console.log(getAuth())
 
-    updatePassword(user, newPassword).then(() => {
-      history.push("/login");
-    });
+    signInWithEmailAndPassword(auth, userEmail, password).then((user)=>{
+    updatePassword(user, newPassword).then(user => console.log(user))})
+
+
   };
 
   return (
@@ -123,6 +135,22 @@ function Settings() {
                       setError("");
                     }}
                   />
+                  <Grid item xs={12}>
+                                    <input
+                                    required
+                                    fullWidth
+                                    name="password"
+                                    label="Password"
+                                    type="password"
+                                    value={confirmNewPassword}
+                                    autoComplete="password"
+
+                                    className="register-input"
+                                    placeholder="Confirm New Password"
+                                    onChange={(e) => {
+                                      setConfirmNewPassword(e.target.value);
+                                    }}
+                                  />
                   {!error && (
                     <p>
                       <small>
@@ -144,6 +172,7 @@ function Settings() {
                     </p>
                   )}
                 </Grid>
+              </Grid>
               </Grid>
               <Button
                 onClick={(e) => handleSubmit(e)}
