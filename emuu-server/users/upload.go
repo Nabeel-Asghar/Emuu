@@ -9,6 +9,9 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"fmt"
+	"net/smtp"
+
 )
 
 // set struct for user info
@@ -19,6 +22,9 @@ type UploadInfo struct {
 	Game_tags         string `json:"video_gameTags"`
 	Video_url         string `json:"video_url"`
 	Thumbnail_url     string `json:"thumbnail_url"`
+}
+type userNotification struct{
+SubscriberArray []string `firestore:"SubscriberList"`
 }
 
 func (u *UploadInfo) SetUploadInfo(username string, title string, description string, tags string, Videourl string, Thumburl string) {
@@ -123,6 +129,43 @@ func UploadVideo(c *gin.Context) {
 		{Path: "VideosPosted", Value: firestore.Increment(1)},
 	})
 
+
+dsnap, err := client.Collection("Users").Doc(input.User_userName).Get(ctx)
+
+m := dsnap.Data()
+fmt.Printf("Document data: %#v\n", m)
+
+var subscribe userNotification
+                Doc.DataTo(&subscribe)
+fmt.Println(subscribe)
+
+	auth:=smtp.PlainAuth(
+    "",
+    "emuu.1ee85@gmail.com",
+    "eoierbcuhucaexew",
+    "smtp.gmail.com",
+    )
+
+    msg := "Subject: My special subject\nThis is the body of my email"
+
+    err = smtp.SendMail(
+    "smtp.gmail.com:587",
+    auth,
+    "emuu.1ee85@gmail.com",
+    []string{"emuu.1ee85@gmail.com"},
+    []byte (msg),
+    )
+
+    if err !=nil{
+    fmt.Println(err)
+
+    }
+
 	c.JSON(http.StatusOK, gin.H{"message": "User Upload collection successfully created"})
 
 }
+
+
+
+
+
