@@ -1,84 +1,84 @@
 .feed-container {
-  height: 100%;
-  margin: 0px !important;
-  text-align: left;
+  height:100%;
+  margin:0px !important;
+  text-align:left;
 
   .css-185gdzj-MuiCardHeader-root {
-    display: -webkit-box;
-    display: -webkit-flex;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-align-items: center;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    padding: 5px !important;
+    display:-webkit-box;
+    display:-webkit-flex;
+    display:-ms-flexbox;
+    display:flex;
+    -webkit-align-items:center;
+    -webkit-box-align:center;
+    -ms-flex-align:center;
+    align-items:center;
+    padding:5px !important;
   }
   .css-46bh2p-MuiCardContent-root {
-    padding: 16px;
+    padding:16px;
   }
   .feed__heading {
-    margin-top: 10px;
-    font-weight: normal;
-    padding-bottom: 20px;
+    margin-top:10px;
+    font-weight:normal;
+    padding-bottom:20px;
   }
   .videoInfo {
-    padding-left: 80px;
+    padding-left:80px;
   }
   .videos__container {
-    display: inline-flex;
-    flex-wrap: wrap;
-    gap: 20px;
+    display:inline-flex;
+    flex-wrap:wrap;
+    gap:20px;
   }
 
   .video__details__container {
-    display: flex;
-    flex-direction: row;
+    display:flex;
+    flex-direction:row;
   }
   .subs__container {
-    flex-wrap: wrap;
-    gap: 20px;
+    flex-wrap:wrap;
+    gap:20px;
   }
   .avatar__container {
-    margin-top: 5px;
+    margin-top:5px;
   }
 
   .video__description__container {
-    display: flex;
-    flex-direction: column;
-    margin-left: 15px;
+    display:flex;
+    flex-direction:column;
+    margin-left:15px;
   }
 
   .video__title {
-    margin-top: 5px;
-    font-size: 18px;
-    font-weight: bold;
+    margin-top:5px;
+    font-size:18px;
+    font-weight:bold;
   }
 
   .video__stats {
-    display: flex;
-    flex-direction: row;
+    display:flex;
+    flex-direction:row;
   }
 
   .video__details {
-    color: #606060;
-    margin-top: -18px;
+    color:#606060;
+    margin-top:-18px;
   }
 
   .dot {
-    height: 5px;
-    width: 5px;
-    background-color: #bbb;
-    border-radius: 50%;
-    margin: -7.5px 5px 0 5px;
+    height:5px;
+    width:5px;
+    background-color:#bbb;
+    border-radius:50%;
+    margin:-7.5px 5px 0 5px;
   }
 }
 .register-input {
-  padding: 10px;
-  width: 100%;
-  margin: 10px 0;
+  padding:10px;
+  width:100%;
+  margin:10px 0;
 }
 .MuiPagination-ul {
-  margin: auto !important;
-  width: fit-content !important;
+  margin:auto !important;
+  width:fit-content !important;
 }

@@ -94,7 +94,7 @@ console.log(getAuth())
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
+          <Avatar sx={{ m: 1, bgcolor: "#0072FF" }}>
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">

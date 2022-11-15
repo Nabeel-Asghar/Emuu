@@ -3,15 +3,14 @@ package users
 import (
 	"cloud.google.com/go/firestore"
 	"context"
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"
 	"google.golang.org/api/option"
 	"log"
 	"net/http"
-	"time"
-	"fmt"
 	"net/smtp"
-
+	"time"
 )
 
 // set struct for user info
@@ -23,8 +22,11 @@ type UploadInfo struct {
 	Video_url         string `json:"video_url"`
 	Thumbnail_url     string `json:"thumbnail_url"`
 }
-type userNotification struct{
-SubscriberArray []string `firestore:"SubscriberList"`
+type Subscribers struct {
+	SubscriberArray []string `firestore:"SubscriberList"`
+}
+type Email struct {
+	Email string `firestore:"Email"`
 }
 
 func (u *UploadInfo) SetUploadInfo(username string, title string, description string, tags string, Videourl string, Thumburl string) {
@@ -129,43 +131,38 @@ func UploadVideo(c *gin.Context) {
 		{Path: "VideosPosted", Value: firestore.Increment(1)},
 	})
 
+	dsnap, err := client.Collection("Users").Doc(input.User_userName).Get(ctx)
 
-dsnap, err := client.Collection("Users").Doc(input.User_userName).Get(ctx)
+	var subscribe Subscribers
+	dsnap.DataTo(&subscribe)
 
-m := dsnap.Data()
-fmt.Printf("Document data: %#v\n", m)
+	for i := 0; i < len(subscribe.SubscriberArray); i++ {
+		dsnap, err := client.Collection("Users").Doc(subscribe.SubscriberArray[i]).Get(ctx)
+		var email Email
+		dsnap.DataTo(&email)
+		auth := smtp.PlainAuth(
+			"",
+			"emuu.1ee85@gmail.com",
+			"eoierbcuhucaexew",
+			"smtp.gmail.com",
+		)
 
-var subscribe userNotification
-                Doc.DataTo(&subscribe)
-fmt.Println(subscribe)
+		msg := "Subject: " + input.User_userName + " has uploaded a video\nCheck out the latest video posted by " + input.User_userName + " on the EMUU application"
 
-	auth:=smtp.PlainAuth(
-    "",
-    "emuu.1ee85@gmail.com",
-    "eoierbcuhucaexew",
-    "smtp.gmail.com",
-    )
+		err = smtp.SendMail(
+			"smtp.gmail.com:587",
+			auth,
+			"emuu.1ee85@gmail.com",
+			[]string{email.Email},
+			[]byte(msg),
+		)
 
-    msg := "Subject: My special subject\nThis is the body of my email"
+		if err != nil {
+			fmt.Println(err)
 
-    err = smtp.SendMail(
-    "smtp.gmail.com:587",
-    auth,
-    "emuu.1ee85@gmail.com",
-    []string{"emuu.1ee85@gmail.com"},
-    []byte (msg),
-    )
-
-    if err !=nil{
-    fmt.Println(err)
-
-    }
+		}
+	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "User Upload collection successfully created"})
 
 }
-
-
-
-
-
