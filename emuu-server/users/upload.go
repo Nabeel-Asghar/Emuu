@@ -9,9 +9,7 @@ import (
 	"log"
 	"net/http"
 	"time"
-
 	"fmt"
-
 	"net/smtp"
 
 )
@@ -24,6 +22,9 @@ type UploadInfo struct {
 	Game_tags         string `json:"video_gameTags"`
 	Video_url         string `json:"video_url"`
 	Thumbnail_url     string `json:"thumbnail_url"`
+}
+type userNotification struct{
+SubscriberArray []string `firestore:"SubscriberList"`
 }
 
 func (u *UploadInfo) SetUploadInfo(username string, title string, description string, tags string, Videourl string, Thumburl string) {
@@ -127,6 +128,16 @@ func UploadVideo(c *gin.Context) {
 	_, err = dc.Update(ctx, []firestore.Update{
 		{Path: "VideosPosted", Value: firestore.Increment(1)},
 	})
+
+
+dsnap, err := client.Collection("Users").Doc(input.User_userName).Get(ctx)
+
+m := dsnap.Data()
+fmt.Printf("Document data: %#v\n", m)
+
+var subscribe userNotification
+                Doc.DataTo(&subscribe)
+fmt.Println(subscribe)
 
 	auth:=smtp.PlainAuth(
     "",
