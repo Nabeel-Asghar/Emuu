@@ -228,7 +228,7 @@ function Profile({ setVideo, video }, { classes }) {
 
         axios.post("http://localhost:8080/auth/updateBanner", JSON.stringify({displayName: displayName,
                                                                                               croppedImageUrl: URL, }))
-              .then(console.log("DOne"))
+
 
       );
     });
@@ -244,7 +244,7 @@ function Profile({ setVideo, video }, { classes }) {
       getDownloadURL(storageRef).then((URL) =>
           axios.post("http://localhost:8080/auth/updateProfilePic", JSON.stringify({displayName: displayName,
                                                                                                       profileImageUrl: URL, }))
-                      .then(console.log("DOne"))
+
       );
     });
     setTimeout(() => window.location.reload(), 1500);
