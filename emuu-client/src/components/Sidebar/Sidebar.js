@@ -22,7 +22,7 @@ import HomeIcon from "@mui/icons-material/Home";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Avatar } from "@mui/material";
-
+import axios from "axios";
 import AppContext from "../../AppContext";
 
 import { collection, getDocs, doc, getDoc } from "firebase/firestore";
@@ -98,7 +98,7 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer() {
   const theme = useTheme();
-  const [ProfilePic, setProfilePic] = useState("");
+
 
   const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
   const [
@@ -115,6 +115,11 @@ export default function MiniDrawer() {
     isAuthorized === "true" ? authUsersNavigation : unAuthorizedNavigation;
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
   let subscribersListCompleteData;
+
+      const ProfilePic = localStorage.getItem("ProfilePictureUrl");
+console.log("1");
+console.log(ProfilePic);
+
   useEffect(async () => {
     const timer = async () => {
       const userRefInitial = doc(db, "Users", userName);
@@ -168,10 +173,9 @@ export default function MiniDrawer() {
   };
   const displayName = localStorage.getItem("displayName");
 
-  const docRef = doc(db, "Users", displayName);
-  getDoc(docRef).then((docSnap) => {
-    setProfilePic(docSnap.data().ProfilePictureUrl);
-  });
+
+
+
   return (
     <AppContext.Consumer>
       {(context) => (

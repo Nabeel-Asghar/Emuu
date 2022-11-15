@@ -20,6 +20,7 @@ import { getAuth, signOut } from "firebase/auth";
 import { collection, getDoc, where, doc } from "firebase/firestore";
 import { db } from "../../Firebase.js";
 import AppContext from "../../AppContext";
+import axios from "axios";
 
 export default function AccountMenu() {
   const userName = localStorage.getItem("displayName");
@@ -28,10 +29,29 @@ export default function AccountMenu() {
   const docRef = doc(db, "Users", userName);
 
   const [ProfilePic, setProfilePic] = useState("");
-  getDoc(docRef).then((docSnap) => {
-    setProfilePic(docSnap.data().ProfilePictureUrl);
-  });
-  const profileImage = localStorage.getItem(ProfilePic);
+
+  async function getMainUser() {
+      const dis = {
+        displayName: userName,
+      };
+      await axios
+        .post("http://localhost:8080/auth/creator", JSON.stringify({ ...dis }))
+        .then(function (response) {});
+
+      const response = await axios.get("http://localhost:8080/auth/creator");
+
+      const user = response.data.message.UserDetails;
+
+
+      setProfilePic(user[0].ProfilePictureUrl);
+
+    }
+
+    useEffect(async () => {
+      await getMainUser();
+    }, [localStorage.setItem("ProfilePictureUrl", ProfilePic)]);
+
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
