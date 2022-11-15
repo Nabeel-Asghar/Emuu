@@ -10,6 +10,7 @@ import (
 	creator "emuu-server/main/users"
     cropImage "emuu-server/main/users"
     profilePic "emuu-server/main/users"
+    likes "emuu-server/main/video"
 )
 
 func main() {
@@ -35,6 +36,7 @@ func main() {
         auth.GET("/creator", creator.SetUser)
         auth.POST("/updateBanner", cropImage.UpdateBanner)
         auth.POST("/updateProfilePic", profilePic.UpdateProfile)
+        auth.POST("/LikeVideo", likes.SetLikes)
 
 	}
 
