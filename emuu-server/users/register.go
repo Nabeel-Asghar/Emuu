@@ -71,6 +71,7 @@ func CreateUser(c *gin.Context) {
 		"ProfilePictureUrl": "https://i.stack.imgur.com/l60Hf.png",
 		"VideosPosted":      0,
 		"DateJoined":        Date,
+		"Email":             input.User_email,
 	})
 
 	if err != nil {
