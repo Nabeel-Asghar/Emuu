@@ -338,26 +338,39 @@ function Video({ video, setVideo, setUserProfile }) {
               class="btn btn-lg btn-primary"
               type="submit"
               onClick={async () => {
-                setComment("");
-                const collectionRef = collection(db, "Videos");
-                const queryData = await query(
-                  collectionRef,
-                  where("VideoUrl", "==", video.VideoUrl)
-                );
-                const _doc = await getDocs(queryData);
-                let id = "";
-                _doc.forEach((doc) => (id = doc.id));
-                const videoRef = doc(db, "Videos", id);
-                await updateDoc(videoRef, {
-                  Comments: arrayUnion({
-                    text: comment,
-                    postedBy: displayName,
-                    date: new Date().toLocaleDateString(),
-                  }),
-                });
-                setVideo((await getDoc(videoRef)).data());
-              }}
-            >
+              await axios
+               .post(
+                "http://localhost:8080/auth/comment",
+                JSON.stringify({text: comment,
+                postedBy: displayName,
+                videoUrl: video.VideoUrl})
+                 )
+                .then(function (response) {});
+                  const response =  await axios.get("http://localhost:8080/auth/comment");
+                    console.log(response);
+
+}}
+
+//                setComment("");
+//                const collectionRef = collection(db, "Videos");
+//                const queryData = await query(
+//                  collectionRef,
+//                  where("VideoUrl", "==", video.VideoUrl)
+//                );
+//                const _doc = await getDocs(queryData);
+//                let id = "";
+//                _doc.forEach((doc) => (id = doc.id));
+//                const videoRef = doc(db, "Videos", id);
+//                await updateDoc(videoRef, {
+//                  Comments: arrayUnion({
+//                    text: comment,
+//                    postedBy: displayName,
+//                    date: new Date().toLocaleDateString(),
+//                  }),
+//                });
+//                setVideo((await getDoc(videoRef)).data());
+//              }}
+              >
               Submit
             </button>
           </div>
