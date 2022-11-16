@@ -179,35 +179,28 @@ function Feeds({ setVideo }) {
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
   let subscribersListCompleteData;
 
-  useEffect(async () => {
-    const timer = async () => {
-      const userRefInitial = doc(db, "Users", displayName);
-      const getSubscribersListRefInitial = await getDoc(userRefInitial);
-      let subscribersListInitial;
-      if (getSubscribersListRefInitial.exists()) {
-        subscribersListInitial =
-          getSubscribersListRefInitial.data().SubscriberList;
-      }
-      setUpdateSubscribersList(subscribersListInitial);
-      const querySnapshotUsers = await getDocs(collection(db, "Users"));
-      const usersArr = [];
-      querySnapshotUsers.forEach((doc) => {
-        usersArr.push(doc.data());
-      });
-      setUsers(usersArr);
-      subscribersListCompleteData = usersArr.filter(
-        (record) =>
-          !record.hasOwnProperty("VideoUrl") &&
-          record.hasOwnProperty("Username") &&
-          subscribersListInitial.includes(record.Username)
-      );
-      setUpdateSubscribersListCompleteData(subscribersListCompleteData);
+
+ async function getSubscribers() {
+    const dis = {
+      displayName: displayName,
     };
-    const interval = setInterval(() => {
-      timer();
-    }, 500);
-    return () => clearTimeout(interval);
-  }, []);
+    await axios
+      .post(
+        "http://localhost:8080/auth/Subscribers",
+        JSON.stringify({ ...dis })) .then(function (response) {});
+                          try {
+        const response = await axios.get("http://localhost:8080/auth/Subscribers");
+
+        setUpdateSubscribersListCompleteData(response.data.message.SubDetails);
+
+                         } catch (error) {}
+                          }
+
+  useEffect(async () => {
+      await getSubscribers();
+
+    }, []);
+
 
   //Sort function for date uploaded
   function sortVideosByTime(videos) {
@@ -236,6 +229,7 @@ function Feeds({ setVideo }) {
 
   useEffect(async () => {
     await getLikedVideos();
+
   }, []);
 
   return (
@@ -427,7 +421,7 @@ function Feeds({ setVideo }) {
             </div>
           </div>
         </TabPanel>
-        <TabPanel value="3">
+        <TabPanel value="3" >
           <div>
             {updatedSubscribersListCompleteData.map((user, index) => (
               <ListItem key={index} disablePadding sx={{ display: "block" }}>

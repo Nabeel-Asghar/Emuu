@@ -2,15 +2,16 @@ package main
 
 import (
 	firebaseSer "emuu-server/main/firebase"
+	creator "emuu-server/main/users"
+	cropImage "emuu-server/main/users"
+	profilePic "emuu-server/main/users"
 	register "emuu-server/main/users"
+	subscriber "emuu-server/main/users"
 	upload "emuu-server/main/users"
+	likes "emuu-server/main/video"
 	video "emuu-server/main/video"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	creator "emuu-server/main/users"
-    cropImage "emuu-server/main/users"
-    profilePic "emuu-server/main/users"
-    likes "emuu-server/main/video"
 )
 
 func main() {
@@ -33,15 +34,17 @@ func main() {
 		auth.POST("/video", video.SetUsernameAndPage)
 		auth.GET("/video", video.SetVideos)
 		auth.POST("/creator", creator.SetUsername)
-        auth.GET("/creator", creator.SetUser)
-        auth.POST("/updateBanner", cropImage.UpdateBanner)
-        auth.POST("/updateProfilePic", profilePic.UpdateProfile)
-        auth.POST("/LikeVideo", likes.SetLikes)
+		auth.GET("/creator", creator.SetUser)
+		auth.POST("/updateBanner", cropImage.UpdateBanner)
+		auth.POST("/updateProfilePic", profilePic.UpdateProfile)
+		auth.POST("/LikeVideo", likes.SetLikes)
+		auth.POST("/Subscribers", subscriber.SetUsernameSub)
+		auth.GET("/Subscribers", subscriber.SetSubscribers)
 
 	}
 
 	api := r.Group("api").Use(firebaseSer.AuthJWT) //create a new router with the middleware authJWT
-	{                                              //you should supply the jwt token from firebase
+	{ //you should supply the jwt token from firebase
 		api.POST("/", func(ctx *gin.Context) {
 
 		})
