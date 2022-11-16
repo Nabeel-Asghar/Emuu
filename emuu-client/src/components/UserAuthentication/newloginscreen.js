@@ -23,7 +23,7 @@ import {
 import { Routes, Route, useHistory } from "react-router-dom";
 import Home from "../home/Home";
 import "../../Firebase.js";
-import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
+import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
 import firebase from "firebase/app";
 
 function Login() {
@@ -77,7 +77,7 @@ function Login() {
 
   return (
     <>
-      <HeaderPostLogin />
+      <NavBarNoSearch />
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid
