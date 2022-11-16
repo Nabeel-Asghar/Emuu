@@ -1,99 +1,99 @@
 .title {
-  font-size:60px;
-  text-align:center;
+  font-size: 60px;
+  text-align: center;
 }
 .videoInfo {
-  font-size:35px;
-  margin:0;
+  font-size: 35px;
+  margin: 0;
 }
 .description {
-  font-size:20px;
-  text-align:left;
-  margin-bottom:16px;
+  font-size: 20px;
+  text-align: left;
+  margin-bottom: 16px;
 }
 .videoPage {
-  width:80%;
-  margin:auto;
-  min-width:1000px;
+  width: 80%;
+  margin: auto;
+  min-width: 1000px;
 }
 
 .videoPage video {
-  width:100%;
-  object-fit:cover;
-  height:fit-content;
+  width: 100%;
+  object-fit: cover;
+  height: fit-content;
 }
 .title-line {
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  gap:30px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
 }
 .videoPage .MuiSvgIcon-root {
-  fill:currentColor;
-  width:1.8em;
-  height:1.8em;
-  display:inline-block;
-  font-size:1.5rem;
-  transition:fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  flex-shrink:0;
-  user-select:none;
+  fill: currentColor;
+  width: 1.8em;
+  height: 1.8em;
+  display: inline-block;
+  font-size: 1.5rem;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  flex-shrink: 0;
+  user-select: none;
 }
 .videoPage .MuiCheckbox-root {
-  color:#f50057;
+  color: #f50057;
 }
 .videoPage .MuiTypography-body1 {
-  font-size:2rem;
-  font-family:"Roboto", "Helvetica", "Arial", sans-serif;
-  font-weight:400;
-  line-height:1.5;
-  letter-spacing:0.00938em;
+  font-size: 2rem;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-weight: 400;
+  line-height: 1.5;
+  letter-spacing: 0.00938em;
 }
 
 .about {
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 .about h2 {
-  font-size:40px;
+  font-size: 40px;
 }
 
 .post-comment {
-  display:flex;
+  display: flex;
 }
 
 .post-comment {
-  flex-grow:1;
+  flex-grow: 1;
 }
 .videoPage .MuiTextField-root {
-  display:-webkit-inline-box;
-  display:-webkit-inline-flex;
-  display:-ms-inline-flexbox;
-  display:inline-flex;
-  -webkit-flex-direction:column;
-  -ms-flex-direction:column;
-  flex-direction:column;
-  position:relative;
-  min-width:0;
-  padding:0;
-  margin:0;
-  border:0;
-  vertical-align:top;
-  flex-grow:1;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  position: relative;
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  vertical-align: top;
+  flex-grow: 1;
 }
 .comment-section {
-  align-items:left;
+  align-items: left;
 }
 .comment-section h2 {
-  text-align:left;
-  font-size:40px;
-  margin:20px 0;
+  text-align: left;
+  font-size: 40px;
+  margin: 20px 0;
 }
 .comment {
-  text-align:left;
-  font-size:20px;
+  text-align: left;
+  font-size: 20px;
 }
 .comment p:first-child {
-  font-weight:bold;
-  margin-bottom:5px;
+  font-weight: bold;
+  margin-bottom: 5px;
 }

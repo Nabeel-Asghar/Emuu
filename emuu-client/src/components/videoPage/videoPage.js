@@ -20,6 +20,7 @@ import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import { Avatar } from "@mui/material";
 import Typography from "@material-ui/core/Typography";
+import axios from "axios";
 import {
   getDocs,
   getDoc,
@@ -131,6 +132,23 @@ function Video({ video, setVideo, setUserProfile }) {
 
   const subscribeUser = () => {};
 
+  async function likeVideo(e) {
+    //Axios post should be done here to send info to backend
+    axios.post(
+      "http://localhost:8080/auth/LikeVideo",
+      JSON.stringify({
+        displayName: displayName,
+        videoUrl: video.VideoUrl,
+        LikedBoolean: !checked,
+      })
+    );
+    if (checked === true) {
+      video.Likes--;
+    } else {
+      video.Likes++;
+    }
+  }
+
   function checkLiked() {
     let liked = video?.usersThatLiked?.includes(displayName); //check if there is a video and if there are users that liked stored
     if (liked) {
@@ -146,6 +164,7 @@ function Video({ video, setVideo, setUserProfile }) {
     }
     if (localStorage.getItem("video")) {
       let video = JSON.parse(localStorage.getItem("video"));
+
       const collectionRef = collection(db, "Videos");
       const queryData = await query(
         collectionRef,
@@ -274,27 +293,7 @@ function Video({ video, setVideo, setUserProfile }) {
                       checked={checked}
                       onChange={async (e) => {
                         setChecked(!checked);
-                        const collectionRef = collection(db, "Videos");
-                        const queryData = await query(
-                          collectionRef,
-                          where("VideoUrl", "==", video.VideoUrl)
-                        );
-                        const _doc = await getDocs(queryData);
-                        let id = "";
-                        _doc.forEach((doc) => (id = doc.id));
-                        const videoRef = doc(db, "Videos", id);
-                        if (e.target.checked) {
-                          await updateDoc(videoRef, { Likes: increment(1) });
-                          await updateDoc(videoRef, {
-                            usersThatLiked: arrayUnion(displayName),
-                          });
-                        } else {
-                          await updateDoc(videoRef, { Likes: increment(-1) });
-                          await updateDoc(videoRef, {
-                            usersThatLiked: arrayRemove(displayName),
-                          });
-                        }
-                        setVideo((await getDoc(videoRef)).data());
+                        likeVideo(e);
                       }}
                     />
                   }

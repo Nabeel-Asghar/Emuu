@@ -20,7 +20,7 @@ import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-
+import axios from "axios";
 import UserInfo from "./UserInfo";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../../Firebase.js";
@@ -45,9 +45,8 @@ import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaS
 function Creator({ setVideo, video }) {
   const history = useHistory();
   const displayName = localStorage.getItem("displayName");
-
   const location = useLocation();
-  const [creatorName, setCreatorName] = useState("Loading...");
+  const creatorName = localStorage.getItem("Creator");
   const [subscriberActionCount, setSubsciberActionCount] = useState(0);
   const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
   const [autocompleteState, setAutocompleteState] = useState({});
@@ -57,7 +56,9 @@ function Creator({ setVideo, video }) {
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
 
   const docRef = doc(db, "Users", creatorName);
-
+  const [Banner, setBanner] = useState("");
+  const [ProfilePic, setProfilePic] = useState("");
+  const [subscriberCount, setSubscriberCount] = useState("");
   const autocomplete = useMemo(
     () =>
       createAutocomplete({
@@ -102,6 +103,30 @@ function Creator({ setVideo, video }) {
       }),
     [count]
   );
+
+  async function getUser() {
+    const dis = {
+      displayName: creatorName,
+    };
+    await axios
+      .post("http://localhost:8080/auth/creator", JSON.stringify({ ...dis }))
+      .then(function (response) {});
+
+    const response = await axios.get("http://localhost:8080/auth/creator");
+
+    const user = response.data.message.UserDetails;
+
+    setBanner(user[0].BannerUrl);
+
+    setProfilePic(user[0].ProfilePictureUrl);
+
+    setSubscriberCount(user[0].SubscriberCount);
+  }
+
+  useEffect(async () => {
+    await getUser();
+  }, []);
+
   const dataSet = autocompleteState?.collections?.[0]?.items;
   const searchResultsVideosArr = dataSet?.filter(
     (obj) => obj.hasOwnProperty("VideoUrl") && obj.hasOwnProperty("Username")
@@ -161,21 +186,6 @@ function Creator({ setVideo, video }) {
     }
     setUpdateSubscribersList(subscribersListInitial);
   }, [subscriberActionCount]);
-
-  useEffect(async () => {
-    setCreatorName(localStorage.getItem("Creator"));
-    checkSubscribed();
-  }, []);
-
-  const [Banner, setBanner] = useState("");
-  const [ProfilePic, setProfilePic] = useState("");
-  const [subscriberCount, setSubscriberCount] = useState("");
-
-  getDoc(docRef).then((docSnap) => {
-    setBanner(docSnap.data().BannerUrl);
-    setProfilePic(docSnap.data().ProfilePictureUrl);
-    setSubscriberCount(docSnap.data().SubscriberCount);
-  });
 
   return (
     <>
