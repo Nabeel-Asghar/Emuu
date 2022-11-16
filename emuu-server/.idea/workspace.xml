@@ -4,39 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8493d53e-db58-4626-b4e8-fbf4ec91baf5" name="Changes" comment="Used prettier">
-      <change beforePath="$PROJECT_DIR$/../emuu-client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/Feeds.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/Feeds.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/Profile.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/Profile.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/UserInfo.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/UserInfo.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/NavbarPostLogin/HeaderPostLogin.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/NavbarPostLogin/HeaderPostLogin.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/ProfileMenu/ProfileMenu.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/ProfileMenu/ProfileMenu.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/Sidebar/Sidebar.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/Sidebar/Sidebar.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/Settings.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/Settings.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/Settings.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/Settings.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/login.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/login.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/register.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/register.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Feeds.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Feeds.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Feeds.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Feeds.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Profile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Profile.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Profile.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/SubscriptionsList/Subscriptions.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/SubscriptionsList/Subscriptions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/UserInfo.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/UserInfo.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/canvasUtils.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/canvasUtils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/styles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/styles.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/common/Button/button.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/common/Button/button.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/common/UserProfileCard/UserProfileCard.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/common/UserProfileCard/UserProfileCard.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/home/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/home/Home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/home/Home.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/home/Home.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/upload/UploadButton.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/upload/UploadButton.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/upload/videoPreview.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/upload/videoPreview.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/videoPage/videoPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/videoPage/videoPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/videoPage/videoPage.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/videoPage/videoPage.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/subscription.go" beforeDir="false" afterPath="$PROJECT_DIR$/users/subscription.go" afterDir="false" />
-    </list>
+    <list default="true" id="8493d53e-db58-4626-b4e8-fbf4ec91baf5" name="Changes" comment="Used prettier" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
