@@ -354,8 +354,11 @@ async function likeVideo(e){
                 postedBy: displayName,
                 videoUrl: video.VideoUrl})
                  )
-//                .then(function (response) {});
-//                const response = await axios.get("http://localhost:8080/auth/comment");
+                .then(function (response) {});
+                  const response =  await axios.get("http://localhost:8080/auth/comment");
+                    console.log(response);
+
+}}
 
 //                setComment("");
 //                const collectionRef = collection(db, "Videos");
@@ -375,8 +378,8 @@ async function likeVideo(e){
 //                  }),
 //                });
 //                setVideo((await getDoc(videoRef)).data());
-              }}
-            >
+//              }}
+              >
               Submit
             </button>
           </div>

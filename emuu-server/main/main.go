@@ -39,7 +39,7 @@ func main() {
 		auth.POST("/updateProfilePic", profilePic.UpdateProfile)
 		auth.POST("/LikeVideo", likes.SetLikes)
 		auth.POST("/comment", comment.SetComment)
-		//auth.GET("/comment", comment.GetComment)
+		auth.GET("/comment", comment.GetComment)
 
 	}
 
