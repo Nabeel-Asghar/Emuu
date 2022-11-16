@@ -139,8 +139,12 @@ async function likeVideo(e){
   axios.post("http://localhost:8080/auth/LikeVideo", JSON.stringify({displayName: displayName,
                                                    videoUrl: video.VideoUrl,
                                                     LikedBoolean: !checked}))
-  setTimeout(() => window.location.reload(), 100);
-       return false;
+  if(checked === true){
+  video.Likes--}
+  else{
+  video.Likes++;
+  }
+
 
   }
 
