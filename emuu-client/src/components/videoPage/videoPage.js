@@ -356,29 +356,9 @@ async function likeVideo(e){
                  )
                 .then(function (response) {});
                   const response =  await axios.get("http://localhost:8080/auth/comment");
-                    console.log(response);
+                    setComment(response.data.message.Comments);
 
 }}
-
-//                setComment("");
-//                const collectionRef = collection(db, "Videos");
-//                const queryData = await query(
-//                  collectionRef,
-//                  where("VideoUrl", "==", video.VideoUrl)
-//                );
-//                const _doc = await getDocs(queryData);
-//                let id = "";
-//                _doc.forEach((doc) => (id = doc.id));
-//                const videoRef = doc(db, "Videos", id);
-//                await updateDoc(videoRef, {
-//                  Comments: arrayUnion({
-//                    text: comment,
-//                    postedBy: displayName,
-//                    date: new Date().toLocaleDateString(),
-//                  }),
-//                });
-//                setVideo((await getDoc(videoRef)).data());
-//              }}
               >
               Submit
             </button>

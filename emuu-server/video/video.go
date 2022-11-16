@@ -23,18 +23,20 @@ var userUN string
 var PageNum int
 
 type Video struct {
-	Username         string   `firestore:"Username"`
-	Title            string   `firestore:"VideoTitle"`
-	VideoUrl         string   `firestore:"VideoUrl"`
-	ThumbnailUrl     string   `firestore:"thumbnailUrl"`
-	Likes            int      `firestore:"Likes"`
-	Views            int      `firestore:"Views"`
-	UploadTime       int      `firestore:"uploadTime"`
-	Date             string   `firestore:"Date"`
-	GameTag          string   `firestore:"GameTag"`
-	VideoDescription string   `firestore:"VideoDescription"`
-	UsersThatLiked   []string `firestore:"usersThatLiked"`
-	ProfilePic       string
+	Username         string              `firestore:"Username"`
+	Title            string              `firestore:"VideoTitle"`
+	VideoUrl         string              `firestore:"VideoUrl"`
+	ThumbnailUrl     string              `firestore:"thumbnailUrl"`
+	Likes            int                 `firestore:"Likes"`
+	Views            int                 `firestore:"Views"`
+	UploadTime       int                 `firestore:"uploadTime"`
+	Date             string              `firestore:"Date"`
+	GameTag          string              `firestore:"GameTag"`
+	VideoDescription string              `firestore:"VideoDescription"`
+	UsersThatLiked   []string            `firestore:"usersThatLiked"`
+	Comments         []map[string]string `firestore:"Comments,omitempty"`
+
+	ProfilePic string
 }
 type User struct {
 	ProfilePicture string `firestore:"ProfilePictureUrl"`

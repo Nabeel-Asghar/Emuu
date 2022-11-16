@@ -12,7 +12,7 @@ import (
 	"time"
 )
 
-var videoUrl = ""
+var videoUrl string
 
 type VideoInfo struct {
 	UserName string `json:"postedBy"`
@@ -29,7 +29,7 @@ func SetComment(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()}) //writter with particular error
 		return
 	}
-	videoUrl := input.VideoUrl
+	videoUrl = input.VideoUrl
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) //setting context with timeout 15
 	defer cancel()                                                           //after 15 seconds, if the function is not executed it will cancel and throw an error
 	// Firestore initialized
