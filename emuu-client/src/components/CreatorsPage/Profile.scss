@@ -1,98 +1,98 @@
-$main-color: #0f0f0f;
-$secondary-color: #26343d;
+$main-color:#0f0f0f;
+$secondary-color:#26343d;
 #prf-bg-img {
-  height: 33vh;
-  width: 100vw;
+  height:33vh;
+  width:100vw;
 }
 .MainProfileDiv {
-  background: #0f0f0f;
+  background:#0f0f0f;
 
   .profile-container {
-    width: 100%;
-    background: #0f0f0f;
-    margin: auto;
-    border-radius: 20px;
+    width:100%;
+    background:#0f0f0f;
+    margin:auto;
+    border-radius:20px;
 
     .top-portion {
-      width: 100%;
-      position: relative;
+      width:100%;
+      position:relative;
       .user-profile-bg-image {
-        width: 100%;
-        background: $main-color;
-        overflow: hidden;
-        border-radius: 0px 0px 0 0;
-        position: relative;
+        width:100%;
+        background:$main-color;
+        overflow:hidden;
+        border-radius:0px 0px 0 0;
+        position:relative;
       }
     }
 
     .middle-portion {
-      display: flex;
-      flex-direction: column;
-      margin-top: 5rem;
-      background: black;
-      border-radius: 100px;
+      display:flex;
+      flex-direction:column;
+      margin-top:5rem;
+      background:black;
+      border-radius:100px;
 
       .user-profile-img {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        height: 150px;
-        width: 150px;
-        border-radius: 50%;
-        transform: translate(50%);
-        background-color: $secondary-color;
+        position:relative;
+        display:flex;
+        flex-direction:column;
+        position:absolute;
+        height:150px;
+        width:150px;
+        border-radius:50%;
+        transform:translate(50%);
+        background-color:$secondary-color;
 
-        border: 3px solid white;
+        border:3px solid white;
 
         #prf-img {
-          height: 100%;
-          width: 100%;
-          object-fit: cover;
-          border-radius: 50%;
+          height:100%;
+          width:100%;
+          object-fit:cover;
+          border-radius:50%;
         }
       }
       .userName {
-        width: 100%;
-        position: absolute;
-        bottom: 3rem;
-        right: -9rem;
-        font-size: 2rem;
-        font-style: strong;
-        font-weight: bold;
-        color: white;
-        padding: 20px;
+        width:100%;
+        position:absolute;
+        bottom:3rem;
+        right:-9rem;
+        font-size:2rem;
+        font-style:strong;
+        font-weight:bold;
+        color:white;
+        padding:20px;
       }
       .subscribers-profile {
-        position: absolute;
-        bottom: 3rem;
-        white-space: nowrap;
-        font-size: 2rem;
-        font-style: secondary;
-        font-weight: light;
-        font-size: 20px;
-        color: lightgray;
-        padding-left: 166px;
+        position:absolute;
+        bottom:3rem;
+        white-space:nowrap;
+        font-size:2rem;
+        font-style:secondary;
+        font-weight:light;
+        font-size:20px;
+        color:lightgray;
+        padding-left:166px;
       }
       .right-side {
-        width: 100%;
-        position: absolute;
-        bottom: 3rem;
-        left: 80vw;
-        font-size: 2rem;
-        font-style: strong;
-        font-weight: bold;
-        color: white;
-        padding: 20px;
+        width:100%;
+        position:absolute;
+        bottom:3rem;
+        left:80vw;
+        font-size:2rem;
+        font-style:strong;
+        font-weight:bold;
+        color:white;
+        padding:20px;
       }
     }
     .bottom-portion {
-      padding-top: 100px;
-      display: flex;
-      flex-direction: column;
-      margin-top: 5rem;
-      background: #0f0f0f;
-      border-radius: 20px;
+      padding-top:100px;
+      display:flex;
+      flex-direction:column;
+      margin-top:5rem;
+      background:#0f0f0f;
+      border-radius:20px;
     }
   }
 }

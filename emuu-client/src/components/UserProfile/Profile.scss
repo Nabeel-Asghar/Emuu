@@ -1,166 +1,166 @@
-$main-color: #0f0f0f;
-$secondary-color: #26343d;
+$main-color:#0f0f0f;
+$secondary-color:#26343d;
 #prf-bg-img {
-  height: 33vh;
-  width: 100vw;
+  height:33vh;
+  width:100vw;
 }
 .MainProfileDiv {
-  background: #0f0f0f;
-  height: 100% !important;
+  background:#0f0f0f;
+  height:100% !important;
   .profile-container {
-    width: 100%;
-    background: #0f0f0f;
-    margin: auto;
-    border-radius: 20px;
-    height: 100vh !important;
+    width:100%;
+    background:#0f0f0f;
+    margin:auto;
+    border-radius:20px;
+    height:100vh !important;
     .top-portion {
-      width: 100%;
-      position: relative;
+      width:100%;
+      position:relative;
       .reactEasyCrop_CropArea {
-        width: 100vw !important;
-        height: 33vh !important;
-        position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -75.4%);
-        border: 1px solid rgba(255, 255, 255, 0.5);
-        box-sizing: border-box;
-        box-shadow: 0 0 0 9999em;
-        color: rgba(0, 0, 0, 0.5);
-        overflow: hidden;
+        width:100vw !important;
+        height:33vh !important;
+        position:absolute;
+        left:50%;
+        top:50%;
+        transform:translate(-50%, -75.4%);
+        border:1px solid rgba(255, 255, 255, 0.5);
+        box-sizing:border-box;
+        box-shadow:0 0 0 9999em;
+        color:rgba(0, 0, 0, 0.5);
+        overflow:hidden;
       }
       .reactEasyCrop_Contain {
-        width: 100vw !important;
-        height: 100% !important;
-        transform: translate(-50%, -75.4%);
-        margin: auto;
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        width:100vw !important;
+        height:100% !important;
+        transform:translate(-50%, -75.4%);
+        margin:auto;
+        position:absolute;
+        top:0;
+        bottom:0;
+        left:0;
+        right:0;
       }
       .submit_Container {
-        background: black;
-        padding-inline: 50px;
+        background:black;
+        padding-inline:50px;
       }
       .reactEasyCrop_Container {
-        background: black;
-        height: 50vh;
-        width: 100vw;
-        position: relative;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        overflow: hidden;
-        user-select: none;
-        touch-action: none;
-        cursor: move;
-        display: flex;
-        justify-content: center;
-        align-items: center;
+        background:black;
+        height:50vh;
+        width:100vw;
+        position:relative;
+        top:0;
+        left:0;
+        right:0;
+        bottom:0;
+        overflow:hidden;
+        user-select:none;
+        touch-action:none;
+        cursor:move;
+        display:flex;
+        justify-content:center;
+        align-items:center;
       }
       .user-profile-bg-image {
-        width: 100vw;
-        background: #000000 !important;
-        overflow: hidden;
-        border-radius: 0px 0px 0 0;
-        position: relative;
+        width:100vw;
+        background:#000000 !important;
+        overflow:hidden;
+        border-radius:0px 0px 0 0;
+        position:relative;
         #background-change {
-          border-radius: 50%;
-          height: 34px;
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          background-color: skyblue;
-          width: 34px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          border-radius:50%;
+          height:34px;
+          position:absolute;
+          top:10px;
+          right:10px;
+          background-color:skyblue;
+          width:34px;
+          display:flex;
+          align-items:center;
+          justify-content:center;
         }
       }
     }
 
     .middle-portion {
-      display: flex;
-      flex-direction: column;
-      margin-top: 5rem;
-      background: black;
-      border-radius: 100px;
+      display:flex;
+      flex-direction:column;
+      margin-top:5rem;
+      background:black;
+      border-radius:100px;
 
       .user-profile-img {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        position: absolute;
-        height: 150px;
-        width: 150px;
-        border-radius: 50%;
-        transform: translate(50%);
-        background-color: $secondary-color;
+        position:relative;
+        display:flex;
+        flex-direction:column;
+        position:absolute;
+        height:150px;
+        width:150px;
+        border-radius:50%;
+        transform:translate(50%);
+        background-color:$secondary-color;
 
-        border: 3px solid white;
+        border:3px solid white;
 
         #profile-change {
-          position: absolute;
-          bottom: 0px;
-          right: 4px;
-          border-radius: 50%;
-          height: 34px;
-          width: 34px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          background-color: skyblue;
+          position:absolute;
+          bottom:0px;
+          right:4px;
+          border-radius:50%;
+          height:34px;
+          width:34px;
+          display:flex;
+          align-items:center;
+          justify-content:center;
+          background-color:skyblue;
         }
         #prf-img {
-          height: 100%;
-          width: 100%;
-          object-fit: cover;
-          border-radius: 50%;
+          height:100%;
+          width:100%;
+          object-fit:cover;
+          border-radius:50%;
         }
       }
       .userName {
-        width: 100%;
-        position: absolute;
-        bottom: 3rem;
-        right: -9rem;
-        font-size: 2rem;
-        font-style: strong;
-        font-weight: bold;
-        color: white;
-        padding: 20px;
+        width:100%;
+        position:absolute;
+        bottom:3rem;
+        right:-9rem;
+        font-size:2rem;
+        font-style:strong;
+        font-weight:bold;
+        color:white;
+        padding:20px;
       }
       .subscribers-profile {
-        position: absolute;
-        bottom: 3rem;
-        white-space: nowrap;
-        font-size: 2rem;
-        font-style: secondary;
-        font-weight: light;
-        font-size: 20px;
-        color: lightgray;
-        padding-left: 166px;
+        position:absolute;
+        bottom:3rem;
+        white-space:nowrap;
+        font-size:2rem;
+        font-style:secondary;
+        font-weight:light;
+        font-size:20px;
+        color:lightgray;
+        padding-left:166px;
       }
     }
     .bottom-portion {
-      padding-top: 100px;
-      display: flex;
-      flex-direction: column;
-      margin-top: 5rem;
-      background: #0f0f0f;
-      border-radius: 20px;
+      padding-top:100px;
+      display:flex;
+      flex-direction:column;
+      margin-top:5rem;
+      background:#0f0f0f;
+      border-radius:20px;
     }
   }
 }
 .css-6hp17o-MuiList-root-MuiMenu-list {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  position: relative;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  padding-left: 8px !important;
-  outline: 0;
+  list-style:none;
+  margin:0;
+  padding:0;
+  position:relative;
+  padding-top:8px;
+  padding-bottom:8px;
+  padding-left:8px !important;
+  outline:0;
 }
