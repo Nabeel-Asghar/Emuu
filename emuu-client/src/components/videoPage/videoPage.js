@@ -136,33 +136,13 @@ async function likeVideo(e){
 
 
 //Axios post should be done here to send info to backend
-//  axios.post("http://localhost:8080/auth/LikeVideo", JSON.stringify({displayName: displayName,
-//                                                   videoUrl: video.VideoUrl,
-//                                                    LikedBoolean: true}))
+  axios.post("http://localhost:8080/auth/LikeVideo", JSON.stringify({displayName: displayName,
+                                                   videoUrl: video.VideoUrl,
+                                                    LikedBoolean: !checked}))
+  setTimeout(() => window.location.reload(), 100);
+       return false;
 
-//current code to update likes
- const collectionRef = collection(db, "Videos");
-                        const queryData = await query(
-                          collectionRef,
-                          where("VideoUrl", "==", video.VideoUrl)
-                        );
-                        const _doc = await getDocs(queryData);
-                        let id = "";
-                        _doc.forEach((doc) => (id = doc.id));
-                        const videoRef = doc(db, "Videos", id);
-                        if (e.target.checked) {
-                          await updateDoc(videoRef, { Likes: increment(1) });
-                          await updateDoc(videoRef, {
-                            usersThatLiked: arrayUnion(displayName),
-                          });
-                        } else {
-                          await updateDoc(videoRef, { Likes: increment(-1) });
-                          await updateDoc(videoRef, {
-                            usersThatLiked: arrayRemove(displayName),
-                          });
-                        }
-                        setVideo((await getDoc(videoRef)).data());
-                      }
+  }
 
 
 
