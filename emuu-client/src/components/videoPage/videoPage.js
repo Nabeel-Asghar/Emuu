@@ -135,11 +135,6 @@ function Video({ video, setVideo, setUserProfile }) {
 async function likeVideo(e){
 
 
-//Axios post should be done here to send info to backend
-//  axios.post("http://localhost:8080/auth/LikeVideo", JSON.stringify({displayName: displayName,
-//                                                   videoUrl: video.VideoUrl,
-//                                                    LikedBoolean: true}))
-
 //current code to update likes
  const collectionRef = collection(db, "Videos");
                         const queryData = await query(
