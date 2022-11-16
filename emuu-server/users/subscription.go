@@ -3,7 +3,6 @@ package users
 import (
 	"cloud.google.com/go/firestore"
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	// 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
@@ -70,6 +69,5 @@ func SetSubscriptions(c *gin.Context) {
 
 		SubscriptionDetails: completeSubscriptionArr,
 	}
-	fmt.Println(completeSubscriptionArr)
 	c.JSON(http.StatusOK, gin.H{"message": response})
 }

@@ -188,8 +188,8 @@ function Profile({ setVideo, video }, { classes }) {
       setCroppedImageSrc(croppedImage);
 
       uploadBackground(croppedImage);
-       setTimeout(() => window.location.reload(), 1500);
-     return false;
+      setTimeout(() => window.location.reload(), 1500);
+      return false;
     } catch (e) {
       console.error(e);
     }
@@ -213,23 +213,18 @@ function Profile({ setVideo, video }, { classes }) {
       return true;
     return false;
   }
- let url;
+  let url;
   function uploadBackground(croppedImage) {
-
     const storage = getStorage();
     const storageRef = ref(storage, "/images/" + uid());
-
-
 
     // 'file' comes from the Blob or File API
     uploadString(storageRef, croppedImage, "data_url").then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
-
-
-        axios.post("http://localhost:8080/auth/updateBanner", JSON.stringify({displayName: displayName,
-                                                                                              croppedImageUrl: URL, }))
-
-
+        axios.post(
+          "http://localhost:8080/auth/updateBanner",
+          JSON.stringify({ displayName: displayName, croppedImageUrl: URL })
+        )
       );
     });
   }
@@ -242,9 +237,10 @@ function Profile({ setVideo, video }, { classes }) {
 
     uploadBytes(storageRef, file).then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
-          axios.post("http://localhost:8080/auth/updateProfilePic", JSON.stringify({displayName: displayName,
-                                                                                                      profileImageUrl: URL, }))
-
+        axios.post(
+          "http://localhost:8080/auth/updateProfilePic",
+          JSON.stringify({ displayName: displayName, profileImageUrl: URL })
+        )
       );
     });
     setTimeout(() => window.location.reload(), 1500);

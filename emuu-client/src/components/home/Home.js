@@ -244,7 +244,7 @@ function Home({ setVideo }, { setUserProfile }) {
                   {topVideos &&
                     topVideos.map((video, index) => (
                       <div>
-                        <Card sx={{ maxWidth: 380, maxHeight: 365}}>
+                        <Card sx={{ maxWidth: 380, maxHeight: 365 }}>
                           <CardMedia
                             component="img"
                             image={video.ThumbnailUrl}
@@ -311,7 +311,7 @@ function Home({ setVideo }, { setUserProfile }) {
                   {recentVideos &&
                     recentVideos.map((video, index) => (
                       <div>
-                        <Card sx={{ maxWidth: 380, maxHeight: 365}}>
+                        <Card sx={{ maxWidth: 380, maxHeight: 365 }}>
                           <CardMedia
                             component="img"
                             image={video.ThumbnailUrl}

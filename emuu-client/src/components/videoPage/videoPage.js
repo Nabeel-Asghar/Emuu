@@ -132,27 +132,22 @@ function Video({ video, setVideo, setUserProfile }) {
 
   const subscribeUser = () => {};
 
-async function likeVideo(e){
-
-
-//Axios post should be done here to send info to backend
-  axios.post("http://localhost:8080/auth/LikeVideo", JSON.stringify({displayName: displayName,
-                                                   videoUrl: video.VideoUrl,
-                                                    LikedBoolean: !checked}))
-  if(checked === true){
-  video.Likes--}
-  else{
-  video.Likes++;
+  async function likeVideo(e) {
+    //Axios post should be done here to send info to backend
+    axios.post(
+      "http://localhost:8080/auth/LikeVideo",
+      JSON.stringify({
+        displayName: displayName,
+        videoUrl: video.VideoUrl,
+        LikedBoolean: !checked,
+      })
+    );
+    if (checked === true) {
+      video.Likes--;
+    } else {
+      video.Likes++;
+    }
   }
-
-
-  }
-
-
-
-
-
-
 
   function checkLiked() {
     let liked = video?.usersThatLiked?.includes(displayName); //check if there is a video and if there are users that liked stored
@@ -169,10 +164,6 @@ async function likeVideo(e){
     }
     if (localStorage.getItem("video")) {
       let video = JSON.parse(localStorage.getItem("video"));
-
-
-
-
 
       const collectionRef = collection(db, "Videos");
       const queryData = await query(
@@ -303,7 +294,7 @@ async function likeVideo(e){
                       onChange={async (e) => {
                         setChecked(!checked);
                         likeVideo(e);
-                       }}
+                      }}
                     />
                   }
                   label="Like"

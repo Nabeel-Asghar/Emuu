@@ -179,28 +179,28 @@ function Feeds({ setVideo }) {
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
   let subscribersListCompleteData;
 
-
- async function getSubscribers() {
+  async function getSubscribers() {
     const dis = {
       displayName: displayName,
     };
     await axios
       .post(
         "http://localhost:8080/auth/Subscribers",
-        JSON.stringify({ ...dis })) .then(function (response) {});
-                          try {
-        const response = await axios.get("http://localhost:8080/auth/Subscribers");
+        JSON.stringify({ ...dis })
+      )
+      .then(function (response) {});
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/auth/Subscribers"
+      );
 
-        setUpdateSubscribersListCompleteData(response.data.message.SubDetails);
-
-                         } catch (error) {}
-                          }
+      setUpdateSubscribersListCompleteData(response.data.message.SubDetails);
+    } catch (error) {}
+  }
 
   useEffect(async () => {
-      await getSubscribers();
-
-    }, []);
-
+    await getSubscribers();
+  }, []);
 
   //Sort function for date uploaded
   function sortVideosByTime(videos) {
@@ -229,7 +229,6 @@ function Feeds({ setVideo }) {
 
   useEffect(async () => {
     await getLikedVideos();
-
   }, []);
 
   return (
@@ -421,7 +420,7 @@ function Feeds({ setVideo }) {
             </div>
           </div>
         </TabPanel>
-        <TabPanel value="3" >
+        <TabPanel value="3">
           <div>
             {updatedSubscribersListCompleteData.map((user, index) => (
               <ListItem key={index} disablePadding sx={{ display: "block" }}>
