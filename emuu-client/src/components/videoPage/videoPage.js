@@ -140,19 +140,18 @@ async function likeVideo(e){
                                                    videoUrl: video.VideoUrl,
                                                     LikedBoolean: !checked}))
   if(checked === true){
-  video.Likes--}
+  video.Likes--
+     sessionStorage.setItem("video", JSON.stringify(video));
+
+  }
+
   else{
   video.Likes++;
+     sessionStorage.setItem("video", JSON.stringify(video));
+
   }
 
-
   }
-
-
-
-
-
-
 
   function checkLiked() {
     let liked = video?.usersThatLiked?.includes(displayName); //check if there is a video and if there are users that liked stored
@@ -164,32 +163,18 @@ async function likeVideo(e){
   }
   localStorage.setItem("CreatorName", video.Username);
   useEffect(async () => {
-    if (video) {
-      localStorage.setItem("video", JSON.stringify(video));
-    }
-    if (localStorage.getItem("video")) {
-      let video = JSON.parse(localStorage.getItem("video"));
-
-
-
-
-
-      const collectionRef = collection(db, "Videos");
-      const queryData = await query(
-        collectionRef,
-        where("VideoUrl", "==", video.VideoUrl)
-      );
-      const _doc = await getDocs(queryData);
-      let id = "";
-      _doc.forEach((doc) => (id = doc.id));
-      const videoRef = doc(db, "Videos", id);
-      await updateDoc(videoRef, { Views: increment(1) });
-      setVideo((await getDoc(videoRef)).data());
+   if (video) {
+      sessionStorage.setItem("video", JSON.stringify(video));
+   }
+    if (sessionStorage.getItem("video")) {
+      setVideo(JSON.parse(sessionStorage.getItem("video")));
+      //console.log(video);
     }
     if (!video && !localStorage.getItem("video")) {
       //if there's no video on this page, redirect to home
       window.location.pathname = "/";
     }
+
   }, []);
 
   useEffect(() => {
