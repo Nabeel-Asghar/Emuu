@@ -2,15 +2,16 @@ package main
 
 import (
 	firebaseSer "emuu-server/main/firebase"
+	creator "emuu-server/main/users"
+	cropImage "emuu-server/main/users"
+	profilePic "emuu-server/main/users"
 	register "emuu-server/main/users"
 	upload "emuu-server/main/users"
+	comment "emuu-server/main/video"
+	likes "emuu-server/main/video"
 	video "emuu-server/main/video"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	creator "emuu-server/main/users"
-    cropImage "emuu-server/main/users"
-    profilePic "emuu-server/main/users"
-    likes "emuu-server/main/video"
 )
 
 func main() {
@@ -33,10 +34,12 @@ func main() {
 		auth.POST("/video", video.SetUsernameAndPage)
 		auth.GET("/video", video.SetVideos)
 		auth.POST("/creator", creator.SetUsername)
-        auth.GET("/creator", creator.SetUser)
-        auth.POST("/updateBanner", cropImage.UpdateBanner)
-        auth.POST("/updateProfilePic", profilePic.UpdateProfile)
-        auth.POST("/LikeVideo", likes.SetLikes)
+		auth.GET("/creator", creator.SetUser)
+		auth.POST("/updateBanner", cropImage.UpdateBanner)
+		auth.POST("/updateProfilePic", profilePic.UpdateProfile)
+		auth.POST("/LikeVideo", likes.SetLikes)
+		auth.POST("/comment", comment.SetComment)
+		//auth.GET("/comment", comment.GetComment)
 
 	}
 
