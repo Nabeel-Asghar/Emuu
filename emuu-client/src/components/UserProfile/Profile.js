@@ -40,7 +40,7 @@ import { styles } from "./styles";
 import { createAutocomplete } from "@algolia/autocomplete-core";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
-
+import axios from "axios";
 import { uploadString } from "@firebase/storage";
 import { Link, useHistory, useLocation } from "react-router-dom";
 const ORIENTATION_TO_ANGLE = {
@@ -61,7 +61,9 @@ function Profile({ setVideo, video }, { classes }) {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
   const history = useHistory();
-
+  const [Banner, setBanner] = useState("");
+  const [ProfilePic, setProfilePic] = useState("");
+  const [subscriberCount, setSubscriberCount] = useState("");
   const [autocompleteState, setAutocompleteState] = useState({});
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
@@ -112,7 +114,26 @@ function Profile({ setVideo, video }, { classes }) {
       }),
     [count]
   );
+  async function getUser() {
+    const dis = {
+      displayName: displayName,
+    };
+    await axios
+      .post("http://localhost:8080/auth/creator", JSON.stringify({ ...dis }))
+      .then(function (response) {});
 
+    const response = await axios.get("http://localhost:8080/auth/creator");
+
+    const user = response.data.message.UserDetails;
+
+    setBanner(user[0].BannerUrl);
+    setProfilePic(user[0].ProfilePictureUrl);
+    setSubscriberCount(user[0].SubscriberCount);
+  }
+
+  useEffect(async () => {
+    await getUser();
+  }, []);
   const dataSet = autocompleteState?.collections?.[0]?.items;
   const searchResultsVideosArr = dataSet?.filter(
     (obj) => obj.hasOwnProperty("VideoUrl") && obj.hasOwnProperty("Username")
@@ -167,8 +188,8 @@ function Profile({ setVideo, video }, { classes }) {
       setCroppedImageSrc(croppedImage);
 
       uploadBackground(croppedImage);
-      setTimeout(() => window.location.reload(), 1500);
-      return false;
+       setTimeout(() => window.location.reload(), 1500);
+     return false;
     } catch (e) {
       console.error(e);
     }
@@ -192,23 +213,23 @@ function Profile({ setVideo, video }, { classes }) {
       return true;
     return false;
   }
-
+ let url;
   function uploadBackground(croppedImage) {
+
     const storage = getStorage();
     const storageRef = ref(storage, "/images/" + uid());
+
+
 
     // 'file' comes from the Blob or File API
     uploadString(storageRef, croppedImage, "data_url").then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
-        setDoc(
-          docRef,
-          {
-            BannerUrl: URL,
-          },
-          {
-            merge: true,
-          }
-        )
+
+
+        axios.post("http://localhost:8080/auth/updateBanner", JSON.stringify({displayName: displayName,
+                                                                                              croppedImageUrl: URL, }))
+
+
       );
     });
   }
@@ -221,29 +242,14 @@ function Profile({ setVideo, video }, { classes }) {
 
     uploadBytes(storageRef, file).then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
-        setDoc(
-          docRef,
-          {
-            ProfilePictureUrl: URL,
-          },
-          {
-            merge: true,
-          }
-        )
+          axios.post("http://localhost:8080/auth/updateProfilePic", JSON.stringify({displayName: displayName,
+                                                                                                      profileImageUrl: URL, }))
+
       );
     });
     setTimeout(() => window.location.reload(), 1500);
     return false;
   }
-
-  const [Banner, setBanner] = useState("");
-  const [ProfilePic, setProfilePic] = useState("");
-  const [subscriberCount, setSubscriberCount] = useState("");
-  getDoc(docRef).then((docSnap) => {
-    setBanner(docSnap.data().BannerUrl);
-    setProfilePic(docSnap.data().ProfilePictureUrl);
-    setSubscriberCount(docSnap.data().SubscriberCount);
-  });
 
   return (
     <>
