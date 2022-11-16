@@ -8,7 +8,7 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Avatar } from "@mui/material";
-
+import axios from "axios"
 import { db } from "../../../Firebase.js";
 import { getDoc, getDocs, doc, collection } from "firebase/firestore";
 
@@ -24,37 +24,67 @@ function Subscriptions() {
 
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
 
+async function getSubscriptions() {
+    const dis = {
+      displayName: displayName,
+    };
+    await axios
+      .post(
+        "http://localhost:8080/auth/Subscription",
+        JSON.stringify({ ...dis })) .then(function (response) {});
+                          try {
+        const response = await axios.get("http://localhost:8080/auth/Subscription");
+
+        setSubscribersData(response.data.message.SubscriptionDetails);
+        console.log(subscribersData)
+                         } catch (error) {}
+                          }
+
   useEffect(async () => {
-    if (count === 0) {
-      const querySnapshotUsers = await getDocs(collection(db, "Users"));
-      const usersArr = [];
-      querySnapshotUsers.forEach((doc) => {
-        usersArr.push(doc.data());
-      });
-      const subscribersDataArr = usersArr.filter((user) =>
-        user?.SubscriberList?.includes(userName)
-      );
-      setSubscribersData(subscribersDataArr);
-      setCount((count) => count + 1);
-    }
-    if (count === 1) {
-      const timer = async () => {
-        const querySnapshotUsers = await getDocs(collection(db, "Users"));
-        const usersArr = [];
-        querySnapshotUsers.forEach((doc) => {
-          usersArr.push(doc.data());
-        });
-        const subscribersDataArr = usersArr.filter((user) =>
-          user?.SubscriberList?.includes(userName)
-        );
-        setSubscribersData(subscribersDataArr);
-      };
-      const interval = setInterval(() => {
-        timer();
-      }, 500);
-      return () => clearTimeout(interval);
-    }
-  }, []);
+      await getSubscriptions();
+
+    }, []);
+
+
+
+
+
+
+
+
+
+
+//   useEffect(async () => {
+//     if (count === 0) {
+//       const querySnapshotUsers = await getDocs(collection(db, "Users"));
+//       const usersArr = [];
+//       querySnapshotUsers.forEach((doc) => {
+//         usersArr.push(doc.data());
+//       });
+//       const subscribersDataArr = usersArr.filter((user) =>
+//         user?.SubscriberList?.includes(userName)
+//       );
+//       setSubscribersData(subscribersDataArr);
+//       setCount((count) => count + 1);
+//     }
+//     if (count === 1) {
+//       const timer = async () => {
+//         const querySnapshotUsers = await getDocs(collection(db, "Users"));
+//         const usersArr = [];
+//         querySnapshotUsers.forEach((doc) => {
+//           usersArr.push(doc.data());
+//         });
+//         const subscribersDataArr = usersArr.filter((user) =>
+//           user?.SubscriberList?.includes(userName)
+//         );
+//         setSubscribersData(subscribersDataArr);
+//       };
+//       const interval = setInterval(() => {
+//         timer();
+//       }, 500);
+//       return () => clearTimeout(interval);
+//     }
+//   }, []);
 
   const usersArr = firebaseData.filter(
     (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")

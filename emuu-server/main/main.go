@@ -7,6 +7,7 @@ import (
 	profilePic "emuu-server/main/users"
 	register "emuu-server/main/users"
 	subscriber "emuu-server/main/users"
+	subscription "emuu-server/main/users"
 	upload "emuu-server/main/users"
 	likes "emuu-server/main/video"
 	video "emuu-server/main/video"
@@ -40,11 +41,13 @@ func main() {
 		auth.POST("/LikeVideo", likes.SetLikes)
 		auth.POST("/Subscribers", subscriber.SetUsernameSub)
 		auth.GET("/Subscribers", subscriber.SetSubscribers)
+		auth.POST("/Subscription", subscription.SetUsernameSubscription)
+		auth.GET("/Subscription", subscriber.SetSubscriptions)
 
 	}
 
 	api := r.Group("api").Use(firebaseSer.AuthJWT) //create a new router with the middleware authJWT
-	{ //you should supply the jwt token from firebase
+	{                                              //you should supply the jwt token from firebase
 		api.POST("/", func(ctx *gin.Context) {
 
 		})
