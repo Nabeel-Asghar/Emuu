@@ -103,9 +103,7 @@ function Creator({ setVideo, video }) {
     [count]
   );
 
-
-
- async function checkSubStatus() {
+  async function checkSubStatus() {
     await axios
       .post(
         "http://localhost:8080/auth/CheckSubscribe",
@@ -131,29 +129,22 @@ function Creator({ setVideo, video }) {
     checkSubStatus();
   }, []);
 
-
-    async function subscribeToUser(e) {
-        //Axios post should be done here to send info to backend
-        axios.post(
-          "http://localhost:8080/auth/SubscribeButton",
-          JSON.stringify({
-            displayName: displayName,
-            creatorName: creatorName,
-            SubBoolean: !checked,
-          })
-        );
-        if (checked === true) {
-         subscriberCount--;
-
-        } else {
-          subscriberCount++;
-
-        }
-
-      }
-
-
-
+  async function subscribeToUser(e) {
+    //Axios post should be done here to send info to backend
+    axios.post(
+      "http://localhost:8080/auth/SubscribeButton",
+      JSON.stringify({
+        displayName: displayName,
+        creatorName: creatorName,
+        SubBoolean: !checked,
+      })
+    );
+    if (checked === true) {
+      subscriberCount--;
+    } else {
+      subscriberCount++;
+    }
+  }
 
   async function getUser() {
     const dis = {
@@ -356,30 +347,6 @@ function Creator({ setVideo, video }) {
                     onChange={async (e) => {
                       setChecked(!checked);
                       subscribeToUser(e);
-//                       const collectionRef = collection(db, "Users");
-//                       const queryData = await query(
-//                         collectionRef,
-//                         where("Username", "==", creatorName)
-//                       );
-//                       const _doc = await getDocs(queryData);
-//                       let id = "";
-//                       _doc.forEach((doc) => (id = doc.id));
-//                       const creatorRef = doc(db, "Users", id);
-//                       if (e.target.checked) {
-//                         await updateDoc(creatorRef, {
-//                           SubscriberCount: increment(1),
-//                         });
-//                         await updateDoc(creatorRef, {
-//                           SubscriberList: arrayUnion(displayName),
-//                         });
-//                       } else {
-//                         await updateDoc(creatorRef, {
-//                           SubscriberCount: increment(-1),
-//                         });
-//                         await updateDoc(creatorRef, {
-//                           SubscriberList: arrayRemove(displayName),
-//                         });
-//                       }
                     }}
                   />
                 </div>

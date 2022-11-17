@@ -35,19 +35,6 @@ function HeaderPostLogin({ search, setSearch }) {
   const auth = getAuth;
   const userName = localStorage.getItem("displayName");
 
-//   async function getUser() {
-//     //Get user data
-//     const querySnapshotUsers = await getDocs(collection(db, "Users"));
-//     const usersArr = [];
-//
-//     querySnapshotUsers.forEach((doc) => {
-//       usersArr.push(doc.data());
-//     });
-//     const userArr = usersArr.filter((user) => user.Username === userName);
-//     setUser(userArr);
-//     localStorage.setItem("userImage", userArr[0].ProfilePictureUrl);
-//   }
-
   const SignedOut = async (e) => {
     signOut(auth)
       .then(() => {
@@ -57,7 +44,7 @@ function HeaderPostLogin({ search, setSearch }) {
         // An error happened.
       });
   };
-//   useEffect(() => getUser(), []);
+  //   useEffect(() => getUser(), []);
   const navAuth = localStorage.getItem("auth");
   return (
     <>

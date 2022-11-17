@@ -175,7 +175,6 @@ function Video({ video, setVideo, setUserProfile }) {
     }
   }
 
-
   localStorage.setItem("CreatorName", video.Username);
   useEffect(async () => {
     if (video) {
