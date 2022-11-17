@@ -32,7 +32,7 @@ function HeaderPostLogin({ search, setSearch }) {
   //Sign Out Function in Nav Bar
   const [user, setUser] = useState([]);
   const history = useHistory();
-  const auth = getAuth;
+  const auth = getAuth();
   const userName = localStorage.getItem("displayName");
 
   const SignedOut = async (e) => {

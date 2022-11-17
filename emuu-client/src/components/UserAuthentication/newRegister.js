@@ -17,7 +17,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
+import NavBarNoImage from "../NavbarPostLogin/NavBarNoImage.js";
 
 import "./register.scss";
 
@@ -97,7 +97,7 @@ function Register() {
 
   return (
     <>
-      <NavBarNoSearch />
+      <NavBarNoImage />
       <Container className="settingsContainer" maxWidth="xs">
         <CssBaseline />
         <Box

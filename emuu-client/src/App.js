@@ -42,45 +42,45 @@ const theme = createTheme({
 });
 
 function App() {
- const auth = localStorage.getItem("auth");
   const [video, setVideo] = useState("");
   const [videos, setVideos] = useState([]);
   const [users, setUsers] = useState([]);
   const completeFirebaseData = videos.concat(users);
-
-  async function getVideos() {
-    //Get all videos data
-    const querySnapshotVideos = await getDocs(collection(db, "Videos"));
-    const videosArr = [];
-    querySnapshotVideos.forEach((doc) => {
-      videosArr.push(doc.data());
-    });
-    setVideos(videosArr);
-
-    //Get all users data
-    const querySnapshotUsers = await getDocs(collection(db, "Users"));
-    const usersArr = [];
-    querySnapshotUsers.forEach((doc) => {
-      usersArr.push(doc.data());
-    });
-    setUsers(usersArr);
-  }
-
-  useEffect(() => {
-    (async () => {
-      await getVideos();
-    })();
-  }, []);
-
-  if (completeFirebaseData) {
-    localStorage.setItem("firebase-data", JSON.stringify(completeFirebaseData));
-  }
+const auth = "true"
+//  async function getVideos() {
+//    //Get all videos data
+//    const querySnapshotVideos = await getDocs(collection(db, "Videos"));
+//    const videosArr = [];
+//    querySnapshotVideos.forEach((doc) => {
+//      videosArr.push(doc.data());
+//    });
+//    setVideos(videosArr);
+//
+//    //Get all users data
+//    const querySnapshotUsers = await getDocs(collection(db, "Users"));
+//    const usersArr = [];
+//    querySnapshotUsers.forEach((doc) => {
+//      usersArr.push(doc.data());
+//    });
+//    setUsers(usersArr);
+//  }
+//
+//  useEffect(() => {
+//    (async () => {
+//      await getVideos();
+//    })();
+//  }, []);
+//
+//  if (completeFirebaseData) {
+//    localStorage.setItem("firebase-data", JSON.stringify(completeFirebaseData));
+//  }
 
   return (
+    <BrowserRouter>
     <AppProvider>
       <ThemeProvider theme={theme}>
         <div className="App">
-          <BrowserRouter>
+
             <Route exact path="/">
               <Home setVideo={setVideo} />
             </Route>
@@ -111,10 +111,11 @@ function App() {
                 </Route>
               </>
             )}
-          </BrowserRouter>
+
         </div>
       </ThemeProvider>
     </AppProvider>
+      </BrowserRouter>
   );
 }
 
