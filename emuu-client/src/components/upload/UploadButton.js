@@ -752,7 +752,7 @@ const FileUpload = ({ setVideo }) => {
                             ? "outlined-multiline-static"
                             : "outlined-error-helper-text"
                         }
-                        label={videoTitleErr.length === 0 ? "Title *" : "error"}
+                        label={videoTitleErr.length === 0 ? "Title *" : "A video title is required!"}
                         placeholder="Add a title that describes your video"
                         multiline
                         rows={2}
@@ -771,7 +771,7 @@ const FileUpload = ({ setVideo }) => {
                         label={
                           videoDescriptionErr.length === 0
                             ? "Description *"
-                            : "error"
+                            : "A description is required!"
                         }
                         placeholder="Tell viewers about your video"
                         multiline
@@ -828,8 +828,7 @@ const FileUpload = ({ setVideo }) => {
                           <MenuItem value="Survival">Survival</MenuItem>
                           <MenuItem value="Other">Other</MenuItem>
                         </Select>
-                        <FormHelperText>Required</FormHelperText>
-                      </FormControl>
+
                       <label htmlFor="upload-photo">
                         <input
                           style={{ display: "none" }}
@@ -861,6 +860,8 @@ const FileUpload = ({ setVideo }) => {
                           />
                         )}
                       </label>
+                      <FormHelperText>Required</FormHelperText>
+                                            </FormControl>
                     </Box>
                   </div>
                   <div style={{ marginLeft: "30px", marginTop: "55px" }}>
