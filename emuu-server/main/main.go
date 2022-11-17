@@ -9,11 +9,11 @@ import (
 	subscriber "emuu-server/main/users"
 	subscription "emuu-server/main/users"
 	upload "emuu-server/main/users"
+	comment "emuu-server/main/video"
 	likes "emuu-server/main/video"
 	video "emuu-server/main/video"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	comment "emuu-server/main/video"
 )
 
 func main() {
@@ -36,15 +36,17 @@ func main() {
 		auth.POST("/video", video.SetUsernameAndPage)
 		auth.GET("/video", video.SetVideos)
 		auth.POST("/creator", creator.SetUsername)
-        auth.GET("/creator", creator.SetUser)
-        auth.POST("/updateBanner", cropImage.UpdateBanner)
-        auth.POST("/updateProfilePic", profilePic.UpdateProfile)
-        auth.POST("/LikeVideo", likes.SetLikes)
-        auth.POST("/Subscribers", subscriber.SetUsernameSub)
+		auth.GET("/creator", creator.SetUser)
+		auth.POST("/updateBanner", cropImage.UpdateBanner)
+		auth.POST("/updateProfilePic", profilePic.UpdateProfile)
+		auth.POST("/LikeVideo", likes.SetLikes)
+		auth.POST("/CheckLikeVideo", likes.SetUsernameLike)
+		auth.GET("/CheckLikeVideo", likes.CheckLikes)
+		auth.POST("/Subscribers", subscriber.SetUsernameSub)
 		auth.GET("/Subscribers", subscriber.SetSubscribers)
 		auth.POST("/Subscription", subscription.SetUsernameSubscription)
 		auth.GET("/Subscription", subscriber.SetSubscriptions)
-        auth.POST("/comment", comment.SetComment)
+		auth.POST("/comment", comment.SetComment)
 		auth.GET("/comment", comment.GetComment)
 	}
 

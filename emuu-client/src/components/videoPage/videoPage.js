@@ -132,6 +132,27 @@ function Video({ video, setVideo, setUserProfile }) {
 
   const subscribeUser = () => {};
 
+
+
+async function checkLikeStatus(){
+ await axios.post("http://localhost:8080/auth/CheckLikeVideo", JSON.stringify({displayName: displayName,
+                                                   videoUrl: video.VideoUrl,
+                                                    LikedBoolean: !checked}))  .then(function (response) {});
+                                                                                 try {
+                                                                                   const response = await axios.get(
+                                                                                     "http://localhost:8080/auth/CheckLikeVideo"
+                                                                                   );
+
+                                                                                  setChecked(response.data.message.CheckedValue);
+                                                                                 } catch (error) {}
+                                                                               }
+
+
+  useEffect(() => {
+    checkLikeStatus();
+  }, );
+
+
 async function likeVideo(e){
 
 
