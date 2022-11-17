@@ -36,6 +36,7 @@ import {
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 function Video({ video, setVideo, setUserProfile }) {
+
   const displayName = localStorage.getItem("displayName");
   const [checked, setChecked] = useState(false);
   const history = useHistory();
@@ -151,7 +152,16 @@ function Video({ video, setVideo, setUserProfile }) {
       setChecked(response.data.message.CheckedValue);
     } catch (error) {}
   }
+  async function SetView() {
+      await axios
+        .post("http://localhost:8080/auth/view", JSON.stringify({videoUrl: video.VideoUrl}))
+        video.Views++
+         sessionStorage.setItem("video", JSON.stringify(video));
 
+    }
+useEffect(() => {
+    SetView();
+  }, [video]);
   useEffect(() => {
     checkLikeStatus();
   }, [video]);
