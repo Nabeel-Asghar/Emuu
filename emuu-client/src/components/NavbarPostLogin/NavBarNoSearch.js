@@ -67,7 +67,7 @@ function NavBarNoSearch({ search, setSearch }) {
           bg="dark"
           variant="dark"
           expand={expand}
-          className="mb-3"
+          className="navbar"
         >
           <Container fluid>
             <Navbar.Brand href="/">

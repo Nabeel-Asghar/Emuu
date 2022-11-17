@@ -4,7 +4,7 @@ import "../home/Home.scss";
 import "./UploadButton.scss";
 
 import axios from "axios";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Link, useHistory, useLocation, useRef } from "react-router-dom";
 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
@@ -49,6 +49,11 @@ import AppContext from "../../AppContext";
 
 import { storage } from "../../Firebase.js";
 import "../../Firebase.js";
+import CircularProgress from "@mui/material/CircularProgress";
+import { green } from "@mui/material/colors";
+import Fab from "@mui/material/Fab";
+import CheckIcon from "@mui/icons-material/Check";
+import SaveIcon from "@mui/icons-material/Save";
 
 const useStyles = makeStyles({
   btnClass: {
@@ -90,7 +95,6 @@ const FileUpload = ({ setVideo }) => {
   const [videoUrl, setVideoUrl] = useState("");
   const [userName, setUserName] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
-
   const [autocompleteState, setAutocompleteState] = useState({});
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
@@ -109,6 +113,133 @@ const FileUpload = ({ setVideo }) => {
 
   //Store percent
   const [percent, setPercent] = useState(0);
+
+  function CircularIntegration() {
+    const [loading, setLoading] = React.useState(false);
+    const [success, setSuccess] = React.useState(false);
+    const timer = React.useRef();
+
+    const buttonSx = {
+      ...(success && {
+        color: green[500],
+        "&:hover": {
+          color: green[700],
+        },
+      }),
+    };
+
+    React.useEffect(() => {
+      return () => {
+        clearTimeout(timer.current);
+      };
+    }, []);
+
+    const handleButtonClick = (e) => {
+      e.preventDefault();
+
+      if (videoTitle.length === 0) {
+        setVideoTitleErr("This is a required field");
+      }
+
+      if (videoTitle.length > 0) {
+        setVideoTitleErr("");
+      }
+
+      if (videoDescription.length === 0) {
+        setVideoDescriptionErr("This is a required field");
+      }
+
+      if (videoDescription.length > 0) {
+        setVideoDescriptionErr("");
+      }
+
+      if (videoTag.length === 0) {
+        setVideoTagErr("This is a required field");
+      }
+
+      if (videoTag.length > 0) {
+        setVideoTagErr("");
+      }
+
+      if (thumbnail?.name?.length === 0) {
+        setThumbnailErr("This is a required field");
+      }
+
+      if (thumbnail?.name?.length > 0) {
+        setThumbnailErr("");
+      }
+
+      timer.current = window.setTimeout(() => {
+        if (
+          videoTitleErr.length === 0 &&
+          videoDescriptionErr.length === 0 &&
+          videoTagErr.length === 0 &&
+          thumbnailErr.length === 0
+        ) {
+          handleUpload();
+
+          if (!loading) {
+            setSuccess(false);
+            setLoading(true);
+            timer.current = window.setTimeout(() => {
+              setSuccess(true);
+              setLoading(false);
+            }, 2000);
+          }
+        }
+      }, 200);
+    };
+
+    return (
+      <Box sx={{ display: "flex", alignItems: "center" }}>
+        <Box sx={{ m: 1, position: "relative" }}>
+          <Fab
+            aria-label="save"
+            color="primary"
+            sx={buttonSx}
+            onClick={handleButtonClick}
+          >
+            {success ? <CheckIcon /> : <SaveIcon />}
+          </Fab>
+          {loading && (
+            <CircularProgress
+              size={68}
+              sx={{
+                color: green[500],
+                position: "absolute",
+                top: -6,
+                left: -6,
+                zIndex: 1,
+              }}
+            />
+          )}
+        </Box>
+        <Box sx={{ m: 1, position: "relative" }}>
+          <Button
+            variant="contained"
+            sx={buttonSx}
+            disabled={loading}
+            onClick={handleButtonClick}
+          >
+            SUBMIT
+          </Button>
+          {loading && (
+            <CircularProgress
+              size={24}
+              sx={{
+                color: green[500],
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                marginTop: "-12px",
+                marginLeft: "-12px",
+              }}
+            />
+          )}
+        </Box>
+      </Box>
+    );
+  }
 
   const handleTitleChange = (event) => {
     setVideoTitle(event.target.value);
@@ -181,41 +312,7 @@ const FileUpload = ({ setVideo }) => {
     };
   };
 
-  const onFormSubmit = (e) => {
-    e.preventDefault();
-    if (videoTitle.length === 0) {
-      setVideoTitleErr("This is a required field");
-    }
-    if (videoTitle.length > 0) {
-      setVideoTitleErr("");
-    }
-    if (videoDescription.length === 0) {
-      setVideoDescriptionErr("This is a required field");
-    }
-    if (videoDescription.length > 0) {
-      setVideoDescriptionErr("");
-    }
-    if (videoTag.length === 0) {
-      setVideoTagErr("This is a required field");
-    }
-    if (videoTag.length > 0) {
-      setVideoTagErr("");
-    }
-    if (thumbnail?.name?.length === 0) {
-      setThumbnailErr("This is a required field");
-    }
-    if (thumbnail?.name?.length > 0) {
-      setThumbnailErr("");
-    }
-    if (
-      videoTitleErr.length === 0 &&
-      videoDescriptionErr.length === 0 &&
-      videoTagErr.length === 0 &&
-      thumbnailErr.length === 0
-    ) {
-      handleUpload();
-    }
-  };
+  const onFormSubmit = (e) => {};
 
   const autocomplete = useMemo(
     () =>
@@ -433,6 +530,7 @@ const FileUpload = ({ setVideo }) => {
             </span>
           );
         });
+      history.push("/userprofile");
     }
   }, [videoUrl, thumbnailUrl]);
 
@@ -654,7 +752,11 @@ const FileUpload = ({ setVideo }) => {
                             ? "outlined-multiline-static"
                             : "outlined-error-helper-text"
                         }
-                        label={videoTitleErr.length === 0 ? "Title *" : "error"}
+                        label={
+                          videoTitleErr.length === 0
+                            ? "Title *"
+                            : "A video title is required!"
+                        }
                         placeholder="Add a title that describes your video"
                         multiline
                         rows={2}
@@ -673,7 +775,7 @@ const FileUpload = ({ setVideo }) => {
                         label={
                           videoDescriptionErr.length === 0
                             ? "Description *"
-                            : "error"
+                            : "A description is required!"
                         }
                         placeholder="Tell viewers about your video"
                         multiline
@@ -732,36 +834,47 @@ const FileUpload = ({ setVideo }) => {
                         </Select>
                         <FormHelperText>Required</FormHelperText>
                       </FormControl>
-                      <label htmlFor="upload-photo">
-                        <input
-                          style={{ display: "none" }}
-                          id="upload-thumbnail"
-                          name="upload-thumbnail"
-                          type="file"
-                          onChange={handleThumbnailChange}
-                          accept="image/jpeg"
-                        />
-                        <Button
-                          className={classes.btnClass}
-                          type="submit"
-                          variant="contained"
-                          component="span"
-                          onClick={() =>
-                            document.querySelector("#upload-thumbnail").click()
-                          }
-                        >
-                          UPLOAD THUMBNAIL
-                        </Button>
 
-                        {thumbnail && (
-                          <img
-                            src={thumbnailPreview}
-                            alt="thumbnail-alt"
-                            height="80"
-                            style={{ marginLeft: "5px" }}
+                      <FormControl
+                        required
+                        sx={{ display: "flex", mt: 0, width: 200 }}
+                        error={thumbnailErr.length > 0}
+                      >
+                        <label htmlFor="upload-photo">
+                          <input
+                            style={{ display: "none" }}
+                            id="upload-thumbnail"
+                            name="upload-thumbnail"
+                            type="file"
+                            onChange={handleThumbnailChange}
+                            accept="image/jpeg"
                           />
-                        )}
-                      </label>
+
+                          <Button
+                            className={classes.btnClass}
+                            type="submit"
+                            variant="contained"
+                            component="span"
+                            onClick={() =>
+                              document
+                                .querySelector("#upload-thumbnail")
+                                .click()
+                            }
+                          >
+                            UPLOAD THUMBNAIL
+                          </Button>
+
+                          {thumbnail && (
+                            <img
+                              src={thumbnailPreview}
+                              alt="thumbnail-alt"
+                              height="80"
+                              style={{ marginLeft: "5px" }}
+                            />
+                          )}
+                        </label>
+                        <FormHelperText>Required</FormHelperText>
+                      </FormControl>
                     </Box>
                   </div>
                   <div style={{ marginLeft: "30px", marginTop: "55px" }}>
@@ -773,6 +886,13 @@ const FileUpload = ({ setVideo }) => {
                     />
                   </div>
                 </div>
+                <CircularIntegration
+                  className={classes.submitBtn}
+                  type="submit"
+                  variant="contained"
+                  component="span"
+                />
+                {/*
                 <Button
                   className={classes.submitBtn}
                   type="submit"
@@ -782,6 +902,7 @@ const FileUpload = ({ setVideo }) => {
                 >
                   SUBMIT
                 </Button>
+                */}
               </div>
             </Dialog>
           </div>

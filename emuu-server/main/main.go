@@ -4,6 +4,7 @@ import (
 	firebaseSer "emuu-server/main/firebase"
 	creator "emuu-server/main/users"
 	cropImage "emuu-server/main/users"
+	likedVideos "emuu-server/main/users"
 	navbar "emuu-server/main/users"
 	profilePic "emuu-server/main/users"
 	register "emuu-server/main/users"
@@ -55,6 +56,8 @@ func main() {
 		auth.GET("/CheckSubscribe", subscriberButton.CheckSub)
 		auth.POST("/navbar", navbar.SetNavUsername)
 		auth.GET("/navbar", navbar.SetNavUser)
+		auth.POST("/likedvideo", likedVideos.SetUsernameLiked)
+		auth.GET("/likedvideo", likedVideos.SetLikedVideos)
 	}
 
 	api := r.Group("api").Use(firebaseSer.AuthJWT) //create a new router with the middleware authJWT

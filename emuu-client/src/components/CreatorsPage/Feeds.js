@@ -216,8 +216,9 @@ function Feeds({ setVideo, setUserProfile }) {
               {topVideos &&
                 sort == "Most Viewed" &&
                 topVideos.map((video) => (
-                  <Card sx={{ maxWidth: 380, height: 400 }}>
+                  <Card sx={{ maxWidth: 380, height: 375 }}>
                     <CardMedia component="img" image={video.ThumbnailUrl} />
+
                     <CardContent>
                       <CardHeader
                         avatar={
@@ -253,9 +254,15 @@ function Feeds({ setVideo, setUserProfile }) {
                           fontWeight="medium"
                           fontSize="18px"
                         >
-                          {" "}
-                          {video.Username} &ensp;&ensp;&ensp;&ensp;&ensp;
                           {video.Likes} Likes &#x2022; {video.Views} Views
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          fontWeight="medium"
+                          fontSize="18px"
+                        >
+                          {video.Username}
                         </Typography>
                       </div>
                     </CardContent>

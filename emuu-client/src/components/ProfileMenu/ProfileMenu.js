@@ -28,26 +28,7 @@ export default function AccountMenu() {
   const open = Boolean(anchorEl);
   const docRef = doc(db, "Users", userName);
 
-  const [ProfilePic, setProfilePic] = useState("");
-
-  async function getMainUser() {
-    const dis = {
-      displayName: userName,
-    };
-    await axios
-      .post("http://localhost:8080/auth/navbar", JSON.stringify({ ...dis }))
-      .then(function (response) {});
-
-    const response = await axios.get("http://localhost:8080/auth/navbar");
-
-    const user = response.data.message.UserDetails;
-
-    setProfilePic(user[0].ProfilePictureUrl);
-  }
-
-  useEffect(async () => {
-    await getMainUser();
-  }, [localStorage.setItem("ProfilePictureUrl", ProfilePic)]);
+  const ProfilePic = localStorage.getItem("ProfilePictureUrl");
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);

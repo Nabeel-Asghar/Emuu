@@ -81,20 +81,23 @@
   }
 }
 .css-1evlaxh {
-    background-color: rgb(33 37 41);
-    color: rgb(255, 255, 255);
-    transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-    box-shadow: none;
-    background-image: linear-gradient(rgba(255, 255, 255, 0), rgba(255, 255, 255, 0));
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    flex: 1 0 auto;
-    z-index: 1200;
-    position: fixed;
-    top: 0px;
-    outline: 0px;
-    left: 0px;
-    border-right: 1px solid rgba(255, 255, 255, 0.12);
+  background-color: rgb(33 37 41);
+  color: rgb(255, 255, 255);
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  box-shadow: none;
+  background-image: linear-gradient(
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0)
+  );
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  flex: 1 0 auto;
+  z-index: 1200;
+  position: fixed;
+  top: 0px;
+  outline: 0px;
+  left: 0px;
+  border-right: 1px solid rgba(255, 255, 255, 0.12);
 }
