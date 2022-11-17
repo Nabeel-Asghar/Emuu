@@ -18,12 +18,11 @@ type DisplayName struct {
 var userUN string
 
 type User struct {
-	Username         string   `firestore:"Username"`
-	BannerUrl            string   `firestore:"BannerUrl"`
-	DateJoined        string   `firestore:"DateJoined"`
-	ProfilePictureUrl         string      `firestore:"ProfilePictureUrl"`
-	SubscriberCount            int      `firestore:"SubscriberCount"`
-
+	Username          string `firestore:"Username"`
+	BannerUrl         string `firestore:"BannerUrl"`
+	DateJoined        string `firestore:"DateJoined"`
+	ProfilePictureUrl string `firestore:"ProfilePictureUrl"`
+	SubscriberCount   int    `firestore:"SubscriberCount"`
 }
 
 func SetUsername(c *gin.Context) {
@@ -33,7 +32,6 @@ func SetUsername(c *gin.Context) {
 	userUN = res.UserName
 
 }
-
 
 func SetUser(c *gin.Context) {
 	if userUN != "" {
@@ -64,11 +62,10 @@ func SetUser(c *gin.Context) {
 		}
 
 		response := struct {
-			UserDetails   []User
+			UserDetails []User
 		}{
 
-			UserDetails:   userDataArr,
-
+			UserDetails: userDataArr,
 		}
 
 		c.JSON(http.StatusOK, gin.H{"message": response})
