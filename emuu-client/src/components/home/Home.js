@@ -115,7 +115,9 @@ function Home({ setVideo }, { setUserProfile }) {
         JSON.stringify({ ...disAndPage })
       )
       .then(function (response) {});
-    const response = await axios.get("https://emuu-cz5iycld7a-ue.a.run.app/auth/video");
+    const response = await axios.get(
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/video"
+    );
     setTopVideos(response.data.message.MostViewed);
     setRecentVideos(response.data.message.RecentUpload);
     setPages(response.data.message.Pages);

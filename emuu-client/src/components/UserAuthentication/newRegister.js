@@ -90,7 +90,7 @@ function Register() {
 
     history.push("/login");
     await axios
-      .post("http://localhost:8080/auth/register", JSON.stringify(userdata))
+      .post("https://emuu-cz5iycld7a-ue.a.run.app/auth/register", JSON.stringify(userdata))
       .then((result) => {});
   };
 

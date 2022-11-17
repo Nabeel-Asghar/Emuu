@@ -30,13 +30,13 @@ function Subscriptions() {
     };
     await axios
       .post(
-        "http://localhost:8080/auth/Subscription",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscription",
         JSON.stringify({ ...dis })
       )
       .then(function (response) {});
     try {
       const response = await axios.get(
-        "http://localhost:8080/auth/Subscription"
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscription"
       );
 
       setSubscribersData(response.data.message.SubscriptionDetails);

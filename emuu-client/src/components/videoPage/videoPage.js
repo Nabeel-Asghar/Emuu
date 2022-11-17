@@ -36,7 +36,6 @@ import {
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 function Video({ video, setVideo, setUserProfile }) {
-
   const displayName = localStorage.getItem("displayName");
   const [checked, setChecked] = useState(false);
   const history = useHistory();
@@ -136,7 +135,7 @@ function Video({ video, setVideo, setUserProfile }) {
   async function checkLikeStatus() {
     await axios
       .post(
-        "http://localhost:8080/auth/CheckLikeVideo",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckLikeVideo",
         JSON.stringify({
           displayName: displayName,
           videoUrl: video.VideoUrl,
@@ -146,20 +145,21 @@ function Video({ video, setVideo, setUserProfile }) {
       .then(function (response) {});
     try {
       const response = await axios.get(
-        "http://localhost:8080/auth/CheckLikeVideo"
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckLikeVideo"
       );
 
       setChecked(response.data.message.CheckedValue);
     } catch (error) {}
   }
   async function SetView() {
-      await axios
-        .post("http://localhost:8080/auth/view", JSON.stringify({videoUrl: video.VideoUrl}))
-        video.Views++
-         sessionStorage.setItem("video", JSON.stringify(video));
-
-    }
-useEffect(() => {
+    await axios.post(
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/view",
+      JSON.stringify({ videoUrl: video.VideoUrl })
+    );
+    video.Views++;
+    sessionStorage.setItem("video", JSON.stringify(video));
+  }
+  useEffect(() => {
     SetView();
   }, [video]);
   useEffect(() => {
@@ -169,7 +169,7 @@ useEffect(() => {
   async function likeVideo(e) {
     //Axios post should be done here to send info to backend
     axios.post(
-      "http://localhost:8080/auth/LikeVideo",
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/LikeVideo",
       JSON.stringify({
         displayName: displayName,
         videoUrl: video.VideoUrl,
@@ -357,7 +357,7 @@ useEffect(() => {
               onClick={async () => {
                 await axios
                   .post(
-                    "http://localhost:8080/auth/comment",
+                    "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment",
                     JSON.stringify({
                       text: comment,
                       postedBy: displayName,
@@ -366,7 +366,7 @@ useEffect(() => {
                   )
                   .then(function (response) {});
                 const response = await axios.get(
-                  "http://localhost:8080/auth/comment"
+                  "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment"
                 );
                 setComment(response.data.message.Comments);
               }}

@@ -119,10 +119,10 @@ function Profile({ setVideo, video }, { classes }) {
       displayName: displayName,
     };
     await axios
-      .post("http://localhost:8080/auth/creator", JSON.stringify({ ...dis }))
+      .post("https://emuu-cz5iycld7a-ue.a.run.app/auth/creator", JSON.stringify({ ...dis }))
       .then(function (response) {});
 
-    const response = await axios.get("http://localhost:8080/auth/creator");
+    const response = await axios.get("https://emuu-cz5iycld7a-ue.a.run.app/auth/creator");
 
     const user = response.data.message.UserDetails;
 
@@ -222,7 +222,7 @@ function Profile({ setVideo, video }, { classes }) {
     uploadString(storageRef, croppedImage, "data_url").then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
         axios.post(
-          "http://localhost:8080/auth/updateBanner",
+          "https://emuu-cz5iycld7a-ue.a.run.app/auth/updateBanner",
           JSON.stringify({ displayName: displayName, croppedImageUrl: URL })
         )
       );
@@ -238,7 +238,7 @@ function Profile({ setVideo, video }, { classes }) {
     uploadBytes(storageRef, file).then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
         axios.post(
-          "http://localhost:8080/auth/updateProfilePic",
+          "https://emuu-cz5iycld7a-ue.a.run.app/auth/updateProfilePic",
           JSON.stringify({ displayName: displayName, profileImageUrl: URL })
         )
       );

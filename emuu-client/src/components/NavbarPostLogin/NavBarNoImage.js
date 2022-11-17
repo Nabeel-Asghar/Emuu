@@ -10,9 +10,7 @@ import Offcanvas from "react-bootstrap/Offcanvas";
 import { Link } from "react-router-dom";
 import { Routes, Route, useHistory } from "react-router-dom";
 
-
 import EmuuLogo from "./EmuuLogo.png";
-
 
 function NavBarNoImage() {
   //Sign Out Function in Nav Bar
@@ -31,8 +29,6 @@ function NavBarNoImage() {
             <Navbar.Brand href="/">
               <img src={EmuuLogo} width="140" height="40"></img>
             </Navbar.Brand>
-
-
           </Container>
         </Navbar>
       ))}
