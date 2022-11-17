@@ -155,29 +155,22 @@ function Feeds({ setVideo }) {
 
   async function getLikedVideos() {
     //Get all video data
-        const dis = {
-          displayName: displayName,
-        };
-        await axios
-          .post(
-            "http://localhost:8080/auth/likedvideo",
-            JSON.stringify({ ...dis })
-          )
-          .then(function (response) {});
-        try {
-          const response = await axios.get(
-            "http://localhost:8080/auth/likedvideo"
-          );
+    const dis = {
+      displayName: displayName,
+    };
+    await axios
+      .post("http://localhost:8080/auth/likedvideo", JSON.stringify({ ...dis }))
+      .then(function (response) {});
+    try {
+      const response = await axios.get("http://localhost:8080/auth/likedvideo");
 
-         setLikedVideos(response.data.message.LikedVidDetails);
-        } catch (error) {}
-
-
+      setLikedVideos(response.data.message.LikedVidDetails);
+    } catch (error) {}
   }
 
   useEffect(async () => {
-      await getLikedVideos();
-    }, []);
+    await getLikedVideos();
+  }, []);
 
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
   let subscribersListCompleteData;
@@ -380,11 +373,14 @@ function Feeds({ setVideo }) {
               {likedVideos &&
                 likedVideos.map((video) => (
                   <Card sx={{ maxWidth: 380, height: 400 }}>
-                    <CardMedia component="img" image={video.ThumbnailUrl } />
+                    <CardMedia component="img" image={video.ThumbnailUrl} />
                     <CardContent>
                       <CardHeader
                         avatar={
-                          <Avatar sx={{ width: 60, height: 60 }} src={video.ProfilePic}></Avatar>
+                          <Avatar
+                            sx={{ width: 60, height: 60 }}
+                            src={video.ProfilePic}
+                          ></Avatar>
                         }
                         title={
                           <Typography

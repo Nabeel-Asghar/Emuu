@@ -187,11 +187,7 @@ const FileUpload = ({ setVideo }) => {
             }, 2000);
           }
         }
-
-
       }, 200);
-
-
     };
 
     return (
@@ -534,7 +530,7 @@ const FileUpload = ({ setVideo }) => {
             </span>
           );
         });
-         history.push("/userprofile");
+      history.push("/userprofile");
     }
   }, [videoUrl, thumbnailUrl]);
 
