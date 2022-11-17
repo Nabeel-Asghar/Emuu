@@ -35,10 +35,10 @@ export default function AccountMenu() {
       displayName: userName,
     };
     await axios
-      .post("http://localhost:8080/auth/creator", JSON.stringify({ ...dis }))
+      .post("http://localhost:8080/auth/navbar", JSON.stringify({ ...dis }))
       .then(function (response) {});
 
-    const response = await axios.get("http://localhost:8080/auth/creator");
+    const response = await axios.get("http://localhost:8080/auth/navbar");
 
     const user = response.data.message.UserDetails;
 

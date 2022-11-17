@@ -782,7 +782,6 @@ const FileUpload = ({ setVideo }) => {
                 >
                   SUBMIT
                 </Button>
-
               </div>
             </Dialog>
           </div>

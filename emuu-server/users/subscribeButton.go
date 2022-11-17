@@ -1,37 +1,43 @@
-package video
+package users
 
 import (
 	"cloud.google.com/go/firestore"
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
-	"google.golang.org/api/iterator"
+	// 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
 	"log"
+
+	"google.golang.org/api/iterator"
 	"net/http"
+	// 	"reflect"
+	// 	"strconv"
 	"time"
 )
 
-type DisplayName struct {
-	UserName     string `json:"displayName"`
-	VideoUrl     string `json:"videoUrl"`
-	LikedBoolean bool   `json:"LikedBoolean"`
+var subName string
+var creatorName string
+
+type UserAndCreator struct {
+	UserName   string `json:"displayName"`
+	Creator    string `json:"creatorName"`
+	SubBoolean bool   `json:"SubBoolean"`
 }
 
-type Like struct {
-	UsersThatLiked []string `firestore:"usersThatLiked"`
+type Subscriber struct {
+	UsersThatSubscribed []string `firestore:"SubscriberList"`
 }
 
-func SetUsernameLike(c *gin.Context) {
-	var res DisplayName
+func SetUserAndCreator(c *gin.Context) {
+	var res UserAndCreator
 	c.ShouldBindJSON(&res)
 	c.JSON(http.StatusOK, gin.H{"message": res})
-	userUN = res.UserName
-	videoUrl = res.VideoUrl
+	subName = res.UserName
+	creatorName = res.Creator
 
 }
 
-func CheckLikes(c *gin.Context) {
+func CheckSub(c *gin.Context) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) //setting context with timeout 15
 	defer cancel()                                                           //after 15 seconds, if the function is not executed it will cancel and throw an error
@@ -43,8 +49,8 @@ func CheckLikes(c *gin.Context) {
 	}
 	defer client.Close()
 
-	var likesArr Like
-	iter := client.Collection("Videos").Where("VideoUrl", "==", videoUrl).Documents(ctx)
+	var subArr Subscriber
+	iter := client.Collection("Users").Where("Username", "==", creatorName).Documents(ctx)
 	for {
 		doc, err := iter.Next()
 		if err == iterator.Done {
@@ -54,11 +60,10 @@ func CheckLikes(c *gin.Context) {
 			return
 		}
 
-		doc.DataTo(&likesArr)
-
+		doc.DataTo(&subArr)
 		var checkedStatus bool = false
-		for i := 0; i < len(likesArr.UsersThatLiked); i++ {
-			if likesArr.UsersThatLiked[i] == userUN {
+		for i := 0; i < len(subArr.UsersThatSubscribed); i++ {
+			if subArr.UsersThatSubscribed[i] == subName {
 				checkedStatus = true
 				break
 			}
@@ -66,10 +71,10 @@ func CheckLikes(c *gin.Context) {
 		}
 
 		response := struct {
-			CheckedValue bool
+			CheckedSubValue bool
 		}{
 
-			CheckedValue: checkedStatus,
+			CheckedSubValue: checkedStatus,
 		}
 
 		c.JSON(http.StatusOK, gin.H{"message": response})
@@ -77,8 +82,8 @@ func CheckLikes(c *gin.Context) {
 
 }
 
-func SetLikes(c *gin.Context) {
-	var input DisplayName
+func SetSubscribe(c *gin.Context) {
+	var input UserAndCreator
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()}) //writter with particular error
 		return
@@ -94,10 +99,10 @@ func SetLikes(c *gin.Context) {
 	}
 	defer client.Close()
 
-	if input.LikedBoolean == true {
-		var likesArr Like
-		var newlikesArr []string
-		iter := client.Collection("Videos").Where("VideoUrl", "==", input.VideoUrl).Documents(ctx)
+	if input.SubBoolean == true {
+		var subArr Subscriber
+		var newsubArr []string
+		iter := client.Collection("Users").Where("Username", "==", input.Creator).Documents(ctx)
 		for {
 			doc, err := iter.Next()
 			if err == iterator.Done {
@@ -107,28 +112,27 @@ func SetLikes(c *gin.Context) {
 				return
 			}
 
-			doc.DataTo(&likesArr)
-			fmt.Println(likesArr.UsersThatLiked)
+			doc.DataTo(&subArr)
 
 			var user = input.UserName
-			fmt.Println(user)
-			newlikesArr = append(newlikesArr, user)
-			newlikesArr = append(newlikesArr, likesArr.UsersThatLiked...)
-			fmt.Println(newlikesArr)
-			dc := client.Collection("Videos").Doc(doc.Ref.ID)
+
+			newsubArr = append(newsubArr, user)
+			newsubArr = append(newsubArr, subArr.UsersThatSubscribed...)
+
+			dc := client.Collection("Users").Doc(doc.Ref.ID)
 			_, err = dc.Update(ctx, []firestore.Update{
-				{Path: "usersThatLiked", Value: newlikesArr},
+				{Path: "SubscriberList", Value: newsubArr},
 			})
-			li := client.Collection("Videos").Doc(doc.Ref.ID)
+			li := client.Collection("Users").Doc(doc.Ref.ID)
 			_, err = li.Update(ctx, []firestore.Update{
-				{Path: "Likes", Value: firestore.Increment(1)},
+				{Path: "SubscriberCount", Value: firestore.Increment(1)},
 			})
 		}
 
 	} else {
-		var likesArr Like
-		var newlikesArr []string
-		iter := client.Collection("Videos").Where("VideoUrl", "==", input.VideoUrl).Documents(ctx)
+		var subArr Subscriber
+		var newsubArr []string
+		iter := client.Collection("Users").Where("Username", "==", input.Creator).Documents(ctx)
 		for {
 			doc, err := iter.Next()
 			if err == iterator.Done {
@@ -138,27 +142,25 @@ func SetLikes(c *gin.Context) {
 				return
 			}
 
-			doc.DataTo(&likesArr)
-			fmt.Println(likesArr.UsersThatLiked)
+			doc.DataTo(&subArr)
 
 			var user = input.UserName
-			fmt.Println(user)
-			newlikesArr = append(newlikesArr, likesArr.UsersThatLiked...)
-			for i, v := range newlikesArr {
+
+			newsubArr = append(newsubArr, subArr.UsersThatSubscribed...)
+			for i, v := range newsubArr {
 				if v == user {
-					newlikesArr = append(newlikesArr[:i], newlikesArr[i+1:]...)
+					newsubArr = append(newsubArr[:i], newsubArr[i+1:]...)
 					break
 				}
 			}
 
-			fmt.Println(newlikesArr)
-			dc := client.Collection("Videos").Doc(doc.Ref.ID)
+			dc := client.Collection("Users").Doc(doc.Ref.ID)
 			_, err = dc.Update(ctx, []firestore.Update{
-				{Path: "usersThatLiked", Value: newlikesArr},
+				{Path: "SubscriberList", Value: newsubArr},
 			})
-			li := client.Collection("Videos").Doc(doc.Ref.ID)
+			li := client.Collection("Users").Doc(doc.Ref.ID)
 			_, err = li.Update(ctx, []firestore.Update{
-				{Path: "Likes", Value: firestore.Increment(-1)},
+				{Path: "SubscriberCount", Value: firestore.Increment(-1)},
 			})
 		}
 

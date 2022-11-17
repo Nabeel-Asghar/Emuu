@@ -4,8 +4,12 @@ import (
 	firebaseSer "emuu-server/main/firebase"
 	creator "emuu-server/main/users"
 	cropImage "emuu-server/main/users"
+	navbar "emuu-server/main/users"
 	profilePic "emuu-server/main/users"
 	register "emuu-server/main/users"
+	subscriber "emuu-server/main/users"
+	subscriberButton "emuu-server/main/users"
+	subscription "emuu-server/main/users"
 	upload "emuu-server/main/users"
 	comment "emuu-server/main/video"
 	likes "emuu-server/main/video"
@@ -38,13 +42,23 @@ func main() {
 		auth.POST("/updateBanner", cropImage.UpdateBanner)
 		auth.POST("/updateProfilePic", profilePic.UpdateProfile)
 		auth.POST("/LikeVideo", likes.SetLikes)
+		auth.POST("/CheckLikeVideo", likes.SetUsernameLike)
+		auth.GET("/CheckLikeVideo", likes.CheckLikes)
+		auth.POST("/Subscribers", subscriber.SetUsernameSub)
+		auth.GET("/Subscribers", subscriber.SetSubscribers)
+		auth.POST("/Subscription", subscription.SetUsernameSubscription)
+		auth.GET("/Subscription", subscriber.SetSubscriptions)
 		auth.POST("/comment", comment.SetComment)
 		auth.GET("/comment", comment.GetComment)
-
+		auth.POST("/SubscribeButton", subscriberButton.SetSubscribe)
+		auth.POST("/CheckSubscribe", subscriberButton.SetUserAndCreator)
+		auth.GET("/CheckSubscribe", subscriberButton.CheckSub)
+		auth.POST("/navbar", navbar.SetNavUsername)
+		auth.GET("/navbar", navbar.SetNavUser)
 	}
 
 	api := r.Group("api").Use(firebaseSer.AuthJWT) //create a new router with the middleware authJWT
-	{                                              //you should supply the jwt token from firebase
+	{ //you should supply the jwt token from firebase
 		api.POST("/", func(ctx *gin.Context) {
 
 		})
