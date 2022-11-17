@@ -42,7 +42,7 @@ const theme = createTheme({
 });
 
 function App() {
-  const auth = localStorage.getItem("auth");
+ const auth = localStorage.getItem("auth");
   const [video, setVideo] = useState("");
   const [videos, setVideos] = useState([]);
   const [users, setUsers] = useState([]);
