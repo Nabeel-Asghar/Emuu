@@ -165,7 +165,7 @@ function Home({ setVideo }, { setUserProfile }) {
                     {searchResultsVideosArr &&
                       searchResultsVideosArr.map((video, index) => (
                         <div>
-                          <Card sx={{ width: 385, height: 375 }}>
+                          <Card sx={{ width: 385, height: 385 }}>
                             <CardMedia
                               component="img"
                               image={video.thumbnailUrl}

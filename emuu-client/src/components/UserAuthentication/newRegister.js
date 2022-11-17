@@ -36,7 +36,6 @@ function Register() {
     user_password: password,
   };
 
-  const videoCollectionData = {};
 
   const validatePassword = (pass) => {
     if (pass.length < 8) {
