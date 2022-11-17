@@ -3,7 +3,6 @@ package users
 import (
 	"cloud.google.com/go/firestore"
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	// 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
@@ -62,7 +61,6 @@ func CheckSub(c *gin.Context) {
 		}
 
 		doc.DataTo(&subArr)
-		fmt.Println(subArr.UsersThatSubscribed)
 		var checkedStatus bool = false
 		for i := 0; i < len(subArr.UsersThatSubscribed); i++ {
 			if subArr.UsersThatSubscribed[i] == subName {
@@ -79,9 +77,6 @@ func CheckSub(c *gin.Context) {
 			CheckedSubValue: checkedStatus,
 		}
 
-		fmt.Println(checkedStatus)
-		fmt.Println(userUN)
-		fmt.Println("checkedStatus")
 		c.JSON(http.StatusOK, gin.H{"message": response})
 	}
 
