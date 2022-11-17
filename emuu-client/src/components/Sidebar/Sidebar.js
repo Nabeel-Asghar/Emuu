@@ -121,10 +121,10 @@ export default function MiniDrawer() {
       displayName: userName,
     };
     await axios
-      .post("http://localhost:8080/auth/navbar", JSON.stringify({ ...dis }))
+      .post("https://emuu-cz5iycld7a-ue.a.run.app/auth/navbar", JSON.stringify({ ...dis }))
       .then(function (response) {});
 
-    const response = await axios.get("http://localhost:8080/auth/navbar");
+    const response = await axios.get("https://emuu-cz5iycld7a-ue.a.run.app/auth/navbar");
 
     const user = response.data.message.UserDetails;
     setProfilePic(user[0].ProfilePictureUrl);

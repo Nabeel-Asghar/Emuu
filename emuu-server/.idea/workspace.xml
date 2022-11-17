@@ -4,38 +4,8 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8493d53e-db58-4626-b4e8-fbf4ec91baf5" name="Changes" comment="Used prettier">
-      <change beforePath="$PROJECT_DIR$/../emuu-client/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/Feeds.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/Feeds.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/Profile.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/Profile.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/UserInfo.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/UserInfo.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/NavbarPostLogin/HeaderPostLogin.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/NavbarPostLogin/HeaderPostLogin.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/ProfileMenu/ProfileMenu.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/ProfileMenu/ProfileMenu.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/Sidebar/Sidebar.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/Sidebar/Sidebar.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/Settings.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/Settings.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/Settings.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/Settings.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/login.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/login.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/register.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/register.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Feeds.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Feeds.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Feeds.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Feeds.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Profile.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Profile.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Profile.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Profile.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/SubscriptionsList/Subscriptions.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/SubscriptionsList/Subscriptions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/UserInfo.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/UserInfo.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/canvasUtils.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/canvasUtils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/styles.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/styles.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/common/Button/button.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/common/Button/button.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/common/UserProfileCard/UserProfileCard.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/common/UserProfileCard/UserProfileCard.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/home/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/home/Home.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/home/Home.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/home/Home.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/upload/UploadButton.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/upload/UploadButton.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/upload/videoPreview.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/upload/videoPreview.scss" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/videoPage/videoPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/videoPage/videoPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/videoPage/videoPage.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/videoPage/videoPage.scss" afterDir="false" />
+    <list default="true" id="8493d53e-db58-4626-b4e8-fbf4ec91baf5" name="Changes" comment="Working on getting the user's profile picture from each video onto the home page without creating a new field in the videos collection, no need to store the information twice if it's already there, need to find a way to access that element of the array and add it">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/subscription.go" beforeDir="false" afterPath="$PROJECT_DIR$/users/subscription.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,30 +35,30 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;DefaultGoTemplateProperty&quot;: &quot;Go File&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.format.on.save.advertiser.fired&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.formatter.settings.were.checked&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.migrated.go.modules.settings&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.modules.go.list.on.any.changes.was.set&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Rabby/Documents/Emuu/emuu-server&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultGoTemplateProperty": "Go File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.format.on.save.advertiser.fired": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "go.import.settings.migrated": "true",
+    "last_opened_file_path": "C:/Users/tanvi",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File&quot;: [
-      &quot;PLAIN_TEXT&quot;
+  "keyToStringList": {
+    "com.intellij.ide.scratch.ScratchImplUtil$2/New Scratch File": [
+      "PLAIN_TEXT"
     ]
   }
-}</component>
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -125,8 +95,7 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Added firebase integration" />
     <MESSAGE value="Working on getting the user's profile picture from each video onto the home page without creating a new field in the videos collection, no need to store the information twice if it's already there, need to find a way to access that element of the array and add it" />
-    <MESSAGE value="Used prettier" />
-    <option name="LAST_COMMIT_MESSAGE" value="Used prettier" />
+    <option name="LAST_COMMIT_MESSAGE" value="Working on getting the user's profile picture from each video onto the home page without creating a new field in the videos collection, no need to store the information twice if it's already there, need to find a way to access that element of the array and add it" />
   </component>
   <component name="VgoProject">
     <integration-enabled>false</integration-enabled>

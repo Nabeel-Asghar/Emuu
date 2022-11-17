@@ -136,12 +136,12 @@ function Feeds({ setVideo }) {
     };
     await axios
       .post(
-        "http://localhost:8080/auth/video",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/video",
         JSON.stringify({ ...disAndPage })
       )
       .then(function (response) {});
     try {
-      const response = await axios.get("http://localhost:8080/auth/video");
+      const response = await axios.get("https://emuu-cz5iycld7a-ue.a.run.app/auth/video");
 
       setTopVideos(response.data.message.MostViewed);
       setRecentVideos(response.data.message.RecentUpload);
@@ -159,10 +159,10 @@ function Feeds({ setVideo }) {
       displayName: displayName,
     };
     await axios
-      .post("http://localhost:8080/auth/likedvideo", JSON.stringify({ ...dis }))
+      .post("https://emuu-cz5iycld7a-ue.a.run.app/auth/likedvideo", JSON.stringify({ ...dis }))
       .then(function (response) {});
     try {
-      const response = await axios.get("http://localhost:8080/auth/likedvideo");
+      const response = await axios.get("https://emuu-cz5iycld7a-ue.a.run.app/auth/likedvideo");
 
       setLikedVideos(response.data.message.LikedVidDetails);
     } catch (error) {}
@@ -181,13 +181,13 @@ function Feeds({ setVideo }) {
     };
     await axios
       .post(
-        "http://localhost:8080/auth/Subscribers",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscribers",
         JSON.stringify({ ...dis })
       )
       .then(function (response) {});
     try {
       const response = await axios.get(
-        "http://localhost:8080/auth/Subscribers"
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscribers"
       );
 
       setUpdateSubscribersListCompleteData(response.data.message.SubDetails);
