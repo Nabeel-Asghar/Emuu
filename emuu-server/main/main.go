@@ -6,9 +6,8 @@ import (
 	cropImage "emuu-server/main/users"
 	profilePic "emuu-server/main/users"
 	register "emuu-server/main/users"
-	subscriber "emuu-server/main/users"
-	subscription "emuu-server/main/users"
 	upload "emuu-server/main/users"
+	comment "emuu-server/main/video"
 	likes "emuu-server/main/video"
 	video "emuu-server/main/video"
 	"github.com/gin-contrib/cors"
@@ -39,10 +38,8 @@ func main() {
 		auth.POST("/updateBanner", cropImage.UpdateBanner)
 		auth.POST("/updateProfilePic", profilePic.UpdateProfile)
 		auth.POST("/LikeVideo", likes.SetLikes)
-		auth.POST("/Subscribers", subscriber.SetUsernameSub)
-		auth.GET("/Subscribers", subscriber.SetSubscribers)
-		auth.POST("/Subscription", subscription.SetUsernameSubscription)
-		auth.GET("/Subscription", subscriber.SetSubscriptions)
+		auth.POST("/comment", comment.SetComment)
+		auth.GET("/comment", comment.GetComment)
 
 	}
 

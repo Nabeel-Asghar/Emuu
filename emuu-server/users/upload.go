@@ -102,6 +102,9 @@ func UploadVideo(c *gin.Context) {
 	//Format Time
 	Date := dt.Format("01-02-2006")
 
+	//Declare comments array
+
+	var commentsArr []map[string]string
 	//Declare usersThatLiked array
 	usersThatLikedArr := [...]string{}
 
@@ -113,7 +116,7 @@ func UploadVideo(c *gin.Context) {
 		"GameTag":          u1.getTags(),
 		"VideoUrl":         u1.getvidUrl(),
 		"thumbnailUrl":     u1.getthumbUrl(),
-		"Comments":         "",
+		"Comments":         commentsArr,
 		"Likes":            0,
 		"Views":            0,
 		"Date":             Date,

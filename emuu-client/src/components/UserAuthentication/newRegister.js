@@ -18,7 +18,9 @@ import Container from "@mui/material/Container";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
+
 import "./register.scss";
+
 
 function Register() {
   //use state for registration variables
@@ -35,7 +37,6 @@ function Register() {
     user_password: password,
   };
 
-  const videoCollectionData = {};
 
   const validatePassword = (pass) => {
     if (pass.length < 8) {
@@ -92,13 +93,13 @@ function Register() {
     history.push("/login");
     await axios
       .post("http://localhost:8080/auth/register", JSON.stringify(userdata))
-      .then((result) => { });
+      .then((result) => {});
   };
 
   return (
     <>
       <NavBarNoSearch />
-      <Container component="main" maxWidth="xs">
+      <Container className="settingsContainer" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{

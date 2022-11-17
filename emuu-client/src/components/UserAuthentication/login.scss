@@ -64,3 +64,9 @@
   margin-top: 24px;
   margin-bottom: 16px;
 }
+.css-p51h6s-MuiInputBase-input-MuiOutlinedInput-input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0 100px #2c2c2c inset !important;
+    -webkit-text-fill-color: #fff;
+    caret-color: #fff;
+    border-radius: inherit;
+}

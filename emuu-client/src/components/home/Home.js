@@ -3,6 +3,8 @@ import { Avatar } from "@mui/material";
 import "./Home.scss";
 import "../UserProfile/Feeds.scss";
 import axios from "axios";
+import Container from "@mui/material/Container";
+
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import {
   getFirestore,
@@ -138,7 +140,9 @@ function Home({ setVideo }, { setUserProfile }) {
   async function subscribeUser(subscribersName) {}
 
   return (
+
     <AppContext.Consumer>
+
       {(context) => (
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Sidebar />
@@ -163,7 +167,7 @@ function Home({ setVideo }, { setUserProfile }) {
                     {searchResultsVideosArr &&
                       searchResultsVideosArr.map((video, index) => (
                         <div>
-                          <Card sx={{ width: 385, height: 375 }}>
+                          <Card sx={{ width: 385, height: 385 }}>
                             <CardMedia
                               component="img"
                               image={video.thumbnailUrl}
@@ -186,6 +190,7 @@ function Home({ setVideo }, { setUserProfile }) {
                                       <span
                                         onClick={() => {
                                           setVideo(video);
+                                          sessionStorage.setItem("video", JSON.stringify(video));
                                         }}
                                       >
                                         {video.VideoTitle}
@@ -380,10 +385,15 @@ function Home({ setVideo }, { setUserProfile }) {
                 </Stack>
               )}
             </div>
+
           </div>
+
         </div>
+
       )}
+
     </AppContext.Consumer>
+
   );
 }
 

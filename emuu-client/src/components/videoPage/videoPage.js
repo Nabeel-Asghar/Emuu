@@ -132,21 +132,25 @@ function Video({ video, setVideo, setUserProfile }) {
 
   const subscribeUser = () => {};
 
-  async function likeVideo(e) {
-    //Axios post should be done here to send info to backend
-    axios.post(
-      "http://localhost:8080/auth/LikeVideo",
-      JSON.stringify({
-        displayName: displayName,
-        videoUrl: video.VideoUrl,
-        LikedBoolean: !checked,
-      })
-    );
-    if (checked === true) {
-      video.Likes--;
-    } else {
-      video.Likes++;
-    }
+async function likeVideo(e){
+
+
+//Axios post should be done here to send info to backend
+  axios.post("http://localhost:8080/auth/LikeVideo", JSON.stringify({displayName: displayName,
+                                                   videoUrl: video.VideoUrl,
+                                                    LikedBoolean: !checked}))
+  if(checked === true){
+  video.Likes--
+     sessionStorage.setItem("video", JSON.stringify(video));
+
+  }
+
+  else{
+  video.Likes++;
+     sessionStorage.setItem("video", JSON.stringify(video));
+
+  }
+
   }
 
   function checkLiked() {
@@ -159,28 +163,18 @@ function Video({ video, setVideo, setUserProfile }) {
   }
   localStorage.setItem("CreatorName", video.Username);
   useEffect(async () => {
-    if (video) {
-      localStorage.setItem("video", JSON.stringify(video));
-    }
-    if (localStorage.getItem("video")) {
-      let video = JSON.parse(localStorage.getItem("video"));
-
-      const collectionRef = collection(db, "Videos");
-      const queryData = await query(
-        collectionRef,
-        where("VideoUrl", "==", video.VideoUrl)
-      );
-      const _doc = await getDocs(queryData);
-      let id = "";
-      _doc.forEach((doc) => (id = doc.id));
-      const videoRef = doc(db, "Videos", id);
-      await updateDoc(videoRef, { Views: increment(1) });
-      setVideo((await getDoc(videoRef)).data());
+   if (video) {
+      sessionStorage.setItem("video", JSON.stringify(video));
+   }
+    if (sessionStorage.getItem("video")) {
+      setVideo(JSON.parse(sessionStorage.getItem("video")));
+      //console.log(video);
     }
     if (!video && !localStorage.getItem("video")) {
       //if there's no video on this page, redirect to home
       window.location.pathname = "/";
     }
+
   }, []);
 
   useEffect(() => {
@@ -294,7 +288,7 @@ function Video({ video, setVideo, setUserProfile }) {
                       onChange={async (e) => {
                         setChecked(!checked);
                         likeVideo(e);
-                      }}
+                       }}
                     />
                   }
                   label="Like"
@@ -338,26 +332,19 @@ function Video({ video, setVideo, setUserProfile }) {
               class="btn btn-lg btn-primary"
               type="submit"
               onClick={async () => {
-                setComment("");
-                const collectionRef = collection(db, "Videos");
-                const queryData = await query(
-                  collectionRef,
-                  where("VideoUrl", "==", video.VideoUrl)
-                );
-                const _doc = await getDocs(queryData);
-                let id = "";
-                _doc.forEach((doc) => (id = doc.id));
-                const videoRef = doc(db, "Videos", id);
-                await updateDoc(videoRef, {
-                  Comments: arrayUnion({
-                    text: comment,
-                    postedBy: displayName,
-                    date: new Date().toLocaleDateString(),
-                  }),
-                });
-                setVideo((await getDoc(videoRef)).data());
-              }}
-            >
+              await axios
+               .post(
+                "http://localhost:8080/auth/comment",
+                JSON.stringify({text: comment,
+                postedBy: displayName,
+                videoUrl: video.VideoUrl})
+                 )
+                .then(function (response) {});
+                  const response =  await axios.get("http://localhost:8080/auth/comment");
+                    setComment(response.data.message.Comments);
+
+}}
+              >
               Submit
             </button>
           </div>

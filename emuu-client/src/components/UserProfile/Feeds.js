@@ -110,7 +110,6 @@ function Feeds({ setVideo }) {
   const [likedVideos, setLikedVideos] = useState([]);
   const displayName = localStorage.getItem("displayName");
   const docRef = doc(db, "Users", displayName);
-  const [ProfilePic, setProfilePic] = useState("");
   const [sort, setSort] = React.useState("Recently Uploaded");
   const [pages, setPages] = useState(undefined);
   const [page, setPage] = useState(1);
@@ -121,11 +120,12 @@ function Feeds({ setVideo }) {
   ] = useState([]);
   const [users, setUsers] = useState([]);
   const history = useHistory();
-  getDoc(docRef).then((docSnap) => {
-    setProfilePic(docSnap.data().ProfilePictureUrl);
-  });
+//  getDoc(docRef).then((docSnap) => {
+//    setProfilePic(docSnap.data().ProfilePictureUrl);
+//  });
 
   const [value, setValue] = React.useState("1");
+  const ProfilePic = localStorage.getItem("ProfilePictureUrl");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
