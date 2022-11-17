@@ -306,56 +306,56 @@ function Feeds({ setVideo }) {
                 sort == "Most Viewed" &&
                 topVideos.map((video) => (
                   <Card sx={{ maxWidth: 380, height: 375 }}>
-                                      <CardMedia component="img" image={video.ThumbnailUrl} />
+                    <CardMedia component="img" image={video.ThumbnailUrl} />
 
-                                      <CardContent>
-                                        <CardHeader
-                                          avatar={
-                                            <Avatar
-                                              sx={{ width: 60, height: 60 }}
-                                              src={ProfilePic}
-                                            ></Avatar>
-                                          }
-                                          title={
-                                            <Typography
-                                              variant="body2"
-                                              color="text.primary"
-                                              fontWeight="bold"
-                                              fontSize="20px"
-                                            >
-                                              <Link to="/video">
-                                                <span
-                                                  onClick={() => {
-                                                    setVideo(video);
-                                                  }}
-                                                >
-                                                  {video.Title}
-                                                </span>
-                                              </Link>
-                                            </Typography>
-                                          }
-                                        />
+                    <CardContent>
+                      <CardHeader
+                        avatar={
+                          <Avatar
+                            sx={{ width: 60, height: 60 }}
+                            src={ProfilePic}
+                          ></Avatar>
+                        }
+                        title={
+                          <Typography
+                            variant="body2"
+                            color="text.primary"
+                            fontWeight="bold"
+                            fontSize="20px"
+                          >
+                            <Link to="/video">
+                              <span
+                                onClick={() => {
+                                  setVideo(video);
+                                }}
+                              >
+                                {video.Title}
+                              </span>
+                            </Link>
+                          </Typography>
+                        }
+                      />
 
-                                        <div className="videoInfo">
-                                          <Typography
-                                            variant="body2"
-                                            color="text.secondary"
-                                            fontWeight="medium"
-                                            fontSize="18px"
-                                          >
-                                            {video.Likes} Likes &#x2022; {video.Views} Views
-                                          </Typography>
-                                          <Typography
-                                            variant="body2"
-                                            color="text.secondary"
-                                            fontWeight="medium"
-                                            fontSize="18px"
-                                          >
-                                            {video.Username}
-                                          </Typography>
-                                        </div>
-                                      </CardContent>
-                                    </Card>
+                      <div className="videoInfo">
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          fontWeight="medium"
+                          fontSize="18px"
+                        >
+                          {video.Likes} Likes &#x2022; {video.Views} Views
+                        </Typography>
+                        <Typography
+                          variant="body2"
+                          color="text.secondary"
+                          fontWeight="medium"
+                          fontSize="18px"
+                        >
+                          {video.Username}
+                        </Typography>
+                      </div>
+                    </CardContent>
+                  </Card>
                 ))}
             </div>
             {pages && (

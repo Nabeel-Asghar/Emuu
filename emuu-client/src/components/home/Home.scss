@@ -1,66 +1,64 @@
-
-
 .videos__container {
-  display:inline-flex;
-  flex-wrap:wrap;
-  gap:20px;
-  padding:20px;
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 20px !important;
+  padding: 40px !important;
   height: 100vh;
 }
 
 .video__category__title {
-  font-family:"Roboto", "Helvetica", "Arial", sans-serif;
-  font-size:40px !important;
-  font-weight:bold !important;
-  line-height:1.5;
-  padding-left:20px;
-  letter-spacing:0.00938em;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-size: 40px !important;
+  font-weight: bold !important;
+  line-height: 1.5;
+  padding-left: 20px;
+  letter-spacing: 0.00938em;
 }
 .css-185gdzj-MuiCardHeader-root {
-  display:-webkit-box;
-  display:-webkit-flex;
-  display:-ms-flexbox;
-  display:flex;
-  -webkit-align-items:center;
-  -webkit-box-align:center;
-  -ms-flex-align:center;
-  align-items:center;
-  padding:8px !important;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 8px !important;
 }
 .video-row {
-  display:flex;
-  flex-direction:row;
-  gap:40px;
-  overflow-x:scroll;
+  display: flex;
+  flex-direction: row;
+  gap: 40px;
+  overflow-x: scroll;
 
-  padding-left:20px;
-  padding-right:20px;
-  padding-bottom:20px;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-bottom: 20px;
 }
 
 .video-row::-webkit-scrollbar {
-  display:none;
+  display: none;
 }
 .css-46bh2p-MuiCardContent-root {
-  padding-top:8px;
+  padding-top: 8px;
 
-  padding-left:0px;
-  padding-bottom:0px;
+  padding-left: 0px;
+  padding-bottom: 0px;
 }
 .videoInfo {
-  padding-left:80px;
+  padding-left: 80px;
 }
 
 .css-et1ao3-MuiTypography-root {
-  margin:0;
-  font-family:"Roboto", "Helvetica", "Arial", sans-serif;
-  font-size:1.2rem;
-  line-height:1.43;
-  letter-spacing:0.01071em;
-  display:block;
-  font-weight:550;
+  margin: 0;
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-size: 1.2rem;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  display: block;
+  font-weight: 550;
 }
 .MuiPagination-ul {
-  margin:auto !important;
-  width:fit-content !important;
+  margin: auto !important;
+  width: fit-content !important;
 }

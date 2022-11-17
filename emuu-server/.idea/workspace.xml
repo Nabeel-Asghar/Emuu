@@ -5,7 +5,23 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="8493d53e-db58-4626-b4e8-fbf4ec91baf5" name="Changes" comment="Working on getting the user's profile picture from each video onto the home page without creating a new field in the videos collection, no need to store the information twice if it's already there, need to find a way to access that element of the array and add it">
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/App.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/App.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/Feeds.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/Feeds.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/Feeds.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/CreatorsPage/Feeds.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/NavbarPostLogin/HeaderPostLogin.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/NavbarPostLogin/HeaderPostLogin.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/NavbarPostLogin/NavBarNoSearch.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/NavbarPostLogin/NavBarNoSearch.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/ProfileMenu/ProfileMenu.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/ProfileMenu/ProfileMenu.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/Sidebar/Sidebar.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/Sidebar/Sidebar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/Sidebar/Sidebar.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/Sidebar/Sidebar.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/newRegister.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/newRegister.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/register.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserAuthentication/register.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Feeds.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Feeds.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Feeds.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/UserProfile/Feeds.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/home/Home.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/home/Home.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/home/Home.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/home/Home.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/upload/UploadButton.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/upload/UploadButton.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/upload/UploadButton.scss" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/upload/UploadButton.scss" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

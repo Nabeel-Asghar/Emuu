@@ -28,8 +28,6 @@ export default function AccountMenu() {
   const open = Boolean(anchorEl);
   const docRef = doc(db, "Users", userName);
 
-
-
   const ProfilePic = localStorage.getItem("ProfilePictureUrl");
 
   const handleClick = (event) => {

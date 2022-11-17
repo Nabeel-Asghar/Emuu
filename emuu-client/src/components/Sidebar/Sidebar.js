@@ -115,7 +115,6 @@ export default function MiniDrawer() {
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
   let subscribersListCompleteData;
 
-
   const [ProfilePic, setProfilePic] = useState("");
   async function getMainUser() {
     const dis = {
@@ -129,16 +128,11 @@ export default function MiniDrawer() {
 
     const user = response.data.message.UserDetails;
     setProfilePic(user[0].ProfilePictureUrl);
-
-
   }
 
   useEffect(async () => {
     await getMainUser();
-
   }, [localStorage.setItem("ProfilePictureUrl", ProfilePic)]);
-
-
 
   useEffect(async () => {
     const timer = async () => {
