@@ -84,7 +84,7 @@ function App() {
             <Route exact path="/">
               <Home setVideo={setVideo} />
             </Route>
-            <Route path="/login">
+            <Route  path="/login">
               <Login />
             </Route>
             <Route path="/register">
