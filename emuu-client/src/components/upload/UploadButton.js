@@ -131,9 +131,9 @@ const FileUpload = ({ setVideo }) => {
 
     const buttonSx = {
       ...(success && {
-        bgcolor: green[500],
+        color: green[500],
         '&:hover': {
-          bgcolor: green[700],
+          color: green[700],
         },
       }),
     };
@@ -144,15 +144,49 @@ const FileUpload = ({ setVideo }) => {
       };
     }, []);
 
-    const handleButtonClick = () => {
-      if (!loading) {
-        setSuccess(false);
-        setLoading(true);
-        timer.current = window.setTimeout(() => {
-          setSuccess(true);
-          setLoading(false);
-        }, 2000);
-      }
+    const handleButtonClick = (e) => {
+    e.preventDefault();
+        if (videoTitle.length === 0) {
+          setVideoTitleErr("This is a required field");
+        }
+        if (videoTitle.length > 0) {
+          setVideoTitleErr("");
+        }
+        if (videoDescription.length === 0) {
+          setVideoDescriptionErr("This is a required field");
+        }
+        if (videoDescription.length > 0) {
+          setVideoDescriptionErr("");
+        }
+        if (videoTag.length === 0) {
+          setVideoTagErr("This is a required field");
+        }
+        if (videoTag.length > 0) {
+          setVideoTagErr("");
+        }
+        if (thumbnail?.name?.length === 0) {
+          setThumbnailErr("This is a required field");
+        }
+        if (thumbnail?.name?.length > 0) {
+          setThumbnailErr("");
+        }
+        if (
+          videoTitleErr.length === 0 &&
+          videoDescriptionErr.length === 0 &&
+          videoTagErr.length === 0 &&
+          thumbnailErr.length === 0
+        ) {
+          handleUpload();
+          if (!loading) {
+                  setSuccess(false);
+                  setLoading(true);
+                  timer.current = window.setTimeout(() => {
+                    setSuccess(true);
+                    setLoading(false);
+                  }, 2000);
+                }
+        }
+
     };
 
     return (
@@ -184,7 +218,7 @@ const FileUpload = ({ setVideo }) => {
             variant="contained"
             sx={buttonSx}
             disabled={loading}
-            onClick={onFormSubmit}
+            onClick={handleButtonClick}
           >
             SUBMIT
           </Button>
@@ -278,39 +312,7 @@ const FileUpload = ({ setVideo }) => {
   };
 
   const onFormSubmit = (e) => {
-    e.preventDefault();
-    if (videoTitle.length === 0) {
-      setVideoTitleErr("This is a required field");
-    }
-    if (videoTitle.length > 0) {
-      setVideoTitleErr("");
-    }
-    if (videoDescription.length === 0) {
-      setVideoDescriptionErr("This is a required field");
-    }
-    if (videoDescription.length > 0) {
-      setVideoDescriptionErr("");
-    }
-    if (videoTag.length === 0) {
-      setVideoTagErr("This is a required field");
-    }
-    if (videoTag.length > 0) {
-      setVideoTagErr("");
-    }
-    if (thumbnail?.name?.length === 0) {
-      setThumbnailErr("This is a required field");
-    }
-    if (thumbnail?.name?.length > 0) {
-      setThumbnailErr("");
-    }
-    if (
-      videoTitleErr.length === 0 &&
-      videoDescriptionErr.length === 0 &&
-      videoTagErr.length === 0 &&
-      thumbnailErr.length === 0
-    ) {
-      handleUpload();
-    }
+
   };
 
   const autocomplete = useMemo(
