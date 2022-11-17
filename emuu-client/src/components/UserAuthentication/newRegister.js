@@ -18,7 +18,7 @@ import Container from "@mui/material/Container";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
-
+import Paper from "@mui/material/Paper";
 import "./register.scss";
 
 function Register() {
@@ -98,14 +98,33 @@ function Register() {
   return (
     <>
       <NavBarNoSearch />
-      <Container className="settingsContainer" maxWidth="xs">
+    <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
+         <Grid
+                  item
+                  xs={false}
+                  sm={4}
+                  md={7}
+                  sx={{
+                    backgroundImage:
+                      "url(https://images.unsplash.com/photo-1616588589676-62b3bd4ff6d2?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1632&q=80)",
+                    backgroundRepeat: "no-repeat",
+                    backgroundColor: (t) =>
+                      t.palette.mode === "light"
+                        ? t.palette.grey[50]
+                        : t.palette.grey[900],
+                    backgroundSize: "cover",
+                    backgroundPosition: "center",
+                  }}
+                />
+                 <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <Box
           sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
+             my: 8,
+                          mx: 4,
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
           }}
         >
           <Avatar sx={{ m: 1, bgcolor: "secondary.main" }}>
@@ -114,10 +133,11 @@ function Register() {
           <Typography component="h1" variant="h5">
             Register
           </Typography>
-          <Box component="form" sx={{ mt: 3 }}>
-            <Grid container spacing={0}>
-              <Grid item xs={12}>
-                <input
+          <Box component="form" sx={{ mt: 1 }}>
+
+
+                <TextField
+                margin="normal"
                   required
                   fullWidth
                   id="username"
@@ -125,12 +145,13 @@ function Register() {
                   name="username"
                   autoComplete="username"
                   value={userName}
-                  className="register-input"
+
                   placeholder="Username"
                   onChange={(e) => setUserName(e.target.value)}
                 />
-                <Grid item xs={12}>
-                  <input
+
+                  <TextField
+                  margin="normal"
                     required
                     fullWidth
                     id="email"
@@ -138,17 +159,18 @@ function Register() {
                     name="email"
                     autoComplete="email"
                     value={email}
-                    className="register-input"
+
                     placeholder="Email Address"
                     onChange={(e) => {
                       setError("");
                       setEmail(e.target.value);
                     }}
                   />
-                </Grid>
 
-                <Grid item xs={12}>
-                  <input
+
+
+                  <TextField
+                   margin="normal"
                     required
                     fullWidth
                     name="password"
@@ -157,7 +179,7 @@ function Register() {
                     id="password"
                     autoComplete="new-password"
                     value={password}
-                    className="register-input"
+
                     placeholder="Password"
                     onChange={(e) => {
                       setPassword(e.target.value);
@@ -165,7 +187,7 @@ function Register() {
                     }}
                   />
                   {!error && (
-                    <p style={{ color: "white", margin: "0" }}>
+                    <p style={{ color: "white"}}>
                       <small>
                         {" "}
                         <InfoOutlinedIcon />
@@ -175,7 +197,7 @@ function Register() {
                     </p>
                   )}
                   {error && (
-                    <p style={{ color: "red", margin: "0" }}>
+                    <p style={{ color: "red"}}>
                       {" "}
                       <small>
                         {" "}
@@ -184,8 +206,8 @@ function Register() {
                       </small>
                     </p>
                   )}
-                </Grid>
-              </Grid>
+
+
               <Button
                 onClick={(e) => handleSubmit(e)}
                 type="submit"
@@ -195,17 +217,17 @@ function Register() {
               >
                 Sign Up
               </Button>
-              <Grid container justifyContent="flex-end">
+              <Grid container>
                 <Grid item>
                   <Link className="loginLink" href="/Login">
                     Already have an account? Log in
                   </Link>
                 </Grid>
               </Grid>
-            </Grid>
           </Box>
         </Box>
-      </Container>
+        </Grid>
+      </Grid>
     </>
   );
 }

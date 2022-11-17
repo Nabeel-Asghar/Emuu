@@ -54,7 +54,7 @@ function HeaderPostLogin({ search, setSearch }) {
           bg="dark"
           variant="dark"
           expand={expand}
-          className=""
+          className="navbar"
         >
           <Container fluid>
             <Navbar.Brand href="/">
