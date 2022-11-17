@@ -175,14 +175,7 @@ function Video({ video, setVideo, setUserProfile }) {
     }
   }
 
-  //   function checkLiked() {
-  //     let liked = video?.usersThatLiked?.includes(displayName); //check if there is a video and if there are users that liked stored
-  //     if (liked) {
-  //       setChecked(true);
-  //     } else {
-  //       setChecked(false);
-  //     }
-  //   }
+
   localStorage.setItem("CreatorName", video.Username);
   useEffect(async () => {
     if (video) {

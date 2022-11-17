@@ -54,11 +54,10 @@ function Creator({ setVideo, video }) {
   const [checked, setChecked] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
-
   const docRef = doc(db, "Users", creatorName);
   const [Banner, setBanner] = useState("");
-  const [ProfilePic, setProfilePic] = useState("");
-  const [subscriberCount, setSubscriberCount] = useState("");
+  const [CreatorProfilePic, setCreatorProfilePic] = useState("");
+  const [subscriberCount, setSubscriberCount] = useState(0);
   const autocomplete = useMemo(
     () =>
       createAutocomplete({
@@ -104,6 +103,58 @@ function Creator({ setVideo, video }) {
     [count]
   );
 
+
+
+ async function checkSubStatus() {
+    await axios
+      .post(
+        "http://localhost:8080/auth/CheckSubscribe",
+        JSON.stringify({
+          displayName: displayName,
+          creatorName: creatorName,
+          LikedBoolean: !checked,
+        })
+      )
+      .then(function (response) {});
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/auth/CheckSubscribe"
+      );
+
+      setChecked(response.data.message.CheckedSubValue);
+      console.log(response.data.message.CheckedSubValue);
+      console.log("hello");
+    } catch (error) {}
+  }
+
+  useEffect(() => {
+    checkSubStatus();
+  }, []);
+
+
+    async function subscribeToUser(e) {
+        //Axios post should be done here to send info to backend
+        axios.post(
+          "http://localhost:8080/auth/SubscribeButton",
+          JSON.stringify({
+            displayName: displayName,
+            creatorName: creatorName,
+            SubBoolean: !checked,
+          })
+        );
+        if (checked === true) {
+         subscriberCount--;
+
+        } else {
+          subscriberCount++;
+
+        }
+
+      }
+
+
+
+
   async function getUser() {
     const dis = {
       displayName: creatorName,
@@ -118,7 +169,7 @@ function Creator({ setVideo, video }) {
 
     setBanner(user[0].BannerUrl);
 
-    setProfilePic(user[0].ProfilePictureUrl);
+    setCreatorProfilePic(user[0].ProfilePictureUrl);
 
     setSubscriberCount(user[0].SubscriberCount);
   }
@@ -277,7 +328,7 @@ function Creator({ setVideo, video }) {
 
             <div className="middle-portion">
               <div className="user-profile-img">
-                <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
+                <img id="prf-img" src={CreatorProfilePic} alt="" srcSet="" />
 
                 <div className={"userName"}> {creatorName} </div>
 
@@ -304,30 +355,31 @@ function Creator({ setVideo, video }) {
                     checked={checked}
                     onChange={async (e) => {
                       setChecked(!checked);
-                      const collectionRef = collection(db, "Users");
-                      const queryData = await query(
-                        collectionRef,
-                        where("Username", "==", creatorName)
-                      );
-                      const _doc = await getDocs(queryData);
-                      let id = "";
-                      _doc.forEach((doc) => (id = doc.id));
-                      const creatorRef = doc(db, "Users", id);
-                      if (e.target.checked) {
-                        await updateDoc(creatorRef, {
-                          SubscriberCount: increment(1),
-                        });
-                        await updateDoc(creatorRef, {
-                          SubscriberList: arrayUnion(displayName),
-                        });
-                      } else {
-                        await updateDoc(creatorRef, {
-                          SubscriberCount: increment(-1),
-                        });
-                        await updateDoc(creatorRef, {
-                          SubscriberList: arrayRemove(displayName),
-                        });
-                      }
+                      subscribeToUser(e);
+//                       const collectionRef = collection(db, "Users");
+//                       const queryData = await query(
+//                         collectionRef,
+//                         where("Username", "==", creatorName)
+//                       );
+//                       const _doc = await getDocs(queryData);
+//                       let id = "";
+//                       _doc.forEach((doc) => (id = doc.id));
+//                       const creatorRef = doc(db, "Users", id);
+//                       if (e.target.checked) {
+//                         await updateDoc(creatorRef, {
+//                           SubscriberCount: increment(1),
+//                         });
+//                         await updateDoc(creatorRef, {
+//                           SubscriberList: arrayUnion(displayName),
+//                         });
+//                       } else {
+//                         await updateDoc(creatorRef, {
+//                           SubscriberCount: increment(-1),
+//                         });
+//                         await updateDoc(creatorRef, {
+//                           SubscriberList: arrayRemove(displayName),
+//                         });
+//                       }
                     }}
                   />
                 </div>
