@@ -17,8 +17,10 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
+import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
+
 import "./register.scss";
+
 
 function Register() {
   //use state for registration variables
@@ -97,8 +99,8 @@ function Register() {
 
   return (
     <>
-      <HeaderPostLogin />
-      <Container component="main" maxWidth="xs">
+      <NavBarNoSearch />
+      <Container className="settingsContainer" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{

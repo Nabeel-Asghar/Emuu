@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="8493d53e-db58-4626-b4e8-fbf4ec91baf5" name="Changes" comment="Working on getting the user's profile picture from each video onto the home page without creating a new field in the videos collection, no need to store the information twice if it's already there, need to find a way to access that element of the array and add it">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/video/comment.go" beforeDir="false" afterPath="$PROJECT_DIR$/video/comment.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -48,7 +47,7 @@
     &quot;RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed&quot;: &quot;true&quot;,
     &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
     &quot;go.import.settings.migrated&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/Rabby/Documents/Emuu/emuu-server&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/tanvi&quot;,
     &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
     &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
