@@ -120,9 +120,6 @@ function Feeds({ setVideo }) {
   ] = useState([]);
   const [users, setUsers] = useState([]);
   const history = useHistory();
-  //  getDoc(docRef).then((docSnap) => {
-  //    setProfilePic(docSnap.data().ProfilePictureUrl);
-  //  });
 
   const [value, setValue] = React.useState("1");
   const ProfilePic = localStorage.getItem("ProfilePictureUrl");
@@ -158,23 +155,29 @@ function Feeds({ setVideo }) {
 
   async function getLikedVideos() {
     //Get all video data
-    const docRef = collection(db, "Videos");
-    const queryData = await query(
-      docRef,
-      where("usersThatLiked", "array-contains", displayName)
-    );
-    const querySnapshot = await getDocs(queryData);
-    //Create array for recent videos and sort by upload date
-    const querySnapshotLikedVideos = [];
-    querySnapshot.forEach((doc) => querySnapshotLikedVideos.push(doc));
-    sortVideosByTime(querySnapshotLikedVideos);
-    const likedVideosArr = [];
-    querySnapshotLikedVideos.forEach((doc) => {
-      likedVideosArr.push(doc.data());
-    });
+        const dis = {
+          displayName: displayName,
+        };
+        await axios
+          .post(
+            "http://localhost:8080/auth/likedvideo",
+            JSON.stringify({ ...dis })
+          )
+          .then(function (response) {});
+        try {
+          const response = await axios.get(
+            "http://localhost:8080/auth/likedvideo"
+          );
 
-    setLikedVideos(likedVideosArr);
+         setLikedVideos(response.data.message.LikedVidDetails);
+        } catch (error) {}
+
+
   }
+
+  useEffect(async () => {
+      await getLikedVideos();
+    }, []);
 
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
   let subscribersListCompleteData;
@@ -377,11 +380,11 @@ function Feeds({ setVideo }) {
               {likedVideos &&
                 likedVideos.map((video) => (
                   <Card sx={{ maxWidth: 380, height: 400 }}>
-                    <CardMedia component="img" image={video.thumbnailUrl} />
+                    <CardMedia component="img" image={video.ThumbnailUrl } />
                     <CardContent>
                       <CardHeader
                         avatar={
-                          <Avatar sx={{ width: 60, height: 60 }}></Avatar>
+                          <Avatar sx={{ width: 60, height: 60 }} src={video.ProfilePic}></Avatar>
                         }
                         title={
                           <Typography
@@ -396,7 +399,7 @@ function Feeds({ setVideo }) {
                                   setVideo(video);
                                 }}
                               >
-                                {video.VideoTitle}
+                                {video.Title}
                               </span>
                             </Link>
                           </Typography>
