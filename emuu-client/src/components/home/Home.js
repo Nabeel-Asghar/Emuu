@@ -140,9 +140,7 @@ function Home({ setVideo }, { setUserProfile }) {
   async function subscribeUser(subscribersName) {}
 
   return (
-
     <AppContext.Consumer>
-
       {(context) => (
         <div style={{ display: "flex", flexDirection: "row" }}>
           <Sidebar />
@@ -190,7 +188,10 @@ function Home({ setVideo }, { setUserProfile }) {
                                       <span
                                         onClick={() => {
                                           setVideo(video);
-                                          sessionStorage.setItem("video", JSON.stringify(video));
+                                          sessionStorage.setItem(
+                                            "video",
+                                            JSON.stringify(video)
+                                          );
                                         }}
                                       >
                                         {video.VideoTitle}
@@ -385,15 +386,10 @@ function Home({ setVideo }, { setUserProfile }) {
                 </Stack>
               )}
             </div>
-
           </div>
-
         </div>
-
       )}
-
     </AppContext.Consumer>
-
   );
 }
 

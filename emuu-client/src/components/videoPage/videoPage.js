@@ -132,61 +132,62 @@ function Video({ video, setVideo, setUserProfile }) {
 
   const subscribeUser = () => {};
 
+  async function checkLikeStatus() {
+    await axios
+      .post(
+        "http://localhost:8080/auth/CheckLikeVideo",
+        JSON.stringify({
+          displayName: displayName,
+          videoUrl: video.VideoUrl,
+          LikedBoolean: !checked,
+        })
+      )
+      .then(function (response) {});
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/auth/CheckLikeVideo"
+      );
 
-
-async function checkLikeStatus(){
- await axios.post("http://localhost:8080/auth/CheckLikeVideo", JSON.stringify({displayName: displayName,
-                                                   videoUrl: video.VideoUrl,
-                                                    LikedBoolean: !checked}))  .then(function (response) {});
-                                                                                 try {
-                                                                                   const response = await axios.get(
-                                                                                     "http://localhost:8080/auth/CheckLikeVideo"
-                                                                                   );
-
-                                                                                  setChecked(response.data.message.CheckedValue);
-                                                                                 } catch (error) {}
-                                                                               }
-
+      setChecked(response.data.message.CheckedValue);
+    } catch (error) {}
+  }
 
   useEffect(() => {
     checkLikeStatus();
-  }, [video] );
+  }, [video]);
 
-
-async function likeVideo(e){
-
-
-//Axios post should be done here to send info to backend
-  axios.post("http://localhost:8080/auth/LikeVideo", JSON.stringify({displayName: displayName,
-                                                   videoUrl: video.VideoUrl,
-                                                    LikedBoolean: !checked}))
-  if(checked === true){
-  video.Likes--
-     sessionStorage.setItem("video", JSON.stringify(video));
-
+  async function likeVideo(e) {
+    //Axios post should be done here to send info to backend
+    axios.post(
+      "http://localhost:8080/auth/LikeVideo",
+      JSON.stringify({
+        displayName: displayName,
+        videoUrl: video.VideoUrl,
+        LikedBoolean: !checked,
+      })
+    );
+    if (checked === true) {
+      video.Likes--;
+      sessionStorage.setItem("video", JSON.stringify(video));
+    } else {
+      video.Likes++;
+      sessionStorage.setItem("video", JSON.stringify(video));
+    }
   }
 
-  else{
-  video.Likes++;
-     sessionStorage.setItem("video", JSON.stringify(video));
-
-  }
-
-  }
-
-//   function checkLiked() {
-//     let liked = video?.usersThatLiked?.includes(displayName); //check if there is a video and if there are users that liked stored
-//     if (liked) {
-//       setChecked(true);
-//     } else {
-//       setChecked(false);
-//     }
-//   }
+  //   function checkLiked() {
+  //     let liked = video?.usersThatLiked?.includes(displayName); //check if there is a video and if there are users that liked stored
+  //     if (liked) {
+  //       setChecked(true);
+  //     } else {
+  //       setChecked(false);
+  //     }
+  //   }
   localStorage.setItem("CreatorName", video.Username);
   useEffect(async () => {
-   if (video) {
+    if (video) {
       sessionStorage.setItem("video", JSON.stringify(video));
-   }
+    }
     if (sessionStorage.getItem("video")) {
       setVideo(JSON.parse(sessionStorage.getItem("video")));
       //console.log(video);
@@ -195,12 +196,11 @@ async function likeVideo(e){
       //if there's no video on this page, redirect to home
       window.location.pathname = "/";
     }
-
   }, []);
 
-//   useEffect(() => {
-//     checkLiked();
-//   }, [video]);
+  //   useEffect(() => {
+  //     checkLiked();
+  //   }, [video]);
 
   const [comment, setComment] = useState("");
 
@@ -309,7 +309,7 @@ async function likeVideo(e){
                       onChange={async (e) => {
                         setChecked(!checked);
                         likeVideo(e);
-                       }}
+                      }}
                     />
                   }
                   label="Like"
@@ -353,19 +353,22 @@ async function likeVideo(e){
               class="btn btn-lg btn-primary"
               type="submit"
               onClick={async () => {
-              await axios
-               .post(
-                "http://localhost:8080/auth/comment",
-                JSON.stringify({text: comment,
-                postedBy: displayName,
-                videoUrl: video.VideoUrl})
-                 )
-                .then(function (response) {});
-                  const response =  await axios.get("http://localhost:8080/auth/comment");
-                    setComment(response.data.message.Comments);
-
-}}
-              >
+                await axios
+                  .post(
+                    "http://localhost:8080/auth/comment",
+                    JSON.stringify({
+                      text: comment,
+                      postedBy: displayName,
+                      videoUrl: video.VideoUrl,
+                    })
+                  )
+                  .then(function (response) {});
+                const response = await axios.get(
+                  "http://localhost:8080/auth/comment"
+                );
+                setComment(response.data.message.Comments);
+              }}
+            >
               Submit
             </button>
           </div>

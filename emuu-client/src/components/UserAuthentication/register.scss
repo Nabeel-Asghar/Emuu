@@ -1,17 +1,16 @@
 .settingsContainer {
-  height:100vh;
-.loginLink {
-  font-size: 15px;
-  font-weight: normal;
-  color: #1976d2 !important;
-  text-decoration: underline !important;
-  margin-right: 10px;
-}
-.register-input {
+  height: 100vh;
+  .loginLink {
+    font-size: 15px;
+    font-weight: normal;
+    color: #1976d2 !important;
+    text-decoration: underline !important;
+    margin-right: 10px;
+  }
+  .register-input {
     padding: 10px;
     width: 100%;
     margin: 10px 0;
     background-color: transparent;
-    }
-
+  }
 }

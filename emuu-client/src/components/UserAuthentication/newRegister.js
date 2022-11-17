@@ -21,7 +21,6 @@ import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
 
 import "./register.scss";
 
-
 function Register() {
   //use state for registration variables
   const [password, setPassword] = useState("");

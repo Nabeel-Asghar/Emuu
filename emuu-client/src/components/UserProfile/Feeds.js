@@ -120,9 +120,9 @@ function Feeds({ setVideo }) {
   ] = useState([]);
   const [users, setUsers] = useState([]);
   const history = useHistory();
-//  getDoc(docRef).then((docSnap) => {
-//    setProfilePic(docSnap.data().ProfilePictureUrl);
-//  });
+  //  getDoc(docRef).then((docSnap) => {
+  //    setProfilePic(docSnap.data().ProfilePictureUrl);
+  //  });
 
   const [value, setValue] = React.useState("1");
   const ProfilePic = localStorage.getItem("ProfilePictureUrl");
