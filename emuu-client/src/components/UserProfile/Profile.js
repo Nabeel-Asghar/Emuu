@@ -68,7 +68,11 @@ function Profile({ setVideo, video }, { classes }) {
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
 
+
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
+
+
+
 
   const autocomplete = useMemo(
     () =>
@@ -262,11 +266,11 @@ function Profile({ setVideo, video }, { classes }) {
                 searchResultsVideosArr.map((video, index) => (
                   <div>
                     <Card sx={{ width: 385, height: 375 }}>
-                      <CardMedia component="img" image={video.thumbnailUrl} />
+                      <CardMedia component="img" image={video.ThumbnailUrl} />
                       <CardContent>
                         <CardHeader
                           avatar={
-                            <Avatar sx={{ width: 60, height: 60 }}></Avatar>
+                            <Avatar sx={{ width: 60, height: 60 }}  src={video.ProfilePic}></Avatar>
                           }
                           title={
                             <Typography
@@ -281,7 +285,7 @@ function Profile({ setVideo, video }, { classes }) {
                                     setVideo(video);
                                   }}
                                 >
-                                  {video.VideoTitle}
+                                  {video.Title}
                                 </span>
                               </Link>
                             </Typography>

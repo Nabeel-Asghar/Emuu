@@ -14,6 +14,7 @@ import Video from "./components/videoPage/videoPage";
 import Creator from "./components/CreatorsPage/CreatorsPage";
 import AppProvider from "./AppProvider";
 import { db } from "./Firebase.js";
+import axios from "axios";
 import {
   getFirestore,
   collection,
@@ -44,37 +45,25 @@ const theme = createTheme({
 function App() {
   const auth = localStorage.getItem("auth");
   const [video, setVideo] = useState("");
-  const [videos, setVideos] = useState([]);
-  const [users, setUsers] = useState([]);
-  const completeFirebaseData = videos.concat(users);
 
-  async function getVideos() {
-    //Get all videos data
-    const querySnapshotVideos = await getDocs(collection(db, "Videos"));
-    const videosArr = [];
-    querySnapshotVideos.forEach((doc) => {
-      videosArr.push(doc.data());
-    });
-    setVideos(videosArr);
 
-    //Get all users data
-    const querySnapshotUsers = await getDocs(collection(db, "Users"));
-    const usersArr = [];
-    querySnapshotUsers.forEach((doc) => {
-      usersArr.push(doc.data());
-    });
-    setUsers(usersArr);
+
+  async function getData() {
+
+
+    const response = await axios.get(
+        "http://localhost:8080/auth/firebase-data"
+      );
+      const users = (response.data.message.Users);
+      const videos = (response.data.message.Videos);
+      const completeFirebaseData = videos.concat(users);
+      localStorage.setItem("firebase-data", JSON.stringify(completeFirebaseData));
+
   }
 
-  useEffect(() => {
-    (async () => {
-      await getVideos();
-    })();
+useEffect(async () => {
+    await getData();
   }, []);
-
-  if (completeFirebaseData) {
-    localStorage.setItem("firebase-data", JSON.stringify(completeFirebaseData));
-  }
 
   return (
     <AppProvider>
