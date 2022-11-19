@@ -106,7 +106,7 @@ function Creator({ setVideo, video }) {
   async function checkSubStatus() {
     await axios
       .post(
-        "http://localhost:8080/auth/CheckSubscribe",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckSubscribe",
         JSON.stringify({
           displayName: displayName,
           creatorName: creatorName,
@@ -116,7 +116,7 @@ function Creator({ setVideo, video }) {
       .then(function (response) {});
     try {
       const response = await axios.get(
-        "http://localhost:8080/auth/CheckSubscribe"
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckSubscribe"
       );
 
       setChecked(response.data.message.CheckedSubValue);
@@ -132,7 +132,7 @@ function Creator({ setVideo, video }) {
   async function subscribeToUser(e) {
     //Axios post should be done here to send info to backend
     axios.post(
-      "http://localhost:8080/auth/SubscribeButton",
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/SubscribeButton",
       JSON.stringify({
         displayName: displayName,
         creatorName: creatorName,
@@ -151,10 +151,10 @@ function Creator({ setVideo, video }) {
       displayName: creatorName,
     };
     await axios
-      .post("http://localhost:8080/auth/creator", JSON.stringify({ ...dis }))
+      .post("https://emuu-cz5iycld7a-ue.a.run.app/auth/creator", JSON.stringify({ ...dis }))
       .then(function (response) {});
 
-    const response = await axios.get("http://localhost:8080/auth/creator");
+    const response = await axios.get("https://emuu-cz5iycld7a-ue.a.run.app/auth/creator");
 
     const user = response.data.message.UserDetails;
 

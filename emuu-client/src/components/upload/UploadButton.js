@@ -520,7 +520,7 @@ const FileUpload = ({ setVideo }) => {
     if (videoUrl && thumbnailUrl) {
       await axios
         .post(
-          "http://localhost:8080/auth/upload",
+          "https://emuu-cz5iycld7a-ue.a.run.app/auth/upload",
           JSON.stringify({ ...uploadData })
         )
         .then((result) => {

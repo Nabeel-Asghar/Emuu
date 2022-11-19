@@ -2,10 +2,8 @@
   display: inline-flex;
   flex-wrap: wrap;
   gap: 20px !important;
-  padding: 40px !important;
-  height: 100vh;
+  padding: 20px !important;
 }
-
 .video__category__title {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
   font-size: 40px !important;
@@ -61,4 +59,10 @@
 .MuiPagination-ul {
   margin: auto !important;
   width: fit-content !important;
+}
+.css-faujvq {
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  padding: 8px !important;
 }

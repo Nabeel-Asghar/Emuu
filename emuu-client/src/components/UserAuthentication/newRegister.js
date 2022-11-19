@@ -17,7 +17,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
+import NavBarNoImage from "../NavbarPostLogin/NavBarNoImage.js";
 import Paper from "@mui/material/Paper";
 import "./register.scss";
 
@@ -90,13 +90,13 @@ function Register() {
 
     history.push("/login");
     await axios
-      .post("http://localhost:8080/auth/register", JSON.stringify(userdata))
+      .post("https://emuu-cz5iycld7a-ue.a.run.app/auth/register", JSON.stringify(userdata))
       .then((result) => {});
   };
 
   return (
     <>
-      <NavBarNoSearch />
+      <NavBarNoImage />
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid
