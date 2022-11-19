@@ -25,15 +25,29 @@ import {
 import EmuuLogo from "./EmuuLogo.png";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import HeaderSearch from "./TestAlgoliaSearchInput";
-
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import ProfileMenu from "../ProfileMenu/ProfileMenu";
 
 function HeaderPostLogin({ search, setSearch }) {
   //Sign Out Function in Nav Bar
   const [user, setUser] = useState([]);
   const history = useHistory();
-  const auth = getAuth();
-  const userName = localStorage.getItem("displayName");
+ const [isAuth, setAuth] = useState(true);
+ const[displayName, setDisplayName] = useState("")
+
+ const auth = getAuth();
+ onAuthStateChanged(auth, (user) => {
+   if (user) {
+     setAuth(true);
+      setDisplayName(user.displayName);
+
+     // ...
+   } else {
+     // User is signed out
+     // ...
+     setAuth(false);
+   }
+ });
 
   const SignedOut = async (e) => {
     signOut(auth)

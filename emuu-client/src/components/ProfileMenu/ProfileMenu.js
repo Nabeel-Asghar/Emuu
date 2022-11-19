@@ -16,19 +16,45 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
 import LoginIcon from "@mui/icons-material/Login";
 import Logout from "@mui/icons-material/Logout";
 import { useHistory, Link } from "react-router-dom";
-import { getAuth, signOut } from "firebase/auth";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 import { collection, getDoc, where, doc } from "firebase/firestore";
 import { db } from "../../Firebase.js";
 import AppContext from "../../AppContext";
 import axios from "axios";
 
 export default function AccountMenu() {
-  const userName = localStorage.getItem("displayName");
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const docRef = doc(db, "Users", userName);
+
 
   const ProfilePic = localStorage.getItem("ProfilePictureUrl");
+
+const [isAuth, setAuth] = useState(true);
+const[displayName, setDisplayName] = useState("")
+
+const auth = getAuth();
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    setAuth(true);
+     setDisplayName(user.displayName);
+         localStorage.setItem("displayName", user.displayName);
+    // ...
+  } else {
+    // User is signed out
+    // ...
+    setAuth(false);
+
+    SignedOut();
+     localStorage.setItem("auth", false);
+
+                    localStorage.setItem("user", null);
+                    localStorage.setItem("displayName", null);
+
+  }
+});
+
+
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -39,7 +65,6 @@ export default function AccountMenu() {
 
   //Sign Out Function in Nav Bar
   const history = useHistory();
-  const auth = getAuth;
 
   const navAuth = localStorage.getItem("auth");
   let userFirstInitial;
@@ -54,7 +79,7 @@ export default function AccountMenu() {
   const SignedOut = async (e) => {
     signOut(auth)
       .then(() => {
-        history.push("/");
+
       })
       .catch((error) => {
         // An error happened.
@@ -63,7 +88,7 @@ export default function AccountMenu() {
 
   return (
     <React.Fragment>
-      {navAuth === "true" ? (
+      {isAuth  ? (
         <>
           <Box
             sx={{ display: "flex", alignItems: "center", textAlign: "center" }}

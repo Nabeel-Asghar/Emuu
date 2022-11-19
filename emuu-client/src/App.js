@@ -2,12 +2,12 @@ import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, useHistory } from "react-router-dom";
 import Login from "./components/UserAuthentication/newloginscreen";
 import Register from "./components/UserAuthentication/newRegister";
 import Settings from "./components/UserAuthentication/Settings";
 import Home from "./components/home/Home";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged,  signOut } from "firebase/auth";
 import Profile from "./components/UserProfile/Profile";
 import UploadVideo from "./components/upload/UploadButton";
 import Video from "./components/videoPage/videoPage";
@@ -47,7 +47,6 @@ function App() {
   const [video, setVideo] = useState("");
 
 
-
   async function getData() {
 
 
@@ -63,7 +62,10 @@ function App() {
 
 useEffect(async () => {
     await getData();
+
   }, []);
+
+
 
   return (
     <AppProvider>
