@@ -292,104 +292,104 @@ function Video({ video, setVideo, setUserProfile }) {
             </div>
           </p>
         )}
-        <video controls height="700" src={video.VideoUrl}></video>
-        <div className="title-line">
-          <h1 class="title">{video.Title}</h1>
-          <p class="videoInfo">
-            {video.Likes} Likes &#x2022; {video.Views} Views
-            {localStorage.getItem("auth") == "true" && (
-              <>
-                &#x2022;&ensp;
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      icon={<FavoriteBorder />}
-                      checkedIcon={<Favorite />}
-                      name="Like"
-                      id="Like"
-                      checked={checked}
-                      onChange={async (e) => {
-                        setChecked(!checked);
-                        likeVideo(e);
-                      }}
-                    />
-                  }
-                  label="Like"
-                />
-              </>
-            )}
-          </p>
-        </div>
-        <div className="about">
-          <h2>About</h2>
-          <div className="description">{video.VideoDescription}</div>
-          <p className="description">
-            Posted By:{" "}
-            <Link
-              to="/creator"
-              onClick={() => {
-                localStorage.setItem("Creator", video.Username);
-              }}
-            >
-              {""}
-              {video.Username}
-            </Link>{" "}
-            on {video.Date}
-          </p>
-          <p className="description">Game Tag: {video.GameTag}</p>
-        </div>
-        {localStorage.getItem("auth") == "true" && (
-          <div className="post-comment">
-            <TextField
-              id="standard-textarea"
-              label="Enter a comment"
-              placeholder=""
-              multiline
-              variant="standard"
-              size="normal"
-              value={comment}
-              onChange={handleComments}
-            />{" "}
-            <p></p>
-            <button
-              class="btn btn-lg btn-primary"
-              type="submit"
-              onClick={async () => {
-                await axios
-                  .post(
-                    "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment",
-                    JSON.stringify({
-                      text: comment,
-                      postedBy: displayName,
-                      videoUrl: video.VideoUrl,
-                    })
-                  )
-                  .then(function (response) {});
-                const response = await axios.get(
-                  "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment"
-                );
-                setComment(response.data.message.Comments);
-              }}
-            >
-              Submit
-            </button>
-          </div>
-        )}
+        <div className="videoPage-left"><video controls height="700" src={video.VideoUrl}></video>
+                                                <div className="title-line">
+                                                  <h1 class="title">{video.Title}</h1>
+                                                  <p class="videoInfo">
+                                                    {video.Likes} Likes &#x2022; {video.Views} Views
+                                                    {localStorage.getItem("auth") == "true" && (
+                                                      <>
+                                                        &#x2022;&ensp;
+                                                        <FormControlLabel
+                                                          control={
+                                                            <Checkbox
+                                                              icon={<FavoriteBorder />}
+                                                              checkedIcon={<Favorite />}
+                                                              name="Like"
+                                                              id="Like"
+                                                              checked={checked}
+                                                              onChange={async (e) => {
+                                                                setChecked(!checked);
+                                                                likeVideo(e);
+                                                              }}
+                                                            />
+                                                          }
+                                                          label="Like"
+                                                        />
+                                                      </>
+                                                    )}
+                                                  </p>
+                                                </div>
+                                                <div className="about">
+                                                  <h2>About</h2>
+                                                  <div className="description">{video.VideoDescription}</div>
+                                                  <p className="description">
+                                                    Posted By:{" "}
+                                                    <Link
+                                                      to="/creator"
+                                                      onClick={() => {
+                                                        localStorage.setItem("Creator", video.Username);
+                                                      }}
+                                                    >
+                                                      {""}
+                                                      {video.Username}
+                                                    </Link>{" "}
+                                                    on {video.Date}
+                                                  </p>
+                                                  <p className="description">Game Tag: {video.GameTag}</p>
+                                                </div>
+                                                {localStorage.getItem("auth") == "true" && (
+                                                  <div className="post-comment">
+                                                    <TextField
+                                                      id="standard-textarea"
+                                                      label="Enter a comment"
+                                                      placeholder=""
+                                                      multiline
+                                                      variant="standard"
+                                                      size="normal"
+                                                      value={comment}
+                                                      onChange={handleComments}
+                                                    />{" "}
+                                                    <p></p>
+                                                    <button
+                                                      class="btn btn-lg btn-primary"
+                                                      type="submit"
+                                                      onClick={async () => {
+                                                        await axios
+                                                          .post(
+                                                            "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment",
+                                                            JSON.stringify({
+                                                              text: comment,
+                                                              postedBy: displayName,
+                                                              videoUrl: video.VideoUrl,
+                                                            })
+                                                          )
+                                                          .then(function (response) {});
+                                                        const response = await axios.get(
+                                                          "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment"
+                                                        );
+                                                        setComment(response.data.message.Comments);
+                                                      }}
+                                                    >
+                                                      Submit
+                                                    </button>
+                                                  </div>
+                                                )}
 
-        {video.Comments && (
-          <div className="comment-section">
-            <h2>Comments</h2>
-            {video.Comments.map((comment) => (
-              <div className="comment">
-                <p>
-                  {comment.postedBy}&#x2022;
-                  <span style={{ opacity: 0.5 }}>{comment.date}</span>
-                </p>
-                <p>{comment.text}</p>
-              </div>
-            ))}
-          </div>
-        )}
+                                                {video.Comments && (
+                                                  <div className="comment-section">
+                                                    <h2>Comments</h2>
+                                                    {video.Comments.map((comment) => (
+                                                      <div className="comment">
+                                                        <p>
+                                                          {comment.postedBy}&#x2022;
+                                                          <span style={{ opacity: 0.5 }}>{comment.date}</span>
+                                                        </p>
+                                                        <p>{comment.text}</p>
+                                                      </div>
+                                                    ))}
+                                                  </div>
+                                                )}</div>
       </div>
     </>
   );

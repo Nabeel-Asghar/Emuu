@@ -1,8 +1,8 @@
 #BUILDER STAGE 1
 FROM golang:1.19-alpine as builder
 
-ENV APP emuu
-ENV CMD_MAIN main/main.go
+# Create and change to the app directory.
+WORKDIR /app
 
 WORKDIR $GOPATH/src/${APP}
 COPY . .

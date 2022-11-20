@@ -17,6 +17,7 @@ import (
 	likes "emuu-server/main/video"
 	video "emuu-server/main/video"
 	view "emuu-server/main/video"
+	settings "emuu-server/main/users"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -62,6 +63,7 @@ func main() {
 		auth.GET("/likedvideo", likedVideos.SetLikedVideos)
 		auth.POST("/view", view.UpdateView)
 		auth.GET("/firebase-data", firebasedata.SetVideosAndUsers)
+		auth.POST("/settings", settings.UpdatePassword)
 	}
 
 	api := r.Group("api").Use(firebaseSer.AuthJWT) //create a new router with the middleware authJWT
