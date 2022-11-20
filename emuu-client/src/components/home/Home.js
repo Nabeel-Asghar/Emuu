@@ -128,6 +128,8 @@ function Home({ setVideo }, { setUserProfile }) {
     await getVideos();
   }, [page]);
 
+
+
   const dataSet = autocompleteState?.collections?.[0]?.items;
   const searchResultsVideosArr = dataSet?.filter(
     (obj) => obj.hasOwnProperty("VideoUrl") && obj.hasOwnProperty("Username")
@@ -267,6 +269,11 @@ function Home({ setVideo }, { setUserProfile }) {
                                     <span
                                       onClick={() => {
                                         setVideo(video);
+                                          const TitleAndTag = {
+                                                title: video.Title,
+                                                gameTag: video.GameTag,
+                                              };
+                                        axios.post("http://localhost:8080/auth/videoPage",JSON.stringify({ ...TitleAndTag }))
                                       }}
                                     >
                                       {video.Title}
@@ -334,6 +341,11 @@ function Home({ setVideo }, { setUserProfile }) {
                                     <span
                                       onClick={() => {
                                         setVideo(video);
+                                         const TitleAndTag = {
+                                                                                        title: video.Title,
+                                                                                        gameTag: video.GameTag,
+                                                                                      };
+                                        axios.post("http://localhost:8080/auth/videoPage",JSON.stringify({ ...TitleAndTag }))
                                       }}
                                     >
                                       {video.Title}

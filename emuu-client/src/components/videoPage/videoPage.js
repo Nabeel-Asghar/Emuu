@@ -44,7 +44,10 @@ function Video({ video, setVideo, setUserProfile }) {
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
   const creatorRouteName = video.Username;
+    const [recommendedVideos, setRecommendedVideos] = useState([]);
+
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
+
 
   const autocomplete = useMemo(
     () =>
@@ -132,6 +135,20 @@ function Video({ video, setVideo, setUserProfile }) {
 
   const subscribeUser = () => {};
 
+  function getVideoAndRecommend(){
+
+  const response =  axios.get(
+        "http://localhost:8080/auth/videoPage"
+      );
+      console.log(response.data.message);
+      setVideo(response.data.message.Video);
+      setRecommendedVideos(response.data.message.RecommendedVideos);
+  }
+
+   useEffect(() => {
+        getVideoAndRecommend();
+      }, [video]);
+
   async function checkLikeStatus() {
     await axios
       .post(
@@ -165,6 +182,7 @@ function Video({ video, setVideo, setUserProfile }) {
   useEffect(() => {
     checkLikeStatus();
   }, [video]);
+
 
   async function likeVideo(e) {
     //Axios post should be done here to send info to backend
