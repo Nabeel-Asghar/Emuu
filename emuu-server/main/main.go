@@ -2,6 +2,7 @@ package main
 
 import (
 	firebaseSer "emuu-server/main/firebase"
+	firebasedata "emuu-server/main/firebase"
 	creator "emuu-server/main/users"
 	cropImage "emuu-server/main/users"
 	likedVideos "emuu-server/main/users"
@@ -60,10 +61,11 @@ func main() {
 		auth.POST("/likedvideo", likedVideos.SetUsernameLiked)
 		auth.GET("/likedvideo", likedVideos.SetLikedVideos)
 		auth.POST("/view", view.UpdateView)
+		auth.GET("/firebase-data", firebasedata.SetVideosAndUsers)
 	}
 
 	api := r.Group("api").Use(firebaseSer.AuthJWT) //create a new router with the middleware authJWT
-	{ //you should supply the jwt token from firebase
+	{                                              //you should supply the jwt token from firebase
 		api.POST("/", func(ctx *gin.Context) {
 
 		})

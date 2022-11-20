@@ -2,18 +2,19 @@ import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { BrowserRouter, Route } from "react-router-dom";
+import { BrowserRouter, Route, useHistory } from "react-router-dom";
 import Login from "./components/UserAuthentication/newloginscreen";
 import Register from "./components/UserAuthentication/newRegister";
 import Settings from "./components/UserAuthentication/Settings";
 import Home from "./components/home/Home";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged,  signOut } from "firebase/auth";
 import Profile from "./components/UserProfile/Profile";
 import UploadVideo from "./components/upload/UploadButton";
 import Video from "./components/videoPage/videoPage";
 import Creator from "./components/CreatorsPage/CreatorsPage";
 import AppProvider from "./AppProvider";
 import { db } from "./Firebase.js";
+import axios from "axios";
 import {
   getFirestore,
   collection,
@@ -42,41 +43,29 @@ const theme = createTheme({
 });
 
 function App() {
-
   const auth = localStorage.getItem("auth");
   const [video, setVideo] = useState("");
-  const [videos, setVideos] = useState([]);
-  const [users, setUsers] = useState([]);
 
-  const completeFirebaseData = videos.concat(users);
 
-  async function getVideos() {
-    //Get all videos data
-    const querySnapshotVideos = await getDocs(collection(db, "Videos"));
-    const videosArr = [];
-    querySnapshotVideos.forEach((doc) => {
-      videosArr.push(doc.data());
-    });
-    setVideos(videosArr);
+  async function getData() {
 
-    //Get all users data
-    const querySnapshotUsers = await getDocs(collection(db, "Users"));
-    const usersArr = [];
-    querySnapshotUsers.forEach((doc) => {
-      usersArr.push(doc.data());
-    });
-    setUsers(usersArr);
+
+    const response = await axios.get(
+        "http://localhost:8080/auth/firebase-data"
+      );
+      const users = (response.data.message.Users);
+      const videos = (response.data.message.Videos);
+      const completeFirebaseData = videos.concat(users);
+      localStorage.setItem("firebase-data", JSON.stringify(completeFirebaseData));
+
   }
 
-  useEffect(() => {
-    (async () => {
-      await getVideos();
-    })();
+useEffect(async () => {
+    await getData();
+
   }, []);
 
-  if (completeFirebaseData) {
-    localStorage.setItem("firebase-data", JSON.stringify(completeFirebaseData));
-  }
+
 
   return (
     <AppProvider>
@@ -86,8 +75,8 @@ function App() {
             <Route exact path="/">
               <Home setVideo={setVideo} />
             </Route>
-            <Route path="/login">
-              <Login  />
+            <Route  path="/login">
+              <Login />
             </Route>
             <Route path="/register">
               <Register />

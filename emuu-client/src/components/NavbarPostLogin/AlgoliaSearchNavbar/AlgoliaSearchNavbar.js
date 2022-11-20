@@ -4,7 +4,7 @@ import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import Navbar from "react-bootstrap/Navbar";
 import "./AlgoliaSearchNavbar.scss";
-import ProfileMenu from "../../ProfileMenu/ProfileMenu";
+ import ProfileMenu from "../../ProfileMenu/ProfileMenu";
 
 import EmuuLogo from "../EmuuLogo.png";
 

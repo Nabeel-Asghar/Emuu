@@ -4,9 +4,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8493d53e-db58-4626-b4e8-fbf4ec91baf5" name="Changes" comment="Working on getting the user's profile picture from each video onto the home page without creating a new field in the videos collection, no need to store the information twice if it's already there, need to find a way to access that element of the array and add it">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="8493d53e-db58-4626-b4e8-fbf4ec91baf5" name="Changes" comment="Working on getting the user's profile picture from each video onto the home page without creating a new field in the videos collection, no need to store the information twice if it's already there, need to find a way to access that element of the array and add it" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -47,7 +45,7 @@
     "RunOnceActivity.go.watchers.conflict.with.on.save.actions.check.performed": "true",
     "WebServerToolWindowFactoryState": "false",
     "go.import.settings.migrated": "true",
-    "last_opened_file_path": "C:/Users/tanvi",
+    "last_opened_file_path": "C:/Users/Rabby",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
