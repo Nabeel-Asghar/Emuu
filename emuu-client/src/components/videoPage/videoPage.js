@@ -21,6 +21,10 @@ import IconButton from "@mui/material/IconButton";
 import { Avatar } from "@mui/material";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
+import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
 import {
   getDocs,
   getDoc,
@@ -38,6 +42,7 @@ import { getAuth, onAuthStateChanged } from "firebase/auth";
 function Video({ video, setVideo, setUserProfile }) {
   const displayName = localStorage.getItem("displayName");
   const [checked, setChecked] = useState(false);
+  const [dislikeCheck, setDislikeCheck] = useState(false);
   const history = useHistory();
   const location = useLocation();
   const [autocompleteState, setAutocompleteState] = useState({});
@@ -132,6 +137,8 @@ function Video({ video, setVideo, setUserProfile }) {
 
   const subscribeUser = () => {};
 
+
+
   async function checkLikeStatus() {
     await axios
       .post(
@@ -185,6 +192,25 @@ function Video({ video, setVideo, setUserProfile }) {
     }
   }
 
+
+ async function dislikeVideo(e) {
+    //Axios post should be done here to send info to backend
+    axios.post(
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/LikeVideo",
+      JSON.stringify({
+        displayName: displayName,
+        videoUrl: video.VideoUrl,
+        LikedBoolean: !dislikeCheck,
+      })
+    );
+    if (dislikeCheck === true) {
+      video.Dislikes++;
+      sessionStorage.setItem("video", JSON.stringify(video));
+    } else {
+      video.Dislikes--;
+      sessionStorage.setItem("video", JSON.stringify(video));
+    }
+  }
   localStorage.setItem("CreatorName", video.Username);
   useEffect(async () => {
     if (video) {
@@ -258,7 +284,7 @@ function Video({ video, setVideo, setUserProfile }) {
                                                fontWeight="medium"
                                                fontSize="18px"
                                              >
-                                               {video.Likes} Likes &#x2022; {video.Views} Views
+                                               {video.Likes} Like &#x2022; {video.Views} Views
                                              </Typography>
                                              <Typography
                                                variant="body2"
@@ -296,15 +322,15 @@ function Video({ video, setVideo, setUserProfile }) {
                                                 <div className="title-line">
                                                   <h1 class="title">{video.Title}</h1>
                                                   <p class="videoInfo">
-                                                    {video.Likes} Likes &#x2022; {video.Views} Views
+                                                    {video.Likes} Likes &#x2022;{video.Likes} Dislikes &#x2022; {video.Views} Views
                                                     {localStorage.getItem("auth") == "true" && (
                                                       <>
                                                         &#x2022;&ensp;
                                                         <FormControlLabel
                                                           control={
                                                             <Checkbox
-                                                              icon={<FavoriteBorder />}
-                                                              checkedIcon={<Favorite />}
+                                                              icon={<ThumbUpOffAltIcon />}
+                                                              checkedIcon={<ThumbUpAltIcon />}
                                                               name="Like"
                                                               id="Like"
                                                               checked={checked}
@@ -316,6 +342,22 @@ function Video({ video, setVideo, setUserProfile }) {
                                                           }
                                                           label="Like"
                                                         />
+                                                        <FormControlLabel
+                                                          control={
+                                                          <Checkbox
+                                                          icon={<ThumbDownOffAltIcon />}
+                                                          checkedIcon={<ThumbDownIcon />}
+                                                                                                                      name="Dislike"
+                                                                                                                      id="Dislike"
+                                                                                                                      checked={dislikeCheck}
+                                                                                                                      onChange={async (e) => {
+                                                                                                                        setChecked(!dislikeCheck);
+                                                                                                                        dislikeVideo(e);
+                                                                                                                      }}
+                                                                                                                    />
+                                                                                                                  }
+                                                                                                                  label="Dislike"
+                                                                                                                />
                                                       </>
                                                     )}
                                                   </p>
