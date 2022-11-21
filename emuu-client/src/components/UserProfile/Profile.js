@@ -3,7 +3,6 @@ import AddIcon from "@mui/icons-material/Add";
 import "./Profile.scss";
 import "../../Firebase.js";
 import Feeds from "./Feeds";
-import UserInfo from "./UserInfo";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Blob } from "firebase/firestore";
 import { db, storage } from "../../Firebase.js";
@@ -15,6 +14,7 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Avatar } from "@mui/material";
 import {
   getDoc,
@@ -51,8 +51,6 @@ const ORIENTATION_TO_ANGLE = {
 
 function Profile({ setVideo, video }, { classes }) {
   const [percent, setPercent] = useState(0);
-  const displayName = localStorage.getItem("displayName");
-  const docRef = doc(db, "Users", displayName);
   const [imageSrc, setImageSrc] = React.useState(null);
   const [croppedImageSrc, setCroppedImageSrc] = React.useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -67,12 +65,18 @@ function Profile({ setVideo, video }, { classes }) {
   const [autocompleteState, setAutocompleteState] = useState({});
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
-
-
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
+  const [profileUser, setProfileUser] = useState([]);
+  const displayName = localStorage.getItem("displayName");
 
-
-
+  // const auth = getAuth();
+  // const user = auth.currentUser;
+  //
+  // if (user) {
+  //  var displayName = user.displayName;
+  // } else {
+  // var displayName = null;
+  // }
 
   const autocomplete = useMemo(
     () =>
@@ -123,21 +127,31 @@ function Profile({ setVideo, video }, { classes }) {
       displayName: displayName,
     };
     await axios
-      .post("https://emuu-cz5iycld7a-ue.a.run.app/auth/creator", JSON.stringify({ ...dis }))
+      .post(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator",
+        JSON.stringify({ ...dis })
+      )
       .then(function (response) {});
-
-    const response = await axios.get("https://emuu-cz5iycld7a-ue.a.run.app/auth/creator");
-
-    const user = response.data.message.UserDetails;
-
-    setBanner(user[0].BannerUrl);
-    setProfilePic(user[0].ProfilePictureUrl);
-    setSubscriberCount(user[0].SubscriberCount);
+    try {
+      const response = await axios.get(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator"
+      );
+      console.log("user");
+      const user = response.data.message.UserDetails;
+      console.log(user);
+      setProfileUser(user);
+      setBanner(user[0].BannerUrl);
+      setProfilePic(user[0].ProfilePictureUrl);
+      setSubscriberCount(user[0].SubscriberCount);
+    } catch (error) {
+      console.log("er");
+    }
   }
 
   useEffect(async () => {
     await getUser();
   }, []);
+
   const dataSet = autocompleteState?.collections?.[0]?.items;
   const searchResultsVideosArr = dataSet?.filter(
     (obj) => obj.hasOwnProperty("VideoUrl") && obj.hasOwnProperty("Username")
@@ -147,8 +161,6 @@ function Profile({ setVideo, video }, { classes }) {
   );
   const showSearchResults =
     searchResultsVideosArr?.length > 0 || searchResultsUsersArr?.length > 0;
-
-  const userName = localStorage.getItem("displayName");
 
   const usersArr = firebaseData.filter(
     (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
@@ -270,7 +282,10 @@ function Profile({ setVideo, video }, { classes }) {
                       <CardContent>
                         <CardHeader
                           avatar={
-                            <Avatar sx={{ width: 60, height: 60 }}  src={video.ProfilePic}></Avatar>
+                            <Avatar
+                              sx={{ width: 60, height: 60 }}
+                              src={video.ProfilePic}
+                            ></Avatar>
                           }
                           title={
                             <Typography

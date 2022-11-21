@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Sidebar.scss";
-
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import Subscriptions from "../UserProfile/SubscriptionsList/Subscriptions.js";
 import { styled, useTheme } from "@mui/material/styles";
@@ -109,63 +109,47 @@ export default function MiniDrawer() {
   const authUsersNavigation = ["Home", "User Profile", "Upload Video"];
   const unAuthorizedNavigation = ["Home"];
   const isAuthorized = localStorage.getItem("auth");
-  const userName = localStorage.getItem("displayName");
+
   const currentNavigation =
     isAuthorized === "true" ? authUsersNavigation : unAuthorizedNavigation;
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
   let subscribersListCompleteData;
-
   const [ProfilePic, setProfilePic] = useState("");
 
+  const auth = getAuth();
+  const user = auth.currentUser;
 
+  if (user) {
+    var userName = user.displayName;
+    localStorage.setItem("displayName", user.displayName);
+  } else {
+    var userName = null;
+  }
 
   async function getMainUser() {
     const dis = {
       displayName: userName,
     };
     await axios
-      .post("https://emuu-cz5iycld7a-ue.a.run.app/auth/navbar", JSON.stringify({ ...dis }))
+      .post(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/navbar",
+        JSON.stringify({ ...dis })
+      )
       .then(function (response) {});
 
-    const response = await axios.get("https://emuu-cz5iycld7a-ue.a.run.app/auth/navbar");
+    const response = await axios.get(
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/navbar"
+    );
 
     const user = response.data.message.UserDetails;
     setProfilePic(user[0].ProfilePictureUrl);
+    console.log(user[0].ProfilePictureUrl);
+    localStorage.setItem("ProfilePictureUrl", user[0].ProfilePictureUrl);
   }
 
-  useEffect(async () => {
-    await getMainUser();
-  }, [localStorage.setItem("ProfilePictureUrl", ProfilePic)]);
-
-  useEffect(async () => {
-    const timer = async () => {
-      const userRefInitial = doc(db, "Users", userName);
-      const getSubscribersListRefInitial = await getDoc(userRefInitial);
-      let subscribersListInitial;
-      if (getSubscribersListRefInitial.exists()) {
-        subscribersListInitial =
-          getSubscribersListRefInitial.data().SubscriberList;
-      }
-      setUpdateSubscribersList(subscribersListInitial);
-      const querySnapshotUsers = await getDocs(collection(db, "Users"));
-      const usersArr = [];
-      querySnapshotUsers.forEach((doc) => {
-        usersArr.push(doc.data());
-      });
-      setUsers(usersArr);
-      subscribersListCompleteData = usersArr.filter(
-        (record) =>
-          !record.hasOwnProperty("VideoUrl") &&
-          record.hasOwnProperty("Username") &&
-          subscribersListInitial.includes(record.Username)
-      );
-      setUpdateSubscribersListCompleteData(subscribersListCompleteData);
-    };
-    const interval = setInterval(() => {
-      timer();
-    }, 500);
-    return () => clearTimeout(interval);
-  }, []);
+  if (userName !== null) {
+    getMainUser();
+  }
 
   const usersArr = firebaseData.filter(
     (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
@@ -188,7 +172,6 @@ export default function MiniDrawer() {
     );
     history.push("/creator");
   };
-  const displayName = localStorage.getItem("displayName");
 
   return (
     <AppContext.Consumer>

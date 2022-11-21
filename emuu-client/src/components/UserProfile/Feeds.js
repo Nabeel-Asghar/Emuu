@@ -46,6 +46,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { useHistory } from "react-router-dom";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 const options = ["Recently Uploaded", "Most Viewed"];
 
 const ITEM_HEIGHT = 48;
@@ -108,8 +109,6 @@ function Feeds({ setVideo }) {
   const [recentVideos, setRecentVideos] = useState([]);
   const [topVideos, setTopVideos] = useState([]);
   const [likedVideos, setLikedVideos] = useState([]);
-  const displayName = localStorage.getItem("displayName");
-  const docRef = doc(db, "Users", displayName);
   const [sort, setSort] = React.useState("Recently Uploaded");
   const [pages, setPages] = useState(undefined);
   const [page, setPage] = useState(1);
@@ -120,13 +119,20 @@ function Feeds({ setVideo }) {
   ] = useState([]);
   const [users, setUsers] = useState([]);
   const history = useHistory();
-
   const [value, setValue] = React.useState("1");
   const ProfilePic = localStorage.getItem("ProfilePictureUrl");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const auth = getAuth();
+  const user = auth.currentUser;
+
+  if (user) {
+    var displayName = user.displayName;
+  } else {
+    var displayName = null;
+  }
 
   //Videos for Videos feed
   async function getVideos() {
@@ -141,7 +147,9 @@ function Feeds({ setVideo }) {
       )
       .then(function (response) {});
     try {
-      const response = await axios.get("https://emuu-cz5iycld7a-ue.a.run.app/auth/video");
+      const response = await axios.get(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/video"
+      );
 
       setTopVideos(response.data.message.MostViewed);
       setRecentVideos(response.data.message.RecentUpload);
@@ -149,28 +157,24 @@ function Feeds({ setVideo }) {
     } catch (error) {}
   }
 
-  useEffect(async () => {
-    await getVideos();
-  }, [page]);
-
   async function getLikedVideos() {
     //Get all video data
     const dis = {
       displayName: displayName,
     };
     await axios
-      .post("https://emuu-cz5iycld7a-ue.a.run.app/auth/likedvideo", JSON.stringify({ ...dis }))
+      .post(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/likedvideo",
+        JSON.stringify({ ...dis })
+      )
       .then(function (response) {});
     try {
-      const response = await axios.get("https://emuu-cz5iycld7a-ue.a.run.app/auth/likedvideo");
-
+      const response = await axios.get(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/likedvideo"
+      );
       setLikedVideos(response.data.message.LikedVidDetails);
     } catch (error) {}
   }
-
-  useEffect(async () => {
-    await getLikedVideos();
-  }, []);
 
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
   let subscribersListCompleteData;
@@ -193,11 +197,28 @@ function Feeds({ setVideo }) {
       setUpdateSubscribersListCompleteData(response.data.message.SubDetails);
     } catch (error) {}
   }
+  //
+  //   useEffect(async () => {
+  //      if (displayName !== null){
+  //      }
+  //  }, [] );
+  //    useEffect(async () => {
+  //     if (displayName !== null){
+  //      await getLikedVideos();
+  //      await getVideos();
+  //      await getSubscribers();
+  //      }
+  //  }, [] );
 
-  useEffect(async () => {
-    await getSubscribers();
-  }, []);
-
+  if (displayName !== null && likedVideos.length === 0) {
+    getLikedVideos();
+  }
+  if (displayName !== null && topVideos.length === 0) {
+    getVideos();
+  }
+  if (displayName !== null && updatedSubscribersListCompleteData.length === 0) {
+    getSubscribers();
+  }
   //Sort function for date uploaded
   function sortVideosByTime(videos) {
     for (let i = 0; i < videos.length - 1; i++) {

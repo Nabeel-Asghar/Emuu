@@ -9,7 +9,7 @@ import {
   where,
   onSnapshot,
 } from "firebase/firestore";
-
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 const displayName = localStorage.getItem("displayName");
 
 function UserInfo() {

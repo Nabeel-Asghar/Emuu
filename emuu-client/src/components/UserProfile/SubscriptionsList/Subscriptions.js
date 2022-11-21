@@ -11,8 +11,7 @@ import { Avatar } from "@mui/material";
 import axios from "axios";
 import { db } from "../../../Firebase.js";
 import { getDoc, getDocs, doc, collection } from "firebase/firestore";
-
-const displayName = localStorage.getItem("displayName");
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 function Subscriptions() {
   const [subscribersData, setSubscribersData] = useState([]);
@@ -20,10 +19,15 @@ function Subscriptions() {
   const [count, setCount] = useState(0);
   const history = useHistory();
 
-  const userName = localStorage.getItem("displayName");
-
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
+  const auth = getAuth();
+  const user = auth.currentUser;
 
+  if (user) {
+    var displayName = user.displayName;
+  } else {
+    var displayName = null;
+  }
   async function getSubscriptions() {
     const dis = {
       displayName: displayName,
@@ -44,41 +48,9 @@ function Subscriptions() {
     } catch (error) {}
   }
 
-  useEffect(async () => {
-    await getSubscriptions();
-  }, []);
-
-  //   useEffect(async () => {
-  //     if (count === 0) {
-  //       const querySnapshotUsers = await getDocs(collection(db, "Users"));
-  //       const usersArr = [];
-  //       querySnapshotUsers.forEach((doc) => {
-  //         usersArr.push(doc.data());
-  //       });
-  //       const subscribersDataArr = usersArr.filter((user) =>
-  //         user?.SubscriberList?.includes(userName)
-  //       );
-  //       setSubscribersData(subscribersDataArr);
-  //       setCount((count) => count + 1);
-  //     }
-  //     if (count === 1) {
-  //       const timer = async () => {
-  //         const querySnapshotUsers = await getDocs(collection(db, "Users"));
-  //         const usersArr = [];
-  //         querySnapshotUsers.forEach((doc) => {
-  //           usersArr.push(doc.data());
-  //         });
-  //         const subscribersDataArr = usersArr.filter((user) =>
-  //           user?.SubscriberList?.includes(userName)
-  //         );
-  //         setSubscribersData(subscribersDataArr);
-  //       };
-  //       const interval = setInterval(() => {
-  //         timer();
-  //       }, 500);
-  //       return () => clearTimeout(interval);
-  //     }
-  //   }, []);
+  if (displayName !== null && subscribersData.length === 0) {
+    getSubscriptions();
+  }
 
   const usersArr = firebaseData.filter(
     (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")

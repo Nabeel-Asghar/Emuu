@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from "react";
 import logo from "./logo.svg";
 import "./App.css";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { BrowserRouter, Route, useHistory } from "react-router-dom";
 import Login from "./components/UserAuthentication/newloginscreen";
 import Register from "./components/UserAuthentication/newRegister";
 import Settings from "./components/UserAuthentication/Settings";
 import Home from "./components/home/Home";
-import { getAuth, onAuthStateChanged,  signOut } from "firebase/auth";
 import Profile from "./components/UserProfile/Profile";
 import UploadVideo from "./components/upload/UploadButton";
 import Video from "./components/videoPage/videoPage";
@@ -43,29 +43,22 @@ const theme = createTheme({
 });
 
 function App() {
-  const auth = localStorage.getItem("auth");
+  const auth = getAuth();
   const [video, setVideo] = useState("");
 
-
   async function getData() {
-
-
     const response = await axios.get(
-        "http://localhost:8080/auth/firebase-data"
-      );
-      const users = (response.data.message.Users);
-      const videos = (response.data.message.Videos);
-      const completeFirebaseData = videos.concat(users);
-      localStorage.setItem("firebase-data", JSON.stringify(completeFirebaseData));
-
+      "http://localhost:8080/auth/firebase-data"
+    );
+    const users = response.data.message.Users;
+    const videos = response.data.message.Videos;
+    const completeFirebaseData = videos.concat(users);
+    localStorage.setItem("firebase-data", JSON.stringify(completeFirebaseData));
   }
 
-useEffect(async () => {
+  useEffect(async () => {
     await getData();
-
   }, []);
-
-
 
   return (
     <AppProvider>
@@ -75,7 +68,7 @@ useEffect(async () => {
             <Route exact path="/">
               <Home setVideo={setVideo} />
             </Route>
-            <Route  path="/login">
+            <Route path="/login">
               <Login />
             </Route>
             <Route path="/register">
@@ -88,7 +81,7 @@ useEffect(async () => {
               <Creator setVideo={setVideo} video={video} />
             </Route>
 
-            {auth === "true" && (
+            {auth && (
               <>
                 <Route path="/userprofile">
                   <Profile setVideo={setVideo} video={video} />
@@ -97,6 +90,7 @@ useEffect(async () => {
                 <Route path="/upload">
                   <UploadVideo />
                 </Route>
+
                 <Route path="/settings">
                   <Settings />
                 </Route>

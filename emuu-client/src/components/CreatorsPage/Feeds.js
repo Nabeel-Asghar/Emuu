@@ -134,7 +134,9 @@ function Feeds({ setVideo, setUserProfile }) {
       )
       .then(function (response) {});
     try {
-      const response = await axios.get("https://emuu-cz5iycld7a-ue.a.run.app/auth/video");
+      const response = await axios.get(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/video"
+      );
 
       setTopVideos(response.data.message.MostViewed);
       setRecentVideos(response.data.message.RecentUpload);
