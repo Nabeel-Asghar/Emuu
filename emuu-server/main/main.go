@@ -15,8 +15,8 @@ import (
 	upload "emuu-server/main/users"
 	comment "emuu-server/main/video"
 	likes "emuu-server/main/video"
+	recommended "emuu-server/main/video"
 	video "emuu-server/main/video"
-	videoPage "emuu-server/main/video"
 	view "emuu-server/main/video"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
@@ -63,12 +63,12 @@ func main() {
 		auth.GET("/likedvideo", likedVideos.SetLikedVideos)
 		auth.POST("/view", view.UpdateView)
 		auth.GET("/firebase-data", firebasedata.SetVideosAndUsers)
-		auth.POST("/videoPage", videoPage.SetVideoTitle)
-		auth.GET("/videoPage", videoPage.SetVideoAndRecommend)
+		auth.POST("/recommended", recommended.SetGameTag)
+		auth.GET("/recommended", recommended.SetRecommended)
 	}
 
 	api := r.Group("api").Use(firebaseSer.AuthJWT) //create a new router with the middleware authJWT
-	{                                              //you should supply the jwt token from firebase
+	{ //you should supply the jwt token from firebase
 		api.POST("/", func(ctx *gin.Context) {
 
 		})

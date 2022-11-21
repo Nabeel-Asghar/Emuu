@@ -341,11 +341,6 @@ function Home({ setVideo }, { setUserProfile }) {
                                     <span
                                       onClick={() => {
                                         setVideo(video);
-                                         const TitleAndTag = {
-                                                                                        title: video.Title,
-                                                                                        gameTag: video.GameTag,
-                                                                                      };
-                                        axios.post("http://localhost:8080/auth/videoPage",JSON.stringify({ ...TitleAndTag }))
                                       }}
                                     >
                                       {video.Title}

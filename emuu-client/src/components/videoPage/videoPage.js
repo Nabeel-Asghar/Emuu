@@ -36,6 +36,9 @@ import {
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 function Video({ video, setVideo, setUserProfile }) {
+
+
+
   const displayName = localStorage.getItem("displayName");
   const [checked, setChecked] = useState(false);
   const history = useHistory();
@@ -135,18 +138,27 @@ function Video({ video, setVideo, setUserProfile }) {
 
   const subscribeUser = () => {};
 
-  function getVideoAndRecommend(){
+  async function getRecommended(){
+await axios
+      .post(
+              "http://localhost:8080/auth/recommended",
+        JSON.stringify({
+          gameTag: video.GameTag
+        })
+      )
+      .then(function (response) {});
+    try {
+      const response =  await axios.get(
+              "http://localhost:8080/auth/recommended"
+            );
 
-  const response =  axios.get(
-        "http://localhost:8080/auth/videoPage"
-      );
       console.log(response.data.message);
-      setVideo(response.data.message.Video);
       setRecommendedVideos(response.data.message.RecommendedVideos);
+  }catch (error) {}
   }
 
-   useEffect(() => {
-        getVideoAndRecommend();
+   useEffect(async() => {
+         getRecommended();
       }, [video]);
 
   async function checkLikeStatus() {
@@ -206,10 +218,10 @@ function Video({ video, setVideo, setUserProfile }) {
   localStorage.setItem("CreatorName", video.Username);
   useEffect(async () => {
     if (video) {
-      sessionStorage.setItem("video", JSON.stringify(video));
+      localStorage.setItem("video", JSON.stringify(video));
     }
-    if (sessionStorage.getItem("video")) {
-      setVideo(JSON.parse(sessionStorage.getItem("video")));
+    if (localStorage.getItem("video")) {
+      setVideo(JSON.parse(localStorage.getItem("video")));
       //console.log(video);
     }
     if (!video && !localStorage.getItem("video")) {
