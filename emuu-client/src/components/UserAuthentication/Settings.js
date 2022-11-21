@@ -20,6 +20,7 @@ import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
 import {
   getAuth,
+  signOut,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   sendPasswordResetEmail
@@ -79,7 +80,31 @@ function Settings() {
     const userEmail = localStorage.getItem("userEmail");
 const auth = getAuth();
 const user = auth.currentUser;
-console.log(getAuth())
+console.log({newPassword,uid:auth.currentUser.uid})
+
+await axios
+      .post("http://localhost:8080/auth/settings", {newPassword,uid:auth.currentUser.uid})
+        .then((result) => {
+        if(result.data){
+       alert("Successfully Updated Password")
+
+         signOut(auth).then(()=>{
+
+           localStorage.setItem("auth", false);
+                                       localStorage.setItem("user", null);
+                                                                     localStorage.setItem("displayName", null);
+                                       history.push("/login");
+
+
+         }).catch(e=>alert(e.message));
+
+
+
+
+
+        }
+
+      }).catch(e=>alert(e.message));
 
 }
 
@@ -107,11 +132,11 @@ console.log(getAuth())
           <Box component="form" sx={{ mt: 3 }}>
             <Grid container spacing={0}>
               <Grid item xs={12}>
-                <input
+                <TextField
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label="Current Password"
                   type="password"
                   id="password"
                   autoComplete="password"
@@ -123,12 +148,12 @@ console.log(getAuth())
                   }}
                 />
                 <Grid item xs={12}>
-                  <input
+                  <TextField
                     required
                     fullWidth
                     name="newpassword"
-                    label="newPassword"
-                    type="newpassword"
+                    label="New Password"
+                    type="password"
                     id="newpassword"
                     autoComplete="new-password"
                     value={newPassword}
@@ -140,11 +165,11 @@ console.log(getAuth())
                     }}
                   />
                   <Grid item xs={12}>
-                                    <input
+                                    <TextField
                                     required
                                     fullWidth
                                     name="password"
-                                    label="Password"
+                                    label="Confirm New Password"
                                     type="password"
                                     value={confirmNewPassword}
                                     autoComplete="password"

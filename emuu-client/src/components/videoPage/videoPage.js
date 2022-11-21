@@ -322,7 +322,7 @@ function Video({ video, setVideo, setUserProfile }) {
                                                 <div className="title-line">
                                                   <h1 class="title">{video.Title}</h1>
                                                   <p class="videoInfo">
-                                                    {video.Likes} Likes &#x2022;{video.Likes} Dislikes &#x2022; {video.Views} Views
+                                                    {video.Likes} Likes &#x2022;{video.Dislikes} Dislikes &#x2022; {video.Views} Views
                                                     {localStorage.getItem("auth") == "true" && (
                                                       <>
                                                         &#x2022;&ensp;
