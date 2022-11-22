@@ -21,6 +21,8 @@ import IconButton from "@mui/material/IconButton";
 import { Avatar } from "@mui/material";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
+import SidebarVideo from "../Sidebar/SidebarVideo";
+
 import {
   getDocs,
   getDoc,
@@ -47,7 +49,7 @@ function Video({ video, setVideo, setUserProfile }) {
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
   const creatorRouteName = video.Username;
-    const [recommendedVideos, setRecommendedVideos] = useState([]);
+//    const [recommendedVideos, setRecommendedVideos] = useState([]);
 
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
 
@@ -138,28 +140,28 @@ function Video({ video, setVideo, setUserProfile }) {
 
   const subscribeUser = () => {};
 
-  async function getRecommended(){
-await axios
-      .post(
-              "http://localhost:8080/auth/recommended",
-        JSON.stringify({
-          gameTag: video.GameTag
-        })
-      )
-      .then(function (response) {});
-    try {
-      const response =  await axios.get(
-              "http://localhost:8080/auth/recommended"
-            );
-
-      console.log(response.data.message);
-      setRecommendedVideos(response.data.message.RecommendedVideos);
-  }catch (error) {}
-  }
-
-   useEffect(async() => {
-         getRecommended();
-      }, [video]);
+// async function getRecommended(){
+//await axios
+//      .post(
+//              "http://localhost:8080/auth/recommended",
+//        JSON.stringify({
+//          gameTag: video.GameTag
+//        })
+//      )
+//      .then(function (response) {});
+//    try {
+//      const response =  await axios.get(
+//              "http://localhost:8080/auth/recommended"
+//            );
+//
+//      console.log(response.data.message);
+//      setRecommendedVideos(response.data.message.RecommendedVideos);
+//  }catch (error) {}
+//  }
+//
+//   useEffect(async() => {
+//          getRecommended();
+//      },[video]);
 
   async function checkLikeStatus() {
     await axios
@@ -242,6 +244,7 @@ await axios
 
   return (
     <>
+    <SidebarVideo />
       <AlgoliaSearchNavbar
         autocomplete={autocomplete}
         searchInput={searchInput}

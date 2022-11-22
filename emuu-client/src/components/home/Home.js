@@ -44,6 +44,7 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { BrowserRouter, Route, useHistory } from "react-router-dom";
 import firebase from "firebase/compat/app";
 import Sidebar from "../Sidebar/Sidebar";
+
 import AppContext from "../../AppContext";
 
 function Home({ setVideo }, { setUserProfile }) {
