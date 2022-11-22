@@ -23,38 +23,32 @@ import AppContext from "../../AppContext";
 import axios from "axios";
 
 export default function AccountMenu() {
-
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
-
   const ProfilePic = localStorage.getItem("ProfilePictureUrl");
 
-const [isAuth, setAuth] = useState(true);
-const[displayName, setDisplayName] = useState("")
+  const [isAuth, setAuth] = useState(true);
+  const [displayName, setDisplayName] = useState("");
 
-const auth = getAuth();
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    setAuth(true);
-     setDisplayName(user.displayName);
-         localStorage.setItem("displayName", user.displayName);
-    // ...
-  } else {
-    // User is signed out
-    // ...
-    setAuth(false);
+  const auth = getAuth();
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setAuth(true);
+      setDisplayName(user.displayName);
+      localStorage.setItem("displayName", user.displayName);
+      // ...
+    } else {
+      // User is signed out
+      // ...
+      setAuth(false);
 
-    SignedOut();
-     localStorage.setItem("auth", false);
-
-                    localStorage.setItem("user", null);
-                    localStorage.setItem("displayName", null);
-
-  }
-});
-
-
+      SignedOut();
+      localStorage.setItem("auth", false);
+      localStorage.setItem("user", null);
+      localStorage.setItem("displayName", null);
+    }
+  });
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -78,9 +72,7 @@ onAuthStateChanged(auth, (user) => {
 
   const SignedOut = async (e) => {
     signOut(auth)
-      .then(() => {
-
-      })
+      .then(() => {})
       .catch((error) => {
         // An error happened.
       });
@@ -88,7 +80,7 @@ onAuthStateChanged(auth, (user) => {
 
   return (
     <React.Fragment>
-      {isAuth  ? (
+      {isAuth ? (
         <>
           <Box
             sx={{ display: "flex", alignItems: "center", textAlign: "center" }}
