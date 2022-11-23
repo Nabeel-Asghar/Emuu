@@ -247,6 +247,8 @@ await axios
         autocomplete={autocomplete}
         searchInput={searchInput}
       />
+
+      <div className="vp-container">
       <div className="videoPageOne">
         {showSearchResults && (
           <p class="text-start">
@@ -431,67 +433,63 @@ await axios
                         {recommendedVideos &&
                           recommendedVideos.map((video, index) => (
                             <div>
-                              <Card sx={{ maxWidth: 130, maxHeight: 120 }}>
-                                <CardMedia
-                                  component="img"
-                                  image={video.ThumbnailUrl}
-                                />
-                                <CardContent>
-                                  <CardHeader
-                                    avatar={
-                                      <Avatar
-                                        sx={{ width: 60, height: 60 }}
-                                        src={video.ProfilePic}
-                                      ></Avatar>
-                                    }
-                                    title={
-                                      <Typography
-                                        variant="body2"
-                                        color="text.primary"
-                                        fontWeight="bold"
-                                        fontSize="20px"
-                                      >
-                                        <Link to="/video">
-                                          <span
-                                            onClick={() => {
-                                              setVideo(video);
-                                                const TitleAndTag = {
-                                                      title: video.Title,
-                                                      gameTag: video.GameTag,
-                                                    };
-                                              axios.post("http://localhost:8080/auth/videoPage",JSON.stringify({ ...TitleAndTag }))
-                                            }}
-                                          >
-                                            {video.Title}
-                                          </span>
-                                        </Link>
-                                      </Typography>
-                                    }
-                                  />
+                              <Card sx={{ maxWidth: 400, maxHeight: 365 }}>
+                                                        <CardMedia
+                                                          component="img"
+                                                          image={video.ThumbnailUrl}
+                                                        />
+                                                        <CardContent>
+                                                          <CardHeader
+                                                            avatar={
+                                                              <Avatar
+                                                                sx={{ width: 60, height: 60 }}
+                                                                src={video.ProfilePic}
+                                                              ></Avatar>
+                                                            }
+                                                            title={
+                                                              <Typography
+                                                                variant="body2"
+                                                                color="text.primary"
+                                                                fontWeight="bold"
+                                                                fontSize="20px"
+                                                              >
+                                                                <Link to="/video">
+                                                                  <span
+                                                                    onClick={() => {
+                                                                      setVideo(video);
+                                                                    }}
+                                                                  >
+                                                                    {video.Title}
+                                                                  </span>
+                                                                </Link>
+                                                              </Typography>
+                                                            }
+                                                          />
 
-                                  <div className="videoInfo">
-                                    <Typography
-                                      variant="body2"
-                                      color="text.secondary"
-                                      fontWeight="medium"
-                                      fontSize="18px"
-                                    >
-                                      {video.Likes} Likes &#x2022; {video.Views} Views
-                                    </Typography>
-                                    <Typography
-                                      variant="body2"
-                                      color="text.secondary"
-                                      fontWeight="medium"
-                                      fontSize="18px"
-                                    >
-                                      {video.Username}
-                                    </Typography>
-                                  </div>
-                                </CardContent>
-                              </Card>
+                                                          <div className="videoInfo">
+                                                            <Typography
+                                                              variant="body2"
+                                                              color="text.secondary"
+                                                              fontWeight="medium"
+                                                              fontSize="18px"
+                                                            >
+                                                              {video.Likes} Likes &#x2022; {video.Views} Views
+                                                            </Typography>
+                                                            <Typography
+                                                              variant="body2"
+                                                              color="text.secondary"
+                                                              fontWeight="medium"
+                                                              fontSize="18px"
+                                                            >
+                                                              {video.Username}
+                                                            </Typography>
+                                                          </div>
+                                                        </CardContent>
+                                                      </Card>
                             </div>
                           ))}
                       </div>
+      </div>
       </div>
     </>
   );
