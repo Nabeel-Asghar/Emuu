@@ -21,7 +21,6 @@ import IconButton from "@mui/material/IconButton";
 import { Avatar } from "@mui/material";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
-import SidebarVideo from "../Sidebar/SidebarVideo";
 
 import {
   getDocs,
@@ -49,7 +48,7 @@ function Video({ video, setVideo, setUserProfile }) {
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
   const creatorRouteName = video.Username;
-//    const [recommendedVideos, setRecommendedVideos] = useState([]);
+    const [recommendedVideos, setRecommendedVideos] = useState([]);
 
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
 
@@ -140,28 +139,28 @@ function Video({ video, setVideo, setUserProfile }) {
 
   const subscribeUser = () => {};
 
-// async function getRecommended(){
-//await axios
-//      .post(
-//              "http://localhost:8080/auth/recommended",
-//        JSON.stringify({
-//          gameTag: video.GameTag
-//        })
-//      )
-//      .then(function (response) {});
-//    try {
-//      const response =  await axios.get(
-//              "http://localhost:8080/auth/recommended"
-//            );
-//
-//      console.log(response.data.message);
-//      setRecommendedVideos(response.data.message.RecommendedVideos);
-//  }catch (error) {}
-//  }
-//
-//   useEffect(async() => {
-//          getRecommended();
-//      },[video]);
+ async function getRecommended(){
+await axios
+      .post(
+              "http://localhost:8080/auth/recommended",
+        JSON.stringify({
+          gameTag: video.GameTag
+        })
+      )
+      .then(function (response) {});
+    try {
+      const response =  await axios.get(
+              "http://localhost:8080/auth/recommended"
+            );
+
+      console.log(response.data.message);
+      setRecommendedVideos(response.data.message.RecommendedVideos);
+  }catch (error) {}
+  }
+
+   useEffect(async() => {
+          getRecommended();
+      },[video]);
 
   async function checkLikeStatus() {
     await axios
@@ -244,12 +243,11 @@ function Video({ video, setVideo, setUserProfile }) {
 
   return (
     <>
-    <SidebarVideo />
       <AlgoliaSearchNavbar
         autocomplete={autocomplete}
         searchInput={searchInput}
       />
-      <div className="videoPage">
+      <div className="videoPageOne">
         {showSearchResults && (
           <p class="text-start">
             <h2 className="video__category__title p-4">Search Results</h2>
@@ -423,6 +421,77 @@ function Video({ video, setVideo, setUserProfile }) {
             ))}
           </div>
         )}
+      </div>
+      <div className = "videoPageTwo">
+      <Typography className={"video__category__title"}>
+                        Recommended Videos
+                      </Typography>
+                      <div className="videos__container">
+                        {" "}
+                        {recommendedVideos &&
+                          recommendedVideos.map((video, index) => (
+                            <div>
+                              <Card sx={{ maxWidth: 130, maxHeight: 120 }}>
+                                <CardMedia
+                                  component="img"
+                                  image={video.ThumbnailUrl}
+                                />
+                                <CardContent>
+                                  <CardHeader
+                                    avatar={
+                                      <Avatar
+                                        sx={{ width: 60, height: 60 }}
+                                        src={video.ProfilePic}
+                                      ></Avatar>
+                                    }
+                                    title={
+                                      <Typography
+                                        variant="body2"
+                                        color="text.primary"
+                                        fontWeight="bold"
+                                        fontSize="20px"
+                                      >
+                                        <Link to="/video">
+                                          <span
+                                            onClick={() => {
+                                              setVideo(video);
+                                                const TitleAndTag = {
+                                                      title: video.Title,
+                                                      gameTag: video.GameTag,
+                                                    };
+                                              axios.post("http://localhost:8080/auth/videoPage",JSON.stringify({ ...TitleAndTag }))
+                                            }}
+                                          >
+                                            {video.Title}
+                                          </span>
+                                        </Link>
+                                      </Typography>
+                                    }
+                                  />
+
+                                  <div className="videoInfo">
+                                    <Typography
+                                      variant="body2"
+                                      color="text.secondary"
+                                      fontWeight="medium"
+                                      fontSize="18px"
+                                    >
+                                      {video.Likes} Likes &#x2022; {video.Views} Views
+                                    </Typography>
+                                    <Typography
+                                      variant="body2"
+                                      color="text.secondary"
+                                      fontWeight="medium"
+                                      fontSize="18px"
+                                    >
+                                      {video.Username}
+                                    </Typography>
+                                  </div>
+                                </CardContent>
+                              </Card>
+                            </div>
+                          ))}
+                      </div>
       </div>
     </>
   );

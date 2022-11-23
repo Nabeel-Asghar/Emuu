@@ -11,10 +11,16 @@
   text-align: left;
   margin-bottom: 16px;
 }
-.videoPage {
-  width: 80%;
-  margin: auto;
-  min-width: 1000px;
+.videoPageOne {
+  width: 70%;
+      min-width: 80vh;
+      max-width: 160vh;
+      padding-left: 5vh;
+}
+.videoPageTwo {
+  width: 30%;
+
+      padding-right: 5vh;
 }
 
 .videoPage video {
@@ -96,4 +102,18 @@
 .comment p:first-child {
   font-weight: bold;
   margin-bottom: 5px;
+}
+.videos__container {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 20px !important;
+  padding: 20px !important;
+}
+.video__category__title {
+  font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+  font-size: 40px !important;
+  font-weight: bold !important;
+  line-height: 1.5;
+  padding-left: 20px;
+  letter-spacing: 0.00938em;
 }
