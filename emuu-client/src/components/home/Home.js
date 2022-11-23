@@ -44,6 +44,7 @@ import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import { BrowserRouter, Route, useHistory } from "react-router-dom";
 import firebase from "firebase/compat/app";
 import Sidebar from "../Sidebar/Sidebar";
+
 import AppContext from "../../AppContext";
 
 function Home({ setVideo }, { setUserProfile }) {
@@ -124,6 +125,8 @@ function Home({ setVideo }, { setUserProfile }) {
   useEffect(async () => {
     await getVideos();
   }, [page]);
+
+
 
   const dataSet = autocompleteState?.collections?.[0]?.items;
   const searchResultsVideosArr = dataSet?.filter(
@@ -269,6 +272,11 @@ function Home({ setVideo }, { setUserProfile }) {
                                     <span
                                       onClick={() => {
                                         setVideo(video);
+                                          const TitleAndTag = {
+                                                title: video.Title,
+                                                gameTag: video.GameTag,
+                                              };
+                                        axios.post("http://localhost:8080/auth/videoPage",JSON.stringify({ ...TitleAndTag }))
                                       }}
                                     >
                                       {video.Title}

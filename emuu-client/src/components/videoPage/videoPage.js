@@ -21,10 +21,7 @@ import IconButton from "@mui/material/IconButton";
 import { Avatar } from "@mui/material";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
-import ThumbUpOffAltIcon from '@mui/icons-material/ThumbUpOffAlt';
-import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
-import ThumbDownOffAltIcon from '@mui/icons-material/ThumbDownOffAlt';
+
 import {
   getDocs,
   getDoc,
@@ -40,16 +37,21 @@ import {
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 function Video({ video, setVideo, setUserProfile }) {
+
+
+
   const displayName = localStorage.getItem("displayName");
   const [checked, setChecked] = useState(false);
-  const [dislikeCheck, setDislikeCheck] = useState(false);
   const history = useHistory();
   const location = useLocation();
   const [autocompleteState, setAutocompleteState] = useState({});
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
   const creatorRouteName = video.Username;
+    const [recommendedVideos, setRecommendedVideos] = useState([]);
+
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
+
 
   const autocomplete = useMemo(
     () =>
@@ -137,7 +139,28 @@ function Video({ video, setVideo, setUserProfile }) {
 
   const subscribeUser = () => {};
 
+ async function getRecommended(){
+await axios
+      .post(
+              "http://localhost:8080/auth/recommended",
+        JSON.stringify({
+          gameTag: video.GameTag
+        })
+      )
+      .then(function (response) {});
+    try {
+      const response =  await axios.get(
+              "http://localhost:8080/auth/recommended"
+            );
 
+      console.log(response.data.message);
+      setRecommendedVideos(response.data.message.RecommendedVideos);
+  }catch (error) {}
+  }
+
+   useEffect(async() => {
+          getRecommended();
+      },[video]);
 
   async function checkLikeStatus() {
     await axios
@@ -173,6 +196,7 @@ function Video({ video, setVideo, setUserProfile }) {
     checkLikeStatus();
   }, [video]);
 
+
   async function likeVideo(e) {
     //Axios post should be done here to send info to backend
     axios.post(
@@ -192,32 +216,13 @@ function Video({ video, setVideo, setUserProfile }) {
     }
   }
 
-
- async function dislikeVideo(e) {
-    //Axios post should be done here to send info to backend
-    axios.post(
-      "https://emuu-cz5iycld7a-ue.a.run.app/auth/LikeVideo",
-      JSON.stringify({
-        displayName: displayName,
-        videoUrl: video.VideoUrl,
-        LikedBoolean: !dislikeCheck,
-      })
-    );
-    if (dislikeCheck === true) {
-      video.Dislikes++;
-      sessionStorage.setItem("video", JSON.stringify(video));
-    } else {
-      video.Dislikes--;
-      sessionStorage.setItem("video", JSON.stringify(video));
-    }
-  }
   localStorage.setItem("CreatorName", video.Username);
   useEffect(async () => {
     if (video) {
-      sessionStorage.setItem("video", JSON.stringify(video));
+      localStorage.setItem("video", JSON.stringify(video));
     }
-    if (sessionStorage.getItem("video")) {
-      setVideo(JSON.parse(sessionStorage.getItem("video")));
+    if (localStorage.getItem("video")) {
+      setVideo(JSON.parse(localStorage.getItem("video")));
       //console.log(video);
     }
     if (!video && !localStorage.getItem("video")) {
@@ -242,7 +247,9 @@ function Video({ video, setVideo, setUserProfile }) {
         autocomplete={autocomplete}
         searchInput={searchInput}
       />
-      <div className="videoPage">
+
+      <div className="vp-container">
+      <div className="videoPageOne">
         {showSearchResults && (
           <p class="text-start">
             <h2 className="video__category__title p-4">Search Results</h2>
@@ -284,7 +291,7 @@ function Video({ video, setVideo, setUserProfile }) {
                                                fontWeight="medium"
                                                fontSize="18px"
                                              >
-                                               {video.Likes} Like &#x2022; {video.Views} Views
+                                               {video.Likes} Likes &#x2022; {video.Views} Views
                                              </Typography>
                                              <Typography
                                                variant="body2"
@@ -318,120 +325,171 @@ function Video({ video, setVideo, setUserProfile }) {
             </div>
           </p>
         )}
-        <div className="videoPage-left"><video controls height="700" src={video.VideoUrl}></video>
-                                                <div className="title-line">
-                                                  <h1 class="title">{video.Title}</h1>
-                                                  <p class="videoInfo">
-                                                    {video.Likes} Likes &#x2022;{video.Dislikes} Dislikes &#x2022; {video.Views} Views
-                                                    {localStorage.getItem("auth") == "true" && (
-                                                      <>
-                                                        &#x2022;&ensp;
-                                                        <FormControlLabel
-                                                          control={
-                                                            <Checkbox
-                                                              icon={<ThumbUpOffAltIcon />}
-                                                              checkedIcon={<ThumbUpAltIcon />}
-                                                              name="Like"
-                                                              id="Like"
-                                                              checked={checked}
-                                                              onChange={async (e) => {
-                                                                setChecked(!checked);
-                                                                likeVideo(e);
-                                                              }}
-                                                            />
-                                                          }
-                                                          label="Like"
-                                                        />
-                                                        <FormControlLabel
-                                                          control={
-                                                          <Checkbox
-                                                          icon={<ThumbDownOffAltIcon />}
-                                                          checkedIcon={<ThumbDownIcon />}
-                                                                                                                      name="Dislike"
-                                                                                                                      id="Dislike"
-                                                                                                                      checked={dislikeCheck}
-                                                                                                                      onChange={async (e) => {
-                                                                                                                        setChecked(!dislikeCheck);
-                                                                                                                        dislikeVideo(e);
-                                                                                                                      }}
-                                                                                                                    />
-                                                                                                                  }
-                                                                                                                  label="Dislike"
-                                                                                                                />
-                                                      </>
-                                                    )}
-                                                  </p>
-                                                </div>
-                                                <div className="about">
-                                                  <h2>About</h2>
-                                                  <div className="description">{video.VideoDescription}</div>
-                                                  <p className="description">
-                                                    Posted By:{" "}
-                                                    <Link
-                                                      to="/creator"
-                                                      onClick={() => {
-                                                        localStorage.setItem("Creator", video.Username);
-                                                      }}
-                                                    >
-                                                      {""}
-                                                      {video.Username}
-                                                    </Link>{" "}
-                                                    on {video.Date}
-                                                  </p>
-                                                  <p className="description">Game Tag: {video.GameTag}</p>
-                                                </div>
-                                                {localStorage.getItem("auth") == "true" && (
-                                                  <div className="post-comment">
-                                                    <TextField
-                                                      id="standard-textarea"
-                                                      label="Enter a comment"
-                                                      placeholder=""
-                                                      multiline
-                                                      variant="standard"
-                                                      size="normal"
-                                                      value={comment}
-                                                      onChange={handleComments}
-                                                    />{" "}
-                                                    <p></p>
-                                                    <button
-                                                      class="btn btn-lg btn-primary"
-                                                      type="submit"
-                                                      onClick={async () => {
-                                                        await axios
-                                                          .post(
-                                                            "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment",
-                                                            JSON.stringify({
-                                                              text: comment,
-                                                              postedBy: displayName,
-                                                              videoUrl: video.VideoUrl,
-                                                            })
-                                                          )
-                                                          .then(function (response) {});
-                                                        const response = await axios.get(
-                                                          "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment"
-                                                        );
-                                                        setComment(response.data.message.Comments);
-                                                      }}
-                                                    >
-                                                      Submit
-                                                    </button>
-                                                  </div>
-                                                )}
+        <video controls height="700" src={video.VideoUrl}></video>
+        <div className="title-line">
+          <h1 class="title">{video.Title}</h1>
+          <p class="videoInfo">
+            {video.Likes} Likes &#x2022; {video.Views} Views
+            {localStorage.getItem("auth") == "true" && (
+              <>
+                &#x2022;&ensp;
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      icon={<FavoriteBorder />}
+                      checkedIcon={<Favorite />}
+                      name="Like"
+                      id="Like"
+                      checked={checked}
+                      onChange={async (e) => {
+                        setChecked(!checked);
+                        likeVideo(e);
+                      }}
+                    />
+                  }
+                  label="Like"
+                />
+              </>
+            )}
+          </p>
+        </div>
+        <div className="about">
+          <h2>About</h2>
+          <div className="description">{video.VideoDescription}</div>
+          <p className="description">
+            Posted By:{" "}
+            <Link
+              to="/creator"
+              onClick={() => {
+                localStorage.setItem("Creator", video.Username);
+              }}
+            >
+              {""}
+              {video.Username}
+            </Link>{" "}
+            on {video.Date}
+          </p>
+          <p className="description">Game Tag: {video.GameTag}</p>
+        </div>
+        {localStorage.getItem("auth") == "true" && (
+          <div className="post-comment">
+            <TextField
+              id="standard-textarea"
+              label="Enter a comment"
+              placeholder=""
+              multiline
+              variant="standard"
+              size="normal"
+              value={comment}
+              onChange={handleComments}
+            />{" "}
+            <p></p>
+            <button
+              class="btn btn-lg btn-primary"
+              type="submit"
+              onClick={async () => {
+                await axios
+                  .post(
+                    "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment",
+                    JSON.stringify({
+                      text: comment,
+                      postedBy: displayName,
+                      videoUrl: video.VideoUrl,
+                    })
+                  )
+                  .then(function (response) {});
+                const response = await axios.get(
+                  "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment"
+                );
+                setComment(response.data.message.Comments);
+              }}
+            >
+              Submit
+            </button>
+          </div>
+        )}
 
-                                                {video.Comments && (
-                                                  <div className="comment-section">
-                                                    <h2>Comments</h2>
-                                                    {video.Comments.map((comment) => (
-                                                      <div className="comment">
-                                                        <p>
-                                                          {comment.postedBy}&#x2022;
-                                                          <span style={{ opacity: 0.5 }}>{comment.date}</span>
-                                                        </p>
-                                                        <p>{comment.text}</p>
-                                                      </div>
-                                                    ))}
-                                                  </div>
-                                                )}</div>
+        {video.Comments && (
+          <div className="comment-section">
+            <h2>Comments</h2>
+            {video.Comments.map((comment) => (
+              <div className="comment">
+                <p>
+                  {comment.postedBy}&#x2022;
+                  <span style={{ opacity: 0.5 }}>{comment.date}</span>
+                </p>
+                <p>{comment.text}</p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+      <div className = "videoPageTwo">
+      <Typography className={"video__category__title"}>
+                        Recommended Videos
+                      </Typography>
+                      <div className="videos__container">
+                        {" "}
+                        {recommendedVideos &&
+                          recommendedVideos.map((video, index) => (
+                            <div>
+                              <Card sx={{ maxWidth: 400, maxHeight: 365 }}>
+                                                        <CardMedia
+                                                          component="img"
+                                                          image={video.ThumbnailUrl}
+                                                        />
+                                                        <CardContent>
+                                                          <CardHeader
+                                                            avatar={
+                                                              <Avatar
+                                                                sx={{ width: 60, height: 60 }}
+                                                                src={video.ProfilePic}
+                                                              ></Avatar>
+                                                            }
+                                                            title={
+                                                              <Typography
+                                                                variant="body2"
+                                                                color="text.primary"
+                                                                fontWeight="bold"
+                                                                fontSize="20px"
+                                                              >
+                                                                <Link to="/video">
+                                                                  <span
+                                                                    onClick={() => {
+                                                                      setVideo(video);
+                                                                    }}
+                                                                  >
+                                                                    {video.Title}
+                                                                  </span>
+                                                                </Link>
+                                                              </Typography>
+                                                            }
+                                                          />
+
+                                                          <div className="videoInfo">
+                                                            <Typography
+                                                              variant="body2"
+                                                              color="text.secondary"
+                                                              fontWeight="medium"
+                                                              fontSize="18px"
+                                                            >
+                                                              {video.Likes} Likes &#x2022; {video.Views} Views
+                                                            </Typography>
+                                                            <Typography
+                                                              variant="body2"
+                                                              color="text.secondary"
+                                                              fontWeight="medium"
+                                                              fontSize="18px"
+                                                            >
+                                                              {video.Username}
+                                                            </Typography>
+                                                          </div>
+                                                        </CardContent>
+                                                      </Card>
+                            </div>
+                          ))}
+                      </div>
+      </div>
       </div>
     </>
   );

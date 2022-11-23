@@ -15,6 +15,7 @@ import (
 	upload "emuu-server/main/users"
 	comment "emuu-server/main/video"
 	likes "emuu-server/main/video"
+	recommended "emuu-server/main/video"
 	video "emuu-server/main/video"
 	view "emuu-server/main/video"
 	settings "emuu-server/main/users"
@@ -64,6 +65,8 @@ func main() {
 		auth.POST("/view", view.UpdateView)
 		auth.GET("/firebase-data", firebasedata.SetVideosAndUsers)
 		auth.POST("/settings", settings.UpdatePassword)
+		auth.POST("/recommended", recommended.SetGameTag)
+        		auth.GET("/recommended", recommended.SetRecommended)
 	}
 
 	api := r.Group("api").Use(firebaseSer.AuthJWT) //create a new router with the middleware authJWT
