@@ -229,7 +229,7 @@ function Creator({ setVideo, video }) {
     let subscribersListInitial;
     if (getSubscribersListRefInitial.exists()) {
       subscribersListInitial =
-        getSubscribersListRefInitial.data().SubscriberList;
+        getSubscribersListRefInitial.data()?.SubscriberList;
     }
     setUpdateSubscribersList(subscribersListInitial);
   }, [subscriberActionCount]);
@@ -335,7 +335,7 @@ function Creator({ setVideo, video }) {
                   {" "}
                   {subscriberCount} subscribers{" "}
                 </div>
-                <div className="right-side">
+                {localStorage.getItem("auth") == "true" &&<div className="right-side">
                   <Checkbox
                     icon={
                       <SubscribeButton
@@ -357,7 +357,7 @@ function Creator({ setVideo, video }) {
                       subscribeToUser(e);
                     }}
                   />
-                </div>
+                </div>}
               </div>
             </div>
             <div className="bottom-portion">

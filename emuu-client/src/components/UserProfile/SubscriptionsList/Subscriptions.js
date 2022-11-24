@@ -47,16 +47,15 @@ function Subscriptions() {
       console.log(subscribersData);
     } catch (error) {}
   }
-
   if (displayName !== null && subscribersData.length === 0) {
     getSubscriptions();
   }
 
-  const usersArr = firebaseData.filter(
+  const usersArr = firebaseData?.filter(
     (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
   );
 
-  const videosArr = firebaseData.filter(
+  const videosArr = firebaseData?.filter(
     (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
   );
 
