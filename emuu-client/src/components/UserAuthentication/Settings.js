@@ -23,27 +23,23 @@ import {
   signOut,
   signInWithEmailAndPassword,
   onAuthStateChanged,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import "../../Firebase.js";
 import firebase from "firebase/app";
 import "./register.scss";
-import {updatePassword } from "firebase/auth";
+import { updatePassword } from "firebase/auth";
 import "./Settings.scss";
-
-
 
 function Settings() {
   //use state for registration variables
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
-  const [confirmNewPassword , setConfirmNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [message, setMessage] = useState("");
   const history = useHistory();
   const [error, setError] = useState("");
-  const email=useState("");
-
-
+  const email = useState("");
 
   const validatePassword = (pass) => {
     if (pass.length < 8) {
@@ -78,37 +74,31 @@ function Settings() {
     // store the states in the form data
     if (!validatePassword(newPassword)) return;
     const userEmail = localStorage.getItem("userEmail");
-const auth = getAuth();
-const user = auth.currentUser;
-console.log({newPassword,uid:auth.currentUser.uid})
+    const auth = getAuth();
+    const user = auth.currentUser;
+    console.log({ newPassword, uid: auth.currentUser.uid });
 
-await axios
-      .post("http://localhost:8080/auth/settings", {newPassword,uid:auth.currentUser.uid})
-        .then((result) => {
-        if(result.data){
-       alert("Successfully Updated Password")
+    await axios
+      .post("http://localhost:8080/auth/settings", {
+        newPassword,
+        uid: auth.currentUser.uid,
+      })
+      .then((result) => {
+        if (result.data) {
+          alert("Successfully Updated Password");
 
-         signOut(auth).then(()=>{
-
-           localStorage.setItem("auth", false);
-                                       localStorage.setItem("user", null);
-                                                                     localStorage.setItem("displayName", null);
-                                       history.push("/login");
-
-
-         }).catch(e=>alert(e.message));
-
-
-
-
-
+          signOut(auth)
+            .then(() => {
+              localStorage.setItem("auth", false);
+              localStorage.setItem("user", null);
+              localStorage.setItem("displayName", null);
+              history.push("/login");
+            })
+            .catch((e) => alert(e.message));
         }
-
-      }).catch(e=>alert(e.message));
-
-}
-
-
+      })
+      .catch((e) => alert(e.message));
+  };
 
   return (
     <>
@@ -165,43 +155,42 @@ await axios
                     }}
                   />
                   <Grid item xs={12}>
-                                    <TextField
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    label="Confirm New Password"
-                                    type="password"
-                                    value={confirmNewPassword}
-                                    autoComplete="password"
-
-                                    className="register-input"
-                                    placeholder="Confirm New Password"
-                                    onChange={(e) => {
-                                      setConfirmNewPassword(e.target.value);
-                                    }}
-                                  />
-                  {!error && (
-                    <p>
-                      <small>
+                    <TextField
+                      required
+                      fullWidth
+                      name="password"
+                      label="Confirm New Password"
+                      type="password"
+                      value={confirmNewPassword}
+                      autoComplete="password"
+                      className="register-input"
+                      placeholder="Confirm New Password"
+                      onChange={(e) => {
+                        setConfirmNewPassword(e.target.value);
+                      }}
+                    />
+                    {!error && (
+                      <p>
+                        <small>
+                          {" "}
+                          <InfoOutlinedIcon />
+                          Password must be at least 8 characters with 1 special
+                          character and 1 uppercase character{" "}
+                        </small>{" "}
+                      </p>
+                    )}
+                    {error && (
+                      <p style={{ color: "red", margin: "0" }}>
                         {" "}
-                        <InfoOutlinedIcon />
-                        Password must be at least 8 characters with 1 special
-                        character and 1 uppercase character{" "}
-                      </small>{" "}
-                    </p>
-                  )}
-                  {error && (
-                    <p style={{ color: "red", margin: "0" }}>
-                      {" "}
-                      <small>
-                        {" "}
-                        <ErrorOutlineIcon />
-                        {error}
-                      </small>
-                    </p>
-                  )}
+                        <small>
+                          {" "}
+                          <ErrorOutlineIcon />
+                          {error}
+                        </small>
+                      </p>
+                    )}
+                  </Grid>
                 </Grid>
-              </Grid>
               </Grid>
               <Button
                 onClick={(e) => handleSubmit(e)}

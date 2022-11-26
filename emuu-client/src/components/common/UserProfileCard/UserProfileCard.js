@@ -16,14 +16,13 @@ const UserProfileCard = ({
 
   return (
     <div className="video__details__container">
-      <Link
-        to="/creator">
-      <div  className="avatar__container"
-        onClick={() => {
-          localStorage.setItem("Creator", username);
-        }}>
-        </div>
-
+      <Link to="/creator">
+        <div
+          className="avatar__container"
+          onClick={() => {
+            localStorage.setItem("Creator", username);
+          }}
+        ></div>
 
         <Avatar
           src={

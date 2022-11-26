@@ -335,29 +335,31 @@ function Creator({ setVideo, video }) {
                   {" "}
                   {subscriberCount} subscribers{" "}
                 </div>
-                {localStorage.getItem("auth") == "true" &&<div className="right-side">
-                  <Checkbox
-                    icon={
-                      <SubscribeButton
-                        color="error"
-                        buttonTitle={"Subscribe"}
-                        buttonStyling={{ marginTop: "-22.5px" }}
-                      />
-                    }
-                    checkedIcon={
-                      <SubscribeButton
-                        color="error"
-                        buttonTitle={"Unsubscribe"}
-                        buttonStyling={{ marginTop: "-22.5px" }}
-                      />
-                    }
-                    checked={checked}
-                    onChange={async (e) => {
-                      setChecked(!checked);
-                      subscribeToUser(e);
-                    }}
-                  />
-                </div>}
+                {localStorage.getItem("auth") == "true" && (
+                  <div className="right-side">
+                    <Checkbox
+                      icon={
+                        <SubscribeButton
+                          color="error"
+                          buttonTitle={"Subscribe"}
+                          buttonStyling={{ marginTop: "-22.5px" }}
+                        />
+                      }
+                      checkedIcon={
+                        <SubscribeButton
+                          color="error"
+                          buttonTitle={"Unsubscribe"}
+                          buttonStyling={{ marginTop: "-22.5px" }}
+                        />
+                      }
+                      checked={checked}
+                      onChange={async (e) => {
+                        setChecked(!checked);
+                        subscribeToUser(e);
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             </div>
             <div className="bottom-portion">

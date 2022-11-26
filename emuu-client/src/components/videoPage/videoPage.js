@@ -41,10 +41,9 @@ import {
 } from "firebase/firestore";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 function Video({ video, setVideo, setUserProfile }) {
-
-    const [commentList,setCommentList]=useState(video?.Comments||[])
+  const [commentList, setCommentList] = useState(video?.Comments || []);
   const displayName = localStorage.getItem("displayName");
   const [checked, setChecked] = useState(false);
   const history = useHistory();
@@ -53,28 +52,26 @@ function Video({ video, setVideo, setUserProfile }) {
   const [searchInput, setSearchInput] = useState("");
   const [subscriberCount, setSubscriberCount] = useState(null);
   const [count, setCount] = useState(0);
-   const ProfilePic = localStorage.getItem("ProfilePictureUrl");
+  const ProfilePic = localStorage.getItem("ProfilePictureUrl");
 
   async function getCreator() {
-      const dis = {
-        displayName:  video.Username,
-      };
+    const dis = {
+      displayName: video.Username,
+    };
 
+    await axios
+      .post(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator",
+        JSON.stringify({ ...dis })
+      )
+      .then(function (response) {});
+    const response = await axios.get(
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator"
+    );
+    const user = response.data.message.UserDetails;
 
-      await axios
-        .post(
-          "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator",
-          JSON.stringify({ ...dis })
-        )
-        .then(function (response) {});
-      const response = await axios.get(
-        "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator"
-      );
-      const user = response.data.message.UserDetails;
-
-
-      setSubscriberCount(user[0].SubscriberCount);
-    }
+    setSubscriberCount(user[0].SubscriberCount);
+  }
   const [recommendedVideos, setRecommendedVideos] = useState([]);
 
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
@@ -179,14 +176,14 @@ function Video({ video, setVideo, setUserProfile }) {
         "http://localhost:8080/auth/recommended"
       );
 
-//      console.log(response.data.message);
+      //      console.log(response.data.message);
       setRecommendedVideos(response.data.message.RecommendedVideos);
     } catch (error) {}
   }
 
   useEffect(async () => {
     getRecommended();
-    await getCreator()
+    await getCreator();
   }, [video]);
 
   async function checkLikeStatus() {
@@ -218,10 +215,10 @@ function Video({ video, setVideo, setUserProfile }) {
   }
   useEffect(() => {
     SetView();
-//  }, [video]);
-//  useEffect(() => {
+    //  }, [video]);
+    //  useEffect(() => {
     checkLikeStatus();
-    getCreator()
+    getCreator();
   }, [video]);
 
   async function likeVideo(e) {
@@ -258,16 +255,16 @@ function Video({ video, setVideo, setUserProfile }) {
     }
   }, []);
 
-//    useEffect(() => {
-//      checkLiked();
-//    }, [video]);
+  //    useEffect(() => {
+  //      checkLiked();
+  //    }, [video]);
 
   const [comment, setComment] = useState("");
 
   const handleComments = (event) => {
     setComment(event.target.value);
   };
-//console.log("Video",video)
+  //console.log("Video",video)
   return (
     <>
       <AlgoliaSearchNavbar
@@ -380,39 +377,36 @@ function Video({ video, setVideo, setUserProfile }) {
                   <span className="subs">{subscriberCount} Subscribers</span>
                 </div>
               </div>
-              {localStorage.getItem("auth") == "true" && <div className="actions">
-                <div className="btn-group">
-                  <span className="likes action-btn">
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          icon={<ThumbUpOutlinedIcon sx={{ color: "#fff" }} />}
-                          checkedIcon={
-                            <ThumbUpIcon sx={{ color: "#fff" }} />
-                          }
-                          name="Like"
-                          id="Like"
-                          checked={checked}
-                          onChange={ async(e) => {
-                                                 setChecked(!checked);
-                                                 likeVideo(e);
-                                               }}
-                        />
-                      }
-                       label={video.Likes > 0 ? video.Likes : ""}
-                    />
+              {localStorage.getItem("auth") == "true" && (
+                <div className="actions">
+                  <div className="btn-group">
+                    <span className="likes action-btn">
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            icon={
+                              <ThumbUpOutlinedIcon sx={{ color: "#fff" }} />
+                            }
+                            checkedIcon={<ThumbUpIcon sx={{ color: "#fff" }} />}
+                            name="Like"
+                            id="Like"
+                            checked={checked}
+                            onChange={async (e) => {
+                              setChecked(!checked);
+                              likeVideo(e);
+                            }}
+                          />
+                        }
+                        label={video.Likes > 0 ? video.Likes : ""}
+                      />
+                    </span>
 
-
-                  </span>
-
-                  <span className="dislikes action-btn">
-                    <ThumbDownOutlinedIcon sx={{ color: "#fff" }} />
-
-                  </span>
-
+                    <span className="dislikes action-btn">
+                      <ThumbDownOutlinedIcon sx={{ color: "#fff" }} />
+                    </span>
+                  </div>
                 </div>
-
-              </div>}
+              )}
             </p>
           </div>
           <div className="about">
@@ -427,52 +421,49 @@ function Video({ video, setVideo, setUserProfile }) {
           <div className="comments-section">
             <h3 className="comment-count">{commentList?.length} Comments</h3>
 
-            {localStorage.getItem("auth") == "true" &&<div className="createComment">
-              <img
-                src={ProfilePic}
-                className="profilePic"
-                alt="Profile"
-              />
-              <FormControl fullWidth>
-                <TextField
-                  id="filled-search"
-                  InputLabelProps={{
-                    style: { color: "#ededed" },
+            {localStorage.getItem("auth") == "true" && (
+              <div className="createComment">
+                <img src={ProfilePic} className="profilePic" alt="Profile" />
+                <FormControl fullWidth>
+                  <TextField
+                    id="filled-search"
+                    InputLabelProps={{
+                      style: { color: "#ededed" },
+                    }}
+                    InputProps={{ style: { color: "white" } }}
+                    sx={{ color: "white" }}
+                    label="Write comment"
+                    type="text"
+                    value={comment}
+                    onChange={handleComments}
+                    variant="standard"
+                  />
+                </FormControl>
+                <button
+                  className="submit-btn"
+                  type="submit"
+                  onClick={async () => {
+                    await axios
+                      .post(
+                        "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment",
+                        JSON.stringify({
+                          text: comment,
+                          postedBy: displayName,
+                          videoUrl: video.VideoUrl,
+                        })
+                      )
+                      .then(function (response) {});
+                    const { data } = await axios.get(
+                      "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment"
+                    );
+                    setComment("");
+                    setCommentList(data.message.Comments);
                   }}
-                  InputProps={{ style: { color: "white" } }}
-                  sx={{ color: "white" }}
-                  label="Write comment"
-                  type="text"
-                  value={comment}
-                  onChange={handleComments}
-
-                  variant="standard"
-                />
-              </FormControl>
-              <button
-                className="submit-btn"
-                type="submit"
-                onClick={async () => {
-                  await axios
-                    .post(
-                      "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment",
-                      JSON.stringify({
-                        text: comment,
-                        postedBy: displayName,
-                        videoUrl: video.VideoUrl,
-                      })
-                    )
-                    .then(function (response) {});
-                  const {data} = await axios.get(
-                    "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment"
-                  );
-                  setComment("");
-                  setCommentList(data.message.Comments)
-                }}
-              >
-                Submit
-              </button>
-            </div>}
+                >
+                  Submit
+                </button>
+              </div>
+            )}
 
             {commentList?.length ? (
               <div className="comment-list">
