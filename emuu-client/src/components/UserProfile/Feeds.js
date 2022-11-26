@@ -274,7 +274,7 @@ function Feeds({ setVideo }) {
                         avatar={
                           <Avatar
                             sx={{ width: 60, height: 60 }}
-                            src={ProfilePic}
+                            src={video.ProfilePic}
                           ></Avatar>
                         }
                         title={
@@ -330,7 +330,7 @@ function Feeds({ setVideo }) {
                         avatar={
                           <Avatar
                             sx={{ width: 60, height: 60 }}
-                            src={ProfilePic}
+                            src={video.ProfilePic}
                           ></Avatar>
                         }
                         title={
