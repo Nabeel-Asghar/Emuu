@@ -9,6 +9,8 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"reflect"
+
 )
 
 type GamesTag struct {
@@ -30,6 +32,8 @@ type Vid struct {
 	VideoDescription string              `firestore:"VideoDescription"`
 	UsersThatLiked   []string            `firestore:"usersThatLiked"`
 	Comments         []map[string]string `firestore:"Comments,omitempty"`
+	ProfilePic string
+
 }
 
 func SetGameTag(c *gin.Context) {
@@ -65,6 +69,20 @@ func SetRecommended(c *gin.Context) {
 		var vid = Vid{}
 
 		doc.DataTo(&vid)
+		iter := client.Collection("Users").Where("Username", "==", vid.Username).Documents(ctx)
+		for {
+			doc, err := iter.Next()
+			if err == iterator.Done {
+				break
+			}
+			if err != nil {
+				return
+			}
+			var profilePic User
+			doc.DataTo(&profilePic)
+			reflect.ValueOf(&vid).Elem().FieldByName("ProfilePic").SetString(profilePic.ProfilePicture)
+
+		}
 		recommendArr = append(recommendArr, vid)
 	}
 
