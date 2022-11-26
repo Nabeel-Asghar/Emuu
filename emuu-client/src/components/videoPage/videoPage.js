@@ -17,11 +17,11 @@ import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
-
 import IconButton from "@mui/material/IconButton";
 import { Avatar } from "@mui/material";
 import Typography from "@material-ui/core/Typography";
 import axios from "axios";
+
 import {
   getDocs,
   getDoc,
@@ -37,6 +37,10 @@ import {
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
 function Video({ video, setVideo, setUserProfile }) {
+
+
+
+  const displayName = localStorage.getItem("displayName");
   const [checked, setChecked] = useState(false);
   const history = useHistory();
   const location = useLocation();
@@ -44,10 +48,10 @@ function Video({ video, setVideo, setUserProfile }) {
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
   const creatorRouteName = video.Username;
+    const [recommendedVideos, setRecommendedVideos] = useState([]);
+
   const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
 
-  const auth = getAuth();
-  const user = auth.currentUser;
 
   const autocomplete = useMemo(
     () =>
@@ -104,6 +108,8 @@ function Video({ video, setVideo, setUserProfile }) {
   const showSearchResults =
     searchResultsVideosArr?.length > 0 || searchResultsUsersArr?.length > 0;
 
+  const userName = localStorage.getItem("displayName");
+
   const usersArr = firebaseData.filter(
     (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
   );
@@ -133,12 +139,30 @@ function Video({ video, setVideo, setUserProfile }) {
 
   const subscribeUser = () => {};
 
+ async function getRecommended(){
+await axios
+      .post(
+              "http://localhost:8080/auth/recommended",
+        JSON.stringify({
+          gameTag: video.GameTag
+        })
+      )
+      .then(function (response) {});
+    try {
+      const response =  await axios.get(
+              "http://localhost:8080/auth/recommended"
+            );
+
+      console.log(response.data.message);
+      setRecommendedVideos(response.data.message.RecommendedVideos);
+  }catch (error) {}
+  }
+
+   useEffect(async() => {
+          getRecommended();
+      },[video]);
+
   async function checkLikeStatus() {
-    if (user) {
-      var displayName = user.displayName;
-    } else {
-      var displayName = null;
-    }
     await axios
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckLikeVideo",
@@ -168,17 +192,12 @@ function Video({ video, setVideo, setUserProfile }) {
   useEffect(() => {
     SetView();
   }, [video]);
-
   useEffect(() => {
     checkLikeStatus();
   }, [video]);
 
+
   async function likeVideo(e) {
-    if (user) {
-      var displayName = user.displayName;
-    } else {
-      var displayName = null;
-    }
     //Axios post should be done here to send info to backend
     axios.post(
       "https://emuu-cz5iycld7a-ue.a.run.app/auth/LikeVideo",
@@ -200,10 +219,10 @@ function Video({ video, setVideo, setUserProfile }) {
   localStorage.setItem("CreatorName", video.Username);
   useEffect(async () => {
     if (video) {
-      sessionStorage.setItem("video", JSON.stringify(video));
+      localStorage.setItem("video", JSON.stringify(video));
     }
-    if (sessionStorage.getItem("video")) {
-      setVideo(JSON.parse(sessionStorage.getItem("video")));
+    if (localStorage.getItem("video")) {
+      setVideo(JSON.parse(localStorage.getItem("video")));
       //console.log(video);
     }
     if (!video && !localStorage.getItem("video")) {
@@ -228,7 +247,9 @@ function Video({ video, setVideo, setUserProfile }) {
         autocomplete={autocomplete}
         searchInput={searchInput}
       />
-      <div className="videoPage">
+
+      <div className="vp-container">
+      <div className="videoPageOne">
         {showSearchResults && (
           <p class="text-start">
             <h2 className="video__category__title p-4">Search Results</h2>
@@ -237,55 +258,52 @@ function Video({ video, setVideo, setUserProfile }) {
                 searchResultsVideosArr.map((video, index) => (
                   <div>
                     <Card sx={{ width: 385, height: 375 }}>
-                      <CardMedia component="img" image={video.ThumbnailUrl} />
-                      <CardContent>
-                        <CardHeader
-                          avatar={
-                            <Avatar
-                              sx={{ width: 60, height: 60 }}
-                              src={video.ProfilePic}
-                            ></Avatar>
-                          }
-                          title={
-                            <Typography
-                              variant="body2"
-                              color="text.primary"
-                              fontWeight="bold"
-                              fontSize="20px"
-                            >
-                              <Link to="/video">
-                                <span
-                                  onClick={() => {
-                                    setVideo(video);
-                                  }}
-                                >
-                                  {video.Title}
-                                </span>
-                              </Link>
-                            </Typography>
-                          }
-                        />
+                                         <CardMedia component="img" image={video.ThumbnailUrl} />
+                                         <CardContent>
+                                           <CardHeader
+                                             avatar={
+                                               <Avatar sx={{ width: 60, height: 60 }}  src={video.ProfilePic}></Avatar>
+                                             }
+                                             title={
+                                               <Typography
+                                                 variant="body2"
+                                                 color="text.primary"
+                                                 fontWeight="bold"
+                                                 fontSize="20px"
+                                               >
+                                                 <Link to="/video">
+                                                   <span
+                                                     onClick={() => {
+                                                       setVideo(video);
+                                                     }}
+                                                   >
+                                                     {video.Title}
+                                                   </span>
+                                                 </Link>
+                                               </Typography>
+                                             }
+                                           />
 
-                        <div className="videoInfo">
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            fontWeight="medium"
-                            fontSize="18px"
-                          >
-                            {video.Likes} Likes &#x2022; {video.Views} Views
-                          </Typography>
-                          <Typography
-                            variant="body2"
-                            color="text.secondary"
-                            fontWeight="medium"
-                            fontSize="18px"
-                          >
-                            {video.Username}
-                          </Typography>
-                        </div>
-                      </CardContent>
-                    </Card>
+                                           <div className="videoInfo">
+                                             <Typography
+                                               variant="body2"
+                                               color="text.secondary"
+                                               fontWeight="medium"
+                                               fontSize="18px"
+                                             >
+                                               {video.Likes} Likes &#x2022; {video.Views} Views
+                                             </Typography>
+                                             <Typography
+                                               variant="body2"
+                                               color="text.secondary"
+                                               fontWeight="medium"
+                                               fontSize="18px"
+                                             >
+                                               {video.Username}
+                                             </Typography>
+                                           </div>
+                                         </CardContent>
+                                       </Card>
                   </div>
                 ))}
             </div>
@@ -370,11 +388,6 @@ function Video({ video, setVideo, setUserProfile }) {
               class="btn btn-lg btn-primary"
               type="submit"
               onClick={async () => {
-                if (user) {
-                  var displayName = user.displayName;
-                } else {
-                  var displayName = null;
-                }
                 await axios
                   .post(
                     "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment",
@@ -410,6 +423,73 @@ function Video({ video, setVideo, setUserProfile }) {
             ))}
           </div>
         )}
+      </div>
+      <div className = "videoPageTwo">
+      <Typography className={"video__category__title"}>
+                        Recommended Videos
+                      </Typography>
+                      <div className="videos__container">
+                        {" "}
+                        {recommendedVideos &&
+                          recommendedVideos.map((video, index) => (
+                            <div>
+                              <Card sx={{ maxWidth: 400, maxHeight: 365 }}>
+                                                        <CardMedia
+                                                          component="img"
+                                                          image={video.ThumbnailUrl}
+                                                        />
+                                                        <CardContent>
+                                                          <CardHeader
+                                                            avatar={
+                                                              <Avatar
+                                                                sx={{ width: 60, height: 60 }}
+                                                                src={video.ProfilePic}
+                                                              ></Avatar>
+                                                            }
+                                                            title={
+                                                              <Typography
+                                                                variant="body2"
+                                                                color="text.primary"
+                                                                fontWeight="bold"
+                                                                fontSize="20px"
+                                                              >
+                                                                <Link to="/video">
+                                                                  <span
+                                                                    onClick={() => {
+                                                                      setVideo(video);
+                                                                    }}
+                                                                  >
+                                                                    {video.Title}
+                                                                  </span>
+                                                                </Link>
+                                                              </Typography>
+                                                            }
+                                                          />
+
+                                                          <div className="videoInfo">
+                                                            <Typography
+                                                              variant="body2"
+                                                              color="text.secondary"
+                                                              fontWeight="medium"
+                                                              fontSize="18px"
+                                                            >
+                                                              {video.Likes} Likes &#x2022; {video.Views} Views
+                                                            </Typography>
+                                                            <Typography
+                                                              variant="body2"
+                                                              color="text.secondary"
+                                                              fontWeight="medium"
+                                                              fontSize="18px"
+                                                            >
+                                                              {video.Username}
+                                                            </Typography>
+                                                          </div>
+                                                        </CardContent>
+                                                      </Card>
+                            </div>
+                          ))}
+                      </div>
+      </div>
       </div>
     </>
   );
