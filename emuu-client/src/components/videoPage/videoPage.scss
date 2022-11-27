@@ -12,8 +12,7 @@
   margin-bottom: 16px;
 }
 .videoPageOne {
-     flex: 1;
-
+  flex: 1;
 }
 .videoPageTwo {
   width: 450px;
@@ -113,19 +112,17 @@
   padding-left: 20px;
   letter-spacing: 0.00938em;
 }
-.vp-container{
-    gap: 40px;
-    display: flex;
-    padding:40px;
+.vp-container {
+  gap: 40px;
+  display: flex;
+  padding: 40px;
 }
-.post-comment .css-1u3bzj6-MuiFormControl-root-MuiTextField-root{
-flex: 1;
-}
-
-@media(max-width:1200px){
-.vp-container{
-flex-direction:column;
+.post-comment .css-1u3bzj6-MuiFormControl-root-MuiTextField-root {
+  flex: 1;
 }
 
+@media (max-width: 1200px) {
+  .vp-container {
+    flex-direction: column;
+  }
 }
-
