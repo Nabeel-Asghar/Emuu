@@ -146,80 +146,80 @@ function Home({ setVideo }, { setUserProfile }) {
   async function subscribeUser(subscribersName) {}
 
 
-// function Media(props) {
-//   return (
-//     <Grid container wrap="wrap" className="videos__container">
-//       {(topVideos.length <7 ? Array.from(new Array(8)) : topVideos).map((video, index) => (
-//         <Box key={index} sx={{ maxWidth: 380, maxHeight: 365  }}>
-//           {video ? (
-//             <div>
-//                                     <Card sx={{ maxWidth: 380, maxHeight: 365 }}>
-//                                       <CardMedia
-//                                         component="img"
-//                                         image={video.ThumbnailUrl}
-//                                       />
-//                                       <CardContent>
-//                                         <CardHeader
-//                                           avatar={
-//                                             <Avatar
-//                                               sx={{ width: 60, height: 60 }}
-//                                               src={video.ProfilePic}
-//                                             ></Avatar>
-//                                           }
-//                                           title={
-//                                             <Typography
-//                                               variant="body2"
-//                                               color="text.primary"
-//                                               fontWeight="bold"
-//                                               fontSize="20px"
-//                                             >
-//                                               <Link to="/video">
-//                                                 <span
-//                                                   onClick={() => {
-//                                                     setVideo(video);
-//                                                       const TitleAndTag = {
-//                                                             title: video.Title,
-//                                                             gameTag: video.GameTag,
-//                                                           };
-//                                                     axios.post("http://localhost:8080/auth/videoPage",JSON.stringify({ ...TitleAndTag }))
-//                                                   }}
-//                                                 >
-//                                                   {video.Title}
-//                                                 </span>
-//                                               </Link>
-//                                             </Typography>
-//                                           }
-//                                         />
-//
-//                                         <div className="videoInfo">
-//                                           <Typography
-//                                             variant="body2"
-//                                             color="text.secondary"
-//                                             fontWeight="medium"
-//                                             fontSize="18px"
-//                                           >
-//                                             {video.Likes} Likes &#x2022; {video.Views} Views
-//                                           </Typography>
-//                                           <Typography
-//                                             variant="body2"
-//                                             color="text.secondary"
-//                                             fontWeight="medium"
-//                                             fontSize="18px"
-//                                           >
-//                                             {video.Username}
-//                                           </Typography>
-//                                         </div>
-//                                       </CardContent>
-//                                     </Card>
-//                                   </div>
-//           ) : (
-//             <Skeleton variant="rectangular" width={380} height={365} />
-//           )}
-//         </Box>
-//       ))}
-//     </Grid>
-//   );
-// }
+function Media(props) {
+  return (
+    <Grid container wrap="wrap" className="videos__container">
+      {(recentVideos.length <7 ? Array.from(new Array(8)) : recentVideos).map((video, index) => (
+        <Box key={index} sx={{ maxWidth: 380, maxHeight: 365  }}>
+          {video ? (
+            <div>
+                                    <Card sx={{ maxWidth: 380, maxHeight: 365 }}>
+                                      <CardMedia
+                                        component="img"
+                                        image={video.ThumbnailUrl}
+                                      />
+                                      <CardContent>
+                                        <CardHeader
+                                          avatar={
+                                            <Avatar
+                                              sx={{ width: 60, height: 60 }}
+                                              src={video.ProfilePic}
+                                            ></Avatar>
+                                          }
+                                          title={
+                                            <Typography
+                                              variant="body2"
+                                              color="text.primary"
+                                              fontWeight="bold"
+                                              fontSize="20px"
+                                            >
+                                              <Link to="/video">
+                                                <span
+                                                  onClick={() => {
+                                                    setVideo(video);
+                                                      const TitleAndTag = {
+                                                            title: video.Title,
+                                                            gameTag: video.GameTag,
+                                                          };
+                                                    axios.post("http://localhost:8080/auth/videoPage",JSON.stringify({ ...TitleAndTag }))
+                                                  }}
+                                                >
+                                                  {video.Title}
+                                                </span>
+                                              </Link>
+                                            </Typography>
+                                          }
+                                        />
+
+                                        <div className="videoInfo">
+                                          <Typography
+                                            variant="body2"
+                                            color="text.secondary"
+                                            fontWeight="medium"
+                                            fontSize="18px"
+                                          >
+                                            {video.Likes} Likes &#x2022; {video.Views} Views
+                                          </Typography>
+                                          <Typography
+                                            variant="body2"
+                                            color="text.secondary"
+                                            fontWeight="medium"
+                                            fontSize="18px"
+                                          >
+                                            {video.Username}
+                                          </Typography>
+                                        </div>
+                                      </CardContent>
+                                    </Card>
+                                  </div>
+          ) : (
+            <Skeleton variant="rectangular" width={380} height={365} />
+          )}
+        </Box>
+      ))}
+    </Grid>
+  );
+}
 
 
   return (
@@ -406,64 +406,76 @@ function Home({ setVideo }, { setUserProfile }) {
 
                 <div className="videos__container">
                   {" "}
-                  {recentVideos &&
-                    recentVideos.map((video, index) => (
-                      <div>
-                        <Card sx={{ maxWidth: 380, maxHeight: 365 }}>
-                          <CardMedia
-                            component="img"
-                            image={video.ThumbnailUrl}
-                          />
-                          <CardContent>
-                            <CardHeader
-                              avatar={
-                                <Avatar
-                                  sx={{ width: 60, height: 60 }}
-                                  src={video.ProfilePic}
-                                ></Avatar>
-                              }
-                              title={
-                                <Typography
-                                  variant="body2"
-                                  color="text.primary"
-                                  fontWeight="bold"
-                                  fontSize="20px"
-                                >
-                                  <Link to="/video">
-                                    <span
-                                      onClick={() => {
-                                        setVideo(video);
-                                      }}
-                                    >
-                                      {video.Title}
-                                    </span>
-                                  </Link>
-                                </Typography>
-                              }
-                            />
+                  <Grid container wrap="wrap" className="videos__container">
+                        {(recentVideos.length <7 ? Array.from(new Array(8)) : recentVideos).map((video, index) => (
+                          <Box key={index} sx={{ maxWidth: 380, maxHeight: 365  }}>
+                            {video ? (
+                              <div>
+                                                      <Card sx={{ maxWidth: 380, maxHeight: 365 }}>
+                                                        <CardMedia
+                                                          component="img"
+                                                          image={video.ThumbnailUrl}
+                                                        />
+                                                        <CardContent>
+                                                          <CardHeader
+                                                            avatar={
+                                                              <Avatar
+                                                                sx={{ width: 60, height: 60 }}
+                                                                src={video.ProfilePic}
+                                                              ></Avatar>
+                                                            }
+                                                            title={
+                                                              <Typography
+                                                                variant="body2"
+                                                                color="text.primary"
+                                                                fontWeight="bold"
+                                                                fontSize="20px"
+                                                              >
+                                                                <Link to="/video">
+                                                                  <span
+                                                                    onClick={() => {
+                                                                      setVideo(video);
+                                                                        const TitleAndTag = {
+                                                                              title: video.Title,
+                                                                              gameTag: video.GameTag,
+                                                                            };
+                                                                      axios.post("http://localhost:8080/auth/videoPage",JSON.stringify({ ...TitleAndTag }))
+                                                                    }}
+                                                                  >
+                                                                    {video.Title}
+                                                                  </span>
+                                                                </Link>
+                                                              </Typography>
+                                                            }
+                                                          />
 
-                            <div className="videoInfo">
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                                fontWeight="medium"
-                                fontSize="18px"
-                              >
-                                {video.Likes} Likes &#x2022; {video.Views} Views
-                              </Typography>
-                              <Typography
-                                variant="body2"
-                                color="text.secondary"
-                                fontWeight="medium"
-                                fontSize="18px"
-                              >
-                                {video.Username}
-                              </Typography>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      </div>
-                    ))}
+                                                          <div className="videoInfo">
+                                                            <Typography
+                                                              variant="body2"
+                                                              color="text.secondary"
+                                                              fontWeight="medium"
+                                                              fontSize="18px"
+                                                            >
+                                                              {video.Likes} Likes &#x2022; {video.Views} Views
+                                                            </Typography>
+                                                            <Typography
+                                                              variant="body2"
+                                                              color="text.secondary"
+                                                              fontWeight="medium"
+                                                              fontSize="18px"
+                                                            >
+                                                              {video.Username}
+                                                            </Typography>
+                                                          </div>
+                                                        </CardContent>
+                                                      </Card>
+                                                    </div>
+                            ) : (
+                              <Skeleton variant="rectangular" width={380} height={365} />
+                            )}
+                          </Box>
+                        ))}
+                      </Grid>
                 </div>
               </p>
               {pages && (
