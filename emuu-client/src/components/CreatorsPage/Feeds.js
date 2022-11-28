@@ -163,7 +163,7 @@ function Feeds({ setVideo, setUserProfile }) {
               {recentVideos &&
                 sort == "Recently Uploaded" &&
                 recentVideos.map((video, index) => (
-                  <Card sx={{ maxWidth: 380, maxHeight: 365 }}>
+                  <Card sx={{ maxWidth: 325, maxHeight:  320 }}>
                     <Link to="/video">
                       <span
                         onClick={() => {
@@ -200,22 +200,23 @@ function Feeds({ setVideo, setUserProfile }) {
                           />
 
                           <div className="videoInfo">
+
                             <Typography
                               variant="body2"
                               color="text.secondary"
                               fontWeight="medium"
-                              fontSize="18px"
-                            >
-                              {video.Likes} Likes &#x2022; {video.Views} Views
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
-                              fontWeight="medium"
-                              fontSize="18px"
+                              fontSize="14px"
                             >
                               {video.Username}
                             </Typography>
+                              <Typography
+                                                          variant="body2"
+                                                          color="text.secondary"
+                                                          fontWeight="medium"
+                                                          fontSize="14px"
+                                                        >
+                                                          {video.Likes} Likes &#x2022; {video.Views} Views
+                                                        </Typography>
                           </div>
                         </CardContent>
                       </span>
@@ -225,7 +226,7 @@ function Feeds({ setVideo, setUserProfile }) {
               {topVideos &&
                 sort == "Most Viewed" &&
                 topVideos.map((video, index) => (
-                  <Card sx={{ maxWidth: 380, maxHeight: 365 }}>
+                  <Card sx={{ maxWidth: 325, maxHeight:  320 }}>
                     <Link to="/video">
                       <span
                         onClick={() => {
@@ -262,22 +263,23 @@ function Feeds({ setVideo, setUserProfile }) {
                           />
 
                           <div className="videoInfo">
+
                             <Typography
                               variant="body2"
                               color="text.secondary"
                               fontWeight="medium"
-                              fontSize="18px"
-                            >
-                              {video.Likes} Likes &#x2022; {video.Views} Views
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
-                              fontWeight="medium"
-                              fontSize="18px"
+                              fontSize="14px"
                             >
                               {video.Username}
                             </Typography>
+                             <Typography
+                                                          variant="body2"
+                                                          color="text.secondary"
+                                                          fontWeight="medium"
+                                                          fontSize="14px"
+                                                        >
+                                                          {video.Likes} Likes &#x2022; {video.Views} Views
+                                                        </Typography>
                           </div>
                         </CardContent>
                       </span>

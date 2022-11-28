@@ -269,7 +269,7 @@ const [firebaseData, setFirebaseData] = useState([]);
               {recentVideos &&
                 sort == "Recently Uploaded" &&
                 recentVideos.map((video, index) => (
-                  <Card sx={{ maxWidth: 380, maxHeight: 365 }}>
+                  <Card sx={{ maxWidth: 325, maxHeight:  320 }}>
                     <Link to="/video">
                       <span
                         onClick={() => {
@@ -306,22 +306,23 @@ const [firebaseData, setFirebaseData] = useState([]);
                           />
 
                           <div className="videoInfo">
+
                             <Typography
                               variant="body2"
                               color="text.secondary"
                               fontWeight="medium"
-                              fontSize="18px"
-                            >
-                              {video.Likes} Likes &#x2022; {video.Views} Views
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
-                              fontWeight="medium"
-                              fontSize="18px"
+                              fontSize="14px"
                             >
                               {video.Username}
                             </Typography>
+                             <Typography
+                                                          variant="body2"
+                                                          color="text.secondary"
+                                                          fontWeight="medium"
+                                                          fontSize="14px"
+                                                        >
+                                                          {video.Likes} Likes &#x2022; {video.Views} Views
+                                                        </Typography>
                           </div>
                         </CardContent>
                       </span>
@@ -332,7 +333,7 @@ const [firebaseData, setFirebaseData] = useState([]);
               {topVideos &&
                 sort == "Most Viewed" &&
                 topVideos.map((video, index) => (
-                  <Card sx={{ maxWidth: 380, maxHeight: 365 }}>
+                  <Card sx={{ maxWidth: 325, maxHeight:  320 }}>
                     <Link to="/video">
                       <span
                         onClick={() => {
@@ -369,22 +370,23 @@ const [firebaseData, setFirebaseData] = useState([]);
                           />
 
                           <div className="videoInfo">
+
                             <Typography
                               variant="body2"
                               color="text.secondary"
                               fontWeight="medium"
-                              fontSize="18px"
-                            >
-                              {video.Likes} Likes &#x2022; {video.Views} Views
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
-                              fontWeight="medium"
-                              fontSize="18px"
+                              fontSize="14px"
                             >
                               {video.Username}
                             </Typography>
+                             <Typography
+                                                          variant="body2"
+                                                          color="text.secondary"
+                                                          fontWeight="medium"
+                                                          fontSize="14px"
+                                                        >
+                                                          {video.Likes} Likes &#x2022; {video.Views} Views
+                                                        </Typography>
                           </div>
                         </CardContent>
                       </span>
@@ -410,7 +412,7 @@ const [firebaseData, setFirebaseData] = useState([]);
             <div className="videos__container">
               {likedVideos &&
                 likedVideos.map((video, index) => (
-                  <Card sx={{ maxWidth: 380, maxHeight: 365 }}>
+                  <Card sx={{ maxWidth: 325, maxHeight:  320 }}>
                     <Link to="/video">
                       <span
                         onClick={() => {
@@ -447,22 +449,23 @@ const [firebaseData, setFirebaseData] = useState([]);
                           />
 
                           <div className="videoInfo">
+
                             <Typography
                               variant="body2"
                               color="text.secondary"
                               fontWeight="medium"
-                              fontSize="18px"
-                            >
-                              {video.Likes} Likes &#x2022; {video.Views} Views
-                            </Typography>
-                            <Typography
-                              variant="body2"
-                              color="text.secondary"
-                              fontWeight="medium"
-                              fontSize="18px"
+                              fontSize="14px"
                             >
                               {video.Username}
                             </Typography>
+                             <Typography
+                                                          variant="body2"
+                                                          color="text.secondary"
+                                                          fontWeight="medium"
+                                                          fontSize="14px"
+                                                        >
+                                                          {video.Likes} Likes &#x2022; {video.Views} Views
+                                                        </Typography>
                           </div>
                         </CardContent>
                       </span>

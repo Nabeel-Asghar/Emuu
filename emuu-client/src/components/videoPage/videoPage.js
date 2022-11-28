@@ -330,7 +330,7 @@ const [firebaseData, setFirebaseData] = useState([]);
                             }
                           />
 
-                          <div className="videoInfo">
+                          <div className="vidInfo">
                             <Typography
                               variant="body2"
                               color="text.secondary"
@@ -376,7 +376,7 @@ const [firebaseData, setFirebaseData] = useState([]);
           <video controls height="700" src={video.VideoUrl}></video>
           <div className="title-line">
             <h1 className="title">{video.Title}</h1>
-            <p className="videoInfo">
+            <p className="vidInfo">
               <div className="details">
                 <img
                   src={video.ProfilePic}
@@ -481,7 +481,7 @@ const [firebaseData, setFirebaseData] = useState([]);
                     text: comment,
                     postedBy: displayName,
                     videoUrl: video.VideoUrl,
-                    profilePic:ProfilePic 
+                    profilePic:ProfilePic
                   })
                   await axios
                     .post(
@@ -490,7 +490,7 @@ const [firebaseData, setFirebaseData] = useState([]);
                         text: comment,
                         postedBy: displayName,
                         videoUrl: video.VideoUrl,
-                        profilePic:ProfilePic 
+                        profilePic:ProfilePic
                       })
                     )
                     .then(function (response) { });
@@ -521,7 +521,7 @@ const [firebaseData, setFirebaseData] = useState([]);
           </div>
         </div>
         <div className="videoPageTwo">
-          <Typography sx={{ textAlign: "left" }} component="div" className={"video__category__title"}>
+          <Typography sx={{ textAlign: "left" }} component="div" className={"vid__category__title"}>
             Recommended Videos
           </Typography>
 

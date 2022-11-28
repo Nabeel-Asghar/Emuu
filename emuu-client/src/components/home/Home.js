@@ -266,10 +266,10 @@ const [firebaseData, setFirebaseData] = useState([]);
                       ? Array.from(new Array(8))
                       : topVideos
                     ).map((video, index) => (
-                      <Box key={index} sx={{ maxWidth: 380, maxHeight: 365 }}>
+                      <Box key={index} sx={{ maxWidth: 325, maxHeight: 320 }}>
                         {video ? (
                           <div>
-                            <Card sx={{ maxWidth: 380, maxHeight: 365 }}>
+                            <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
                               <Link to="/video">
                                 <span
                                   onClick={() => {
@@ -310,23 +310,24 @@ const [firebaseData, setFirebaseData] = useState([]);
                                     />
 
                                     <div className="videoInfo">
+
                                       <Typography
                                         variant="body2"
                                         color="text.secondary"
                                         fontWeight="medium"
-                                        fontSize="18px"
-                                      >
-                                        {video.Likes} Likes &#x2022;{" "}
-                                        {video.Views} Views
-                                      </Typography>
-                                      <Typography
-                                        variant="body2"
-                                        color="text.secondary"
-                                        fontWeight="medium"
-                                        fontSize="18px"
+                                        fontSize="14px"
                                       >
                                         {video.Username}
                                       </Typography>
+                                       <Typography
+                                                                              variant="body2"
+                                                                              color="text.secondary"
+                                                                              fontWeight="medium"
+                                                                              fontSize="14px"
+                                                                            >
+                                                                              {video.Likes} Likes &#x2022;{" "}
+                                                                              {video.Views} Views
+                                                                            </Typography>
                                     </div>
                                   </CardContent>
                                 </span>
@@ -336,8 +337,8 @@ const [firebaseData, setFirebaseData] = useState([]);
                         ) : (
                           <Skeleton
                             variant="rectangular"
-                            width={380}
-                            height={365}
+                            width={325}
+                            height={310}
                           />
                         )}
                       </Box>
@@ -357,10 +358,10 @@ const [firebaseData, setFirebaseData] = useState([]);
                       ? Array.from(new Array(8))
                       : recentVideos
                     ).map((video, index) => (
-                      <Box key={index} sx={{ maxWidth: 380, maxHeight: 365 }}>
+                      <Box key={index} sx={{ maxWidth: 325, maxHeight: 320 }}>
                         {video ? (
                           <div>
-                            <Card sx={{ maxWidth: 380, maxHeight: 365 }}>
+                            <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
                               <Link to="/video">
                                 <span
                                   onClick={() => {
@@ -400,23 +401,25 @@ const [firebaseData, setFirebaseData] = useState([]);
                                     />
 
                                     <div className="videoInfo">
+
                                       <Typography
                                         variant="body2"
                                         color="text.secondary"
                                         fontWeight="medium"
-                                        fontSize="18px"
-                                      >
-                                        {video.Likes} Likes &#x2022;{" "}
-                                        {video.Views} Views
-                                      </Typography>
-                                      <Typography
-                                        variant="body2"
-                                        color="text.secondary"
-                                        fontWeight="medium"
-                                        fontSize="18px"
+                                        fontSize="14px"
                                       >
                                         {video.Username}
                                       </Typography>
+                                       <Typography
+                                                                              variant="body2"
+                                                                              color="text.secondary"
+                                                                              fontWeight="medium"
+                                                                              fontSize="14px"
+                                                                            >
+                                                                              {video.Likes} Likes &#x2022;{" "}
+                                                                              {video.Views} Views
+                                                                            </Typography>
+
                                     </div>
                                   </CardContent>
                                 </span>
@@ -426,8 +429,8 @@ const [firebaseData, setFirebaseData] = useState([]);
                         ) : (
                           <Skeleton
                             variant="rectangular"
-                            width={380}
-                            height={365}
+                            width={325}
+                            height={310}
                           />
                         )}
                       </Box>
