@@ -181,7 +181,7 @@ const [firebaseData, setFirebaseData] = useState([]);
   async function getRecommended() {
     await axios
       .post(
-        "http://localhost:8080/auth/recommended",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended",
         JSON.stringify({
           gameTag: video.GameTag,
         })
@@ -189,7 +189,7 @@ const [firebaseData, setFirebaseData] = useState([]);
       .then(function (response) { });
     try {
       const response = await axios.get(
-        "http://localhost:8080/auth/recommended"
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended"
       );
 
       //      console.log(response.data.message);
