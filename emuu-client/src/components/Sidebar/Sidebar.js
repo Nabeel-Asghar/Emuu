@@ -165,10 +165,10 @@ const [firebaseData, setFirebaseData] = useState([]);
     getMainUser();
   }
 
-  const usersArr = firebaseData.filter(
+  const usersArr = firebaseData?.filter(
     (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
   );
-  const videosArr = firebaseData.filter(
+  const videosArr = firebaseData?.filter(
     (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
   );
 

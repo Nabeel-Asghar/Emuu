@@ -18,18 +18,28 @@ import Container from "@mui/material/Container";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
+import {
+  getAuth,
+  signOut,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  sendPasswordResetEmail,
+} from "firebase/auth";
+import "../../Firebase.js";
+import firebase from "firebase/app";
 import "./register.scss";
-import { getAuth, updatePassword } from "firebase/auth";
+import { updatePassword } from "firebase/auth";
 import "./Settings.scss";
+
 function Settings() {
   //use state for registration variables
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [message, setMessage] = useState("");
   const history = useHistory();
   const [error, setError] = useState("");
-  const auth = getAuth();
-  const user = auth.currentUser;
+  const email = useState("");
 
   const validatePassword = (pass) => {
     if (pass.length < 8) {
@@ -63,10 +73,31 @@ function Settings() {
     e.preventDefault();
     // store the states in the form data
     if (!validatePassword(newPassword)) return;
+    const userEmail = localStorage.getItem("userEmail");
+    const auth = getAuth();
+    const user = auth.currentUser;
+    console.log({ newPassword, uid: auth.currentUser.uid });
 
-    updatePassword(user, newPassword).then(() => {
-      history.push("/login");
-    });
+    await axios
+      .post("http://localhost:8080/auth/settings", {
+        newPassword,
+        uid: auth.currentUser.uid,
+      })
+      .then((result) => {
+        if (result.data) {
+          alert("Successfully Updated Password");
+
+          signOut(auth)
+            .then(() => {
+              localStorage.setItem("auth", false);
+              localStorage.setItem("user", null);
+              localStorage.setItem("displayName", null);
+              history.push("/login");
+            })
+            .catch((e) => alert(e.message));
+        }
+      })
+      .catch((e) => alert(e.message));
   };
 
   return (
@@ -91,11 +122,11 @@ function Settings() {
           <Box component="form" sx={{ mt: 3 }}>
             <Grid container spacing={0}>
               <Grid item xs={12}>
-                <input
+                <TextField
                   required
                   fullWidth
                   name="password"
-                  label="Password"
+                  label="Current Password"
                   type="password"
                   id="password"
                   autoComplete="password"
@@ -107,12 +138,12 @@ function Settings() {
                   }}
                 />
                 <Grid item xs={12}>
-                  <input
+                  <TextField
                     required
                     fullWidth
                     name="newpassword"
-                    label="newPassword"
-                    type="newpassword"
+                    label="New Password"
+                    type="password"
                     id="newpassword"
                     autoComplete="new-password"
                     value={newPassword}
@@ -123,26 +154,42 @@ function Settings() {
                       setError("");
                     }}
                   />
-                  {!error && (
-                    <p>
-                      <small>
+                  <Grid item xs={12}>
+                    <TextField
+                      required
+                      fullWidth
+                      name="password"
+                      label="Confirm New Password"
+                      type="password"
+                      value={confirmNewPassword}
+                      autoComplete="password"
+                      className="register-input"
+                      placeholder="Confirm New Password"
+                      onChange={(e) => {
+                        setConfirmNewPassword(e.target.value);
+                      }}
+                    />
+                    {!error && (
+                      <p>
+                        <small>
+                          {" "}
+                          <InfoOutlinedIcon />
+                          Password must be at least 8 characters with 1 special
+                          character and 1 uppercase character{" "}
+                        </small>{" "}
+                      </p>
+                    )}
+                    {error && (
+                      <p style={{ color: "red", margin: "0" }}>
                         {" "}
-                        <InfoOutlinedIcon />
-                        Password must be at least 8 characters with 1 special
-                        character and 1 uppercase character{" "}
-                      </small>{" "}
-                    </p>
-                  )}
-                  {error && (
-                    <p style={{ color: "red", margin: "0" }}>
-                      {" "}
-                      <small>
-                        {" "}
-                        <ErrorOutlineIcon />
-                        {error}
-                      </small>
-                    </p>
-                  )}
+                        <small>
+                          {" "}
+                          <ErrorOutlineIcon />
+                          {error}
+                        </small>
+                      </p>
+                    )}
+                  </Grid>
                 </Grid>
               </Grid>
               <Button

@@ -99,6 +99,20 @@ func SetVideos(c *gin.Context) {
 			var vid = Video{}
 
 			doc.DataTo(&vid)
+			iter := client.Collection("Users").Where("Username", "==", vid.Username).Documents(ctx)
+			for {
+				doc, err := iter.Next()
+				if err == iterator.Done {
+					break
+				}
+				if err != nil {
+					return
+				}
+				var profilePic User
+				doc.DataTo(&profilePic)
+				reflect.ValueOf(&vid).Elem().FieldByName("ProfilePic").SetString(profilePic.ProfilePicture)
+
+			}
 			mostViewedArr = append(mostViewedArr, vid)
 			recentArr = append(recentArr, vid)
 		}
