@@ -8,7 +8,7 @@
     text-align: left;
     white-space: normal;
   }
-  .videoInfo {
+.vidInfo {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -17,7 +17,7 @@
     padding-left:0px;
   }
   @media screen and (max-width:600px){
-  .videoInfo {
+ .vidInfo {
       display: flex;
       flex-direction:column;
       align-items: center;
@@ -26,7 +26,7 @@
       padding-left:0px;
     }
   }
-  .videoInfo .details {
+  .vidInfo .details {
     display: flex;
     align-items: center;
     justify-content: flex-start;
@@ -38,7 +38,7 @@
     width: 70px;
     margin-right: 12px;
   }
-  .videoInfo .details .creator {
+  .vidInfo .details .creator {
     display: flex;
     flex-direction: column;
     font-family: "Roboto", "Arial", sans-serif;
@@ -47,18 +47,18 @@
     font-weight: 400;
     font-weight: bolder;
   }
-  .videoInfo .details .creator .subs {
+  .vidInfo .details .creator .subs {
     font-size: 12px;
     line-height: 1.2rem;
     font-weight: bold;
   }
-  .videoInfo .actions {
+  .vidInfo .actions {
     justify-content: flex-end;
     display: flex;
     color: #fff;
     flex-direction: column;
   }
-  .videoInfo .actions .btn-group {
+  .vidInfo .actions .btn-group {
   position:relative;
    border-radius: 12px;
     display: flex;
@@ -93,7 +93,7 @@
   	width:98%;
   }
 
-  .videoInfo .actions .btn-group .action-btn {
+  .vidInfo .actions .btn-group .action-btn {
     padding: 4px 5px;
     display: flex;
 
@@ -103,7 +103,7 @@
     justify-content: center;
   }
 
-.videoInfo .actions .btn-group .action-btn > span{
+.vidInfo .actions .btn-group .action-btn > span{
 color:"#fff"!important}
   .about {
     margin: 20px 2px;
@@ -260,7 +260,7 @@ color:"#fff"!important}
     gap: 20px !important;
     padding: 20px !important;
   }
-  .video__category__title {
+  .vid__category__title {
     font-family: "Roboto", "Helvetica", "Arial", sans-serif;
     font-size: 30px !important;
     font-weight: bold !important;
