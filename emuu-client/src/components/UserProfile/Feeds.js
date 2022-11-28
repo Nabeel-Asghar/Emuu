@@ -197,18 +197,7 @@ function Feeds({ setVideo }) {
       setUpdateSubscribersListCompleteData(response.data.message.SubDetails);
     } catch (error) {}
   }
-  //
-  //   useEffect(async () => {
-  //      if (displayName !== null){
-  //      }
-  //  }, [] );
-  //    useEffect(async () => {
-  //     if (displayName !== null){
-  //      await getLikedVideos();
-  //      await getVideos();
-  //      await getSubscribers();
-  //      }
-  //  }, [] );
+
 
   if (displayName !== null && likedVideos.length === 0) {
     getLikedVideos();
