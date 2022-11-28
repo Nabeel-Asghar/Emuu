@@ -1,8 +1,8 @@
 #BUILDER STAGE 1
 FROM golang:1.19-alpine as builder
 
-# Create and change to the app directory.
-WORKDIR /app
+ENV APP emmu
+ENV CMD_MAIN main/main.go
 
 WORKDIR $GOPATH/src/${APP}
 COPY . .
@@ -18,7 +18,7 @@ RUN go build -o /${APP} $GOPATH/src/${APP}/${CMD_MAIN}
 #BUILDER STAGE 2
 FROM alpine:3.9
 
-ENV APP emuu
+ENV APP emmu
 ENV FB_CONFIG_FILE serviceAccountKey.json
 ENV GO_CONFIG ./${FB_CONFIG_FILE}
 
