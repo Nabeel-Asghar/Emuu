@@ -8,25 +8,26 @@ import (
 	"google.golang.org/api/option"
 	"log"
 	"net/http"
-	"reflect"
+ 	"reflect"
 	"time"
+
 )
 
 type Video struct {
-	Username         string              `firestore:"Username"`
-	Title            string              `firestore:"VideoTitle"`
-	VideoUrl         string              `firestore:"VideoUrl"`
-	ThumbnailUrl     string              `firestore:"thumbnailUrl"`
-	Likes            int                 `firestore:"Likes"`
-	Views            int                 `firestore:"Views"`
-	UploadTime       int                 `firestore:"uploadTime"`
-	Date             string              `firestore:"Date"`
-	GameTag          string              `firestore:"GameTag"`
-	VideoDescription string              `firestore:"VideoDescription"`
-	UsersThatLiked   []string            `firestore:"usersThatLiked"`
-	Comments         []map[string]string `firestore:"Comments,omitempty"`
+		Username         string              `firestore:"Username"`
+    	Title            string              `firestore:"VideoTitle"`
+    	VideoUrl         string              `firestore:"VideoUrl"`
+    	ThumbnailUrl     string              `firestore:"thumbnailUrl"`
+    	Likes            int                 `firestore:"Likes"`
+    	Views            int                 `firestore:"Views"`
+    	UploadTime       int                 `firestore:"uploadTime"`
+    	Date             string              `firestore:"Date"`
+    	GameTag          string              `firestore:"GameTag"`
+    	VideoDescription string              `firestore:"VideoDescription"`
+    	UsersThatLiked   []string            `firestore:"usersThatLiked"`
+    	Comments         []map[string]string `firestore:"Comments,omitempty"`
 
-	ProfilePicUrl string
+     	ProfilePic string
 }
 
 type User struct {
@@ -35,6 +36,10 @@ type User struct {
 	DateJoined        string `firestore:"DateJoined"`
 	ProfilePictureUrl string `firestore:"ProfilePictureUrl"`
 	SubscriberCount   int    `firestore:"SubscriberCount"`
+}
+
+type UserPfp struct{
+ProfilePicture string `firestore:"ProfilePictureUrl"`
 }
 
 func SetVideosAndUsers(c *gin.Context) {
@@ -63,18 +68,18 @@ func SetVideosAndUsers(c *gin.Context) {
 
 		doc.DataTo(&vid)
 
-		iter := client.Collection("Users").Where("Username", "==", vid.Username).Documents(ctx)
+		videoCollection := client.Collection("Users").Where("Username", "==", vid.Username).Documents(ctx)
 		for {
-			doc, err := iter.Next()
+			doc, err := videoCollection.Next()
 			if err == iterator.Done {
 				break
 			}
 			if err != nil {
 				return
 			}
-			var profilePic User
+			var profilePic UserPfp
 			doc.DataTo(&profilePic)
-			reflect.ValueOf(&vid).Elem().FieldByName("ProfilePic").SetString(profilePic.ProfilePictureUrl)
+			reflect.ValueOf(&vid).Elem().FieldByName("ProfilePic").SetString(profilePic.ProfilePicture)
 
 		}
 		videoArr = append(videoArr, vid)
@@ -96,6 +101,7 @@ func SetVideosAndUsers(c *gin.Context) {
 		userArr = append(userArr, user)
 
 	}
+
 
 	response := struct {
 		Videos []Video

@@ -65,19 +65,25 @@ function Profile({ setVideo, video }, { classes }) {
   const [autocompleteState, setAutocompleteState] = useState({});
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
-  const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
+
   const [profileUser, setProfileUser] = useState([]);
   const displayName = localStorage.getItem("displayName");
 
-  // const auth = getAuth();
-  // const user = auth.currentUser;
-  //
-  // if (user) {
-  //  var displayName = user.displayName;
-  // } else {
-  // var displayName = null;
-  // }
+const [firebaseData, setFirebaseData] = useState([]);
+  async function getData() {
+      const response = await axios.get(
+        "http://localhost:8080/auth/firebase-data"
+      );
+      const users = response.data.message.Users;
+      const videos = response.data.message.Videos;
+      var completeFirebaseData = videos.concat(users);
+      setFirebaseData(completeFirebaseData);
 
+    }
+
+    useEffect(async () => {
+      await getData();
+    }, []);
   const autocomplete = useMemo(
     () =>
       createAutocomplete({

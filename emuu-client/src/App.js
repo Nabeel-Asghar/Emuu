@@ -46,19 +46,7 @@ function App() {
   const auth = getAuth();
   const [video, setVideo] = useState("");
 
-  async function getData() {
-    const response = await axios.get(
-      "http://localhost:8080/auth/firebase-data"
-    );
-    const users = response.data.message.Users;
-    const videos = response.data.message.Videos;
-    const completeFirebaseData = videos.concat(users);
-    localStorage.setItem("firebase-data", JSON.stringify(completeFirebaseData));
-  }
 
-  useEffect(async () => {
-    await getData();
-  }, []);
 
   return (
     <AppProvider>

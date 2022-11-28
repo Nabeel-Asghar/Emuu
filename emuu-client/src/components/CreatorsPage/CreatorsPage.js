@@ -53,11 +53,26 @@ function Creator({ setVideo, video }) {
   const [count, setCount] = useState(0);
   const [checked, setChecked] = useState(false);
   const [searchInput, setSearchInput] = useState("");
-  const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
+
   const docRef = doc(db, "Users", creatorName);
   const [Banner, setBanner] = useState("");
   const [CreatorProfilePic, setCreatorProfilePic] = useState("");
   const [subscriberCount, setSubscriberCount] = useState(0);
+  const [firebaseData, setFirebaseData] = useState([]);
+    async function getData() {
+        const response = await axios.get(
+          "http://localhost:8080/auth/firebase-data"
+        );
+        const users = response.data.message.Users;
+        const videos = response.data.message.Videos;
+        var completeFirebaseData = videos.concat(users);
+        setFirebaseData(completeFirebaseData);
+
+      }
+
+      useEffect(async () => {
+        await getData();
+      }, []);
   const autocomplete = useMemo(
     () =>
       createAutocomplete({
