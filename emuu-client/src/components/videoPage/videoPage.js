@@ -178,29 +178,29 @@ const [firebaseData, setFirebaseData] = useState([]);
 
   const subscribeUser = () => { };
 
-  async function getRecommended() {
-    await axios
-      .post(
-        "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended",
-        JSON.stringify({
-          gameTag: video.GameTag,
-        })
-      )
-      .then(function (response) { });
-    try {
-      const response = await axios.get(
-        "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended"
-      );
+ async function getRecommended() {
+   await axios
+       .post(
+         "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended",
+         JSON.stringify({
+           gameTag: video.GameTag,
+         })
+       )
+       .then(function (response) { });
+     try {
+       const response = await axios.get(
+         "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended"
+       );
 
-      //      console.log(response.data.message);
-      setRecommendedVideos(response.data.message.RecommendedVideos);
-    } catch (error) { }
-  }
+       //      console.log(response.data.message);
+       setRecommendedVideos(response.data.message.RecommendedVideos);
+     } catch (error) { }
+   }
 
-  useEffect(async () => {
-    getRecommended();
-    await getCreator()
-  }, [video]);
+   useEffect(async () => {
+     getRecommended();
+     await getCreator()
+     }, [video]);
 
   async function checkLikeStatus() {
     await axios
