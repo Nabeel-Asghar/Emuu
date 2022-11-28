@@ -141,7 +141,6 @@ function Home({ setVideo }, { setUserProfile }) {
 
   async function subscribeUser(subscribersName) {}
 
-
   return (
     <AppContext.Consumer>
       {(context) => (
