@@ -54,7 +54,21 @@ function Video({ video, setVideo, setUserProfile }) {
   const [subscriberCount, setSubscriberCount] = useState(null);
   const [count, setCount] = useState(0);
   const ProfilePic = localStorage.getItem("ProfilePictureUrl");
+const [firebaseData, setFirebaseData] = useState([]);
+  async function getData() {
+      const response = await axios.get(
+        "http://localhost:8080/auth/firebase-data"
+      );
+      const users = response.data.message.Users;
+      const videos = response.data.message.Videos;
+      var completeFirebaseData = videos.concat(users);
+      setFirebaseData(completeFirebaseData);
 
+    }
+
+    useEffect(async () => {
+      await getData();
+    }, []);
   async function getCreator() {
     const dis = {
       displayName: video.Username,
@@ -77,7 +91,6 @@ function Video({ video, setVideo, setUserProfile }) {
   }
   const [recommendedVideos, setRecommendedVideos] = useState([]);
 
-  const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
 
   const autocomplete = useMemo(
     () =>
