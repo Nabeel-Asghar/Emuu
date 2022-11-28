@@ -325,7 +325,7 @@ function Home({ setVideo }, { setUserProfile }) {
                 <div className="videos__container">
                   {" "}
                   <Grid container wrap="wrap" className="videos__container">
-                    {(topVideos.length < 7
+                    {(topVideos.length < 1
                       ? Array.from(new Array(8))
                       : topVideos
                     ).map((video, index) => (
@@ -416,7 +416,7 @@ function Home({ setVideo }, { setUserProfile }) {
                 <div className="videos__container">
                   {" "}
                   <Grid container wrap="wrap" className="videos__container">
-                    {(recentVideos.length < 8
+                    {(recentVideos.length < 1
                       ? Array.from(new Array(8))
                       : recentVideos
                     ).map((video, index) => (
