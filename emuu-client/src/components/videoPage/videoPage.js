@@ -26,6 +26,7 @@ import IconButton from "@mui/material/IconButton";
 import { Avatar } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
+import ThumbDownIcon from '@mui/icons-material/ThumbDown';
 
 import {
   getDocs,
@@ -221,6 +222,25 @@ const [firebaseData, setFirebaseData] = useState([]);
       setChecked(response.data.message.CheckedValue);
     } catch (error) { }
   }
+  async function checkDislikeStatus() {
+      await axios
+        .post(
+          "https://localhost:8080/auth/CheckDislikeVideo",
+          JSON.stringify({
+            displayName: displayName,
+            videoUrl: video.VideoUrl,
+            DislikedBoolean: !checked,
+          })
+        )
+        .then(function (response) { });
+      try {
+        const response = await axios.get(
+          "https://localhost:8080/auth/CheckDislikeVideo"
+        );
+
+        setChecked(response.data.message.CheckedValue);
+      } catch (error) { }
+    }
   async function SetView() {
     await axios.post(
       "https://emuu-cz5iycld7a-ue.a.run.app/auth/view",
@@ -234,6 +254,7 @@ const [firebaseData, setFirebaseData] = useState([]);
     //  }, [video]);
     //  useEffect(() => {
     checkLikeStatus();
+    checkDislikeStatus();
     getCreator()
   }, [video]);
 
@@ -255,6 +276,24 @@ const [firebaseData, setFirebaseData] = useState([]);
       sessionStorage.setItem("video", JSON.stringify(video));
     }
   }
+  async function dislikeVideo(e) {
+      //Axios post should be done here to send info to backend
+      axios.post(
+        "https://localhost:8080/auth/DislikeVideo",
+        JSON.stringify({
+          displayName: displayName,
+          videoUrl: video.VideoUrl,
+          DislikedBoolean: !checked,
+        })
+      );
+      if (checked === true) {
+        video.Dislikes--;
+        sessionStorage.setItem("video", JSON.stringify(video));
+      } else {
+        video.Dislikes++;
+        sessionStorage.setItem("video", JSON.stringify(video));
+      }
+    }
 
   localStorage.setItem("CreatorName", video.Username);
   useEffect(async () => {
@@ -337,7 +376,7 @@ const [firebaseData, setFirebaseData] = useState([]);
                               fontWeight="medium"
                               fontSize="18px"
                             >
-                              {video.Likes} Likes &#x2022; {video.Views} Views
+                              {video.Likes} Likes &#x2022; {video.Dislikes} Dislikes &#x2022 {video.Views} Views
                             </Typography>
                             <Typography
                               variant="body2"
@@ -422,7 +461,24 @@ const [firebaseData, setFirebaseData] = useState([]);
                   </span>
 
                   <span className="dislikes action-btn">
-                    <ThumbDownOutlinedIcon sx={{ color: "#fff" }} />
+                    <FormControlLabel
+                      control={
+                       <Checkbox
+                        icon={<ThumbDownOutlinedIcon sx={{ color: "#fff" }} />}
+                        checkedIcon={
+                        <ThumbDownIcon sx={{ color: "#fff" }} />
+                         }
+                         name="Dislike"
+                         id="Dislike"
+                         checked={checked}
+                         onChange={async (e) => {
+                         setChecked(!checked);
+                         dislikeVideo(e);
+                         }}
+                         />
+                         }
+                         label={video.Dislikes > 0 ? video.Dislikes : ""}
+                         />
 
                   </span>
 

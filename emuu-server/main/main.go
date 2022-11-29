@@ -21,6 +21,7 @@ import (
 	settings "emuu-server/main/users"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	dislikes "emuu-server/main/video"
 )
 
 func main() {
@@ -67,6 +68,9 @@ func main() {
 		auth.POST("/settings", settings.UpdatePassword)
 		auth.POST("/recommended", recommended.SetGameTag)
         auth.GET("/recommended", recommended.SetRecommended)
+        auth.POST("/DislikeVideo", dislikes.SetDislikes)
+        auth.POST("/CheckDislikeVideo", dislikes.SetUsernameDislike)
+        auth.GET("/CheckDislikeVideo", dislikes.CheckDislikes)
 	}
 
 	api := r.Group("api").Use(firebaseSer.AuthJWT) //create a new router with the middleware authJWT

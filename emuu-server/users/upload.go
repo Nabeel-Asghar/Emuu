@@ -107,6 +107,7 @@ func UploadVideo(c *gin.Context) {
 	var commentsArr []map[string]string
 	//Declare usersThatLiked array
 	usersThatLikedArr := [...]string{}
+	usersThatDislikedArr := [...]string{}
 
 	id := uuid.New()
 	wr, err := client.Collection("Videos").Doc(id.String()).Create(ctx, map[string]interface{}{
@@ -118,10 +119,12 @@ func UploadVideo(c *gin.Context) {
 		"thumbnailUrl":     u1.getthumbUrl(),
 		"Comments":         commentsArr,
 		"Likes":            0,
+		"Dislikes":         0,
 		"Views":            0,
 		"Date":             Date,
 		"uploadTime":       currentTimestamp,
 		"usersThatLiked":   usersThatLikedArr,
+		"usersThatDisliked": usersThatDislikedArr,
 	})
 
 	if err != nil {
