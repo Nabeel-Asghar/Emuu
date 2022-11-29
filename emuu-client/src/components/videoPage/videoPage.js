@@ -179,17 +179,19 @@ const [firebaseData, setFirebaseData] = useState([]);
   const subscribeUser = () => { };
 
   async function getRecommended() {
+  const TitleAndTag = {
+                                        title: video.Title,
+                                        gameTag: video.GameTag,
+                                      };
     await axios
       .post(
-        "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended",
-        JSON.stringify({
-          gameTag: video.GameTag,
-        })
+        "http://localhost:8080/auth/recommended",
+        JSON.stringify({ ...TitleAndTag })
       )
       .then(function (response) { });
     try {
       const response = await axios.get(
-        "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended"
+        "http://localhost:8080/auth/recommended"
       );
 
       //      console.log(response.data.message);
