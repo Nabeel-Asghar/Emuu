@@ -328,9 +328,9 @@ const [firebaseData, setFirebaseData] = useState([]);
   const handleComments = (event) => {
     setComment(event.target.value);
   };
-  const total = video.Likes + (video.Dislikes || 16)
+  const total = video.Likes + (video.Dislikes )
   const percentageLikes = (video.Likes / total) * 100;
-  const percentageDislikes = ((video.Dislikes || 16) / total) * 100;
+  const percentageDislikes = ((video.Dislikes ) / total) * 100;
   //console.log("Video",video)
   return (
     <>
@@ -494,8 +494,8 @@ const [firebaseData, setFirebaseData] = useState([]);
                 </div>
                 <div className="bar">
 
-                  <div style={{ width: percentageLikes + "%" }} className="likesC">{video.Likes}</div>
-                  <div style={{ width: percentageDislikes + "%" }} className="dislikesC">{video.Dislikes || 20}</div>
+                  <div style={{ width: percentageLikes + "%" }} className="likesC">{}</div>
+                  <div style={{ width: percentageDislikes + "%" }} className="dislikesC">{}</div>
 
                 </div>
 
