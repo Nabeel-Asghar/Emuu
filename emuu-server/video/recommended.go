@@ -93,6 +93,40 @@ func SetRecommended(c *gin.Context) {
 
 	}
 
+	if len(recommendArr) < 10 {
+		iter := client.Collection("Videos").Where("GameTag", "!=", Games).Documents(ctx)
+		for {
+			doc, err := iter.Next()
+			if err == iterator.Done {
+				break
+			}
+			if err != nil {
+				return
+			}
+			var vid = Vid{}
+
+			doc.DataTo(&vid)
+			iter := client.Collection("Users").Where("Username", "==", vid.Username).Documents(ctx)
+			for {
+				doc, err := iter.Next()
+				if err == iterator.Done {
+					break
+				}
+				if err != nil {
+					return
+				}
+				var profilePic User
+				doc.DataTo(&profilePic)
+				reflect.ValueOf(&vid).Elem().FieldByName("ProfilePic").SetString(profilePic.ProfilePicture)
+
+			}
+			recommendArr = append(recommendArr, vid)
+			if len(recommendArr) > 10 {
+				recommendArr = recommendArr[0:10]
+			}
+		}
+	}
+
 	response := struct {
 		RecommendedVideos []Vid
 	}{
