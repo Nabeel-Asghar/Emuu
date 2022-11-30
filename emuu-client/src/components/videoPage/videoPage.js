@@ -550,7 +550,7 @@ const [firebaseData, setFirebaseData] = useState([]);
                   })
                   await axios
                     .post(
-                      "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment",
+                      "http://localhost:8080/auth/comment",
                       JSON.stringify({
                         text: comment,
                         postedBy: displayName,
@@ -575,6 +575,11 @@ const [firebaseData, setFirebaseData] = useState([]);
                 {commentList.map((comment) => (
                   <div className="comment">
                     <h5 className="commentTitle">
+                     <img
+                                    src={comment.ProfilePictureUrl}
+                                    className="profilePicComment"
+                                    alt="Profile"
+                                  />
                       {comment.postedBy} <span className="commentDate"> {comment.date}</span>{" "}
                     </h5>
 

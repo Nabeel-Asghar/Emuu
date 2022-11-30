@@ -23,6 +23,10 @@ type Comment struct {
 	Comments []map[string]string `firestore:"Comments"`
 }
 
+type ProfilePic struct {
+	ProfilePicUrl string `firestore:"ProfilePictureUrl"`
+}
+
 func SetComment(c *gin.Context) {
 	var input VideoInfo
 	if err := c.ShouldBindJSON(&input); err != nil {
@@ -39,9 +43,26 @@ func SetComment(c *gin.Context) {
 		log.Fatalf("firestore client creation error:%s", err)
 	}
 	defer client.Close()
+
+	var UserPFP ProfilePic
+
+	pfp := client.Collection("Users").Where("Username", "==", input.UserName).Documents(ctx)
+	for {
+		doc, err := pfp.Next()
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			return
+		}
+
+		doc.DataTo(&UserPFP)
+
+	}
+
 	commentsArr := Comment{}
 	dt := time.Now()
-	comment := map[string]string{"postedBy": input.UserName, "text": input.Comment, "date": dt.Format("01-02-2006")}
+	comment := map[string]string{"postedBy": input.UserName, "text": input.Comment, "date": dt.Format("01-02-2006"), "ProfilePictureUrl": UserPFP.ProfilePicUrl}
 
 	iter := client.Collection("Videos").Where("VideoUrl", "==", videoUrl).Documents(ctx)
 	for {
