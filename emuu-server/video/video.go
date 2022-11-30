@@ -35,7 +35,8 @@ type Video struct {
 	VideoDescription string              `firestore:"VideoDescription"`
 	UsersThatLiked   []string            `firestore:"usersThatLiked"`
 	Comments         []map[string]string `firestore:"Comments,omitempty"`
-
+    Dislikes            int                 `firestore:"Dislikes"`
+    UsersThatDisiked   []string            `firestore:"usersThatDisliked"`
 	ProfilePic string
 }
 type User struct {
