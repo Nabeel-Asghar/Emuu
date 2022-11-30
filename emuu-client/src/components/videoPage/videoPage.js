@@ -48,6 +48,7 @@ function Video({ video, setVideo, setUserProfile }) {
   const [commentList, setCommentList] = useState(video?.Comments || [])
   const displayName = localStorage.getItem("displayName");
   const [checked, setChecked] = useState(false);
+    const [dislikeChecked, setDislikeChecked] = useState(false);
   const history = useHistory();
   const location = useLocation();
   const [autocompleteState, setAutocompleteState] = useState({});
@@ -225,7 +226,7 @@ const [firebaseData, setFirebaseData] = useState([]);
   async function checkDislikeStatus() {
       await axios
         .post(
-          "https://localhost:8080/auth/CheckDislikeVideo",
+          "http://localhost:8080/auth/CheckDislikeVideo",
           JSON.stringify({
             displayName: displayName,
             videoUrl: video.VideoUrl,
@@ -235,10 +236,10 @@ const [firebaseData, setFirebaseData] = useState([]);
         .then(function (response) { });
       try {
         const response = await axios.get(
-          "https://localhost:8080/auth/CheckDislikeVideo"
+          "http://localhost:8080/auth/CheckDislikeVideo"
         );
 
-        setChecked(response.data.message.CheckedValue);
+        setDislikeChecked(response.data.message.CheckedValue);
       } catch (error) { }
     }
   async function SetView() {
@@ -261,7 +262,7 @@ const [firebaseData, setFirebaseData] = useState([]);
   async function likeVideo(e) {
     //Axios post should be done here to send info to backend
     axios.post(
-      "https://emuu-cz5iycld7a-ue.a.run.app/auth/LikeVideo",
+      "http://localhost:8080/auth/LikeVideo",
       JSON.stringify({
         displayName: displayName,
         videoUrl: video.VideoUrl,
@@ -275,23 +276,31 @@ const [firebaseData, setFirebaseData] = useState([]);
       video.Likes++;
       sessionStorage.setItem("video", JSON.stringify(video));
     }
+     if(dislikeChecked === true) {
+            setDislikeChecked(false);
+            video.Dislikes--;
+            }
   }
   async function dislikeVideo(e) {
       //Axios post should be done here to send info to backend
       axios.post(
-        "https://localhost:8080/auth/DislikeVideo",
+        "http://localhost:8080/auth/DislikeVideo",
         JSON.stringify({
           displayName: displayName,
           videoUrl: video.VideoUrl,
-          DislikedBoolean: !checked,
+          DislikedBoolean: !dislikeChecked,
         })
       );
-      if (checked === true) {
+      if (dislikeChecked === true) {
         video.Dislikes--;
         sessionStorage.setItem("video", JSON.stringify(video));
       } else {
         video.Dislikes++;
         sessionStorage.setItem("video", JSON.stringify(video));
+        if(checked === true) {
+        setChecked(false);
+        video.Likes--;
+        }
       }
     }
 
@@ -319,9 +328,9 @@ const [firebaseData, setFirebaseData] = useState([]);
   const handleComments = (event) => {
     setComment(event.target.value);
   };
-  const total = video.Likes + (video.Dislikes || 16)
+  const total = video.Likes + (video.Dislikes )
   const percentageLikes = (video.Likes / total) * 100;
-  const percentageDislikes = ((video.Dislikes || 16) / total) * 100;
+  const percentageDislikes = ((video.Dislikes ) / total) * 100;
   //console.log("Video",video)
   return (
     <>
@@ -470,9 +479,9 @@ const [firebaseData, setFirebaseData] = useState([]);
                          }
                          name="Dislike"
                          id="Dislike"
-                         checked={checked}
+                         checked={dislikeChecked}
                          onChange={async (e) => {
-                         setChecked(!checked);
+                         setDislikeChecked(!dislikeChecked);
                          dislikeVideo(e);
                          }}
                          />
@@ -485,8 +494,8 @@ const [firebaseData, setFirebaseData] = useState([]);
                 </div>
                 <div className="bar">
 
-                  <div style={{ width: percentageLikes + "%" }} className="likesC">{video.Likes}</div>
-                  <div style={{ width: percentageDislikes + "%" }} className="dislikesC">{video.Dislikes || 20}</div>
+                  <div style={{ width: percentageLikes + "%" }} className="likesC">{}</div>
+                  <div style={{ width: percentageDislikes + "%" }} className="dislikesC">{}</div>
 
                 </div>
 
@@ -541,7 +550,7 @@ const [firebaseData, setFirebaseData] = useState([]);
                   })
                   await axios
                     .post(
-                      "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment",
+                      "http://localhost:8080/auth/comment",
                       JSON.stringify({
                         text: comment,
                         postedBy: displayName,
@@ -566,6 +575,11 @@ const [firebaseData, setFirebaseData] = useState([]);
                 {commentList.map((comment) => (
                   <div className="comment">
                     <h5 className="commentTitle">
+                     <img
+                                    src={comment.ProfilePictureUrl}
+                                    className="profilePicComment"
+                                    alt="Profile"
+                                  />
                       {comment.postedBy} <span className="commentDate"> {comment.date}</span>{" "}
                     </h5>
 

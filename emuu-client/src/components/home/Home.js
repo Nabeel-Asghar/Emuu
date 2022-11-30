@@ -128,12 +128,12 @@ const [firebaseData, setFirebaseData] = useState([]);
     };
     await axios
       .post(
-        "https://emuu-cz5iycld7a-ue.a.run.app/auth/video",
+        "http://localhost:8080/auth/video",
         JSON.stringify({ ...disAndPage })
       )
       .then(function (response) {});
     const response = await axios.get(
-      "https://emuu-cz5iycld7a-ue.a.run.app/auth/video"
+      "http://localhost:8080/auth/video"
     );
     setTopVideos(response.data.message.MostViewed);
     setRecentVideos(response.data.message.RecentUpload);

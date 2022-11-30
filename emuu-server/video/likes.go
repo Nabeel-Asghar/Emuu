@@ -97,6 +97,9 @@ func SetLikes(c *gin.Context) {
 	if input.LikedBoolean == true {
 		var likesArr Like
 		var newlikesArr []string
+		var dislikesArr Dislike
+		var newdislikesArr []string
+
 		iter := client.Collection("Videos").Where("VideoUrl", "==", input.VideoUrl).Documents(ctx)
 		for {
 			doc, err := iter.Next()
@@ -108,12 +111,29 @@ func SetLikes(c *gin.Context) {
 			}
 
 			doc.DataTo(&likesArr)
+			doc.DataTo(&dislikesArr)
 			fmt.Println(likesArr.UsersThatLiked)
 
 			var user = input.UserName
 			fmt.Println(user)
 			newlikesArr = append(newlikesArr, user)
 			newlikesArr = append(newlikesArr, likesArr.UsersThatLiked...)
+			newdislikesArr = append(newdislikesArr, dislikesArr.UsersThatDisliked...)
+			for i, v := range newdislikesArr {
+				if v == user {
+					newdislikesArr = append(newdislikesArr[:i], newdislikesArr[i+1:]...)
+					ab := client.Collection("Videos").Doc(doc.Ref.ID)
+					_, err = ab.Update(ctx, []firestore.Update{
+						{Path: "usersThatDisliked", Value: newdislikesArr},
+					})
+					cd := client.Collection("Videos").Doc(doc.Ref.ID)
+					_, err = cd.Update(ctx, []firestore.Update{
+						{Path: "Dislikes", Value: firestore.Increment(-1)},
+					})
+					break
+				}
+			}
+
 			fmt.Println(newlikesArr)
 			dc := client.Collection("Videos").Doc(doc.Ref.ID)
 			_, err = dc.Update(ctx, []firestore.Update{
@@ -123,6 +143,7 @@ func SetLikes(c *gin.Context) {
 			_, err = li.Update(ctx, []firestore.Update{
 				{Path: "Likes", Value: firestore.Increment(1)},
 			})
+
 		}
 
 	} else {
