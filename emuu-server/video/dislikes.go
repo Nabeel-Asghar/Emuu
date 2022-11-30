@@ -13,8 +13,8 @@ import (
 )
 
 type DisplayNameDislike struct {
-	UserName     string `json:"displayName"`
-	VideoUrl     string `json:"videoUrl"`
+	UserName        string `json:"displayName"`
+	VideoUrl        string `json:"videoUrl"`
 	DislikedBoolean bool   `json:"DislikedBoolean"`
 }
 
@@ -97,6 +97,10 @@ func SetDislikes(c *gin.Context) {
 	if input.DislikedBoolean == true {
 		var dislikesArr Dislike
 		var newdislikesArr []string
+
+		var likesArr Like
+		var newlikesArr []string
+
 		iter := client.Collection("Videos").Where("VideoUrl", "==", input.VideoUrl).Documents(ctx)
 		for {
 			doc, err := iter.Next()
@@ -108,12 +112,27 @@ func SetDislikes(c *gin.Context) {
 			}
 
 			doc.DataTo(&dislikesArr)
-			fmt.Println(dislikesArr.UsersThatDisliked)
+			doc.DataTo(&likesArr)
 
 			var user = input.UserName
 			fmt.Println(user)
 			newdislikesArr = append(newdislikesArr, user)
 			newdislikesArr = append(newdislikesArr, dislikesArr.UsersThatDisliked...)
+			newlikesArr = append(newlikesArr, likesArr.UsersThatLiked...)
+			for i, v := range newlikesArr {
+				if v == user {
+					newlikesArr = append(newlikesArr[:i], newlikesArr[i+1:]...)
+					ab := client.Collection("Videos").Doc(doc.Ref.ID)
+					_, err = ab.Update(ctx, []firestore.Update{
+						{Path: "usersThatLiked", Value: newlikesArr},
+					})
+					cd := client.Collection("Videos").Doc(doc.Ref.ID)
+					_, err = cd.Update(ctx, []firestore.Update{
+						{Path: "Likes", Value: firestore.Increment(-1)},
+					})
+					break
+				}
+			}
 			fmt.Println(newdislikesArr)
 			dc := client.Collection("Videos").Doc(doc.Ref.ID)
 			_, err = dc.Update(ctx, []firestore.Update{
@@ -123,6 +142,7 @@ func SetDislikes(c *gin.Context) {
 			_, err = li.Update(ctx, []firestore.Update{
 				{Path: "Dislikes", Value: firestore.Increment(1)},
 			})
+
 		}
 
 	} else {
@@ -143,6 +163,7 @@ func SetDislikes(c *gin.Context) {
 
 			var user = input.UserName
 			fmt.Println(user)
+
 			newdislikesArr = append(newdislikesArr, dislikesArr.UsersThatDisliked...)
 			for i, v := range newdislikesArr {
 				if v == user {

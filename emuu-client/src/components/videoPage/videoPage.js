@@ -262,7 +262,7 @@ const [firebaseData, setFirebaseData] = useState([]);
   async function likeVideo(e) {
     //Axios post should be done here to send info to backend
     axios.post(
-      "https://emuu-cz5iycld7a-ue.a.run.app/auth/LikeVideo",
+      "http://localhost:8080/auth/LikeVideo",
       JSON.stringify({
         displayName: displayName,
         videoUrl: video.VideoUrl,
@@ -276,6 +276,10 @@ const [firebaseData, setFirebaseData] = useState([]);
       video.Likes++;
       sessionStorage.setItem("video", JSON.stringify(video));
     }
+     if(dislikeChecked === true) {
+            setDislikeChecked(false);
+            video.Dislikes--;
+            }
   }
   async function dislikeVideo(e) {
       //Axios post should be done here to send info to backend
@@ -293,6 +297,10 @@ const [firebaseData, setFirebaseData] = useState([]);
       } else {
         video.Dislikes++;
         sessionStorage.setItem("video", JSON.stringify(video));
+        if(checked === true) {
+        setChecked(false);
+        video.Likes--;
+        }
       }
     }
 
