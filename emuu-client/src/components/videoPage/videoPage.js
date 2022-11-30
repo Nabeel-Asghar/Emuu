@@ -26,7 +26,7 @@ import IconButton from "@mui/material/IconButton";
 import { Avatar } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
-import ThumbDownIcon from '@mui/icons-material/ThumbDown';
+import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 
 import {
   getDocs,
@@ -42,13 +42,12 @@ import {
 } from "firebase/firestore";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import ThumbUpIcon from '@mui/icons-material/ThumbUp';
+import ThumbUpIcon from "@mui/icons-material/ThumbUp";
 function Video({ video, setVideo, setUserProfile }) {
-
-  const [commentList, setCommentList] = useState(video?.Comments || [])
+  const [commentList, setCommentList] = useState(video?.Comments || []);
   const displayName = localStorage.getItem("displayName");
   const [checked, setChecked] = useState(false);
-    const [dislikeChecked, setDislikeChecked] = useState(false);
+  const [dislikeChecked, setDislikeChecked] = useState(false);
   const history = useHistory();
   const location = useLocation();
   const [autocompleteState, setAutocompleteState] = useState({});
@@ -56,43 +55,39 @@ function Video({ video, setVideo, setUserProfile }) {
   const [subscriberCount, setSubscriberCount] = useState(null);
   const [count, setCount] = useState(0);
   const ProfilePic = localStorage.getItem("ProfilePictureUrl");
-const [firebaseData, setFirebaseData] = useState([]);
+  const [firebaseData, setFirebaseData] = useState([]);
   async function getData() {
-      const response = await axios.get(
-        "http://localhost:8080/auth/firebase-data"
-      );
-      const users = response.data.message.Users;
-      const videos = response.data.message.Videos;
-      var completeFirebaseData = videos.concat(users);
-      setFirebaseData(completeFirebaseData);
+    const response = await axios.get(
+      "http://localhost:8080/auth/firebase-data"
+    );
+    const users = response.data.message.Users;
+    const videos = response.data.message.Videos;
+    var completeFirebaseData = videos.concat(users);
+    setFirebaseData(completeFirebaseData);
+  }
 
-    }
-
-    useEffect(async () => {
-      await getData();
-    }, []);
+  useEffect(async () => {
+    await getData();
+  }, []);
   async function getCreator() {
     const dis = {
       displayName: video.Username,
     };
-
 
     await axios
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator",
         JSON.stringify({ ...dis })
       )
-      .then(function (response) { });
+      .then(function (response) {});
     const response = await axios.get(
       "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator"
     );
     const user = response.data.message.UserDetails;
 
-
     setSubscriberCount(user[0].SubscriberCount);
   }
   const [recommendedVideos, setRecommendedVideos] = useState([]);
-
 
   const autocomplete = useMemo(
     () =>
@@ -178,31 +173,31 @@ const [firebaseData, setFirebaseData] = useState([]);
     }
   };
 
-  const subscribeUser = () => { };
+  const subscribeUser = () => {};
 
- async function getRecommended() {
-   await axios
-       .post(
-         "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended",
-         JSON.stringify({
-           gameTag: video.GameTag,
-         })
-       )
-       .then(function (response) { });
-     try {
-       const response = await axios.get(
-         "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended"
-       );
+  async function getRecommended() {
+    await axios
+      .post(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended",
+        JSON.stringify({
+          gameTag: video.GameTag,
+        })
+      )
+      .then(function (response) {});
+    try {
+      const response = await axios.get(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended"
+      );
 
-       //      console.log(response.data.message);
-       setRecommendedVideos(response.data.message.RecommendedVideos);
-     } catch (error) { }
-   }
+      //      console.log(response.data.message);
+      setRecommendedVideos(response.data.message.RecommendedVideos);
+    } catch (error) {}
+  }
 
-   useEffect(async () => {
-     getRecommended();
-     await getCreator()
-     }, [video]);
+  useEffect(async () => {
+    getRecommended();
+    await getCreator();
+  }, [video]);
 
   async function checkLikeStatus() {
     await axios
@@ -214,34 +209,34 @@ const [firebaseData, setFirebaseData] = useState([]);
           LikedBoolean: !checked,
         })
       )
-      .then(function (response) { });
+      .then(function (response) {});
     try {
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckLikeVideo"
       );
 
       setChecked(response.data.message.CheckedValue);
-    } catch (error) { }
+    } catch (error) {}
   }
   async function checkDislikeStatus() {
-      await axios
-        .post(
-          "http://localhost:8080/auth/CheckDislikeVideo",
-          JSON.stringify({
-            displayName: displayName,
-            videoUrl: video.VideoUrl,
-            DislikedBoolean: !checked,
-          })
-        )
-        .then(function (response) { });
-      try {
-        const response = await axios.get(
-          "http://localhost:8080/auth/CheckDislikeVideo"
-        );
+    await axios
+      .post(
+        "http://localhost:8080/auth/CheckDislikeVideo",
+        JSON.stringify({
+          displayName: displayName,
+          videoUrl: video.VideoUrl,
+          DislikedBoolean: !checked,
+        })
+      )
+      .then(function (response) {});
+    try {
+      const response = await axios.get(
+        "http://localhost:8080/auth/CheckDislikeVideo"
+      );
 
-        setDislikeChecked(response.data.message.CheckedValue);
-      } catch (error) { }
-    }
+      setDislikeChecked(response.data.message.CheckedValue);
+    } catch (error) {}
+  }
   async function SetView() {
     await axios.post(
       "https://emuu-cz5iycld7a-ue.a.run.app/auth/view",
@@ -256,7 +251,7 @@ const [firebaseData, setFirebaseData] = useState([]);
     //  useEffect(() => {
     checkLikeStatus();
     checkDislikeStatus();
-    getCreator()
+    getCreator();
   }, [video]);
 
   async function likeVideo(e) {
@@ -276,33 +271,33 @@ const [firebaseData, setFirebaseData] = useState([]);
       video.Likes++;
       sessionStorage.setItem("video", JSON.stringify(video));
     }
-     if(dislikeChecked === true) {
-            setDislikeChecked(false);
-            video.Dislikes--;
-            }
+    if (dislikeChecked === true) {
+      setDislikeChecked(false);
+      video.Dislikes--;
+    }
   }
   async function dislikeVideo(e) {
-      //Axios post should be done here to send info to backend
-      axios.post(
-        "http://localhost:8080/auth/DislikeVideo",
-        JSON.stringify({
-          displayName: displayName,
-          videoUrl: video.VideoUrl,
-          DislikedBoolean: !dislikeChecked,
-        })
-      );
-      if (dislikeChecked === true) {
-        video.Dislikes--;
-        sessionStorage.setItem("video", JSON.stringify(video));
-      } else {
-        video.Dislikes++;
-        sessionStorage.setItem("video", JSON.stringify(video));
-        if(checked === true) {
+    //Axios post should be done here to send info to backend
+    axios.post(
+      "http://localhost:8080/auth/DislikeVideo",
+      JSON.stringify({
+        displayName: displayName,
+        videoUrl: video.VideoUrl,
+        DislikedBoolean: !dislikeChecked,
+      })
+    );
+    if (dislikeChecked === true) {
+      video.Dislikes--;
+      sessionStorage.setItem("video", JSON.stringify(video));
+    } else {
+      video.Dislikes++;
+      sessionStorage.setItem("video", JSON.stringify(video));
+      if (checked === true) {
         setChecked(false);
         video.Likes--;
-        }
       }
     }
+  }
 
   localStorage.setItem("CreatorName", video.Username);
   useEffect(async () => {
@@ -328,9 +323,9 @@ const [firebaseData, setFirebaseData] = useState([]);
   const handleComments = (event) => {
     setComment(event.target.value);
   };
-  const total = video.Likes + (video.Dislikes )
+  const total = video.Likes + video.Dislikes;
   const percentageLikes = (video.Likes / total) * 100;
-  const percentageDislikes = ((video.Dislikes ) / total) * 100;
+  const percentageDislikes = (video.Dislikes / total) * 100;
   //console.log("Video",video)
   return (
     <>
@@ -385,7 +380,8 @@ const [firebaseData, setFirebaseData] = useState([]);
                               fontWeight="medium"
                               fontSize="18px"
                             >
-                              {video.Likes} Likes &#x2022; {video.Dislikes} Dislikes &#x2022 {video.Views} Views
+                              {video.Likes} Likes &#x2022; {video.Dislikes}{" "}
+                              Dislikes &#x2022 {video.Views} Views
                             </Typography>
                             <Typography
                               variant="body2"
@@ -444,64 +440,69 @@ const [firebaseData, setFirebaseData] = useState([]);
                   <span className="subs">{subscriberCount} Subscribers</span>
                 </div>
               </div>
-              {localStorage.getItem("auth") == "true" && <div className="actions">
-                <div className="btn-group">
-                  <span className="likes action-btn">
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          icon={<ThumbUpOutlinedIcon sx={{ color: "#fff" }} />}
-                          checkedIcon={
-                            <ThumbUpIcon sx={{ color: "#fff" }} />
-                          }
-                          name="Like"
-                          id="Like"
-                          checked={checked}
-                          onChange={async (e) => {
-                            setChecked(!checked);
-                            likeVideo(e);
-                          }}
-                        />
-                      }
-                      label={video.Likes > 0 ? video.Likes : ""}
-                    />
+              {localStorage.getItem("auth") == "true" && (
+                <div className="actions">
+                  <div className="btn-group">
+                    <span className="likes action-btn">
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            icon={
+                              <ThumbUpOutlinedIcon sx={{ color: "#fff" }} />
+                            }
+                            checkedIcon={<ThumbUpIcon sx={{ color: "#fff" }} />}
+                            name="Like"
+                            id="Like"
+                            checked={checked}
+                            onChange={async (e) => {
+                              setChecked(!checked);
+                              likeVideo(e);
+                            }}
+                          />
+                        }
+                        label={video.Likes > 0 ? video.Likes : ""}
+                      />
+                    </span>
 
-
-                  </span>
-
-                  <span className="dislikes action-btn">
-                    <FormControlLabel
-                      control={
-                       <Checkbox
-                        icon={<ThumbDownOutlinedIcon sx={{ color: "#fff" }} />}
-                        checkedIcon={
-                        <ThumbDownIcon sx={{ color: "#fff" }} />
-                         }
-                         name="Dislike"
-                         id="Dislike"
-                         checked={dislikeChecked}
-                         onChange={async (e) => {
-                         setDislikeChecked(!dislikeChecked);
-                         dislikeVideo(e);
-                         }}
-                         />
-                         }
-                         label={video.Dislikes > 0 ? video.Dislikes : ""}
-                         />
-
-                  </span>
-
+                    <span className="dislikes action-btn">
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            icon={
+                              <ThumbDownOutlinedIcon sx={{ color: "#fff" }} />
+                            }
+                            checkedIcon={
+                              <ThumbDownIcon sx={{ color: "#fff" }} />
+                            }
+                            name="Dislike"
+                            id="Dislike"
+                            checked={dislikeChecked}
+                            onChange={async (e) => {
+                              setDislikeChecked(!dislikeChecked);
+                              dislikeVideo(e);
+                            }}
+                          />
+                        }
+                        label={video.Dislikes > 0 ? video.Dislikes : ""}
+                      />
+                    </span>
+                  </div>
+                  <div className="bar">
+                    <div
+                      style={{ width: percentageLikes + "%" }}
+                      className="likesC"
+                    >
+                      {}
+                    </div>
+                    <div
+                      style={{ width: percentageDislikes + "%" }}
+                      className="dislikesC"
+                    >
+                      {}
+                    </div>
+                  </div>
                 </div>
-                <div className="bar">
-
-                  <div style={{ width: percentageLikes + "%" }} className="likesC">{}</div>
-                  <div style={{ width: percentageDislikes + "%" }} className="dislikesC">{}</div>
-
-                </div>
-
-
-              </div>}
-
+              )}
             </p>
           </div>
           <div className="about">
@@ -516,71 +517,69 @@ const [firebaseData, setFirebaseData] = useState([]);
           <div className="comments-section">
             <h3 className="comment-count">{commentList?.length} Comments</h3>
 
-            {localStorage.getItem("auth") == "true" && <div className="createComment">
-              <img
-                src={ProfilePic}
-                className="profilePic"
-                alt="Profile"
-              />
-              <FormControl fullWidth>
-                <TextField
-                  id="filled-search"
-                  InputLabelProps={{
-                    style: { color: "#ededed" },
+            {localStorage.getItem("auth") == "true" && (
+              <div className="createComment">
+                <img src={ProfilePic} className="profilePic" alt="Profile" />
+                <FormControl fullWidth>
+                  <TextField
+                    id="filled-search"
+                    InputLabelProps={{
+                      style: { color: "#ededed" },
+                    }}
+                    InputProps={{ style: { color: "white" } }}
+                    sx={{ color: "white" }}
+                    label="Write a comment"
+                    type="text"
+                    value={comment}
+                    onChange={handleComments}
+                    variant="standard"
+                  />
+                </FormControl>
+                <button
+                  className="submit-btn"
+                  type="submit"
+                  onClick={async () => {
+                    console.log({
+                      text: comment,
+                      postedBy: displayName,
+                      videoUrl: video.VideoUrl,
+                      profilePic: ProfilePic,
+                    });
+                    await axios
+                      .post(
+                        "http://localhost:8080/auth/comment",
+                        JSON.stringify({
+                          text: comment,
+                          postedBy: displayName,
+                          videoUrl: video.VideoUrl,
+                          profilePic: ProfilePic,
+                        })
+                      )
+                      .then(function (response) {});
+                    const { data } = await axios.get(
+                      "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment"
+                    );
+                    setComment("");
+                    setCommentList(data.message.Comments);
                   }}
-                  InputProps={{ style: { color: "white" } }}
-                  sx={{ color: "white" }}
-                  label="Write a comment"
-                  type="text"
-                  value={comment}
-                  onChange={handleComments}
-
-                  variant="standard"
-                />
-              </FormControl>
-              <button
-                className="submit-btn"
-                type="submit"
-                onClick={async () => {
-                  console.log({
-                    text: comment,
-                    postedBy: displayName,
-                    videoUrl: video.VideoUrl,
-                    profilePic:ProfilePic
-                  })
-                  await axios
-                    .post(
-                      "http://localhost:8080/auth/comment",
-                      JSON.stringify({
-                        text: comment,
-                        postedBy: displayName,
-                        videoUrl: video.VideoUrl,
-                        profilePic:ProfilePic
-                      })
-                    )
-                    .then(function (response) { });
-                  const { data } = await axios.get(
-                    "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment"
-                  );
-                  setComment("");
-                  setCommentList(data.message.Comments)
-                }}
-              >
-                Submit
-              </button>
-            </div>}
+                >
+                  Submit
+                </button>
+              </div>
+            )}
 
             {commentList?.length ? (
               <div className="comment-list">
                 {commentList.map((comment) => (
                   <div className="comment">
                     <h5 className="commentTitle">
-                     <img
-                                    src={comment.ProfilePictureUrl}
-                                    className="profilePicComment"
-                                    alt="Profile"
-                                  />
-                      {comment.postedBy} <span className="commentDate"> {comment.date}</span>{" "}
+                      <img
+                        src={comment.ProfilePictureUrl}
+                        className="profilePicComment"
+                        alt="Profile"
+                      />
+                      {comment.postedBy}{" "}
+                      <span className="commentDate"> {comment.date}</span>{" "}
                     </h5>
 
                     <p className="commentText">{comment.text}</p>
@@ -591,7 +590,11 @@ const [firebaseData, setFirebaseData] = useState([]);
           </div>
         </div>
         <div className="videoPageTwo">
-          <Typography sx={{ textAlign: "left" }} component="div" className={"vid__category__title"}>
+          <Typography
+            sx={{ textAlign: "left" }}
+            component="div"
+            className={"vid__category__title"}
+          >
             Recommended Videos
           </Typography>
 
@@ -601,32 +604,38 @@ const [firebaseData, setFirebaseData] = useState([]);
                 <div className="wrapper">
                   <div className="preview">
                     <Link to="/video">
-                      <img width="168" onClick={() => setVideo(video)} alt="thumbnail" src={video.ThumbnailUrl} />
+                      <img
+                        width="168"
+                        onClick={() => setVideo(video)}
+                        alt="thumbnail"
+                        src={video.ThumbnailUrl}
+                      />
                     </Link>
-
                   </div>
 
                   <div class="info">
                     <Link to="/video">
-                      <Typography onClick={() => setVideo(video)} noWrap component="p" className="title">
+                      <Typography
+                        onClick={() => setVideo(video)}
+                        noWrap
+                        component="p"
+                        className="title"
+                      >
                         {video.Title}
                       </Typography>
                     </Link>
-
-
 
                     <span className="username">{video.Username}</span>
                     <div className="view-info">
                       <div>{video.Views} views </div>
 
-                      <div> {" "}• {video.Date}</div>
+                      <div> • {video.Date}</div>
                     </div>
                   </div>
                 </div>
               ))}
           </div>
         </div>
-
       </div>
     </>
   );

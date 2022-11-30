@@ -19,21 +19,20 @@ function Subscriptions() {
   const [count, setCount] = useState(0);
   const history = useHistory();
 
-const [firebaseData, setFirebaseData] = useState([]);
+  const [firebaseData, setFirebaseData] = useState([]);
   async function getData() {
-      const response = await axios.get(
-        "http://localhost:8080/auth/firebase-data"
-      );
-      const users = response.data.message.Users;
-      const videos = response.data.message.Videos;
-      var completeFirebaseData = videos.concat(users);
-      setFirebaseData(completeFirebaseData);
+    const response = await axios.get(
+      "http://localhost:8080/auth/firebase-data"
+    );
+    const users = response.data.message.Users;
+    const videos = response.data.message.Videos;
+    var completeFirebaseData = videos.concat(users);
+    setFirebaseData(completeFirebaseData);
+  }
 
-    }
-
-    useEffect(async () => {
-      await getData();
-    }, []);
+  useEffect(async () => {
+    await getData();
+  }, []);
   const auth = getAuth();
   const user = auth.currentUser;
 

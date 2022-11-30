@@ -176,21 +176,20 @@ function Feeds({ setVideo }) {
     } catch (error) {}
   }
 
-const [firebaseData, setFirebaseData] = useState([]);
+  const [firebaseData, setFirebaseData] = useState([]);
   async function getData() {
-      const response = await axios.get(
-        "http://localhost:8080/auth/firebase-data"
-      );
-      const users = response.data.message.Users;
-      const videos = response.data.message.Videos;
-      var completeFirebaseData = videos.concat(users);
-      setFirebaseData(completeFirebaseData);
+    const response = await axios.get(
+      "http://localhost:8080/auth/firebase-data"
+    );
+    const users = response.data.message.Users;
+    const videos = response.data.message.Videos;
+    var completeFirebaseData = videos.concat(users);
+    setFirebaseData(completeFirebaseData);
+  }
 
-    }
-
-    useEffect(async () => {
-      await getData();
-    }, []);
+  useEffect(async () => {
+    await getData();
+  }, []);
   let subscribersListCompleteData;
 
   async function getSubscribers() {
@@ -211,7 +210,6 @@ const [firebaseData, setFirebaseData] = useState([]);
       setUpdateSubscribersListCompleteData(response.data.message.SubDetails);
     } catch (error) {}
   }
-
 
   if (displayName !== null && likedVideos.length === 0) {
     getLikedVideos();
@@ -269,7 +267,7 @@ const [firebaseData, setFirebaseData] = useState([]);
               {recentVideos &&
                 sort == "Recently Uploaded" &&
                 recentVideos.map((video, index) => (
-                  <Card sx={{ maxWidth: 325, maxHeight:  320 }}>
+                  <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
                     <Link to="/video">
                       <span
                         onClick={() => {
@@ -306,7 +304,6 @@ const [firebaseData, setFirebaseData] = useState([]);
                           />
 
                           <div className="videoInfo">
-
                             <Typography
                               variant="body2"
                               color="text.secondary"
@@ -315,14 +312,14 @@ const [firebaseData, setFirebaseData] = useState([]);
                             >
                               {video.Username}
                             </Typography>
-                             <Typography
-                                                          variant="body2"
-                                                          color="text.secondary"
-                                                          fontWeight="medium"
-                                                          fontSize="14px"
-                                                        >
-                                                          {video.Likes} Likes &#x2022; {video.Views} Views
-                                                        </Typography>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              fontWeight="medium"
+                              fontSize="14px"
+                            >
+                              {video.Likes} Likes &#x2022; {video.Views} Views
+                            </Typography>
                           </div>
                         </CardContent>
                       </span>
@@ -333,7 +330,7 @@ const [firebaseData, setFirebaseData] = useState([]);
               {topVideos &&
                 sort == "Most Viewed" &&
                 topVideos.map((video, index) => (
-                  <Card sx={{ maxWidth: 325, maxHeight:  320 }}>
+                  <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
                     <Link to="/video">
                       <span
                         onClick={() => {
@@ -370,7 +367,6 @@ const [firebaseData, setFirebaseData] = useState([]);
                           />
 
                           <div className="videoInfo">
-
                             <Typography
                               variant="body2"
                               color="text.secondary"
@@ -379,14 +375,14 @@ const [firebaseData, setFirebaseData] = useState([]);
                             >
                               {video.Username}
                             </Typography>
-                             <Typography
-                                                          variant="body2"
-                                                          color="text.secondary"
-                                                          fontWeight="medium"
-                                                          fontSize="14px"
-                                                        >
-                                                          {video.Likes} Likes &#x2022; {video.Views} Views
-                                                        </Typography>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              fontWeight="medium"
+                              fontSize="14px"
+                            >
+                              {video.Likes} Likes &#x2022; {video.Views} Views
+                            </Typography>
                           </div>
                         </CardContent>
                       </span>
@@ -412,7 +408,7 @@ const [firebaseData, setFirebaseData] = useState([]);
             <div className="videos__container">
               {likedVideos &&
                 likedVideos.map((video, index) => (
-                  <Card sx={{ maxWidth: 325, maxHeight:  320 }}>
+                  <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
                     <Link to="/video">
                       <span
                         onClick={() => {
@@ -449,7 +445,6 @@ const [firebaseData, setFirebaseData] = useState([]);
                           />
 
                           <div className="videoInfo">
-
                             <Typography
                               variant="body2"
                               color="text.secondary"
@@ -458,14 +453,14 @@ const [firebaseData, setFirebaseData] = useState([]);
                             >
                               {video.Username}
                             </Typography>
-                             <Typography
-                                                          variant="body2"
-                                                          color="text.secondary"
-                                                          fontWeight="medium"
-                                                          fontSize="14px"
-                                                        >
-                                                          {video.Likes} Likes &#x2022; {video.Views} Views
-                                                        </Typography>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              fontWeight="medium"
+                              fontSize="14px"
+                            >
+                              {video.Likes} Likes &#x2022; {video.Views} Views
+                            </Typography>
                           </div>
                         </CardContent>
                       </span>

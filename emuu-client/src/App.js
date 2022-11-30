@@ -46,8 +46,6 @@ function App() {
   const auth = getAuth();
   const [video, setVideo] = useState("");
 
-
-
   return (
     <AppProvider>
       <ThemeProvider theme={theme}>
