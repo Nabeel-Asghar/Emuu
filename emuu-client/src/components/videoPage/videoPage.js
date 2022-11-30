@@ -48,6 +48,7 @@ function Video({ video, setVideo, setUserProfile }) {
   const [commentList, setCommentList] = useState(video?.Comments || [])
   const displayName = localStorage.getItem("displayName");
   const [checked, setChecked] = useState(false);
+    const [dislikeChecked, setDislikeChecked] = useState(false);
   const history = useHistory();
   const location = useLocation();
   const [autocompleteState, setAutocompleteState] = useState({});
@@ -225,7 +226,7 @@ const [firebaseData, setFirebaseData] = useState([]);
   async function checkDislikeStatus() {
       await axios
         .post(
-          "https://localhost:8080/auth/CheckDislikeVideo",
+          "http://localhost:8080/auth/CheckDislikeVideo",
           JSON.stringify({
             displayName: displayName,
             videoUrl: video.VideoUrl,
@@ -235,10 +236,10 @@ const [firebaseData, setFirebaseData] = useState([]);
         .then(function (response) { });
       try {
         const response = await axios.get(
-          "https://localhost:8080/auth/CheckDislikeVideo"
+          "http://localhost:8080/auth/CheckDislikeVideo"
         );
 
-        setChecked(response.data.message.CheckedValue);
+        setDislikeChecked(response.data.message.CheckedValue);
       } catch (error) { }
     }
   async function SetView() {
@@ -279,14 +280,14 @@ const [firebaseData, setFirebaseData] = useState([]);
   async function dislikeVideo(e) {
       //Axios post should be done here to send info to backend
       axios.post(
-        "https://localhost:8080/auth/DislikeVideo",
+        "http://localhost:8080/auth/DislikeVideo",
         JSON.stringify({
           displayName: displayName,
           videoUrl: video.VideoUrl,
-          DislikedBoolean: !checked,
+          DislikedBoolean: !dislikeChecked,
         })
       );
-      if (checked === true) {
+      if (dislikeChecked === true) {
         video.Dislikes--;
         sessionStorage.setItem("video", JSON.stringify(video));
       } else {
@@ -470,9 +471,9 @@ const [firebaseData, setFirebaseData] = useState([]);
                          }
                          name="Dislike"
                          id="Dislike"
-                         checked={checked}
+                         checked={dislikeChecked}
                          onChange={async (e) => {
-                         setChecked(!checked);
+                         setDislikeChecked(!dislikeChecked);
                          dislikeVideo(e);
                          }}
                          />

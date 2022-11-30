@@ -95,7 +95,7 @@ func SetDislikes(c *gin.Context) {
 	defer client.Close()
 
 	if input.DislikedBoolean == true {
-		var dislikesArr Like
+		var dislikesArr Dislike
 		var newdislikesArr []string
 		iter := client.Collection("Videos").Where("VideoUrl", "==", input.VideoUrl).Documents(ctx)
 		for {
