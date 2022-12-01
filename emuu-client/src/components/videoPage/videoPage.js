@@ -35,6 +35,8 @@ function Video({ video, setVideo }) {
   const [count, setCount] = useState(0);
   const ProfilePic = localStorage.getItem("ProfilePictureUrl");
   const [firebaseData, setFirebaseData] = useState([]);
+
+  //axios post request to get data for the search bar
   async function getData() {
     const response = await axios.get(
       "http://localhost:8080/auth/firebase-data"
@@ -42,23 +44,30 @@ function Video({ video, setVideo }) {
     const users = response.data.message.Users;
     const videos = response.data.message.Videos;
     var completeFirebaseData = videos.concat(users);
+    //sets array with user and video data
     setFirebaseData(completeFirebaseData);
   }
 
+  //calls get data function on page load
   useEffect(async () => {
     await getData();
   }, []);
+
+  //creates post and get request for creator data
   async function getCreator() {
     const dis = {
       displayName: video.Username,
     };
 
+    //sends post request of creators name to server
     await axios
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator",
         JSON.stringify({ ...dis })
       )
       .then(function (response) {});
+
+     //sends get request to receive creators details
     const response = await axios.get(
       "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator"
     );
@@ -67,6 +76,7 @@ function Video({ video, setVideo }) {
     setSubscriberCount(user[0].SubscriberCount);
   }
   const [recommendedVideos, setRecommendedVideos] = useState([]);
+
 
   const autocomplete = useMemo(
     () =>
@@ -152,11 +162,13 @@ function Video({ video, setVideo }) {
 
   const subscribeUser = () => {};
 
+//sends axios post and get request to display recommended videos on video page
   async function getRecommended() {
     const TitleAndTag = {
       title: video.Title,
       gameTag: video.GameTag,
     };
+    //sends video title and game tag for a post request to server
     await axios
       .post(
         "http://localhost:8080/auth/recommended",
@@ -164,20 +176,21 @@ function Video({ video, setVideo }) {
       )
       .then(function (response) {});
     try {
+    //gets recommended videos as a map string array
       const response = await axios.get(
         "http://localhost:8080/auth/recommended"
       );
-
-      //      console.log(response.data.message);
+      //stores recommended videos into a useState array
       setRecommendedVideos(response.data.message.RecommendedVideos);
     } catch (error) {}
   }
 
+//gets recommended videos and creator data upon page load
   useEffect(async () => {
     getRecommended();
     await getCreator();
   }, [video]);
-
+//sends axios post request to check liked status
   async function checkLikeStatus() {
     await axios
       .post(
@@ -190,13 +203,15 @@ function Video({ video, setVideo }) {
       )
       .then(function (response) {});
     try {
+    //response is a get request to determine if a user has previously liked the video or not
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckLikeVideo"
       );
-
+    //sets whether or not the like button should be checked when a user enters a video
       setChecked(response.data.message.CheckedValue);
     } catch (error) {}
   }
+  //sends axios post request to check disliked status
   async function checkDislikeStatus() {
     await axios
       .post(
@@ -209,21 +224,27 @@ function Video({ video, setVideo }) {
       )
       .then(function (response) {});
     try {
+        //response is a get request to determine if a user has previously disliked the video or not
       const response = await axios.get(
         "http://localhost:8080/auth/CheckDislikeVideo"
       );
-
+    //sets whether or not the dislike button should be checked when a user enters a video
       setDislikeChecked(response.data.message.CheckedValue);
     } catch (error) {}
   }
+
+  //axios post request to update view count upon page load
   async function SetView() {
     await axios.post(
       "https://emuu-cz5iycld7a-ue.a.run.app/auth/view",
       JSON.stringify({ videoUrl: video.VideoUrl })
     );
+    //updates view count when user enters page
     video.Views++;
     sessionStorage.setItem("video", JSON.stringify(video));
   }
+
+  //upon page load, view count, like/dislike check, as well as creator data will run
   useEffect(() => {
     SetView();
     //  }, [video]);
@@ -233,8 +254,9 @@ function Video({ video, setVideo }) {
     getCreator();
   }, [video]);
 
+//function when a user likes a video
   async function likeVideo(e) {
-    //Axios post should be done here to send info to backend
+    //post request sends user/video data to server
     axios.post(
       "http://localhost:8080/auth/LikeVideo",
       JSON.stringify({
@@ -243,20 +265,26 @@ function Video({ video, setVideo }) {
         LikedBoolean: !checked,
       })
     );
+
+    //if a user has the video liked already, and clicks the like button again, the like count will revert and the button will be unchecked.
     if (checked === true) {
       video.Likes--;
       sessionStorage.setItem("video", JSON.stringify(video));
-    } else {
+    }
+     //if a user has not liked the video already, and clicks the like button, the like count will go up and the button will be checked.
+    else {
       video.Likes++;
       sessionStorage.setItem("video", JSON.stringify(video));
     }
+    //if the user has disliked the video, upon liking, it will uncheck the dislike button and negate the dislike count
     if (dislikeChecked === true) {
       setDislikeChecked(false);
       video.Dislikes--;
     }
   }
+  //function when a user dislikes a video
   async function dislikeVideo(e) {
-    //Axios post should be done here to send info to backend
+    //post request sends user/video data to server
     axios.post(
       "http://localhost:8080/auth/DislikeVideo",
       JSON.stringify({
@@ -265,12 +293,16 @@ function Video({ video, setVideo }) {
         DislikedBoolean: !dislikeChecked,
       })
     );
+       //if a user has the video disliked already, and clicks the dislike button again, the dislike count will revert and the button will be unchecked.
     if (dislikeChecked === true) {
       video.Dislikes--;
       sessionStorage.setItem("video", JSON.stringify(video));
-    } else {
+    }
+    //if a user has not disliked the video already, and clicks the dislike button, the dislike count will go up and the button will be checked.
+    else {
       video.Dislikes++;
       sessionStorage.setItem("video", JSON.stringify(video));
+       //if the user has liked the video, upon disliking, it will uncheck the like button and negate the like count
       if (checked === true) {
         setChecked(false);
         video.Likes--;
@@ -279,6 +311,8 @@ function Video({ video, setVideo }) {
   }
 
   localStorage.setItem("CreatorName", video.Username);
+
+  //parses the video and locally stores it to allow users to reload
   useEffect(async () => {
     if (video) {
       localStorage.setItem("video", JSON.stringify(video));
@@ -293,19 +327,18 @@ function Video({ video, setVideo }) {
     }
   }, []);
 
-  //    useEffect(() => {
-  //      checkLiked();
-  //    }, [video]);
-
   const [comment, setComment] = useState("");
+
 
   const handleComments = (event) => {
     setComment(event.target.value);
   };
+
+  //creates like/dislike ratio for the like/dislike bar
   const total = video.Likes + video.Dislikes;
   const percentageLikes = (video.Likes / total) * 100;
   const percentageDislikes = (video.Dislikes / total) * 100;
-  //console.log("Video",video)
+
   return (
     <>
       <AlgoliaSearchNavbar
