@@ -9,7 +9,6 @@ import (
 	navbar "emuu-server/main/users"
 	profilePic "emuu-server/main/users"
 	register "emuu-server/main/users"
-	settings "emuu-server/main/users"
 	subscriber "emuu-server/main/users"
 	subscriberButton "emuu-server/main/users"
 	subscription "emuu-server/main/users"
@@ -19,8 +18,10 @@ import (
 	recommended "emuu-server/main/video"
 	video "emuu-server/main/video"
 	view "emuu-server/main/video"
+	settings "emuu-server/main/users"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	dislikes "emuu-server/main/video"
 )
 
 func main() {
@@ -38,7 +39,6 @@ func main() {
 
 	auth := r.Group("auth") //group is in the gin gonic framework,if you want to create login forgot password, you can create it
 	{
-		//Create POST and GET endpoints for various functionalities in the application
 		auth.POST("/upload", upload.UploadVideo)
 		auth.POST("/register", register.CreateUser)
 		auth.POST("/video", video.SetUsernameAndPage)
@@ -67,11 +67,14 @@ func main() {
 		auth.GET("/firebase-data", firebasedata.SetVideosAndUsers)
 		auth.POST("/settings", settings.UpdatePassword)
 		auth.POST("/recommended", recommended.SetGameTag)
-		auth.GET("/recommended", recommended.SetRecommended)
+        auth.GET("/recommended", recommended.SetRecommended)
+        auth.POST("/DislikeVideo", dislikes.SetDislikes)
+        auth.POST("/CheckDislikeVideo", dislikes.SetUsernameDislike)
+        auth.GET("/CheckDislikeVideo", dislikes.CheckDislikes)
 	}
 
 	api := r.Group("api").Use(firebaseSer.AuthJWT) //create a new router with the middleware authJWT
-	{                                              //supply the jwt token from firebase
+	{                                              //you should supply the jwt token from firebase
 		api.POST("/", func(ctx *gin.Context) {
 
 		})

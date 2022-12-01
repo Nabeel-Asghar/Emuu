@@ -25,7 +25,7 @@ function Settings() {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const history = useHistory();
   const [error, setError] = useState("");
-
+//validator to ensure password has more than 8 characters, an uppercase, and a special character
   const validatePassword = (pass) => {
     if (pass.length < 8) {
       setError("At least 8 characters");
@@ -59,8 +59,7 @@ function Settings() {
     // store the states in the form data
     if (!validatePassword(newPassword)) return;
     const auth = getAuth();
-    console.log({ newPassword, uid: auth.currentUser.uid });
-
+    //sends axios post to server of users new password info
     await axios
       .post("http://localhost:8080/auth/settings", {
         newPassword,
@@ -68,8 +67,10 @@ function Settings() {
       })
       .then((result) => {
         if (result.data) {
+        //alerts user password change is a success
           alert("Successfully Updated Password");
 
+//sends user to login page to login again
           signOut(auth)
             .then(() => {
               localStorage.setItem("auth", false);

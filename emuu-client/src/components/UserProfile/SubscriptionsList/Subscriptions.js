@@ -15,33 +15,38 @@ function Subscriptions() {
   const [subscribersData, setSubscribersData] = useState([]);
 
   const history = useHistory();
-
+//function for firebaseData for search bar
   const [firebaseData, setFirebaseData] = useState([]);
   async function getData() {
+    //sends axios get request for data
     const response = await axios.get(
       "http://localhost:8080/auth/firebase-data"
     );
     const users = response.data.message.Users;
     const videos = response.data.message.Videos;
     var completeFirebaseData = videos.concat(users);
+        //sets data of users and videos into an array
     setFirebaseData(completeFirebaseData);
   }
-
+//upon page load runs getData function
   useEffect(async () => {
     await getData();
   }, []);
   const auth = getAuth();
   const user = auth.currentUser;
-
+//function to set user display name
   if (user) {
     var displayName = user.displayName;
   } else {
     var displayName = null;
   }
+
+  //function to get subscriptions list for user
   async function getSubscriptions() {
     const dis = {
       displayName: displayName,
     };
+    //sends axios post of users name to server
     await axios
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscription",
@@ -49,14 +54,17 @@ function Subscriptions() {
       )
       .then(function (response) {});
     try {
+    //sends axios get request to receive subscriptions list of users
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscription"
       );
-
+        //sets subscriptions list into an array
       setSubscribersData(response.data.message.SubscriptionDetails);
-      console.log(subscribersData);
+
     } catch (error) {}
   }
+
+  //if statement to only allow subscriptions list to run once
   if (displayName !== null && subscribersData.length === 0) {
     getSubscriptions();
   }
