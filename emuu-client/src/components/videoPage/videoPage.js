@@ -185,16 +185,15 @@ const [firebaseData, setFirebaseData] = useState([]);
                                       };
     await axios
       .post(
-        "http://localhost:8080/auth/recommended",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended",
         JSON.stringify({ ...URLAndTag })
       )
       .then(function (response) { });
     try {
       const response = await axios.get(
-        "http://localhost:8080/auth/recommended"
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended"
       );
 
-      //      console.log(response.data.message);
       setRecommendedVideos(response.data.message.RecommendedVideos);
     } catch (error) { }
   }
