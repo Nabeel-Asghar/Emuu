@@ -1,10 +1,8 @@
 import "./UserInfo.scss";
 import "./Feeds.scss";
 import { Avatar } from "@mui/material";
-import { AxiosContext } from "react-axios/lib/components/AxiosProvider";
 import React, { useState, useEffect, useMemo } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import AddIcon from "@mui/icons-material/Add";
 import "./Profile.scss";
 import Checkbox from "@material-ui/core/Checkbox";
 import "../../Firebase.js";
@@ -16,28 +14,10 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
-import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db, storage } from "../../Firebase.js";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import {
-  arrayUnion,
-  arrayRemove,
-  getDoc,
-  getDocs,
-  setDoc,
-  doc,
-  collection,
-  query,
-  where,
-  onSnapshot,
-  increment,
-  updateDoc,
-} from "firebase/firestore";
+import { db } from "../../Firebase.js";
+import { getDoc, doc } from "firebase/firestore";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
 
 //Function to display creator page
@@ -53,8 +33,6 @@ function Creator({ setVideo, video }) {
   const [count, setCount] = useState(0);
   const [checked, setChecked] = useState(false);
   const [searchInput, setSearchInput] = useState("");
-
-  const docRef = doc(db, "Users", creatorName);
   const [Banner, setBanner] = useState("");
   const [CreatorProfilePic, setCreatorProfilePic] = useState("");
   const [subscriberCount, setSubscriberCount] = useState(0);
@@ -198,8 +176,6 @@ function Creator({ setVideo, video }) {
   const showSearchResults =
     searchResultsVideosArr?.length > 0 || searchResultsUsersArr?.length > 0;
 
-  const userName = localStorage.getItem("displayName");
-
   const usersArr = firebaseData.filter(
     (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
   );
@@ -227,15 +203,6 @@ function Creator({ setVideo, video }) {
         : history.push("/creator");
     }
   };
-
-  function checkSubscribed() {
-    let subscribed = creatorsData[0]?.SubscriberList?.includes(displayName); //check if there is a video and if there are users that liked stored
-    if (subscribed) {
-      setChecked(true);
-    } else {
-      setChecked(false);
-    }
-  }
 
   useEffect(async () => {
     const userRefInitial = doc(db, "Users", creatorName);

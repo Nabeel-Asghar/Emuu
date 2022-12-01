@@ -2,8 +2,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -11,20 +9,12 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./login.scss";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { Routes, Route, useHistory } from "react-router-dom";
-import Home from "../home/Home";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useHistory } from "react-router-dom";
 import "../../Firebase.js";
 import NavBarNoImage from "../NavbarPostLogin/NavBarNoImage.js";
-import firebase from "firebase/app";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -34,7 +24,7 @@ function Login() {
   //Sign in feature
   const handleSubmit = async (e) => {
     const auth = getAuth();
-    const user = auth.currentUser;
+
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
@@ -50,7 +40,6 @@ function Login() {
         window.location.reload();
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
 
         switch (errorMessage.split(")")[0].split("/")[1]) {

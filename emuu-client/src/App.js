@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from "react";
-import logo from "./logo.svg";
+import React, { useState } from "react";
 import "./App.css";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { BrowserRouter, Route, useHistory } from "react-router-dom";
+import { BrowserRouter, Route } from "react-router-dom";
 import Login from "./components/UserAuthentication/newloginscreen";
 import Register from "./components/UserAuthentication/newRegister";
 import Settings from "./components/UserAuthentication/Settings";
@@ -13,16 +12,6 @@ import UploadVideo from "./components/upload/UploadButton";
 import Video from "./components/videoPage/videoPage";
 import Creator from "./components/CreatorsPage/CreatorsPage";
 import AppProvider from "./AppProvider";
-import { db } from "./Firebase.js";
-import axios from "axios";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  doc,
-  query,
-  where,
-} from "firebase/firestore";
 
 const theme = createTheme({
   palette: {

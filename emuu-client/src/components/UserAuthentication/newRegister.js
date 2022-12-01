@@ -1,20 +1,15 @@
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { React, useState, Component } from "react";
+import { React, useState } from "react";
 import axios from "axios";
-import Login from "./newloginscreen";
-import { Routes, Route, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import NavBarNoImage from "../NavbarPostLogin/NavBarNoImage.js";
@@ -26,7 +21,6 @@ function Register() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
-  const [message, setMessage] = useState("");
   const history = useHistory();
   const [error, setError] = useState("");
 

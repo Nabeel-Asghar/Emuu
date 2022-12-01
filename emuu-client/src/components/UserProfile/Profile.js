@@ -4,28 +4,12 @@ import "./Profile.scss";
 import "../../Firebase.js";
 import Feeds from "./Feeds";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
-import { Blob } from "firebase/firestore";
-import { db, storage } from "../../Firebase.js";
 import { uid } from "uid";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Avatar } from "@mui/material";
-import {
-  getDoc,
-  getDocs,
-  setDoc,
-  doc,
-  collection,
-  query,
-  where,
-  onSnapshot,
-} from "firebase/firestore";
 
 import ReactDOM from "react-dom";
 import Cropper from "react-easy-crop";
@@ -33,24 +17,17 @@ import Slider from "@material-ui/core/Slider";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
-import { getOrientation } from "get-orientation/browser";
 import ImgDialog from "./imgDialog";
-import { getCroppedImg, getRotatedImage } from "./canvasUtils";
+import { getCroppedImg } from "./canvasUtils";
 import { styles } from "./styles";
 import { createAutocomplete } from "@algolia/autocomplete-core";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
 import axios from "axios";
 import { uploadString } from "@firebase/storage";
-import { Link, useHistory, useLocation } from "react-router-dom";
-const ORIENTATION_TO_ANGLE = {
-  3: 180,
-  6: 90,
-  8: -90,
-};
+import { Link, useHistory } from "react-router-dom";
 
 function Profile({ setVideo, video }, { classes }) {
-  const [percent, setPercent] = useState(0);
   const [imageSrc, setImageSrc] = React.useState(null);
   const [croppedImageSrc, setCroppedImageSrc] = React.useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -193,9 +170,8 @@ function Profile({ setVideo, video }, { classes }) {
   };
 
   const subscribeUser = () => {};
-  const subscribersCount = localStorage.getItem("subscribersCount");
 
-  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
+  const onCropComplete = useCallback((croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
 
@@ -234,7 +210,6 @@ function Profile({ setVideo, video }, { classes }) {
       return true;
     return false;
   }
-  let url;
   function uploadBackground(croppedImage) {
     const storage = getStorage();
     const storageRef = ref(storage, "/images/" + uid());

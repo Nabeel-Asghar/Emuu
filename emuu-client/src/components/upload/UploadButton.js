@@ -4,24 +4,18 @@ import "../home/Home.scss";
 import "./UploadButton.scss";
 
 import axios from "axios";
-import { Link, useHistory, useLocation, useRef } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
-
 import { createAutocomplete } from "@algolia/autocomplete-core";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
 import { Avatar } from "@mui/material";
-
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@mui/material/Typography";
-import { createTheme } from "@mui/material/styles";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
@@ -91,7 +85,6 @@ const FileUpload = ({ setVideo }) => {
   const [videoDescriptionErr, setVideoDescriptionErr] = useState("");
   const [videoTag, setVideoTag] = useState("");
   const [videoTagErr, setVideoTagErr] = useState("");
-  const [videoDate, setVideoDate] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [userName, setUserName] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
@@ -324,8 +317,6 @@ const FileUpload = ({ setVideo }) => {
       }
     };
   };
-
-  const onFormSubmit = (e) => {};
 
   const autocomplete = useMemo(
     () =>
