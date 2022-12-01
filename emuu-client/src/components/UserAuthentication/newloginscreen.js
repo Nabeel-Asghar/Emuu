@@ -24,7 +24,7 @@ function Login() {
   //Sign in feature
   const handleSubmit = async (e) => {
     const auth = getAuth();
-
+//firebase function to sign in users
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
@@ -41,7 +41,7 @@ function Login() {
       })
       .catch((error) => {
         const errorMessage = error.message;
-
+//validation errors when user inputs incorrect information
         switch (errorMessage.split(")")[0].split("/")[1]) {
           case "invalid-email":
             setError(

@@ -29,7 +29,7 @@ function Register() {
     user_email: email,
     user_password: password,
   };
-
+//validator to ensure password has more than 8 characters, an uppercase, and a special character
   const validatePassword = (pass) => {
     if (pass.length < 8) {
       setError("At least 8 characters");
@@ -57,7 +57,7 @@ function Register() {
 
     return true;
   };
-
+//validates email has format example@test.com
   function validateEmail(email) {
     let at = 0;
     let checkDotcom = "";
@@ -67,7 +67,7 @@ function Register() {
         checkDotcom += email[i];
       }
     }
-
+//sets error message when email is not valid
     if (!(checkDotcom == "moc.") || !at || at > 1) {
       setError("The email address is invalid");
       return false;
@@ -81,8 +81,9 @@ function Register() {
     // store the states in the form data
     if (!validateEmail(userdata.user_email)) return;
     if (!validatePassword(userdata.user_password)) return;
-
+//sends user to login page
     history.push("/login");
+    //sends axios post to server of users registration info
     await axios
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/register",
