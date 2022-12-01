@@ -3,16 +3,11 @@ import React from "react";
 import "./videoPage.scss";
 import ThumbDownOutlinedIcon from "@mui/icons-material/ThumbDownOutlined";
 import ThumbUpOutlinedIcon from "@mui/icons-material/ThumbUpOutlined";
-import ThumbUpAltTwoTone from "@mui/icons-material/ThumbUpAltTwoTone";
 import FormControl from "@mui/material/FormControl";
 
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
-import Favorite from "@material-ui/icons/Favorite";
-import FavoriteBorder from "@material-ui/icons/FavoriteBorder";
-import Button from "react-bootstrap/Button";
 import TextField from "@mui/material/TextField";
-import { db } from "../../Firebase.js";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
 import { createAutocomplete } from "@algolia/autocomplete-core";
@@ -20,30 +15,14 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
 import { Avatar } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import axios from "axios";
 import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 
-import {
-  getDocs,
-  getDoc,
-  collection,
-  doc,
-  where,
-  query,
-  updateDoc,
-  increment,
-  arrayUnion,
-  arrayRemove,
-} from "firebase/firestore";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
-function Video({ video, setVideo, setUserProfile }) {
+function Video({ video, setVideo }) {
   const [commentList, setCommentList] = useState(video?.Comments || []);
   const displayName = localStorage.getItem("displayName");
   const [checked, setChecked] = useState(false);
@@ -144,8 +123,6 @@ function Video({ video, setVideo, setUserProfile }) {
   const showSearchResults =
     searchResultsVideosArr?.length > 0 || searchResultsUsersArr?.length > 0;
 
-  const userName = localStorage.getItem("displayName");
-
   const usersArr = firebaseData?.filter(
     (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
   );
@@ -176,10 +153,10 @@ function Video({ video, setVideo, setUserProfile }) {
   const subscribeUser = () => {};
 
   async function getRecommended() {
-  const TitleAndTag = {
-                                        title: video.Title,
-                                        gameTag: video.GameTag,
-                                      };
+    const TitleAndTag = {
+      title: video.Title,
+      gameTag: video.GameTag,
+    };
     await axios
       .post(
         "http://localhost:8080/auth/recommended",

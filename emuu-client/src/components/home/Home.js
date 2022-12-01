@@ -3,48 +3,20 @@ import { Avatar } from "@mui/material";
 import "./Home.scss";
 import "../UserProfile/Feeds.scss";
 import axios from "axios";
-import Container from "@mui/material/Container";
-
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  updateDoc,
-  setDoc,
-  doc,
-  getDoc,
-  query,
-} from "firebase/firestore";
 import { createAutocomplete } from "@algolia/autocomplete-core";
 import { Link } from "react-router-dom";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
 
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
-import { db } from "../../Firebase.js";
-import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
-import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { red } from "@mui/material/colors";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import "firebase/firestore";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { BrowserRouter, Route, useHistory } from "react-router-dom";
-import firebase from "firebase/compat/app";
 import Sidebar from "../Sidebar/Sidebar";
-import PropTypes from "prop-types";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";

@@ -1,15 +1,10 @@
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { React, useState, Component, useMemo } from "react";
+import { React, useState } from "react";
 import axios from "axios";
-import Login from "./newloginscreen";
-import { Routes, Route, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
-import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
@@ -18,17 +13,9 @@ import Container from "@mui/material/Container";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import NavBarNoSearch from "../NavbarPostLogin/NavBarNoSearch.js";
-import {
-  getAuth,
-  signOut,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  sendPasswordResetEmail,
-} from "firebase/auth";
+import { getAuth, signOut } from "firebase/auth";
 import "../../Firebase.js";
-import firebase from "firebase/app";
 import "./register.scss";
-import { updatePassword } from "firebase/auth";
 import "./Settings.scss";
 
 function Settings() {
@@ -36,10 +23,8 @@ function Settings() {
   const [password, setPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
-  const [message, setMessage] = useState("");
   const history = useHistory();
   const [error, setError] = useState("");
-  const email = useState("");
 
   const validatePassword = (pass) => {
     if (pass.length < 8) {
@@ -73,9 +58,7 @@ function Settings() {
     e.preventDefault();
     // store the states in the form data
     if (!validatePassword(newPassword)) return;
-    const userEmail = localStorage.getItem("userEmail");
     const auth = getAuth();
-    const user = auth.currentUser;
     console.log({ newPassword, uid: auth.currentUser.uid });
 
     await axios

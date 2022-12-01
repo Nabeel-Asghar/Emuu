@@ -1,6 +1,6 @@
 import "./ProfileMenu.scss";
 import * as React from "react";
-import { useState, useEffect, useContext } from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -12,15 +12,10 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
-import HowToRegIcon from "@mui/icons-material/HowToReg";
 import LoginIcon from "@mui/icons-material/Login";
 import Logout from "@mui/icons-material/Logout";
 import { useHistory, Link } from "react-router-dom";
 import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
-import { collection, getDoc, where, doc } from "firebase/firestore";
-import { db } from "../../Firebase.js";
-import AppContext from "../../AppContext";
-import axios from "axios";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -59,8 +54,6 @@ export default function AccountMenu() {
 
   //Sign Out Function in Nav Bar
   const history = useHistory();
-
-  const navAuth = localStorage.getItem("auth");
   let userFirstInitial;
 
   if (auth === true) {

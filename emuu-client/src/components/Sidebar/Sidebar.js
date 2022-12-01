@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Sidebar.scss";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import Subscriptions from "../UserProfile/SubscriptionsList/Subscriptions.js";
 import { styled, useTheme } from "@mui/material/styles";
@@ -19,15 +19,11 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "@mui/icons-material/Home";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Avatar } from "@mui/material";
 import axios from "axios";
 import AppContext from "../../AppContext";
-
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
-
-import { db } from "../../Firebase.js";
 
 const drawerWidth = 240;
 
@@ -98,13 +94,6 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer() {
   const theme = useTheme();
-
-  const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
-  const [
-    updatedSubscribersListCompleteData,
-    setUpdateSubscribersListCompleteData,
-  ] = useState([]);
-  const [users, setUsers] = useState([]);
   const history = useHistory();
   const authUsersNavigation = ["Home", "User Profile", "Upload Video"];
   const unAuthorizedNavigation = ["Home"];
@@ -126,7 +115,6 @@ export default function MiniDrawer() {
   useEffect(async () => {
     await getData();
   }, []);
-  let subscribersListCompleteData;
   const [ProfilePic, setProfilePic] = useState("");
 
   const auth = getAuth();
@@ -170,21 +158,6 @@ export default function MiniDrawer() {
   const videosArr = firebaseData?.filter(
     (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
   );
-
-  const handleCreatorProfile = (creatorsName) => {
-    const creatorsData = usersArr.filter(
-      (user) => user.Username === creatorsName
-    );
-    const creatorsDataVideos = videosArr.filter(
-      (video) => video.Username === creatorsName
-    );
-    localStorage.setItem("creatorsData", JSON.stringify(creatorsData));
-    localStorage.setItem(
-      "creatorsDataVideos",
-      JSON.stringify(creatorsDataVideos)
-    );
-    history.push("/creator");
-  };
 
   return (
     <AppContext.Consumer>

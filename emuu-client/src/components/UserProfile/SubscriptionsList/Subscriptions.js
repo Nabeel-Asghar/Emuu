@@ -9,14 +9,11 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Avatar } from "@mui/material";
 import axios from "axios";
-import { db } from "../../../Firebase.js";
-import { getDoc, getDocs, doc, collection } from "firebase/firestore";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 
 function Subscriptions() {
   const [subscribersData, setSubscribersData] = useState([]);
 
-  const [count, setCount] = useState(0);
   const history = useHistory();
 
   const [firebaseData, setFirebaseData] = useState([]);
@@ -63,14 +60,6 @@ function Subscriptions() {
   if (displayName !== null && subscribersData.length === 0) {
     getSubscriptions();
   }
-
-  const usersArr = firebaseData?.filter(
-    (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
-  );
-
-  const videosArr = firebaseData?.filter(
-    (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
-  );
 
   const handleSubscribersProfile = (subscribersName) => {
     localStorage.setItem("Creator", subscribersName);

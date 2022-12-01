@@ -1,39 +1,22 @@
 import React, { useEffect, useState } from "react";
 import "./Feeds.scss";
 import { Avatar } from "@mui/material";
-import YouTubeJSON from "../data/youtube-videos.json";
-import { AxiosContext } from "react-axios/lib/components/AxiosProvider";
-import { storage } from "../../Firebase.js";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { db } from "../../Firebase.js";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Subscriptions from "./SubscriptionsList/Subscriptions.js";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  getDoc,
-  doc,
-  query,
-  where,
-} from "firebase/firestore";
+
 import { Link } from "react-router-dom";
-import { styled } from "@mui/material/styles";
+
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
+
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { red } from "@mui/material/colors";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
 import Tab from "@material-ui/core/Tab";
@@ -46,7 +29,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { useHistory } from "react-router-dom";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 const options = ["Recently Uploaded", "Most Viewed"];
 
 const ITEM_HEIGHT = 48;
@@ -112,15 +95,13 @@ function Feeds({ setVideo }) {
   const [sort, setSort] = React.useState("Recently Uploaded");
   const [pages, setPages] = useState(undefined);
   const [page, setPage] = useState(1);
-  const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
   const [
     updatedSubscribersListCompleteData,
     setUpdateSubscribersListCompleteData,
   ] = useState([]);
-  const [users, setUsers] = useState([]);
+
   const history = useHistory();
   const [value, setValue] = React.useState("1");
-  const ProfilePic = localStorage.getItem("ProfilePictureUrl");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -190,7 +171,6 @@ function Feeds({ setVideo }) {
   useEffect(async () => {
     await getData();
   }, []);
-  let subscribersListCompleteData;
 
   async function getSubscribers() {
     const dis = {
@@ -221,24 +201,6 @@ function Feeds({ setVideo }) {
     getSubscribers();
   }
   //Sort function for date uploaded
-  function sortVideosByTime(videos) {
-    for (let i = 0; i < videos.length - 1; i++) {
-      for (let j = 0; j < videos.length - 1 - i; j++) {
-        if (videos[i].data().uploadTime < videos[i + 1].data().uploadTime) {
-          let temp = videos[i];
-          videos[i] = videos[i + 1];
-          videos[i + 1] = temp;
-        }
-      }
-    }
-  }
-
-  const usersArr = firebaseData.filter(
-    (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
-  );
-  const videosArr = firebaseData.filter(
-    (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
-  );
 
   const handleCreatorProfile = (creatorsName) => {
     localStorage.setItem("Creator", creatorsName);
