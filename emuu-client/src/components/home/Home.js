@@ -59,21 +59,20 @@ function Home({ setVideo }, { setUserProfile }) {
   const [pages, setPages] = useState(undefined);
   const [page, setPage] = useState(1);
 
-const [firebaseData, setFirebaseData] = useState([]);
+  const [firebaseData, setFirebaseData] = useState([]);
   async function getData() {
-      const response = await axios.get(
-        "http://localhost:8080/auth/firebase-data"
-      );
-      const users = response.data.message.Users;
-      const videos = response.data.message.Videos;
-      var completeFirebaseData = videos.concat(users);
-      setFirebaseData(completeFirebaseData);
+    const response = await axios.get(
+      "http://localhost:8080/auth/firebase-data"
+    );
+    const users = response.data.message.Users;
+    const videos = response.data.message.Videos;
+    var completeFirebaseData = videos.concat(users);
+    setFirebaseData(completeFirebaseData);
+  }
 
-    }
-
-    useEffect(async () => {
-      await getData();
-    }, []);
+  useEffect(async () => {
+    await getData();
+  }, []);
 
   const autocomplete = useMemo(
     () =>
@@ -132,9 +131,7 @@ const [firebaseData, setFirebaseData] = useState([]);
         JSON.stringify({ ...disAndPage })
       )
       .then(function (response) {});
-    const response = await axios.get(
-      "http://localhost:8080/auth/video"
-    );
+    const response = await axios.get("http://localhost:8080/auth/video");
     setTopVideos(response.data.message.MostViewed);
     setRecentVideos(response.data.message.RecentUpload);
     setPages(response.data.message.Pages);
@@ -310,7 +307,6 @@ const [firebaseData, setFirebaseData] = useState([]);
                                     />
 
                                     <div className="videoInfo">
-
                                       <Typography
                                         variant="body2"
                                         color="text.secondary"
@@ -319,15 +315,15 @@ const [firebaseData, setFirebaseData] = useState([]);
                                       >
                                         {video.Username}
                                       </Typography>
-                                       <Typography
-                                                                              variant="body2"
-                                                                              color="text.secondary"
-                                                                              fontWeight="medium"
-                                                                              fontSize="14px"
-                                                                            >
-                                                                              {video.Likes} Likes &#x2022;{" "}
-                                                                              {video.Views} Views
-                                                                            </Typography>
+                                      <Typography
+                                        variant="body2"
+                                        color="text.secondary"
+                                        fontWeight="medium"
+                                        fontSize="14px"
+                                      >
+                                        {video.Likes} Likes &#x2022;{" "}
+                                        {video.Views} Views
+                                      </Typography>
                                     </div>
                                   </CardContent>
                                 </span>
@@ -401,7 +397,6 @@ const [firebaseData, setFirebaseData] = useState([]);
                                     />
 
                                     <div className="videoInfo">
-
                                       <Typography
                                         variant="body2"
                                         color="text.secondary"
@@ -410,16 +405,15 @@ const [firebaseData, setFirebaseData] = useState([]);
                                       >
                                         {video.Username}
                                       </Typography>
-                                       <Typography
-                                                                              variant="body2"
-                                                                              color="text.secondary"
-                                                                              fontWeight="medium"
-                                                                              fontSize="14px"
-                                                                            >
-                                                                              {video.Likes} Likes &#x2022;{" "}
-                                                                              {video.Views} Views
-                                                                            </Typography>
-
+                                      <Typography
+                                        variant="body2"
+                                        color="text.secondary"
+                                        fontWeight="medium"
+                                        fontSize="14px"
+                                      >
+                                        {video.Likes} Likes &#x2022;{" "}
+                                        {video.Views} Views
+                                      </Typography>
                                     </div>
                                   </CardContent>
                                 </span>
