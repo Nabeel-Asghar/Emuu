@@ -47,6 +47,8 @@ function Profile({ setVideo, video }, { classes }) {
   const displayName = localStorage.getItem("displayName");
 
   const [firebaseData, setFirebaseData] = useState([]);
+
+  //gets firebase data for search functionality
   async function getData() {
     const response = await axios.get(
       "http://localhost:8080/auth/firebase-data"
@@ -54,9 +56,10 @@ function Profile({ setVideo, video }, { classes }) {
     const users = response.data.message.Users;
     const videos = response.data.message.Videos;
     var completeFirebaseData = videos.concat(users);
+    //stores map of users and videos details into an array
     setFirebaseData(completeFirebaseData);
   }
-
+//runs the get data function upon page load
   useEffect(async () => {
     await getData();
   }, []);
@@ -104,10 +107,13 @@ function Profile({ setVideo, video }, { classes }) {
       }),
     [count]
   );
+
+  //function to get user information
   async function getUser() {
     const dis = {
       displayName: displayName,
     };
+    //sends axios post of users name to server
     await axios
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator",
@@ -115,21 +121,23 @@ function Profile({ setVideo, video }, { classes }) {
       )
       .then(function (response) {});
     try {
+
+    //sends axios get request for user information
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator"
       );
-      console.log("user");
+
       const user = response.data.message.UserDetails;
-      console.log(user);
+      //sets profile, banner/profile pic source, and subscriberCount for user
       setProfileUser(user);
       setBanner(user[0].BannerUrl);
       setProfilePic(user[0].ProfilePictureUrl);
       setSubscriberCount(user[0].SubscriberCount);
     } catch (error) {
-      console.log("er");
+
     }
   }
-
+//runs getUser function upon page load
   useEffect(async () => {
     await getUser();
   }, []);
@@ -171,20 +179,24 @@ function Profile({ setVideo, video }, { classes }) {
 
   const subscribeUser = () => {};
 
+//sets crop dimensions upon cropping banner (react Easy Crop)
   const onCropComplete = useCallback((croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
 
+//upon crop complete, runs uploadBackround to update firebase banner url
   const showCroppedImage = useCallback(async () => {
     try {
+    //sets cropped image information
       const croppedImage = await getCroppedImg(
         imageSrc,
         croppedAreaPixels,
         rotation
       );
       setCroppedImageSrc(croppedImage);
-
+        //runs function to update firebase banner url
       uploadBackground(croppedImage);
+      //reloads page once image is successfully updated
       setTimeout(() => window.location.reload(), 1500);
       return false;
     } catch (e) {
@@ -196,6 +208,7 @@ function Profile({ setVideo, video }, { classes }) {
     setCroppedImage(null);
   }, []);
 
+//sets image when a user uploads a file for the banner
   const onFileChange = async (e) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -205,18 +218,22 @@ function Profile({ setVideo, video }, { classes }) {
     }
   };
   function verifyJpeg(filename) {
+  //splits file name at the period
     const fnArr = filename.split(".");
+    //tests whether the file is a jpeg or jpg
     if (fnArr[fnArr.length - 1] == "jpeg" || fnArr[fnArr.length - 1] == "jpg")
       return true;
     return false;
   }
+  //function to update firebase banner url
   function uploadBackground(croppedImage) {
     const storage = getStorage();
     const storageRef = ref(storage, "/images/" + uid());
 
-    // 'file' comes from the Blob or File API
+    //uploads file to firebase storage
     uploadString(storageRef, croppedImage, "data_url").then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
+      //creates an axios post of the users name and image url to the server to update firestore data
         axios.post(
           "https://emuu-cz5iycld7a-ue.a.run.app/auth/updateBanner",
           JSON.stringify({ displayName: displayName, croppedImageUrl: URL })
@@ -224,21 +241,24 @@ function Profile({ setVideo, video }, { classes }) {
       );
     });
   }
-
+ //function to update firebase profile picture url
   function uploadProfile(e) {
     let file = e.target.files[0];
+    //verifies image is a jpeg
     if (!verifyJpeg(file.name)) return;
     const storage = getStorage();
     const storageRef = ref(storage, "/images/" + file.name);
-
+ //uploads file to firebase storage
     uploadBytes(storageRef, file).then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
         axios.post(
+         //creates an axios post of the users name and image url to the server to update firestore data
           "https://emuu-cz5iycld7a-ue.a.run.app/auth/updateProfilePic",
           JSON.stringify({ displayName: displayName, profileImageUrl: URL })
         )
       );
     });
+    //refreshes page when profile picture has successfully updated
     setTimeout(() => window.location.reload(), 1500);
     return false;
   }
