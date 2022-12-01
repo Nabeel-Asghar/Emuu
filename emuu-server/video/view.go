@@ -11,11 +11,14 @@ import (
 	"time"
 )
 
+// create struct to reflect json value of video url sent from front end
 type VideoView struct {
 	VideoUrl string `json:"videoUrl"`
 }
 
+// function to update the view of a video
 func UpdateView(c *gin.Context) {
+	//get video url from json input and bind it to variable res
 	var res VideoView
 	c.ShouldBindJSON(&res)
 	c.JSON(http.StatusOK, gin.H{"message": res})
@@ -28,7 +31,7 @@ func UpdateView(c *gin.Context) {
 		log.Fatalf("firestore client creation error:%s", err)
 	}
 	defer client.Close()
-
+	//Find video in Firestore based off its url
 	iter := client.Collection("Videos").Where("VideoUrl", "==", videoUrl).Documents(ctx)
 	for {
 		doc, err := iter.Next()
@@ -38,6 +41,7 @@ func UpdateView(c *gin.Context) {
 		if err != nil {
 			return
 		}
+		//Update view count to be incremented by 1
 		li := client.Collection("Videos").Doc(doc.Ref.ID)
 		_, err = li.Update(ctx, []firestore.Update{
 			{Path: "Views", Value: firestore.Increment(1)},

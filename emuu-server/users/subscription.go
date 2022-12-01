@@ -15,10 +15,12 @@ import (
 	"time"
 )
 
+// create struct to reflect json values sent from frontend
 type NameForSubscriptions struct {
 	UserName string `json:"displayName"`
 }
 
+// create struct to reflect data needed to be sent to frontend for subscriptions
 type SubscriptionProfile struct {
 	Username          string `firestore:"Username"`
 	BannerUrl         string `firestore:"BannerUrl"`
@@ -27,6 +29,7 @@ type SubscriptionProfile struct {
 	SubscriberCount   int    `firestore:"SubscriberCount"`
 }
 
+// set global variable of username by binding to json sent from frontend
 func SetUsernameSubscription(c *gin.Context) {
 	var res NameForSubscriptions
 	c.ShouldBindJSON(&res)
@@ -46,7 +49,7 @@ func SetSubscriptions(c *gin.Context) {
 		log.Fatalf("firestore client creation error:%s", err)
 	}
 	defer client.Close()
-
+	//create array of subscriptions and iterate through Firestore's Users collection to find users in subscriber lists of other users
 	completeSubscriptionArr := []SubscriptionProfile{}
 	iter := client.Collection("Users").Where("SubscriberList", "array-contains", userUN).Documents(ctx)
 	for {
@@ -57,12 +60,15 @@ func SetSubscriptions(c *gin.Context) {
 		if err != nil {
 			return
 		}
+		//add document data to subscription array
 		var subscriptionArr SubscriptionProfile
 		doc.DataTo(&subscriptionArr)
 
+		//add subscription array data per iteration to complete subscription array that will be sent to frontend
 		completeSubscriptionArr = append(completeSubscriptionArr, subscriptionArr)
 
 	}
+	//send response to frontend of subscription list
 	response := struct {
 		SubscriptionDetails []SubscriptionProfile
 	}{

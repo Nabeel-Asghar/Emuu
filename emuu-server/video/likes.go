@@ -3,7 +3,6 @@ package video
 import (
 	"cloud.google.com/go/firestore"
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
@@ -12,16 +11,19 @@ import (
 	"time"
 )
 
+//create struct to reflect json values sent from frontend
 type DisplayName struct {
 	UserName     string `json:"displayName"`
 	VideoUrl     string `json:"videoUrl"`
 	LikedBoolean bool   `json:"LikedBoolean"`
 }
 
+//create struct to reflect firestore value of usersThatLiked array
 type Like struct {
 	UsersThatLiked []string `firestore:"usersThatLiked"`
 }
 
+//set the global variable of username and video url from json input by binding to json
 func SetUsernameLike(c *gin.Context) {
 	var res DisplayName
 	c.ShouldBindJSON(&res)
@@ -31,6 +33,7 @@ func SetUsernameLike(c *gin.Context) {
 
 }
 
+//function to check if a user has liked a video
 func CheckLikes(c *gin.Context) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) //setting context with timeout 15
@@ -42,8 +45,9 @@ func CheckLikes(c *gin.Context) {
 		log.Fatalf("firestore client creation error:%s", err)
 	}
 	defer client.Close()
-
+	//create an array for users that liked of Type Like
 	var likesArr Like
+	//iterate through Videos collection to find video based off of its url
 	iter := client.Collection("Videos").Where("VideoUrl", "==", videoUrl).Documents(ctx)
 	for {
 		doc, err := iter.Next()
@@ -53,9 +57,9 @@ func CheckLikes(c *gin.Context) {
 		if err != nil {
 			return
 		}
-
+		//add the existing stored users that likes array to variable likesArr
 		doc.DataTo(&likesArr)
-
+		//Check if user is in the likes array, if they are then set likes to true
 		var checkedStatus bool = false
 		for i := 0; i < len(likesArr.UsersThatLiked); i++ {
 			if likesArr.UsersThatLiked[i] == userUN {
@@ -64,7 +68,7 @@ func CheckLikes(c *gin.Context) {
 			}
 
 		}
-
+		//send response back to frontend of whether a user liked the video
 		response := struct {
 			CheckedValue bool
 		}{
@@ -77,7 +81,9 @@ func CheckLikes(c *gin.Context) {
 
 }
 
+//function to like a video
 func SetLikes(c *gin.Context) {
+	//bind json elements sent from frontend to variable input
 	var input DisplayName
 	if err := c.ShouldBindJSON(&input); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()}) //writter with particular error
@@ -93,13 +99,12 @@ func SetLikes(c *gin.Context) {
 		log.Fatalf("firestore client creation error:%s", err)
 	}
 	defer client.Close()
-
+	//if Like is true (checked)
 	if input.LikedBoolean == true {
+		//create an array to pull existing data and new array to overwrite old array
 		var likesArr Like
 		var newlikesArr []string
-		var dislikesArr Dislike
-		var newdislikesArr []string
-
+		//Find the video in Firestore
 		iter := client.Collection("Videos").Where("VideoUrl", "==", input.VideoUrl).Documents(ctx)
 		for {
 			doc, err := iter.Next()
@@ -109,46 +114,29 @@ func SetLikes(c *gin.Context) {
 			if err != nil {
 				return
 			}
-
+			//Add existing data to likes array
 			doc.DataTo(&likesArr)
-			doc.DataTo(&dislikesArr)
-			fmt.Println(likesArr.UsersThatLiked)
-
+			//Add new user to new likes array and add existing data to new likes array
 			var user = input.UserName
-			fmt.Println(user)
 			newlikesArr = append(newlikesArr, user)
 			newlikesArr = append(newlikesArr, likesArr.UsersThatLiked...)
-			newdislikesArr = append(newdislikesArr, dislikesArr.UsersThatDisliked...)
-			for i, v := range newdislikesArr {
-				if v == user {
-					newdislikesArr = append(newdislikesArr[:i], newdislikesArr[i+1:]...)
-					ab := client.Collection("Videos").Doc(doc.Ref.ID)
-					_, err = ab.Update(ctx, []firestore.Update{
-						{Path: "usersThatDisliked", Value: newdislikesArr},
-					})
-					cd := client.Collection("Videos").Doc(doc.Ref.ID)
-					_, err = cd.Update(ctx, []firestore.Update{
-						{Path: "Dislikes", Value: firestore.Increment(-1)},
-					})
-					break
-				}
-			}
-
-			fmt.Println(newlikesArr)
+			//update the usersThatLiked array in Firestore
 			dc := client.Collection("Videos").Doc(doc.Ref.ID)
 			_, err = dc.Update(ctx, []firestore.Update{
 				{Path: "usersThatLiked", Value: newlikesArr},
 			})
+			//Update like count in Firestore to be incremented by 1
 			li := client.Collection("Videos").Doc(doc.Ref.ID)
 			_, err = li.Update(ctx, []firestore.Update{
 				{Path: "Likes", Value: firestore.Increment(1)},
 			})
-
 		}
 
-	} else {
+	} else { //if Like isn't true (unchecked)
+		//create an array to pull existing data and new array to overwrite old array
 		var likesArr Like
 		var newlikesArr []string
+		//Find the video in Firestore
 		iter := client.Collection("Videos").Where("VideoUrl", "==", input.VideoUrl).Documents(ctx)
 		for {
 			doc, err := iter.Next()
@@ -158,12 +146,10 @@ func SetLikes(c *gin.Context) {
 			if err != nil {
 				return
 			}
-
+			//Add existing data to likes array
 			doc.DataTo(&likesArr)
-			fmt.Println(likesArr.UsersThatLiked)
-
+			//Add existing data to newLikesArr and remove user from the array
 			var user = input.UserName
-			fmt.Println(user)
 			newlikesArr = append(newlikesArr, likesArr.UsersThatLiked...)
 			for i, v := range newlikesArr {
 				if v == user {
@@ -171,12 +157,12 @@ func SetLikes(c *gin.Context) {
 					break
 				}
 			}
-
-			fmt.Println(newlikesArr)
+			//Update the usersThatLiked array in Firestore
 			dc := client.Collection("Videos").Doc(doc.Ref.ID)
 			_, err = dc.Update(ctx, []firestore.Update{
 				{Path: "usersThatLiked", Value: newlikesArr},
 			})
+			//Update the likes count to be decremented by 1
 			li := client.Collection("Videos").Doc(doc.Ref.ID)
 			_, err = li.Update(ctx, []firestore.Update{
 				{Path: "Likes", Value: firestore.Increment(-1)},
