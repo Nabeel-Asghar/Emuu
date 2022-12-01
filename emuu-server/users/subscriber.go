@@ -16,13 +16,17 @@ import (
 	"time"
 )
 
+// create struct to reflect data being sent from frontend
 type Name struct {
 	UserName string `json:"displayName"`
 }
 
+// create struct to reflect Firestore document element of subscriber list
 type Subscribed struct {
 	UsersThatSubscribed []string `firestore:"SubscriberList"`
 }
+
+// create struct to reflect Firestore document fields needed to be sent to frontend
 type SubProfile struct {
 	Username          string `firestore:"Username"`
 	BannerUrl         string `firestore:"BannerUrl"`
@@ -31,6 +35,7 @@ type SubProfile struct {
 	SubscriberCount   int    `firestore:"SubscriberCount"`
 }
 
+// set global variable of username
 func SetUsernameSub(c *gin.Context) {
 	var res Name
 	c.ShouldBindJSON(&res)
@@ -39,6 +44,7 @@ func SetUsernameSub(c *gin.Context) {
 
 }
 
+// function to set subscribers
 func SetSubscribers(c *gin.Context) {
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) //setting context with timeout 15
@@ -50,7 +56,7 @@ func SetSubscribers(c *gin.Context) {
 		log.Fatalf("firestore client creation error:%s", err)
 	}
 	defer client.Close()
-
+	//iterate through users collection to find document of user
 	iter := client.Collection("Users").Where("Username", "==", userUN).Documents(ctx)
 	for {
 		doc, err := iter.Next()
@@ -60,11 +66,12 @@ func SetSubscribers(c *gin.Context) {
 		if err != nil {
 			return
 		}
+		//create subscribers array and add document data retrieved from firestore
 		var subscribedArr Subscribed
 		doc.DataTo(&subscribedArr)
-
+		//create array of type SubProfile to be sent to frontend
 		completeSubscriberArr := []SubProfile{}
-
+		//iterate through each user and get the document data needed to be sent to frontend
 		for i := 0; i < len(subscribedArr.UsersThatSubscribed); i++ {
 
 			dsnap, err := client.Collection("Users").Doc(subscribedArr.UsersThatSubscribed[i]).Get(ctx)
@@ -79,7 +86,7 @@ func SetSubscribers(c *gin.Context) {
 			}
 
 		}
-
+		//send response to frontend of subscribers array
 		response := struct {
 			SubDetails []SubProfile
 		}{

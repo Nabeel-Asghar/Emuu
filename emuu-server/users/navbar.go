@@ -11,10 +11,12 @@ import (
 	"time"
 )
 
+// Create struct to get the json value of username sent from frontend
 type NavBarName struct {
 	UserName string `json:"displayName"`
 }
 
+// Create struct to retreive reflected fields of Firestore needed to be sent to frontend
 type NavBarUser struct {
 	Username          string `firestore:"Username"`
 	BannerUrl         string `firestore:"BannerUrl"`
@@ -23,6 +25,7 @@ type NavBarUser struct {
 	SubscriberCount   int    `firestore:"SubscriberCount"`
 }
 
+// function to set the username based off of the JSON response and bind it to variable res
 func SetNavUsername(c *gin.Context) {
 	var res DisplayName
 	c.ShouldBindJSON(&res)
@@ -31,8 +34,10 @@ func SetNavUsername(c *gin.Context) {
 
 }
 
+// function to set the user for the nav bar
 func SetNavUser(c *gin.Context) {
 	if userUN != "" {
+		//create userdata array of type NavBarUser
 		userDataArr := []NavBarUser{}
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) //setting context with timeout 15
 		defer cancel()                                                           //after 15 seconds, if the function is not executed it will cancel and throw an error
@@ -43,6 +48,7 @@ func SetNavUser(c *gin.Context) {
 			log.Fatalf("firestore client creation error:%s", err)
 		}
 		defer client.Close()
+		//Iterate through Users collection in Firestore to find user based off of username
 		iter := client.Collection("Users").Where("Username", "==", userUN).Documents(ctx)
 		for {
 			doc, err := iter.Next()
@@ -52,13 +58,14 @@ func SetNavUser(c *gin.Context) {
 			if err != nil {
 				return
 			}
+			//add data to userInfo from document and then add to userData array per iteration
 			var userInfo = NavBarUser{}
 
 			doc.DataTo(&userInfo)
 			userDataArr = append(userDataArr, userInfo)
 
 		}
-
+		//Send response to frontend containing user details
 		response := struct {
 			UserDetails []NavBarUser
 		}{

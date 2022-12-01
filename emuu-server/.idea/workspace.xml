@@ -4,8 +4,8 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="8493d53e-db58-4626-b4e8-fbf4ec91baf5" name="Changes" comment="Adding alogilia functionality to recommended.go">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    <list default="true" id="8493d53e-db58-4626-b4e8-fbf4ec91baf5" name="Changes" comment="Commented code for main.go">
+      <change beforePath="$PROJECT_DIR$/../emuu-client/src/components/videoPage/videoPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/../emuu-client/src/components/videoPage/videoPage.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/video/recommended.go" beforeDir="false" afterPath="$PROJECT_DIR$/video/recommended.go" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -97,7 +97,9 @@
     <MESSAGE value="Added firebase integration" />
     <MESSAGE value="Working on getting the user's profile picture from each video onto the home page without creating a new field in the videos collection, no need to store the information twice if it's already there, need to find a way to access that element of the array and add it" />
     <MESSAGE value="Adding alogilia functionality to recommended.go" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding alogilia functionality to recommended.go" />
+    <MESSAGE value="Commented code on firebase data for algolia" />
+    <MESSAGE value="Commented code for main.go" />
+    <option name="LAST_COMMIT_MESSAGE" value="Commented code for main.go" />
   </component>
   <component name="VgoProject">
     <integration-enabled>false</integration-enabled>

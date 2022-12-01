@@ -61,7 +61,9 @@ func CreateUser(c *gin.Context) {
 	dt := time.Now()
 	//Format Time
 	Date := dt.Format("01-02-2006")
+	//Create subscribers list array
 	SubscriberListArr := [...]string{}
+	//Create a user document based off of username and add fields to the document
 	wr, err := client.Collection("Users").Doc(input.User_userName).Create(ctx, map[string]interface{}{
 		"Username":          input.User_userName,
 		"SubscriberCount":   0,
