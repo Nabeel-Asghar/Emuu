@@ -2,16 +2,16 @@ package video
 
 import (
 	"cloud.google.com/go/firestore"
-	"context"
-	"github.com/gin-gonic/gin"
-	"google.golang.org/api/iterator"
-	"google.golang.org/api/option"
-	"log"
-	"math"
-	"net/http"
-	"reflect"
-	"strconv"
-	"time"
+    "context"
+    "github.com/gin-gonic/gin"
+    "google.golang.org/api/iterator"
+    "google.golang.org/api/option"
+    "log"
+    "math"
+    "net/http"
+    "reflect"
+    "strconv"
+    "time"
 )
 
 //create struct to reflect json values sent from frontend (name and page number)
@@ -27,19 +27,20 @@ var PageNum int
 //create a struct of type Video which reflect document fields in Firestore's Videos collection
 type Video struct {
 	Username         string              `firestore:"Username"`
-	Title            string              `firestore:"VideoTitle"`
-	VideoUrl         string              `firestore:"VideoUrl"`
-	ThumbnailUrl     string              `firestore:"thumbnailUrl"`
-	Likes            int                 `firestore:"Likes"`
-	Views            int                 `firestore:"Views"`
-	UploadTime       int                 `firestore:"uploadTime"`
-	Date             string              `firestore:"Date"`
-	GameTag          string              `firestore:"GameTag"`
-	VideoDescription string              `firestore:"VideoDescription"`
-	UsersThatLiked   []string            `firestore:"usersThatLiked"`
-	Comments         []map[string]string `firestore:"Comments,omitempty"`
-
-	ProfilePic string
+    Title            string              `firestore:"VideoTitle"`
+    VideoUrl         string              `firestore:"VideoUrl"`
+    ThumbnailUrl     string              `firestore:"thumbnailUrl"`
+    Likes            int                 `firestore:"Likes"`
+    Views            int                 `firestore:"Views"`
+    UploadTime       int                 `firestore:"uploadTime"`
+    Date             string              `firestore:"Date"`
+    GameTag          string              `firestore:"GameTag"`
+    VideoDescription string              `firestore:"VideoDescription"`
+    UsersThatLiked   []string            `firestore:"usersThatLiked"`
+    Comments         []map[string]string `firestore:"Comments,omitempty"`
+    Dislikes            int                 `firestore:"Dislikes"`
+    UsersThatDisiked   []string            `firestore:"usersThatDisliked"`
+    ProfilePic string
 }
 
 //Create struct to retrieve firestore's profile pic of each user

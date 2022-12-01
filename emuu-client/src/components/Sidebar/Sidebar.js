@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Sidebar.scss";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import Subscriptions from "../UserProfile/SubscriptionsList/Subscriptions.js";
 import { styled, useTheme } from "@mui/material/styles";
@@ -19,15 +19,11 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import HomeIcon from "@mui/icons-material/Home";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
+
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import { Avatar } from "@mui/material";
 import axios from "axios";
 import AppContext from "../../AppContext";
-
-import { collection, getDocs, doc, getDoc } from "firebase/firestore";
-
-import { db } from "../../Firebase.js";
 
 const drawerWidth = 240;
 
@@ -98,13 +94,6 @@ const Drawer = styled(MuiDrawer, {
 
 export default function MiniDrawer() {
   const theme = useTheme();
-
-  const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
-  const [
-    updatedSubscribersListCompleteData,
-    setUpdateSubscribersListCompleteData,
-  ] = useState([]);
-  const [users, setUsers] = useState([]);
   const history = useHistory();
   const authUsersNavigation = ["Home", "User Profile", "Upload Video"];
   const unAuthorizedNavigation = ["Home"];
@@ -112,55 +101,56 @@ export default function MiniDrawer() {
 
   const currentNavigation =
     isAuthorized === "true" ? authUsersNavigation : unAuthorizedNavigation;
-const [firebaseData, setFirebaseData] = useState([]);
+  const [firebaseData, setFirebaseData] = useState([]);
   async function getData() {
-      const response = await axios.get(
-        "http://localhost:8080/auth/firebase-data"
-      );
-      const users = response.data.message.Users;
-      const videos = response.data.message.Videos;
-      var completeFirebaseData = videos.concat(users);
-      setFirebaseData(completeFirebaseData);
-
-    }
-
-    useEffect(async () => {
-      await getData();
-    }, []);
-  let subscribersListCompleteData;
+    const response = await axios.get(
+    //sends axios get for firebase data used for search bar
+      "http://localhost:8080/auth/firebase-data"
+    );
+    const users = response.data.message.Users;
+    const videos = response.data.message.Videos;
+    var completeFirebaseData = videos.concat(users);
+    //stores data in an array
+    setFirebaseData(completeFirebaseData);
+  }
+//runs getData upon page load
+  useEffect(async () => {
+    await getData();
+  }, []);
   const [ProfilePic, setProfilePic] = useState("");
 
   const auth = getAuth();
   const user = auth.currentUser;
-
+//sets displayName if user is Authorized
   if (user) {
     var userName = user.displayName;
     localStorage.setItem("displayName", user.displayName);
   } else {
     var userName = null;
   }
-
+//function to get users data
   async function getMainUser() {
     const dis = {
       displayName: userName,
     };
     await axios
+    //sends username with axios post to server
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/navbar",
         JSON.stringify({ ...dis })
       )
       .then(function (response) {});
-
+//axios get request to receive users data
     const response = await axios.get(
       "https://emuu-cz5iycld7a-ue.a.run.app/auth/navbar"
     );
-
+//sets users profile pic for sidebar
     const user = response.data.message.UserDetails;
     setProfilePic(user[0].ProfilePictureUrl);
-    console.log(user[0].ProfilePictureUrl);
+    //sets profile pic in localStorage for profile menu in nav bar
     localStorage.setItem("ProfilePictureUrl", user[0].ProfilePictureUrl);
   }
-
+//if displayName is registered, runs getMainUser
   if (userName !== null) {
     getMainUser();
   }
@@ -171,21 +161,6 @@ const [firebaseData, setFirebaseData] = useState([]);
   const videosArr = firebaseData?.filter(
     (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
   );
-
-  const handleCreatorProfile = (creatorsName) => {
-    const creatorsData = usersArr.filter(
-      (user) => user.Username === creatorsName
-    );
-    const creatorsDataVideos = videosArr.filter(
-      (video) => video.Username === creatorsName
-    );
-    localStorage.setItem("creatorsData", JSON.stringify(creatorsData));
-    localStorage.setItem(
-      "creatorsDataVideos",
-      JSON.stringify(creatorsDataVideos)
-    );
-    history.push("/creator");
-  };
 
   return (
     <AppContext.Consumer>

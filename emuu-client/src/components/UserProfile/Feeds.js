@@ -1,39 +1,22 @@
 import React, { useEffect, useState } from "react";
 import "./Feeds.scss";
 import { Avatar } from "@mui/material";
-import YouTubeJSON from "../data/youtube-videos.json";
-import { AxiosContext } from "react-axios/lib/components/AxiosProvider";
-import { storage } from "../../Firebase.js";
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { db } from "../../Firebase.js";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import Subscriptions from "./SubscriptionsList/Subscriptions.js";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  getDoc,
-  doc,
-  query,
-  where,
-} from "firebase/firestore";
+
 import { Link } from "react-router-dom";
-import { styled } from "@mui/material/styles";
+
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
+
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { red } from "@mui/material/colors";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
 import Tab from "@material-ui/core/Tab";
@@ -46,7 +29,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import { useHistory } from "react-router-dom";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 const options = ["Recently Uploaded", "Most Viewed"];
 
 const ITEM_HEIGHT = 48;
@@ -112,22 +95,20 @@ function Feeds({ setVideo }) {
   const [sort, setSort] = React.useState("Recently Uploaded");
   const [pages, setPages] = useState(undefined);
   const [page, setPage] = useState(1);
-  const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
   const [
     updatedSubscribersListCompleteData,
     setUpdateSubscribersListCompleteData,
   ] = useState([]);
-  const [users, setUsers] = useState([]);
+
   const history = useHistory();
   const [value, setValue] = React.useState("1");
-  const ProfilePic = localStorage.getItem("ProfilePictureUrl");
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
   const auth = getAuth();
   const user = auth.currentUser;
-
+//function to set user display name
   if (user) {
     var displayName = user.displayName;
   } else {
@@ -140,6 +121,7 @@ function Feeds({ setVideo }) {
       displayName: displayName,
       pageNumber: page.toString(),
     };
+    //sends axios post of users name to server
     await axios
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/video",
@@ -147,21 +129,24 @@ function Feeds({ setVideo }) {
       )
       .then(function (response) {});
     try {
+    //sends axios get request to receive users videos
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/video"
       );
-
+        //sets top/recent videos into an array, as well as the number of pages for pagination
       setTopVideos(response.data.message.MostViewed);
       setRecentVideos(response.data.message.RecentUpload);
       setPages(response.data.message.Pages);
     } catch (error) {}
   }
 
+//function to get users liked videos
   async function getLikedVideos() {
     //Get all video data
     const dis = {
       displayName: displayName,
     };
+    //sends axios post of users name to server
     await axios
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/likedvideo",
@@ -169,34 +154,39 @@ function Feeds({ setVideo }) {
       )
       .then(function (response) {});
     try {
+    //sends axios get request to get liked videos
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/likedvideo"
       );
+      //sets liked videos into an array
       setLikedVideos(response.data.message.LikedVidDetails);
     } catch (error) {}
   }
 
-const [firebaseData, setFirebaseData] = useState([]);
+//function for firebaseData for search bar
+  const [firebaseData, setFirebaseData] = useState([]);
   async function getData() {
-      const response = await axios.get(
-        "http://localhost:8080/auth/firebase-data"
-      );
-      const users = response.data.message.Users;
-      const videos = response.data.message.Videos;
-      var completeFirebaseData = videos.concat(users);
-      setFirebaseData(completeFirebaseData);
+  //sends axios get request for data
+    const response = await axios.get(
+      "http://localhost:8080/auth/firebase-data"
+    );
+    const users = response.data.message.Users;
+    const videos = response.data.message.Videos;
+    var completeFirebaseData = videos.concat(users);
+    //sets data of users and videos into an array
+    setFirebaseData(completeFirebaseData);
+  }
+//upon page load runs getData function
+  useEffect(async () => {
+    await getData();
+  }, []);
 
-    }
-
-    useEffect(async () => {
-      await getData();
-    }, []);
-  let subscribersListCompleteData;
-
+//function for subscribers list
   async function getSubscribers() {
     const dis = {
       displayName: displayName,
     };
+      //sends axios post of users name to server
     await axios
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscribers",
@@ -204,15 +194,16 @@ const [firebaseData, setFirebaseData] = useState([]);
       )
       .then(function (response) {});
     try {
+    //sends axios get request to receive subscribers list
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscribers"
       );
-
+/  /sets subscribers list into an array
       setUpdateSubscribersListCompleteData(response.data.message.SubDetails);
     } catch (error) {}
   }
 
-
+//validation to cause functions to only run once
   if (displayName !== null && likedVideos.length === 0) {
     getLikedVideos();
   }
@@ -223,24 +214,6 @@ const [firebaseData, setFirebaseData] = useState([]);
     getSubscribers();
   }
   //Sort function for date uploaded
-  function sortVideosByTime(videos) {
-    for (let i = 0; i < videos.length - 1; i++) {
-      for (let j = 0; j < videos.length - 1 - i; j++) {
-        if (videos[i].data().uploadTime < videos[i + 1].data().uploadTime) {
-          let temp = videos[i];
-          videos[i] = videos[i + 1];
-          videos[i + 1] = temp;
-        }
-      }
-    }
-  }
-
-  const usersArr = firebaseData.filter(
-    (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
-  );
-  const videosArr = firebaseData.filter(
-    (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
-  );
 
   const handleCreatorProfile = (creatorsName) => {
     localStorage.setItem("Creator", creatorsName);
@@ -269,7 +242,7 @@ const [firebaseData, setFirebaseData] = useState([]);
               {recentVideos &&
                 sort == "Recently Uploaded" &&
                 recentVideos.map((video, index) => (
-                  <Card sx={{ maxWidth: 325, maxHeight:  320 }}>
+                  <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
                     <Link to="/video">
                       <span
                         onClick={() => {
@@ -306,7 +279,6 @@ const [firebaseData, setFirebaseData] = useState([]);
                           />
 
                           <div className="videoInfo">
-
                             <Typography
                               variant="body2"
                               color="text.secondary"
@@ -315,14 +287,14 @@ const [firebaseData, setFirebaseData] = useState([]);
                             >
                               {video.Username}
                             </Typography>
-                             <Typography
-                                                          variant="body2"
-                                                          color="text.secondary"
-                                                          fontWeight="medium"
-                                                          fontSize="14px"
-                                                        >
-                                                          {video.Likes} Likes &#x2022; {video.Views} Views
-                                                        </Typography>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              fontWeight="medium"
+                              fontSize="14px"
+                            >
+                              {video.Likes} Likes &#x2022; {video.Views} Views
+                            </Typography>
                           </div>
                         </CardContent>
                       </span>
@@ -333,7 +305,7 @@ const [firebaseData, setFirebaseData] = useState([]);
               {topVideos &&
                 sort == "Most Viewed" &&
                 topVideos.map((video, index) => (
-                  <Card sx={{ maxWidth: 325, maxHeight:  320 }}>
+                  <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
                     <Link to="/video">
                       <span
                         onClick={() => {
@@ -370,7 +342,6 @@ const [firebaseData, setFirebaseData] = useState([]);
                           />
 
                           <div className="videoInfo">
-
                             <Typography
                               variant="body2"
                               color="text.secondary"
@@ -379,14 +350,14 @@ const [firebaseData, setFirebaseData] = useState([]);
                             >
                               {video.Username}
                             </Typography>
-                             <Typography
-                                                          variant="body2"
-                                                          color="text.secondary"
-                                                          fontWeight="medium"
-                                                          fontSize="14px"
-                                                        >
-                                                          {video.Likes} Likes &#x2022; {video.Views} Views
-                                                        </Typography>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              fontWeight="medium"
+                              fontSize="14px"
+                            >
+                              {video.Likes} Likes &#x2022; {video.Views} Views
+                            </Typography>
                           </div>
                         </CardContent>
                       </span>
@@ -412,7 +383,7 @@ const [firebaseData, setFirebaseData] = useState([]);
             <div className="videos__container">
               {likedVideos &&
                 likedVideos.map((video, index) => (
-                  <Card sx={{ maxWidth: 325, maxHeight:  320 }}>
+                  <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
                     <Link to="/video">
                       <span
                         onClick={() => {
@@ -449,7 +420,6 @@ const [firebaseData, setFirebaseData] = useState([]);
                           />
 
                           <div className="videoInfo">
-
                             <Typography
                               variant="body2"
                               color="text.secondary"
@@ -458,14 +428,14 @@ const [firebaseData, setFirebaseData] = useState([]);
                             >
                               {video.Username}
                             </Typography>
-                             <Typography
-                                                          variant="body2"
-                                                          color="text.secondary"
-                                                          fontWeight="medium"
-                                                          fontSize="14px"
-                                                        >
-                                                          {video.Likes} Likes &#x2022; {video.Views} Views
-                                                        </Typography>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              fontWeight="medium"
+                              fontSize="14px"
+                            >
+                              {video.Likes} Likes &#x2022; {video.Views} Views
+                            </Typography>
                           </div>
                         </CardContent>
                       </span>

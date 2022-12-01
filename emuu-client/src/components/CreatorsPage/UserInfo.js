@@ -1,14 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./UserInfo.scss";
 import { db } from "../../Firebase.js";
-import {
-  getDoc,
-  doc,
-  collection,
-  query,
-  where,
-  onSnapshot,
-} from "firebase/firestore";
+import { getDoc, doc } from "firebase/firestore";
 
 const displayName = localStorage.getItem("CreatorName");
 

@@ -1,20 +1,15 @@
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import { React, useState, Component } from "react";
+import { React, useState } from "react";
 import axios from "axios";
-import Login from "./newloginscreen";
-import { Routes, Route, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import Container from "@mui/material/Container";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import NavBarNoImage from "../NavbarPostLogin/NavBarNoImage.js";
@@ -26,7 +21,6 @@ function Register() {
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
   const [userName, setUserName] = useState("");
-  const [message, setMessage] = useState("");
   const history = useHistory();
   const [error, setError] = useState("");
 
@@ -35,7 +29,7 @@ function Register() {
     user_email: email,
     user_password: password,
   };
-
+//validator to ensure password has more than 8 characters, an uppercase, and a special character
   const validatePassword = (pass) => {
     if (pass.length < 8) {
       setError("At least 8 characters");
@@ -63,7 +57,7 @@ function Register() {
 
     return true;
   };
-
+//validates email has format example@test.com
   function validateEmail(email) {
     let at = 0;
     let checkDotcom = "";
@@ -73,7 +67,7 @@ function Register() {
         checkDotcom += email[i];
       }
     }
-
+//sets error message when email is not valid
     if (!(checkDotcom == "moc.") || !at || at > 1) {
       setError("The email address is invalid");
       return false;
@@ -87,8 +81,9 @@ function Register() {
     // store the states in the form data
     if (!validateEmail(userdata.user_email)) return;
     if (!validatePassword(userdata.user_password)) return;
-
+//sends user to login page
     history.push("/login");
+    //sends axios post to server of users registration info
     await axios
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/register",

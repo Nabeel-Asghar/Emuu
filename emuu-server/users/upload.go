@@ -85,7 +85,7 @@ func UploadVideo(c *gin.Context) {
 	var input UploadInfo
 
 	if err := c.ShouldBindJSON(&input); err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()}) //written with particular error
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()}) //writter with particular error
 		return
 	}
 	//set upload information from JSON input that was bound
@@ -115,7 +115,8 @@ func UploadVideo(c *gin.Context) {
 	var commentsArr []map[string]string
 	//Declare usersThatLiked array
 	usersThatLikedArr := [...]string{}
-	//Create new uid for video document and add fields sent from frontend as well as fields that will be needed for each video upload
+	usersThatDislikedArr := [...]string{}
+
 	id := uuid.New()
 	wr, err := client.Collection("Videos").Doc(id.String()).Create(ctx, map[string]interface{}{
 		"Username":         u1.getUsername(),
@@ -126,10 +127,14 @@ func UploadVideo(c *gin.Context) {
 		"thumbnailUrl":     u1.getthumbUrl(),
 		"Comments":         commentsArr,
 		"Likes":            0,
+				"Dislikes":         0,
+
 		"Views":            0,
 		"Date":             Date,
 		"uploadTime":       currentTimestamp,
 		"usersThatLiked":   usersThatLikedArr,
+        		"usersThatDisliked": usersThatDislikedArr,
+
 	})
 
 	if err != nil {

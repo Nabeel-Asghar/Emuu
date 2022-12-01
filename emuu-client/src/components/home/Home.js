@@ -3,48 +3,20 @@ import { Avatar } from "@mui/material";
 import "./Home.scss";
 import "../UserProfile/Feeds.scss";
 import axios from "axios";
-import Container from "@mui/material/Container";
-
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  updateDoc,
-  setDoc,
-  doc,
-  getDoc,
-  query,
-} from "firebase/firestore";
 import { createAutocomplete } from "@algolia/autocomplete-core";
 import { Link } from "react-router-dom";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
 
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
-import { db } from "../../Firebase.js";
-import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
-import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { red } from "@mui/material/colors";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Pagination from "@mui/material/Pagination";
 import Stack from "@mui/material/Stack";
 import "firebase/firestore";
-import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
-import { BrowserRouter, Route, useHistory } from "react-router-dom";
-import firebase from "firebase/compat/app";
 import Sidebar from "../Sidebar/Sidebar";
-import PropTypes from "prop-types";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Skeleton from "@mui/material/Skeleton";
@@ -59,21 +31,20 @@ function Home({ setVideo }, { setUserProfile }) {
   const [pages, setPages] = useState(undefined);
   const [page, setPage] = useState(1);
 
-const [firebaseData, setFirebaseData] = useState([]);
+  const [firebaseData, setFirebaseData] = useState([]);
   async function getData() {
-      const response = await axios.get(
-        "http://localhost:8080/auth/firebase-data"
-      );
-      const users = response.data.message.Users;
-      const videos = response.data.message.Videos;
-      var completeFirebaseData = videos.concat(users);
-      setFirebaseData(completeFirebaseData);
+    const response = await axios.get(
+      "http://localhost:8080/auth/firebase-data"
+    );
+    const users = response.data.message.Users;
+    const videos = response.data.message.Videos;
+    var completeFirebaseData = videos.concat(users);
+    setFirebaseData(completeFirebaseData);
+  }
 
-    }
-
-    useEffect(async () => {
-      await getData();
-    }, []);
+  useEffect(async () => {
+    await getData();
+  }, []);
 
   const autocomplete = useMemo(
     () =>
@@ -128,13 +99,11 @@ const [firebaseData, setFirebaseData] = useState([]);
     };
     await axios
       .post(
-        "https://emuu-cz5iycld7a-ue.a.run.app/auth/video",
+        "http://localhost:8080/auth/video",
         JSON.stringify({ ...disAndPage })
       )
       .then(function (response) {});
-    const response = await axios.get(
-      "https://emuu-cz5iycld7a-ue.a.run.app/auth/video"
-    );
+    const response = await axios.get("http://localhost:8080/auth/video");
     setTopVideos(response.data.message.MostViewed);
     setRecentVideos(response.data.message.RecentUpload);
     setPages(response.data.message.Pages);
@@ -310,7 +279,6 @@ const [firebaseData, setFirebaseData] = useState([]);
                                     />
 
                                     <div className="videoInfo">
-
                                       <Typography
                                         variant="body2"
                                         color="text.secondary"
@@ -319,15 +287,15 @@ const [firebaseData, setFirebaseData] = useState([]);
                                       >
                                         {video.Username}
                                       </Typography>
-                                       <Typography
-                                                                              variant="body2"
-                                                                              color="text.secondary"
-                                                                              fontWeight="medium"
-                                                                              fontSize="14px"
-                                                                            >
-                                                                              {video.Likes} Likes &#x2022;{" "}
-                                                                              {video.Views} Views
-                                                                            </Typography>
+                                      <Typography
+                                        variant="body2"
+                                        color="text.secondary"
+                                        fontWeight="medium"
+                                        fontSize="14px"
+                                      >
+                                        {video.Likes} Likes &#x2022;{" "}
+                                        {video.Views} Views
+                                      </Typography>
                                     </div>
                                   </CardContent>
                                 </span>
@@ -401,7 +369,6 @@ const [firebaseData, setFirebaseData] = useState([]);
                                     />
 
                                     <div className="videoInfo">
-
                                       <Typography
                                         variant="body2"
                                         color="text.secondary"
@@ -410,16 +377,15 @@ const [firebaseData, setFirebaseData] = useState([]);
                                       >
                                         {video.Username}
                                       </Typography>
-                                       <Typography
-                                                                              variant="body2"
-                                                                              color="text.secondary"
-                                                                              fontWeight="medium"
-                                                                              fontSize="14px"
-                                                                            >
-                                                                              {video.Likes} Likes &#x2022;{" "}
-                                                                              {video.Views} Views
-                                                                            </Typography>
-
+                                      <Typography
+                                        variant="body2"
+                                        color="text.secondary"
+                                        fontWeight="medium"
+                                        fontSize="14px"
+                                      >
+                                        {video.Likes} Likes &#x2022;{" "}
+                                        {video.Views} Views
+                                      </Typography>
                                     </div>
                                   </CardContent>
                                 </span>

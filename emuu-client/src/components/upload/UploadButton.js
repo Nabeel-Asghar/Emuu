@@ -4,24 +4,18 @@ import "../home/Home.scss";
 import "./UploadButton.scss";
 
 import axios from "axios";
-import { Link, useHistory, useLocation, useRef } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
 
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { getAuth } from "firebase/auth";
-
 import { createAutocomplete } from "@algolia/autocomplete-core";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
 import { Avatar } from "@mui/material";
-
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@mui/material/Typography";
-import { createTheme } from "@mui/material/styles";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import FileUploadIcon from "@mui/icons-material/FileUpload";
@@ -91,7 +85,6 @@ const FileUpload = ({ setVideo }) => {
   const [videoDescriptionErr, setVideoDescriptionErr] = useState("");
   const [videoTag, setVideoTag] = useState("");
   const [videoTagErr, setVideoTagErr] = useState("");
-  const [videoDate, setVideoDate] = useState("");
   const [videoUrl, setVideoUrl] = useState("");
   const [userName, setUserName] = useState("");
   const [thumbnailUrl, setThumbnailUrl] = useState("");
@@ -105,21 +98,21 @@ const FileUpload = ({ setVideo }) => {
   const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [uploadStatus, setUploadStatus] = useState("");
 
-const [firebaseData, setFirebaseData] = useState([]);
+  const [firebaseData, setFirebaseData] = useState([]);
   async function getData() {
-      const response = await axios.get(
-        "http://localhost:8080/auth/firebase-data"
-      );
-      const users = response.data.message.Users;
-      const videos = response.data.message.Videos;
-      var completeFirebaseData = videos.concat(users);
-      setFirebaseData(completeFirebaseData);
+  //sends axios get request for firebaseData for search bar
+    const response = await axios.get(
+      "http://localhost:8080/auth/firebase-data"
+    );
+    const users = response.data.message.Users;
+    const videos = response.data.message.Videos;
+    var completeFirebaseData = videos.concat(users);
+    setFirebaseData(completeFirebaseData);
+  }
 
-    }
-
-    useEffect(async () => {
-      await getData();
-    }, []);
+  useEffect(async () => {
+    await getData();
+  }, []);
 
   //Gets user authentication
   const auth = getAuth();
@@ -128,6 +121,7 @@ const [firebaseData, setFirebaseData] = useState([]);
   //Store percent
   const [percent, setPercent] = useState(0);
 
+//function for circular loading display when a user uploads a video
   function CircularIntegration() {
     const [loading, setLoading] = React.useState(false);
     const [success, setSuccess] = React.useState(false);
@@ -147,7 +141,7 @@ const [firebaseData, setFirebaseData] = useState([]);
         clearTimeout(timer.current);
       };
     }, []);
-
+//validation to ensure users don't have empty fields
     const handleButtonClick = (e) => {
       e.preventDefault();
 
@@ -190,11 +184,13 @@ const [firebaseData, setFirebaseData] = useState([]);
           videoTagErr.length === 0 &&
           thumbnailErr.length === 0
         ) {
+        //uploads video if all fields are filled out
           handleUpload();
 
           if (!loading) {
             setSuccess(false);
             setLoading(true);
+
             timer.current = window.setTimeout(() => {
               setSuccess(true);
               setLoading(false);
@@ -203,7 +199,7 @@ const [firebaseData, setFirebaseData] = useState([]);
         }
       }, 200);
     };
-
+//returns circular progress
     return (
       <Box sx={{ display: "flex", alignItems: "center" }}>
         <Box sx={{ m: 1, position: "relative" }}>
@@ -254,7 +250,7 @@ const [firebaseData, setFirebaseData] = useState([]);
       </Box>
     );
   }
-
+//error messages if fields are empty
   const handleTitleChange = (event) => {
     setVideoTitle(event.target.value);
     if (event.target.value.length === 0) {
@@ -325,8 +321,6 @@ const [firebaseData, setFirebaseData] = useState([]);
       }
     };
   };
-
-  const onFormSubmit = (e) => {};
 
   const autocomplete = useMemo(
     () =>
@@ -532,6 +526,7 @@ const [firebaseData, setFirebaseData] = useState([]);
 
   useEffect(async () => {
     if (videoUrl && thumbnailUrl) {
+    //sends axios post of upload data to backend
       await axios
         .post(
           "https://emuu-cz5iycld7a-ue.a.run.app/auth/upload",
@@ -544,6 +539,7 @@ const [firebaseData, setFirebaseData] = useState([]);
             </span>
           );
         });
+        //once video is successfully uploaded, sends user to their profile page
       history.push("/userprofile");
     }
   }, [videoUrl, thumbnailUrl]);

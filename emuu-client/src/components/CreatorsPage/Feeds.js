@@ -1,35 +1,16 @@
 import React, { useEffect, useState } from "react";
 import "./Feeds.scss";
 import { Avatar } from "@mui/material";
-import { storage } from "../../Firebase.js";
 import axios from "axios";
-
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-
 import { db } from "../../Firebase.js";
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  doc,
-  query,
-  where,
-  getDoc,
-} from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { Link } from "react-router-dom";
-import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import { red } from "@mui/material/colors";
-import FavoriteIcon from "@mui/icons-material/Favorite";
-import ShareIcon from "@mui/icons-material/Share";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 import Box from "@mui/material/Box";
 import Tab from "@material-ui/core/Tab";
@@ -163,7 +144,7 @@ function Feeds({ setVideo, setUserProfile }) {
               {recentVideos &&
                 sort == "Recently Uploaded" &&
                 recentVideos.map((video, index) => (
-                  <Card sx={{ maxWidth: 325, maxHeight:  320 }}>
+                  <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
                     <Link to="/video">
                       <span
                         onClick={() => {
@@ -200,7 +181,6 @@ function Feeds({ setVideo, setUserProfile }) {
                           />
 
                           <div className="videoInfo">
-
                             <Typography
                               variant="body2"
                               color="text.secondary"
@@ -209,14 +189,14 @@ function Feeds({ setVideo, setUserProfile }) {
                             >
                               {video.Username}
                             </Typography>
-                              <Typography
-                                                          variant="body2"
-                                                          color="text.secondary"
-                                                          fontWeight="medium"
-                                                          fontSize="14px"
-                                                        >
-                                                          {video.Likes} Likes &#x2022; {video.Views} Views
-                                                        </Typography>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              fontWeight="medium"
+                              fontSize="14px"
+                            >
+                              {video.Likes} Likes &#x2022; {video.Views} Views
+                            </Typography>
                           </div>
                         </CardContent>
                       </span>
@@ -226,7 +206,7 @@ function Feeds({ setVideo, setUserProfile }) {
               {topVideos &&
                 sort == "Most Viewed" &&
                 topVideos.map((video, index) => (
-                  <Card sx={{ maxWidth: 325, maxHeight:  320 }}>
+                  <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
                     <Link to="/video">
                       <span
                         onClick={() => {
@@ -263,7 +243,6 @@ function Feeds({ setVideo, setUserProfile }) {
                           />
 
                           <div className="videoInfo">
-
                             <Typography
                               variant="body2"
                               color="text.secondary"
@@ -272,14 +251,14 @@ function Feeds({ setVideo, setUserProfile }) {
                             >
                               {video.Username}
                             </Typography>
-                             <Typography
-                                                          variant="body2"
-                                                          color="text.secondary"
-                                                          fontWeight="medium"
-                                                          fontSize="14px"
-                                                        >
-                                                          {video.Likes} Likes &#x2022; {video.Views} Views
-                                                        </Typography>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              fontWeight="medium"
+                              fontSize="14px"
+                            >
+                              {video.Likes} Likes &#x2022; {video.Views} Views
+                            </Typography>
                           </div>
                         </CardContent>
                       </span>

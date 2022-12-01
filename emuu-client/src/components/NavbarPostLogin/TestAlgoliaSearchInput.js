@@ -1,18 +1,10 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useEffect, useRef } from "react";
 
 import { createAutocomplete } from "@algolia/autocomplete-core";
 
 import { db } from "../../Firebase.js";
 
-import {
-  getFirestore,
-  collection,
-  getDocs,
-  doc,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 
 export default function HeaderSearch() {
   const [videos, setVideos] = useState([]);
@@ -20,8 +12,6 @@ export default function HeaderSearch() {
   const [autocompleteState, setAutocompleteState] = useState({});
   const [searchInput, setSearchInput] = useState("");
   const abc = videos.concat(users);
-
-  const [searchHeader, setSearchHeader] = useState(false);
 
   const inputFocusRef = useRef(null);
   const inputFocusProp = {
@@ -67,11 +57,6 @@ export default function HeaderSearch() {
       ];
     },
   });
-
-  function linkHandleClick() {
-    autocompleteState.query = "";
-    setSearchHeader(false);
-  }
 
   async function getVideos() {
     //Get all videos data
