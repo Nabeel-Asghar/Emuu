@@ -108,7 +108,7 @@ function Feeds({ setVideo }) {
   };
   const auth = getAuth();
   const user = auth.currentUser;
-//function to set authorization for users feeds
+//function to set user display name
   if (user) {
     var displayName = user.displayName;
   } else {
