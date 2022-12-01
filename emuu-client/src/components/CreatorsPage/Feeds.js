@@ -108,6 +108,7 @@ function Feeds({ setVideo, setUserProfile }) {
       displayName: displayName,
       pageNumber: page.toString(),
     };
+    //axios post of creators name to server
     await axios
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/video",
@@ -115,16 +116,17 @@ function Feeds({ setVideo, setUserProfile }) {
       )
       .then(function (response) {});
     try {
+    //get request to server to pull all users video data
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/video"
       );
-
+//sets top/recent videos, and page number for pagination into useState
       setTopVideos(response.data.message.MostViewed);
       setRecentVideos(response.data.message.RecentUpload);
       setPages(response.data.message.Pages);
     } catch (error) {}
   }
-
+//gets videos upon page load
   useEffect(async () => {
     await getVideos();
   }, [page]);
