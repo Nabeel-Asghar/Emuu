@@ -12,17 +12,17 @@ import (
 	"time"
 )
 
-//Create struct to reflect json values sent from frontend
+// Create struct to reflect json values sent from frontend
 type GamesTag struct {
-	GameTag        string `json:"gameTag"`
-	RecommendTitle string `json:"title"`
+	GameTag  string `json:"gameTag"`
+	VideoURL string `json:"videoUrl"`
 }
 
-//create two global variables, one for game tag, and one for video title
+// create two global variables, one for game tag, and one for video title
 var Games string
-var RecTitle string
+var RecURL string
 
-//Create struct to reflect video elements needed to be sent to frontend
+// Create struct to reflect video elements needed to be sent to frontend
 type Vid struct {
 	Username         string              `firestore:"Username"`
 	Title            string              `firestore:"VideoTitle"`
@@ -39,18 +39,18 @@ type Vid struct {
 	ProfilePic       string
 }
 
-//set global variables from json input
+// set global variables from json input
 func SetGameTag(c *gin.Context) {
 
 	var res GamesTag
 	c.ShouldBindJSON(&res)
 	c.JSON(http.StatusOK, gin.H{"message": res})
 	Games = res.GameTag
-	RecTitle = res.RecommendTitle
+	RecURL = res.VideoURL
 
 }
 
-//function to set recommended videos
+// function to set recommended videos
 func SetRecommended(c *gin.Context) {
 	//create an array of recommended videos of type Vid
 	recommendArr := []Vid{}
@@ -78,7 +78,7 @@ func SetRecommended(c *gin.Context) {
 
 		doc.DataTo(&vid)
 		//If it's the same video, skip iteration
-		if vid.Title == RecTitle {
+		if vid.VideoUrl == RecURL {
 			continue
 		}
 		//Find the user of each video

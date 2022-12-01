@@ -179,14 +179,14 @@ const [firebaseData, setFirebaseData] = useState([]);
   const subscribeUser = () => { };
 
   async function getRecommended() {
-  const TitleAndTag = {
-                                        title: video.Title,
+  const URLAndTag = {
+                                        videoUrl: video.VideoUrl,
                                         gameTag: video.GameTag,
                                       };
     await axios
       .post(
         "http://localhost:8080/auth/recommended",
-        JSON.stringify({ ...TitleAndTag })
+        JSON.stringify({ ...URLAndTag })
       )
       .then(function (response) { });
     try {
