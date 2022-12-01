@@ -2,16 +2,16 @@ package video
 
 import (
 	"cloud.google.com/go/firestore"
-	"context"
-	"github.com/gin-gonic/gin"
-	"google.golang.org/api/iterator"
-	"google.golang.org/api/option"
-	"log"
-	"math"
-	"net/http"
-	"reflect"
-	"strconv"
-	"time"
+    "context"
+    "github.com/gin-gonic/gin"
+    "google.golang.org/api/iterator"
+    "google.golang.org/api/option"
+    "log"
+    "math"
+    "net/http"
+    "reflect"
+    "strconv"
+    "time"
 )
 
 type DisplayNameAndPage struct {
@@ -24,20 +24,20 @@ var PageNum int
 
 type Video struct {
 	Username         string              `firestore:"Username"`
-	Title            string              `firestore:"VideoTitle"`
-	VideoUrl         string              `firestore:"VideoUrl"`
-	ThumbnailUrl     string              `firestore:"thumbnailUrl"`
-	Likes            int                 `firestore:"Likes"`
-	Views            int                 `firestore:"Views"`
-	UploadTime       int                 `firestore:"uploadTime"`
-	Date             string              `firestore:"Date"`
-	GameTag          string              `firestore:"GameTag"`
-	VideoDescription string              `firestore:"VideoDescription"`
-	UsersThatLiked   []string            `firestore:"usersThatLiked"`
-	Comments         []map[string]string `firestore:"Comments,omitempty"`
+    Title            string              `firestore:"VideoTitle"`
+    VideoUrl         string              `firestore:"VideoUrl"`
+    ThumbnailUrl     string              `firestore:"thumbnailUrl"`
+    Likes            int                 `firestore:"Likes"`
+    Views            int                 `firestore:"Views"`
+    UploadTime       int                 `firestore:"uploadTime"`
+    Date             string              `firestore:"Date"`
+    GameTag          string              `firestore:"GameTag"`
+    VideoDescription string              `firestore:"VideoDescription"`
+    UsersThatLiked   []string            `firestore:"usersThatLiked"`
+    Comments         []map[string]string `firestore:"Comments,omitempty"`
     Dislikes            int                 `firestore:"Dislikes"`
     UsersThatDisiked   []string            `firestore:"usersThatDisliked"`
-	ProfilePic string
+    ProfilePic string
 }
 type User struct {
 	ProfilePicture string `firestore:"ProfilePictureUrl"`
