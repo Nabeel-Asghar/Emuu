@@ -156,7 +156,7 @@ function Feeds({ setVideo, setUserProfile }) {
                             gameTag: video.GameTag,
                           };
                           axios.post(
-                            "http://localhost:8080/auth/videoPage",
+                            "https://emuu-cz5iycld7a-ue.a.run.app/auth/videoPage",
                             JSON.stringify({ ...TitleAndTag })
                           );
                         }}
@@ -218,7 +218,7 @@ function Feeds({ setVideo, setUserProfile }) {
                             gameTag: video.GameTag,
                           };
                           axios.post(
-                            "http://localhost:8080/auth/videoPage",
+                            "https://emuu-cz5iycld7a-ue.a.run.app/auth/videoPage",
                             JSON.stringify({ ...TitleAndTag })
                           );
                         }}
