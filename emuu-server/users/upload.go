@@ -119,12 +119,14 @@ func UploadVideo(c *gin.Context) {
 		"thumbnailUrl":     u1.getthumbUrl(),
 		"Comments":         commentsArr,
 		"Likes":            0,
-		"Dislikes":         0,
+				"Dislikes":         0,
+
 		"Views":            0,
 		"Date":             Date,
 		"uploadTime":       currentTimestamp,
 		"usersThatLiked":   usersThatLikedArr,
-		"usersThatDisliked": usersThatDislikedArr,
+        		"usersThatDisliked": usersThatDislikedArr,
+
 	})
 
 	if err != nil {
