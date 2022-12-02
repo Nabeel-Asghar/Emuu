@@ -73,7 +73,7 @@ function Home({ setVideo }, { setUserProfile }) {
                 }
                 return firebaseData.filter(
                   (item) =>
-                    item.VideoTitle?.toLowerCase().includes(
+                    item.Title?.toLowerCase().includes(
                       query.toLowerCase()
                     ) ||
                     item.Username?.toLowerCase().includes(
@@ -83,7 +83,7 @@ function Home({ setVideo }, { setUserProfile }) {
               },
               templates: {
                 item({ item }) {
-                  return item.VideoTitle || item.Username;
+                  return item.Title || item.Username;
                 },
               },
             },

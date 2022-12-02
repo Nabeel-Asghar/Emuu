@@ -43,14 +43,14 @@ export default function HeaderSearch() {
                 item.Username?.toLowerCase().includes(query.toLocaleLowerCase())
               ),
               VideoTitles: abc.filter((item) =>
-                item.VideoTitle?.toLowerCase().includes(query.toLowerCase())
+                item.Title?.toLowerCase().includes(query.toLowerCase())
               ),
             };
           },
 
           templates: {
             item({ item }) {
-              return item.VideoTitle || item.Username;
+              return item.Title || item.Username;
             },
           },
         },
@@ -168,7 +168,7 @@ export default function HeaderSearch() {
                               })}
                               className="hp-font-weight-500"
                             >
-                              {" VideoTitle:" + item.VideoTitle}
+                              {" VideoTitle:" + item.Title}
                             </li>
                           )
                       )}

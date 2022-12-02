@@ -9,19 +9,19 @@ import (
 	navbar "emuu-server/main/users"
 	profilePic "emuu-server/main/users"
 	register "emuu-server/main/users"
+	settings "emuu-server/main/users"
 	subscriber "emuu-server/main/users"
 	subscriberButton "emuu-server/main/users"
 	subscription "emuu-server/main/users"
 	upload "emuu-server/main/users"
 	comment "emuu-server/main/video"
+	dislikes "emuu-server/main/video"
 	likes "emuu-server/main/video"
 	recommended "emuu-server/main/video"
 	video "emuu-server/main/video"
 	view "emuu-server/main/video"
-	settings "emuu-server/main/users"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
-	dislikes "emuu-server/main/video"
 )
 
 func main() {
@@ -67,10 +67,11 @@ func main() {
 		auth.GET("/firebase-data", firebasedata.SetVideosAndUsers)
 		auth.POST("/settings", settings.UpdatePassword)
 		auth.POST("/recommended", recommended.SetGameTag)
-        auth.GET("/recommended", recommended.SetRecommended)
-        auth.POST("/DislikeVideo", dislikes.SetDislikes)
-        auth.POST("/CheckDislikeVideo", dislikes.SetUsernameDislike)
-        auth.GET("/CheckDislikeVideo", dislikes.CheckDislikes)
+		auth.GET("/recommended", recommended.SetRecommended)
+		auth.POST("/DislikeVideo", dislikes.SetDislikes)
+		auth.POST("/CheckDislikeVideo", dislikes.SetUsernameDislike)
+		auth.GET("/CheckDislikeVideo", dislikes.CheckDislikes)
+
 	}
 
 	api := r.Group("api").Use(firebaseSer.AuthJWT) //create a new router with the middleware authJWT
