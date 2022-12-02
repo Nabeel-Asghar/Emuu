@@ -51,7 +51,7 @@ function Profile({ setVideo, video }, { classes }) {
   //gets firebase data for search functionality
   async function getData() {
     const response = await axios.get(
-      "http://localhost:8080/auth/firebase-data"
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
     );
     const users = response.data.message.Users;
     const videos = response.data.message.Videos;

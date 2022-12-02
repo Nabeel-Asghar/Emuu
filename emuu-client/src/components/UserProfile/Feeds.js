@@ -168,7 +168,7 @@ function Feeds({ setVideo }) {
   async function getData() {
   //sends axios get request for data
     const response = await axios.get(
-      "http://localhost:8080/auth/firebase-data"
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
     );
     const users = response.data.message.Users;
     const videos = response.data.message.Videos;
@@ -252,7 +252,7 @@ function Feeds({ setVideo }) {
                             gameTag: video.GameTag,
                           };
                           axios.post(
-                            "http://localhost:8080/auth/videoPage",
+                            "https://emuu-cz5iycld7a-ue.a.run.app/auth/videoPage",
                             JSON.stringify({ ...TitleAndTag })
                           );
                         }}
@@ -315,7 +315,7 @@ function Feeds({ setVideo }) {
                             gameTag: video.GameTag,
                           };
                           axios.post(
-                            "http://localhost:8080/auth/videoPage",
+                            "https://emuu-cz5iycld7a-ue.a.run.app/auth/videoPage",
                             JSON.stringify({ ...TitleAndTag })
                           );
                         }}
@@ -393,7 +393,7 @@ function Feeds({ setVideo }) {
                             gameTag: video.GameTag,
                           };
                           axios.post(
-                            "http://localhost:8080/auth/videoPage",
+                            "https://emuu-cz5iycld7a-ue.a.run.app/auth/videoPage",
                             JSON.stringify({ ...TitleAndTag })
                           );
                         }}

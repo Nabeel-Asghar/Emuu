@@ -41,7 +41,7 @@ function Creator({ setVideo, video }) {
   async function getData() {
   //axios get request to receive firebase data
     const response = await axios.get(
-      "http://localhost:8080/auth/firebase-data"
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
     );
     const users = response.data.message.Users;
     const videos = response.data.message.Videos;
