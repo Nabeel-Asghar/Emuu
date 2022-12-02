@@ -347,7 +347,7 @@ const FileUpload = ({ setVideo }) => {
                 }
                 return firebaseData.filter(
                   (item) =>
-                    item.VideoTitle?.toLowerCase().includes(
+                    item.Title?.toLowerCase().includes(
                       query.toLowerCase()
                     ) ||
                     item.Username?.toLowerCase().includes(
@@ -357,7 +357,7 @@ const FileUpload = ({ setVideo }) => {
               },
               templates: {
                 item({ item }) {
-                  return item.VideoTitle || item.Username;
+                  return item.Title || item.Username;
                 },
               },
             },

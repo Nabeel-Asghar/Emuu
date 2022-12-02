@@ -103,7 +103,7 @@ function Video({ video, setVideo }) {
                 }
                 return firebaseData?.filter(
                   (item) =>
-                    item.VideoTitle?.toLowerCase().includes(
+                    item.Title?.toLowerCase().includes(
                       query.toLowerCase()
                     ) ||
                     item.Username?.toLowerCase().includes(
@@ -113,7 +113,7 @@ function Video({ video, setVideo }) {
               },
               templates: {
                 item({ item }) {
-                  return item.VideoTitle || item.Username;
+                  return item.Title || item.Username;
                 },
               },
             },
@@ -164,16 +164,16 @@ function Video({ video, setVideo }) {
 
 //sends axios post and get request to display recommended videos on video page
   async function getRecommended() {
-    const VideoURLAndTag = {
-      videoUrl: video.VideoUrl,
-      gameTag: video.GameTag,
-    };
-    //sends video title and game tag for a post request to server
-    await axios
-      .post(
-        "http://localhost:8080/auth/recommended",
-        JSON.stringify({ ...VideoURLAndTag })
-      )
+   const VideoURLAndTag = {
+         videoUrl: video.VideoUrl,
+         gameTag: video.GameTag,
+       };
+       //sends video title and game tag for a post request to server
+       await axios
+         .post(
+           "http://localhost:8080/auth/recommended",
+           JSON.stringify({ ...VideoURLAndTag })
+         )
       .then(function (response) {});
     try {
     //gets recommended videos as a map string array
@@ -393,7 +393,7 @@ function Video({ video, setVideo }) {
                               fontSize="18px"
                             >
                               {video.Likes} Likes &#x2022; {video.Dislikes}{" "}
-                              Dislikes &#x2022 {video.Views} Views
+                              {video.Views} Views
                             </Typography>
                             <Typography
                               variant="body2"

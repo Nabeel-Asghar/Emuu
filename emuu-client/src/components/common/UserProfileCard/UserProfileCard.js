@@ -2,7 +2,7 @@ import React from "react";
 import "./UserProfileCard.scss";
 import { Avatar } from "@mui/material";
 import { Link } from "react-router-dom";
-
+//return for user profile cards in search bar
 const UserProfileCard = ({ id, profileImg, username, subscribersCount }) => {
   return (
     <div className="video__details__container">

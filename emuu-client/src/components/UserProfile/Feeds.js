@@ -198,7 +198,7 @@ function Feeds({ setVideo }) {
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscribers"
       );
-/  /sets subscribers list into an array
+//sets subscribers list into an array
       setUpdateSubscribersListCompleteData(response.data.message.SubDetails);
     } catch (error) {}
   }

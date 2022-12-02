@@ -22,18 +22,13 @@ type UploadInfo struct {
 	Video_url         string `json:"video_url"`
 	Thumbnail_url     string `json:"thumbnail_url"`
 }
-
-// set struct for subscribers array reflected in Firestore
 type Subscribers struct {
 	SubscriberArray []string `firestore:"SubscriberList"`
 }
-
-// set struct for email reflected in Firestore
 type Email struct {
 	Email string `firestore:"Email"`
 }
 
-// Create setters and getters for upload info to make it more object oriented
 func (u *UploadInfo) SetUploadInfo(username string, title string, description string, tags string, Videourl string, Thumburl string) {
 	u.setUsername(username)
 	u.setTitle(title)
@@ -79,8 +74,6 @@ func (u *UploadInfo) setvidUrl(url string) {
 func (u *UploadInfo) setthumbUrl(url string) {
 	u.Thumbnail_url = url
 }
-
-// function to upload video
 func UploadVideo(c *gin.Context) {
 	var input UploadInfo
 
@@ -88,7 +81,6 @@ func UploadVideo(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()}) //writter with particular error
 		return
 	}
-	//set upload information from JSON input that was bound
 	var u1 UploadInfo
 	u1.SetUploadInfo(input.User_userName, input.Video_title, input.Video_description, input.Game_tags, input.Video_url, input.Thumbnail_url)
 
@@ -141,17 +133,17 @@ func UploadVideo(c *gin.Context) {
 		log.Fatalf("firestore doc creation error:%s\n", err)
 		log.Println(wr)
 	}
-	//increment videos posted by 1
+
 	dc := client.Collection("Users").Doc(input.User_userName)
 	_, err = dc.Update(ctx, []firestore.Update{
 		{Path: "VideosPosted", Value: firestore.Increment(1)},
 	})
-	//Get document of current user
+
 	dsnap, err := client.Collection("Users").Doc(input.User_userName).Get(ctx)
-	//Get document data of subscriber array for email functionality
+
 	var subscribe Subscribers
 	dsnap.DataTo(&subscribe)
-	//For each subscribed user, send an email stating that the user has uploaded a video
+
 	for i := 0; i < len(subscribe.SubscriberArray); i++ {
 		dsnap, err := client.Collection("Users").Doc(subscribe.SubscriberArray[i]).Get(ctx)
 		var email Email
