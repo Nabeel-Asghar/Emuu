@@ -329,14 +329,14 @@ function Creator({ setVideo, video }) {
                         <SubscribeButton
                           color="error"
                           buttonTitle={"Subscribe"}
-                          buttonStyling={{ marginTop: "-22.5px" }}
+                          buttonStyling={{ marginTop: "0px" }}
                         />
                       }
                       checkedIcon={
                         <SubscribeButton
                           color="error"
                           buttonTitle={"Unsubscribe"}
-                          buttonStyling={{ marginTop: "-22.5px" }}
+                          buttonStyling={{ marginTop: "0px" }}
                         />
                       }
                       checked={checked}
