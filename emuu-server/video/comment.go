@@ -26,6 +26,11 @@ type Comment struct {
 	Comments []map[string]string `firestore:"Comments"`
 }
 
+//struct to add profile picture into comments
+type ProfilePic struct {
+	ProfilePicUrl string `firestore:"ProfilePictureUrl"`
+}
+
 // function to set comments
 func SetComment(c *gin.Context) {
 	//bind to json and get the comment info sent from frontend
@@ -45,12 +50,27 @@ func SetComment(c *gin.Context) {
 		log.Fatalf("firestore client creation error:%s", err)
 	}
 	defer client.Close()
+	var UserPFP ProfilePic
+
+    	pfp := client.Collection("Users").Where("Username", "==", input.UserName).Documents(ctx)
+    	for {
+    		doc, err := pfp.Next()
+    		if err == iterator.Done {
+    			break
+    		}
+    		if err != nil {
+    			return
+    		}
+
+    		doc.DataTo(&UserPFP)
+
+    	}
 	//create comments array
 	commentsArr := Comment{}
 	//get current time
 	dt := time.Now()
 	//create comment element based off of information sent from frontend and current date
-	comment := map[string]string{"postedBy": input.UserName, "text": input.Comment, "date": dt.Format("01-02-2006")}
+	comment := map[string]string{"postedBy": input.UserName, "text": input.Comment, "date": dt.Format("01-02-2006"), "ProfilePictureUrl": UserPFP.ProfilePicUrl}
 	//iterate through Videos collection to find video that comment was posted on
 	iter := client.Collection("Videos").Where("VideoUrl", "==", videoUrl).Documents(ctx)
 	for {
