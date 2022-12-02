@@ -164,15 +164,15 @@ function Video({ video, setVideo }) {
 
 //sends axios post and get request to display recommended videos on video page
   async function getRecommended() {
-    const TitleAndTag = {
-      title: video.Title,
+    const VideoURLAndTag = {
+      videoUrl: video.VideoUrl,
       gameTag: video.GameTag,
     };
     //sends video title and game tag for a post request to server
     await axios
       .post(
         "http://localhost:8080/auth/recommended",
-        JSON.stringify({ ...TitleAndTag })
+        JSON.stringify({ ...VideoURLAndTag })
       )
       .then(function (response) {});
     try {
