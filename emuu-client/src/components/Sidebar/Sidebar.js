@@ -104,7 +104,7 @@ export default function MiniDrawer() {
   const [firebaseData, setFirebaseData] = useState([]);
   async function getData() {
     const response = await axios.get(
-    //sends axios get for firebase data used for search bar
+      //sends axios get for firebase data used for search bar
       "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
     );
     const users = response.data.message.Users;
@@ -113,7 +113,7 @@ export default function MiniDrawer() {
     //stores data in an array
     setFirebaseData(completeFirebaseData);
   }
-//runs getData upon page load
+  //runs getData upon page load
   useEffect(async () => {
     await getData();
   }, []);
@@ -121,36 +121,36 @@ export default function MiniDrawer() {
 
   const auth = getAuth();
   const user = auth.currentUser;
-//sets displayName if user is Authorized
+  //sets displayName if user is Authorized
   if (user) {
     var userName = user.displayName;
     localStorage.setItem("displayName", user.displayName);
   } else {
     var userName = null;
   }
-//function to get users data
+  //function to get users data
   async function getMainUser() {
     const dis = {
       displayName: userName,
     };
     await axios
-    //sends username with axios post to server
+      //sends username with axios post to server
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/navbar",
         JSON.stringify({ ...dis })
       )
       .then(function (response) {});
-//axios get request to receive users data
+    //axios get request to receive users data
     const response = await axios.get(
       "https://emuu-cz5iycld7a-ue.a.run.app/auth/navbar"
     );
-//sets users profile pic for sidebar
+    //sets users profile pic for sidebar
     const user = response.data.message.UserDetails;
     setProfilePic(user[0].ProfilePictureUrl);
     //sets profile pic in localStorage for profile menu in nav bar
     localStorage.setItem("ProfilePictureUrl", user[0].ProfilePictureUrl);
   }
-//if displayName is registered, runs getMainUser
+  //if displayName is registered, runs getMainUser
   if (userName !== null) {
     getMainUser();
   }

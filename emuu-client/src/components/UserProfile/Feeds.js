@@ -93,9 +93,9 @@ function Feeds({ setVideo }) {
   const [topVideos, setTopVideos] = useState([]);
   const [likedVideos, setLikedVideos] = useState([]);
   const [sort, setSort] = React.useState("Recently Uploaded");
-  const[countLikedVids,setCountLikedVids] = useState(0);
-   const[countSubscribers,setCountSubscribers] = useState(0);
-    const[countTopVids,setCountTopVids] = useState(0);
+  const [countLikedVids, setCountLikedVids] = useState(0);
+  const [countSubscribers, setCountSubscribers] = useState(0);
+  const [countTopVids, setCountTopVids] = useState(0);
   const [pages, setPages] = useState(undefined);
   const [page, setPage] = useState(1);
   const [
@@ -111,7 +111,7 @@ function Feeds({ setVideo }) {
   };
   const auth = getAuth();
   const user = auth.currentUser;
-//function to set user display name
+  //function to set user display name
   if (user) {
     var displayName = user.displayName;
   } else {
@@ -132,18 +132,18 @@ function Feeds({ setVideo }) {
       )
       .then(function (response) {});
     try {
-    //sends axios get request to receive users videos
+      //sends axios get request to receive users videos
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/video"
       );
-        //sets top/recent videos into an array, as well as the number of pages for pagination
+      //sets top/recent videos into an array, as well as the number of pages for pagination
       setTopVideos(response.data.message.MostViewed);
       setRecentVideos(response.data.message.RecentUpload);
       setPages(response.data.message.Pages);
     } catch (error) {}
   }
 
-//function to get users liked videos
+  //function to get users liked videos
   async function getLikedVideos() {
     //Get all video data
     const dis = {
@@ -157,7 +157,7 @@ function Feeds({ setVideo }) {
       )
       .then(function (response) {});
     try {
-    //sends axios get request to get liked videos
+      //sends axios get request to get liked videos
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/likedvideo"
       );
@@ -166,10 +166,10 @@ function Feeds({ setVideo }) {
     } catch (error) {}
   }
 
-//function for firebaseData for search bar
+  //function for firebaseData for search bar
   const [firebaseData, setFirebaseData] = useState([]);
   async function getData() {
-  //sends axios get request for data
+    //sends axios get request for data
     const response = await axios.get(
       "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
     );
@@ -179,17 +179,17 @@ function Feeds({ setVideo }) {
     //sets data of users and videos into an array
     setFirebaseData(completeFirebaseData);
   }
-//upon page load runs getData function
+  //upon page load runs getData function
   useEffect(async () => {
     await getData();
   }, []);
 
-//function for subscribers list
+  //function for subscribers list
   async function getSubscribers() {
     const dis = {
       displayName: displayName,
     };
-      //sends axios post of users name to server
+    //sends axios post of users name to server
     await axios
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscribers",
@@ -197,16 +197,16 @@ function Feeds({ setVideo }) {
       )
       .then(function (response) {});
     try {
-    //sends axios get request to receive subscribers list
+      //sends axios get request to receive subscribers list
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscribers"
       );
-//sets subscribers list into an array
+      //sets subscribers list into an array
       setUpdateSubscribersListCompleteData(response.data.message.SubDetails);
     } catch (error) {}
   }
 
-//validation to cause functions to only run once
+  //validation to cause functions to only run once
   if (displayName !== null && countLikedVids === 0) {
     getLikedVideos();
     setCountLikedVids(1);
