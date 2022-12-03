@@ -35,7 +35,7 @@ function Home({ setVideo }, { setUserProfile }) {
   async function getData() {
   //axios get request receives all firebase data
     const response = await axios.get(
-      "http://localhost:8080/auth/firebase-data"
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
     );
     const users = response.data.message.Users;
     const videos = response.data.message.Videos;
@@ -103,12 +103,12 @@ function Home({ setVideo }, { setUserProfile }) {
     await axios
     //axios post sends request with empty string to server
       .post(
-        "http://localhost:8080/auth/video",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/video",
         JSON.stringify({ ...disAndPage })
       )
       .then(function (response) {});
       //axios get request receives all video data
-    const response = await axios.get("http://localhost:8080/auth/video");
+    const response = await axios.get("https://emuu-cz5iycld7a-ue.a.run.app/auth/video");
     //sets top/recent videos, and amount of pages for pagination
     setTopVideos(response.data.message.MostViewed);
     setRecentVideos(response.data.message.RecentUpload);
@@ -254,7 +254,7 @@ function Home({ setVideo }, { setUserProfile }) {
                                       gameTag: video.GameTag,
                                     };
                                     axios.post(
-                                      "http://localhost:8080/auth/videoPage",
+                                      "https://emuu-cz5iycld7a-ue.a.run.app/auth/videoPage",
                                       JSON.stringify({ ...TitleAndTag })
                                     );
                                   }}
@@ -345,7 +345,7 @@ function Home({ setVideo }, { setUserProfile }) {
                                       gameTag: video.GameTag,
                                     };
                                     axios.post(
-                                      "http://localhost:8080/auth/videoPage",
+                                      "https://emuu-cz5iycld7a-ue.a.run.app/auth/videoPage",
                                       JSON.stringify({ ...TitleAndTag })
                                     );
                                   }}

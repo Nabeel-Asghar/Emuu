@@ -127,14 +127,14 @@ function Feeds({ setVideo }) {
     //sends axios post of users name to server
     await axios
       .post(
-        "http://localhost:8080/auth/video",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/video",
         JSON.stringify({ ...disAndPage })
       )
       .then(function (response) {});
     try {
     //sends axios get request to receive users videos
       const response = await axios.get(
-        "http://localhost:8080/auth/video"
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/video"
       );
         //sets top/recent videos into an array, as well as the number of pages for pagination
       setTopVideos(response.data.message.MostViewed);
@@ -152,14 +152,14 @@ function Feeds({ setVideo }) {
     //sends axios post of users name to server
     await axios
       .post(
-        "http://localhost:8080/auth/likedvideo",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/likedvideo",
         JSON.stringify({ ...dis })
       )
       .then(function (response) {});
     try {
     //sends axios get request to get liked videos
       const response = await axios.get(
-        "http://localhost:8080/auth/likedvideo"
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/likedvideo"
       );
       //sets liked videos into an array
       setLikedVideos(response.data.message.LikedVidDetails);
@@ -171,7 +171,7 @@ function Feeds({ setVideo }) {
   async function getData() {
   //sends axios get request for data
     const response = await axios.get(
-      "http://localhost:8080/auth/firebase-data"
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
     );
     const users = response.data.message.Users;
     const videos = response.data.message.Videos;
@@ -192,14 +192,14 @@ function Feeds({ setVideo }) {
       //sends axios post of users name to server
     await axios
       .post(
-        "http://localhost:8080/auth/Subscribers",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscribers",
         JSON.stringify({ ...dis })
       )
       .then(function (response) {});
     try {
     //sends axios get request to receive subscribers list
       const response = await axios.get(
-        "http://localhost:8080/auth/Subscribers"
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscribers"
       );
 //sets subscribers list into an array
       setUpdateSubscribersListCompleteData(response.data.message.SubDetails);
@@ -258,7 +258,7 @@ function Feeds({ setVideo }) {
                             gameTag: video.GameTag,
                           };
                           axios.post(
-                            "http://localhost:8080/auth/videoPage",
+                            "https://emuu-cz5iycld7a-ue.a.run.app/auth/videoPage",
                             JSON.stringify({ ...TitleAndTag })
                           );
                         }}
@@ -321,7 +321,7 @@ function Feeds({ setVideo }) {
                             gameTag: video.GameTag,
                           };
                           axios.post(
-                            "http://localhost:8080/auth/videoPage",
+                            "https://emuu-cz5iycld7a-ue.a.run.app/auth/videoPage",
                             JSON.stringify({ ...TitleAndTag })
                           );
                         }}
@@ -399,7 +399,7 @@ function Feeds({ setVideo }) {
                             gameTag: video.GameTag,
                           };
                           axios.post(
-                            "http://localhost:8080/auth/videoPage",
+                            "https://emuu-cz5iycld7a-ue.a.run.app/auth/videoPage",
                             JSON.stringify({ ...TitleAndTag })
                           );
                         }}

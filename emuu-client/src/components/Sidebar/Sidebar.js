@@ -105,7 +105,7 @@ export default function MiniDrawer() {
   async function getData() {
     const response = await axios.get(
     //sends axios get for firebase data used for search bar
-      "http://localhost:8080/auth/firebase-data"
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
     );
     const users = response.data.message.Users;
     const videos = response.data.message.Videos;
@@ -136,13 +136,13 @@ export default function MiniDrawer() {
     await axios
     //sends username with axios post to server
       .post(
-        "http://localhost:8080/auth/navbar",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/navbar",
         JSON.stringify({ ...dis })
       )
       .then(function (response) {});
 //axios get request to receive users data
     const response = await axios.get(
-      "http://localhost:8080/auth/navbar"
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/navbar"
     );
 //sets users profile pic for sidebar
     const user = response.data.message.UserDetails;

@@ -72,7 +72,7 @@ function Profile({ setVideo, video }, { classes }) {
   const [firebaseData, setFirebaseData] = useState([]);
   async function getData() {
     const response = await axios.get(
-      "http://localhost:8080/auth/firebase-data"
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
     );
     const users = response.data.message.Users;
     const videos = response.data.message.Videos;
@@ -133,13 +133,13 @@ function Profile({ setVideo, video }, { classes }) {
     };
     await axios
       .post(
-        "http://localhost:8080/auth/creator",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator",
         JSON.stringify({ ...dis })
       )
       .then(function (response) {});
     try {
       const response = await axios.get(
-        "http://localhost:8080/auth/creator"
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator"
       );
       console.log("user");
       const user = response.data.message.UserDetails;
@@ -243,7 +243,7 @@ function Profile({ setVideo, video }, { classes }) {
     uploadString(storageRef, croppedImage, "data_url").then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
         axios.post(
-          "http://localhost:8080/auth/updateBanner",
+          "https://emuu-cz5iycld7a-ue.a.run.app/auth/updateBanner",
           JSON.stringify({ displayName: displayName, croppedImageUrl: URL })
         )
       );
@@ -259,7 +259,7 @@ function Profile({ setVideo, video }, { classes }) {
     uploadBytes(storageRef, file).then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
         axios.post(
-          "http://localhost:8080/auth/updateProfilePic",
+          "https://emuu-cz5iycld7a-ue.a.run.app/auth/updateProfilePic",
           JSON.stringify({ displayName: displayName, profileImageUrl: URL })
         )
       );

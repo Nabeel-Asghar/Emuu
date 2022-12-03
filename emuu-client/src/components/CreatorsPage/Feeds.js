@@ -111,14 +111,14 @@ function Feeds({ setVideo, setUserProfile }) {
     //axios post of creators name to server
     await axios
       .post(
-        "http://localhost:8080/auth/video",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/video",
         JSON.stringify({ ...disAndPage })
       )
       .then(function (response) {});
     try {
     //get request to server to pull all users video data
       const response = await axios.get(
-        "http://localhost:8080/auth/video"
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/video"
       );
 //sets top/recent videos, and page number for pagination into useState
       setTopVideos(response.data.message.MostViewed);
@@ -156,7 +156,7 @@ function Feeds({ setVideo, setUserProfile }) {
                             gameTag: video.GameTag,
                           };
                           axios.post(
-                            "http://localhost:8080/auth/videoPage",
+                            "https://emuu-cz5iycld7a-ue.a.run.app/auth/videoPage",
                             JSON.stringify({ ...TitleAndTag })
                           );
                         }}
@@ -218,7 +218,7 @@ function Feeds({ setVideo, setUserProfile }) {
                             gameTag: video.GameTag,
                           };
                           axios.post(
-                            "http://localhost:8080/auth/videoPage",
+                            "https://emuu-cz5iycld7a-ue.a.run.app/auth/videoPage",
                             JSON.stringify({ ...TitleAndTag })
                           );
                         }}

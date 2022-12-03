@@ -39,7 +39,7 @@ function Video({ video, setVideo }) {
   //axios post request to get data for the search bar
   async function getData() {
     const response = await axios.get(
-      "http://localhost:8080/auth/firebase-data"
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
     );
     const users = response.data.message.Users;
     const videos = response.data.message.Videos;
@@ -62,14 +62,14 @@ function Video({ video, setVideo }) {
     //sends post request of creators name to server
     await axios
       .post(
-        "http://localhost:8080/auth/creator",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator",
         JSON.stringify({ ...dis })
       )
       .then(function (response) {});
 
      //sends get request to receive creators details
     const response = await axios.get(
-      "http://localhost:8080/auth/creator"
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator"
     );
     const user = response.data.message.UserDetails;
 
@@ -171,14 +171,14 @@ function Video({ video, setVideo }) {
        //sends video title and game tag for a post request to server
        await axios
          .post(
-           "http://localhost:8080/auth/recommended",
+           "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended",
            JSON.stringify({ ...VideoURLAndTag })
          )
       .then(function (response) {});
     try {
     //gets recommended videos as a map string array
       const response = await axios.get(
-        "http://localhost:8080/auth/recommended"
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended"
       );
       //stores recommended videos into a useState array
       setRecommendedVideos(response.data.message.RecommendedVideos);
@@ -194,7 +194,7 @@ function Video({ video, setVideo }) {
   async function checkLikeStatus() {
     await axios
       .post(
-        "http://localhost:8080/auth/CheckLikeVideo",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckLikeVideo",
         JSON.stringify({
           displayName: displayName,
           videoUrl: video.VideoUrl,
@@ -205,7 +205,7 @@ function Video({ video, setVideo }) {
     try {
     //response is a get request to determine if a user has previously liked the video or not
       const response = await axios.get(
-        "http://localhost:8080/auth/CheckLikeVideo"
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckLikeVideo"
       );
     //sets whether or not the like button should be checked when a user enters a video
       setChecked(response.data.message.CheckedValue);
@@ -215,7 +215,7 @@ function Video({ video, setVideo }) {
   async function checkDislikeStatus() {
     await axios
       .post(
-        "http://localhost:8080/auth/CheckDislikeVideo",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckDislikeVideo",
         JSON.stringify({
           displayName: displayName,
           videoUrl: video.VideoUrl,
@@ -226,7 +226,7 @@ function Video({ video, setVideo }) {
     try {
         //response is a get request to determine if a user has previously disliked the video or not
       const response = await axios.get(
-        "http://localhost:8080/auth/CheckDislikeVideo"
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckDislikeVideo"
       );
     //sets whether or not the dislike button should be checked when a user enters a video
       setDislikeChecked(response.data.message.CheckedValue);
@@ -236,7 +236,7 @@ function Video({ video, setVideo }) {
   //axios post request to update view count upon page load
   async function SetView() {
     await axios.post(
-      "http://localhost:8080/auth/view",
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/view",
       JSON.stringify({ videoUrl: video.VideoUrl })
     );
     //updates view count when user enters page
@@ -258,7 +258,7 @@ function Video({ video, setVideo }) {
   async function likeVideo(e) {
     //post request sends user/video data to server
     axios.post(
-      "http://localhost:8080/auth/LikeVideo",
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/LikeVideo",
       JSON.stringify({
         displayName: displayName,
         videoUrl: video.VideoUrl,
@@ -286,7 +286,7 @@ function Video({ video, setVideo }) {
   async function dislikeVideo(e) {
     //post request sends user/video data to server
     axios.post(
-      "http://localhost:8080/auth/DislikeVideo",
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/DislikeVideo",
       JSON.stringify({
         displayName: displayName,
         videoUrl: video.VideoUrl,
@@ -559,7 +559,7 @@ function Video({ video, setVideo }) {
                     });
                     await axios
                       .post(
-                        "http://localhost:8080/auth/comment",
+                        "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment",
                         JSON.stringify({
                           text: comment,
                           postedBy: displayName,
@@ -569,7 +569,7 @@ function Video({ video, setVideo }) {
                       )
                       .then(function (response) {});
                     const { data } = await axios.get(
-                      "http://localhost:8080/auth/comment"
+                      "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment"
                     );
                     setComment("");
                     setCommentList(data.message.Comments);

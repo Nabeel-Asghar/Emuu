@@ -41,7 +41,7 @@ function Creator({ setVideo, video }) {
   async function getData() {
   //axios get request to receive firebase data
     const response = await axios.get(
-      "http://localhost:8080/auth/firebase-data"
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
     );
     const users = response.data.message.Users;
     const videos = response.data.message.Videos;
@@ -102,7 +102,7 @@ function Creator({ setVideo, video }) {
     await axios
     //sends axios post of creators and users name
       .post(
-        "http://localhost:8080/auth/CheckSubscribe",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckSubscribe",
         JSON.stringify({
           displayName: displayName,
           creatorName: creatorName,
@@ -113,22 +113,24 @@ function Creator({ setVideo, video }) {
     try {
     //receives boolean of whether the user is in this creators subscribers list
       const response = await axios.get(
-        "http://localhost:8080/auth/CheckSubscribe"
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckSubscribe"
       );
 //sets the boolean for subscriber button to determine whether the button is checked or not
       setChecked(response.data.message.CheckedSubValue);
 
     } catch (error) {}
   }
+
 //runs checkSubStatus upon page load
   useEffect(() => {
     checkSubStatus();
+
   }, []);
 //function for when user subscribes to creator
   async function subscribeToUser(e) {
     //Axios post to send user and creator data to backend
     axios.post(
-      "http://localhost:8080/auth/SubscribeButton",
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/SubscribeButton",
       JSON.stringify({
         displayName: displayName,
         creatorName: creatorName,
@@ -150,13 +152,13 @@ function Creator({ setVideo, video }) {
     await axios
     //axios post request of creators name to server
       .post(
-        "http://localhost:8080/auth/creator",
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator",
         JSON.stringify({ ...dis })
       )
       .then(function (response) {});
 //axios get request receives creators data
     const response = await axios.get(
-      "http://localhost:8080/auth/creator"
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator"
     );
 //creators name, banner, profile picture, and subscriber count is set
     const user = response.data.message.UserDetails;
@@ -166,6 +168,7 @@ function Creator({ setVideo, video }) {
     setCreatorProfilePic(user[0].ProfilePictureUrl);
 
     setSubscriberCount(user[0].SubscriberCount);
+
   }
 //creators data is pulled upon page load
   useEffect(async () => {

@@ -102,7 +102,7 @@ const FileUpload = ({ setVideo }) => {
   async function getData() {
   //sends axios get request for firebaseData for search bar
     const response = await axios.get(
-      "http://localhost:8080/auth/firebase-data"
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
     );
     const users = response.data.message.Users;
     const videos = response.data.message.Videos;
@@ -530,7 +530,7 @@ const FileUpload = ({ setVideo }) => {
     //sends axios post of upload data to backend
       await axios
         .post(
-          "http://localhost:8080/auth/upload",
+          "https://emuu-cz5iycld7a-ue.a.run.app/auth/upload",
           JSON.stringify({ ...uploadData })
         )
         .then((result) => {
