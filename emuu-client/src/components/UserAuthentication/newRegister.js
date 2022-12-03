@@ -46,10 +46,18 @@ function Register() {
       setError("At least 1 uppercase letter");
       return false;
     }
-    for (let i = 0; i < pass.length; i++) {
-      if (pass[i].charCodeAt(0) >= 33 && pass[i].charCodeAt(0) <= 64)
-        specialChar = true;
+
+    const format = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/
+
+    if(format.test(pass)){
+              specialChar = true;
+
+    } else {
+             specialChar = false;
+
+
     }
+
     if (!specialChar) {
       setError("At least 1 special character");
       return false;
@@ -75,21 +83,41 @@ function Register() {
 
     return true;
   }
+  function validateUsername(username){
+    if(!username || username.length < 3){
+     setError("The Username must be at least 3 letters long");
+          return false;
+    }
+
+
+    return true;
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     // store the states in the form data
     if (!validateEmail(userdata.user_email)) return;
+    if (!validateUsername(userdata.user_userName)) return;
+
     if (!validatePassword(userdata.user_password)) return;
 //sends user to login page
-    history.push("/login");
+
+
     //sends axios post to server of users registration info
-    await axios
-      .post(
-        "https://emuu-cz5iycld7a-ue.a.run.app/auth/register",
-        JSON.stringify(userdata)
-      )
-      .then((result) => {});
+    try{
+
+     await axios
+          .post(
+            "https://emuu-cz5iycld7a-ue.a.run.app/auth/register",
+            JSON.stringify(userdata)
+          )
+
+           history.push("/login");
+    }catch(e){
+        setError(e.response.data?.error||"Failed to register the User.")
+
+    }
+
   };
 
   return (
