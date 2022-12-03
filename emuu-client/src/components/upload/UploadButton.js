@@ -169,7 +169,7 @@ const FileUpload = ({ setVideo }) => {
         setVideoTagErr("");
       }
 
-      if (thumbnail?.name?.length === 0) {
+      if (!thumbnailPreview || !thumbnail || thumbnail?.name?.length === 0) {
         setThumbnailErr("This is a required field");
       }
 
@@ -199,6 +199,7 @@ const FileUpload = ({ setVideo }) => {
         }
       }, 200);
     };
+
 //returns circular progress
     return (
       <Box sx={{ display: "flex", alignItems: "center" }}>
@@ -851,7 +852,7 @@ const FileUpload = ({ setVideo }) => {
                       <FormControl
                         required
                         sx={{ display: "flex", mt: 0, width: 200 }}
-                        error={thumbnailErr.length > 0}
+                        error={!thumbnailPreview && thumbnailErr.length > 0}
                       >
                         <label htmlFor="upload-photo">
                           <input
