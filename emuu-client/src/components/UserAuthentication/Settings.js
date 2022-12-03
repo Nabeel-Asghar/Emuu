@@ -61,7 +61,7 @@ function Settings() {
     const auth = getAuth();
     //sends axios post to server of users new password info
     await axios
-      .post("https://emuu-cz5iycld7a-ue.a.run.app/auth/settings", {
+      .post("http://localhost:8080/auth/settings", {
         newPassword,
         uid: auth.currentUser.uid,
       })

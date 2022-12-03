@@ -86,7 +86,7 @@ function Register() {
     //sends axios post to server of users registration info
     await axios
       .post(
-        "https://emuu-cz5iycld7a-ue.a.run.app/auth/register",
+        "http://localhost:8080/auth/register",
         JSON.stringify(userdata)
       )
       .then((result) => {});

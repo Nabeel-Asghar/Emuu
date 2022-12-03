@@ -8,7 +8,6 @@ import (
     "google.golang.org/api/option"
     "log"
     "math"
-    "fmt"
     "net/http"
     "reflect"
     "strconv"
