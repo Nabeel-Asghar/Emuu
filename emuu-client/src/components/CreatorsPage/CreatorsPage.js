@@ -41,7 +41,7 @@ function Creator({ setVideo, video }) {
   async function getData() {
   //axios get request to receive firebase data
     const response = await axios.get(
-      "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
+      "http://localhost:8080/auth/firebase-data"
     );
     const users = response.data.message.Users;
     const videos = response.data.message.Videos;
@@ -102,7 +102,7 @@ function Creator({ setVideo, video }) {
     await axios
     //sends axios post of creators and users name
       .post(
-        "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckSubscribe",
+        "http://localhost:8080/auth/CheckSubscribe",
         JSON.stringify({
           displayName: displayName,
           creatorName: creatorName,
@@ -113,7 +113,7 @@ function Creator({ setVideo, video }) {
     try {
     //receives boolean of whether the user is in this creators subscribers list
       const response = await axios.get(
-        "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckSubscribe"
+        "http://localhost:8080/auth/CheckSubscribe"
       );
 //sets the boolean for subscriber button to determine whether the button is checked or not
       setChecked(response.data.message.CheckedSubValue);
@@ -128,7 +128,7 @@ function Creator({ setVideo, video }) {
   async function subscribeToUser(e) {
     //Axios post to send user and creator data to backend
     axios.post(
-      "https://emuu-cz5iycld7a-ue.a.run.app/auth/SubscribeButton",
+      "http://localhost:8080/auth/SubscribeButton",
       JSON.stringify({
         displayName: displayName,
         creatorName: creatorName,
@@ -150,13 +150,13 @@ function Creator({ setVideo, video }) {
     await axios
     //axios post request of creators name to server
       .post(
-        "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator",
+        "http://localhost:8080/auth/creator",
         JSON.stringify({ ...dis })
       )
       .then(function (response) {});
 //axios get request receives creators data
     const response = await axios.get(
-      "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator"
+      "http://localhost:8080/auth/creator"
     );
 //creators name, banner, profile picture, and subscriber count is set
     const user = response.data.message.UserDetails;

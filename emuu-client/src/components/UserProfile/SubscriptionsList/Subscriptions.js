@@ -20,7 +20,7 @@ function Subscriptions() {
   async function getData() {
     //sends axios get request for data
     const response = await axios.get(
-      "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
+      "http://localhost:8080/auth/firebase-data"
     );
     const users = response.data.message.Users;
     const videos = response.data.message.Videos;
@@ -49,14 +49,14 @@ function Subscriptions() {
     //sends axios post of users name to server
     await axios
       .post(
-        "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscription",
+        "http://localhost:8080/auth/Subscription",
         JSON.stringify({ ...dis })
       )
       .then(function (response) {});
     try {
     //sends axios get request to receive subscriptions list of users
       const response = await axios.get(
-        "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscription"
+        "http://localhost:8080/auth/Subscription"
       );
         //sets subscriptions list into an array
       setSubscribersData(response.data.message.SubscriptionDetails);

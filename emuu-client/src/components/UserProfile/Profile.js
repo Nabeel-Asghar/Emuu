@@ -4,12 +4,28 @@ import "./Profile.scss";
 import "../../Firebase.js";
 import Feeds from "./Feeds";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
+import { Blob } from "firebase/firestore";
+import { db, storage } from "../../Firebase.js";
 import { uid } from "uid";
 import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import Collapse from "@mui/material/Collapse";
+import IconButton from "@mui/material/IconButton";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Avatar } from "@mui/material";
+import {
+  getDoc,
+  getDocs,
+  setDoc,
+  doc,
+  collection,
+  query,
+  where,
+  onSnapshot,
+} from "firebase/firestore";
 
 import ReactDOM from "react-dom";
 import Cropper from "react-easy-crop";
@@ -17,17 +33,24 @@ import Slider from "@material-ui/core/Slider";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import { withStyles } from "@material-ui/core/styles";
+import { getOrientation } from "get-orientation/browser";
 import ImgDialog from "./imgDialog";
-import { getCroppedImg } from "./canvasUtils";
+import { getCroppedImg, getRotatedImage } from "./canvasUtils";
 import { styles } from "./styles";
 import { createAutocomplete } from "@algolia/autocomplete-core";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
 import axios from "axios";
 import { uploadString } from "@firebase/storage";
-import { Link, useHistory } from "react-router-dom";
+import { Link, useHistory, useLocation } from "react-router-dom";
+const ORIENTATION_TO_ANGLE = {
+  3: 180,
+  6: 90,
+  8: -90,
+};
 
 function Profile({ setVideo, video }, { classes }) {
+  const [percent, setPercent] = useState(0);
   const [imageSrc, setImageSrc] = React.useState(null);
   const [croppedImageSrc, setCroppedImageSrc] = React.useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -47,19 +70,16 @@ function Profile({ setVideo, video }, { classes }) {
   const displayName = localStorage.getItem("displayName");
 
   const [firebaseData, setFirebaseData] = useState([]);
-
-  //gets firebase data for search functionality
   async function getData() {
     const response = await axios.get(
-      "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
+      "http://localhost:8080/auth/firebase-data"
     );
     const users = response.data.message.Users;
     const videos = response.data.message.Videos;
     var completeFirebaseData = videos.concat(users);
-    //stores map of users and videos details into an array
     setFirebaseData(completeFirebaseData);
   }
-//runs the get data function upon page load
+
   useEffect(async () => {
     await getData();
   }, []);
@@ -88,7 +108,7 @@ function Profile({ setVideo, video }, { classes }) {
                 }
                 return firebaseData.filter(
                   (item) =>
-                    item.Title?.toLowerCase().includes(
+                    item.VideoTitle?.toLowerCase().includes(
                       query.toLowerCase()
                     ) ||
                     item.Username?.toLowerCase().includes(
@@ -98,7 +118,7 @@ function Profile({ setVideo, video }, { classes }) {
               },
               templates: {
                 item({ item }) {
-                  return item.Title || item.Username;
+                  return item.VideoTitle || item.Username;
                 },
               },
             },
@@ -107,37 +127,32 @@ function Profile({ setVideo, video }, { classes }) {
       }),
     [count]
   );
-
-  //function to get user information
   async function getUser() {
     const dis = {
       displayName: displayName,
     };
-    //sends axios post of users name to server
     await axios
       .post(
-        "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator",
+        "http://localhost:8080/auth/creator",
         JSON.stringify({ ...dis })
       )
       .then(function (response) {});
     try {
-
-    //sends axios get request for user information
       const response = await axios.get(
-        "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator"
+        "http://localhost:8080/auth/creator"
       );
-
+      console.log("user");
       const user = response.data.message.UserDetails;
-      //sets profile, banner/profile pic source, and subscriberCount for user
+      console.log(user);
       setProfileUser(user);
       setBanner(user[0].BannerUrl);
       setProfilePic(user[0].ProfilePictureUrl);
       setSubscriberCount(user[0].SubscriberCount);
     } catch (error) {
-
+      console.log("er");
     }
   }
-//runs getUser function upon page load
+
   useEffect(async () => {
     await getUser();
   }, []);
@@ -178,25 +193,22 @@ function Profile({ setVideo, video }, { classes }) {
   };
 
   const subscribeUser = () => {};
+  const subscribersCount = localStorage.getItem("subscribersCount");
 
-//sets crop dimensions upon cropping banner (react Easy Crop)
-  const onCropComplete = useCallback((croppedAreaPixels) => {
+  const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
 
-//upon crop complete, runs uploadBackround to update firebase banner url
   const showCroppedImage = useCallback(async () => {
     try {
-    //sets cropped image information
       const croppedImage = await getCroppedImg(
         imageSrc,
         croppedAreaPixels,
         rotation
       );
       setCroppedImageSrc(croppedImage);
-        //runs function to update firebase banner url
+
       uploadBackground(croppedImage);
-      //reloads page once image is successfully updated
       setTimeout(() => window.location.reload(), 1500);
       return false;
     } catch (e) {
@@ -208,7 +220,6 @@ function Profile({ setVideo, video }, { classes }) {
     setCroppedImage(null);
   }, []);
 
-//sets image when a user uploads a file for the banner
   const onFileChange = async (e) => {
     if (e.target.files && e.target.files.length > 0) {
       const file = e.target.files[0];
@@ -218,47 +229,41 @@ function Profile({ setVideo, video }, { classes }) {
     }
   };
   function verifyJpeg(filename) {
-  //splits file name at the period
     const fnArr = filename.split(".");
-    //tests whether the file is a jpeg or jpg
     if (fnArr[fnArr.length - 1] == "jpeg" || fnArr[fnArr.length - 1] == "jpg")
       return true;
     return false;
   }
-  //function to update firebase banner url
+  let url;
   function uploadBackground(croppedImage) {
     const storage = getStorage();
     const storageRef = ref(storage, "/images/" + uid());
 
-    //uploads file to firebase storage
+    // 'file' comes from the Blob or File API
     uploadString(storageRef, croppedImage, "data_url").then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
-      //creates an axios post of the users name and image url to the server to update firestore data
         axios.post(
-          "https://emuu-cz5iycld7a-ue.a.run.app/auth/updateBanner",
+          "http://localhost:8080/auth/updateBanner",
           JSON.stringify({ displayName: displayName, croppedImageUrl: URL })
         )
       );
     });
   }
- //function to update firebase profile picture url
+
   function uploadProfile(e) {
     let file = e.target.files[0];
-    //verifies image is a jpeg
     if (!verifyJpeg(file.name)) return;
     const storage = getStorage();
     const storageRef = ref(storage, "/images/" + file.name);
- //uploads file to firebase storage
+
     uploadBytes(storageRef, file).then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
         axios.post(
-         //creates an axios post of the users name and image url to the server to update firestore data
-          "https://emuu-cz5iycld7a-ue.a.run.app/auth/updateProfilePic",
+          "http://localhost:8080/auth/updateProfilePic",
           JSON.stringify({ displayName: displayName, profileImageUrl: URL })
         )
       );
     });
-    //refreshes page when profile picture has successfully updated
     setTimeout(() => window.location.reload(), 1500);
     return false;
   }
