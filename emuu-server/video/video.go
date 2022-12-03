@@ -8,6 +8,7 @@ import (
     "google.golang.org/api/option"
     "log"
     "math"
+    "fmt"
     "net/http"
     "reflect"
     "strconv"
@@ -20,7 +21,7 @@ type DisplayNameAndPage struct {
 	PageNumber string `json:"pageNumber"`
 }
 
-//create two global variables, username and page number
+//create three global variables, username and page number, and ID for video
 var userUN string
 var PageNum int
 
@@ -41,6 +42,7 @@ type Video struct {
     Dislikes            int                 `firestore:"Dislikes"`
     UsersThatDisliked   []string            `firestore:"usersThatDisliked"`
     ProfilePic string
+    ID                  string
 }
 
 //Create struct to retrieve firestore's profile pic of each user
@@ -114,6 +116,7 @@ func SetVideos(c *gin.Context) {
 			var vid = Video{}
 
 			doc.DataTo(&vid)
+			vid.ID = doc.Ref.ID
 			//add profile picture of user of each video to the vid variable
 			iter := client.Collection("Users").Where("Username", "==", vid.Username).Documents(ctx)
 			for {
@@ -189,6 +192,7 @@ func SetVideos(c *gin.Context) {
 		iter := client.Collection("Videos").Documents(ctx)
 		for {
 			doc, err := iter.Next()
+
 			if err == iterator.Done {
 				break
 			}
@@ -199,6 +203,7 @@ func SetVideos(c *gin.Context) {
 			var vid = Video{}
 
 			doc.DataTo(&vid)
+			vid.ID = doc.Ref.ID
 			//add profile pic of user of each video
 			iter := client.Collection("Users").Where("Username", "==", vid.Username).Documents(ctx)
 			for {
@@ -249,6 +254,7 @@ func SetVideos(c *gin.Context) {
 			MostViewed:   mostViewedArr,
 			RecentUpload: recentArr,
 			Pages:        pageAmount,
+
 		}
 
 		c.JSON(http.StatusOK, gin.H{"message": response})
