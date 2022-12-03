@@ -93,6 +93,9 @@ function Feeds({ setVideo }) {
   const [topVideos, setTopVideos] = useState([]);
   const [likedVideos, setLikedVideos] = useState([]);
   const [sort, setSort] = React.useState("Recently Uploaded");
+  const[countLikedVids,setCountLikedVids] = useState(0);
+   const[countSubscribers,setCountSubscribers] = useState(0);
+    const[countTopVids,setCountTopVids] = useState(0);
   const [pages, setPages] = useState(undefined);
   const [page, setPage] = useState(1);
   const [
@@ -204,14 +207,17 @@ function Feeds({ setVideo }) {
   }
 
 //validation to cause functions to only run once
-  if (displayName !== null && likedVideos.length === 0) {
+  if (displayName !== null && countLikedVids === 0) {
     getLikedVideos();
+    setCountLikedVids(1);
   }
-  if (displayName !== null && topVideos.length === 0) {
+  if (displayName !== null && countTopVids === 0) {
     getVideos();
+    setCountTopVids(1);
   }
-  if (displayName !== null && updatedSubscribersListCompleteData.length === 0) {
+  if (displayName !== null && countSubscribers === 0) {
     getSubscribers();
+    setCountSubscribers(1);
   }
   //Sort function for date uploaded
 

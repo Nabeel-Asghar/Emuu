@@ -13,7 +13,7 @@ import { getAuth } from "firebase/auth";
 
 function Subscriptions() {
   const [subscribersData, setSubscribersData] = useState([]);
-
+const [count, setCount] = useState(0);
   const history = useHistory();
 //function for firebaseData for search bar
   const [firebaseData, setFirebaseData] = useState([]);
@@ -65,8 +65,9 @@ function Subscriptions() {
   }
 
   //if statement to only allow subscriptions list to run once
-  if (displayName !== null && subscribersData.length === 0) {
+  if (displayName !== null && count === 0) {
     getSubscriptions();
+    setCount(1);
   }
 
   const handleSubscribersProfile = (subscribersName) => {
