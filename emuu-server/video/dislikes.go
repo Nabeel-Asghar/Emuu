@@ -3,7 +3,6 @@ package video
 import (
 	"cloud.google.com/go/firestore"
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
@@ -119,7 +118,6 @@ func SetDislikes(c *gin.Context) {
 			doc.DataTo(&likesArr)
 
 			var user = input.UserName
-			fmt.Println(user)
 			//add user to dislikes array and then add existing users back to new dislikes array
 			newdislikesArr = append(newdislikesArr, user)
 			newdislikesArr = append(newdislikesArr, dislikesArr.UsersThatDisliked...)
@@ -139,7 +137,6 @@ func SetDislikes(c *gin.Context) {
 					break
 				}
 			}
-			fmt.Println(newdislikesArr)
 			//update dislikes array to have new dislikes array and increment value by 1
 			dc := client.Collection("Videos").Doc(doc.Ref.ID)
 			_, err = dc.Update(ctx, []firestore.Update{
@@ -168,10 +165,8 @@ func SetDislikes(c *gin.Context) {
 			}
 
 			doc.DataTo(&dislikesArr)
-			fmt.Println(dislikesArr.UsersThatDisliked)
 
 			var user = input.UserName
-			fmt.Println(user)
 			//check if user is in dislikes array, if they are, then remove them
 			newdislikesArr = append(newdislikesArr, dislikesArr.UsersThatDisliked...)
 			for i, v := range newdislikesArr {
@@ -181,7 +176,6 @@ func SetDislikes(c *gin.Context) {
 				}
 			}
 
-			fmt.Println(newdislikesArr)
 			//update users that dislikes array in firestore and increment dislikes by 1
 			dc := client.Collection("Videos").Doc(doc.Ref.ID)
 			_, err = dc.Update(ctx, []firestore.Update{

@@ -2,7 +2,6 @@ package video
 
 import (
 	"context"
-	"fmt"
 	"log"
 	"math"
 	"net/http"

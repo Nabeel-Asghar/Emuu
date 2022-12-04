@@ -3,7 +3,6 @@ package video
 import (
 	"cloud.google.com/go/firestore"
 	"context"
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"google.golang.org/api/iterator"
 	"google.golang.org/api/option"
@@ -120,7 +119,6 @@ func SetLikes(c *gin.Context) {
 			doc.DataTo(&dislikesArr)
 
 			var user = input.UserName
-			fmt.Println(user)
 			//add user to likes array and then add existing users back to new likes array
 			newlikesArr = append(newlikesArr, user)
 			newlikesArr = append(newlikesArr, likesArr.UsersThatLiked...)
@@ -166,10 +164,8 @@ func SetLikes(c *gin.Context) {
 			}
 
 			doc.DataTo(&likesArr)
-			fmt.Println(likesArr.UsersThatLiked)
 
 			var user = input.UserName
-			fmt.Println(user)
 			//check if user is in likes array, if they are, then remove them
 			newlikesArr = append(newlikesArr, likesArr.UsersThatLiked...)
 			for i, v := range newlikesArr {
@@ -179,7 +175,6 @@ func SetLikes(c *gin.Context) {
 				}
 			}
 
-			fmt.Println(newlikesArr)
 			//update users that liked array in firestore and increment likes by 1
 			dc := client.Collection("Videos").Doc(doc.Ref.ID)
 			_, err = dc.Update(ctx, []firestore.Update{
