@@ -22,7 +22,7 @@ import Stack from "@mui/material/Stack";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 
-const options = ["Recently Uploaded", "Most Viewed"];
+const options = ["Recently Uploaded", "Most Viewed", "Top Rated"];
 
 const ITEM_HEIGHT = 48;
 
@@ -82,6 +82,7 @@ function LongMenu({ sort, setSort }) {
 
 function Feeds({ setVideo, setUserProfile }) {
   const [recentVideos, setRecentVideos] = useState([]);
+  const [mostViewedVideos, setMostViewedVideos] = useState([]);
   const [topVideos, setTopVideos] = useState([]);
   const [pages, setPages] = useState(undefined);
   const [page, setPage] = useState(1);
@@ -116,17 +117,18 @@ function Feeds({ setVideo, setUserProfile }) {
       )
       .then(function (response) {});
     try {
-    //get request to server to pull all users video data
+      //get request to server to pull all users video data
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/video"
       );
-//sets top/recent videos, and page number for pagination into useState
-      setTopVideos(response.data.message.MostViewed);
+      //sets top/recent videos, and page number for pagination into useState
+      setMostViewedVideos(response.data.message.MostViewed);
       setRecentVideos(response.data.message.RecentUpload);
+      setTopVideos(response.data.message.TopRated);
       setPages(response.data.message.Pages);
     } catch (error) {}
   }
-//gets videos upon page load
+  //gets videos upon page load
   useEffect(async () => {
     await getVideos();
   }, [page]);
@@ -205,8 +207,70 @@ function Feeds({ setVideo, setUserProfile }) {
                     </Link>
                   </Card>
                 ))}
-              {topVideos &&
+              {mostViewedVideos &&
                 sort == "Most Viewed" &&
+                mostViewedVideos.map((video, index) => (
+                  <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
+                    <Link to="/video">
+                      <span
+                        onClick={() => {
+                          setVideo(video);
+                          const TitleAndTag = {
+                            title: video.Title,
+                            gameTag: video.GameTag,
+                          };
+                          axios.post(
+                            "https://emuu-cz5iycld7a-ue.a.run.app/auth/videoPage",
+                            JSON.stringify({ ...TitleAndTag })
+                          );
+                        }}
+                      >
+                        <CardMedia component="img" image={video.ThumbnailUrl} />
+                        <CardContent>
+                          <CardHeader
+                            avatar={
+                              <Avatar
+                                sx={{ width: 60, height: 60 }}
+                                src={video.ProfilePic}
+                              ></Avatar>
+                            }
+                            title={
+                              <Typography
+                                variant="body2"
+                                color="text.primary"
+                                fontWeight="bold"
+                                fontSize="20px"
+                              >
+                                {video.Title}
+                              </Typography>
+                            }
+                          />
+
+                          <div className="videoInfo">
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              fontWeight="medium"
+                              fontSize="14px"
+                            >
+                              {video.Username}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              fontWeight="medium"
+                              fontSize="14px"
+                            >
+                              {video.Likes} Likes &#x2022; {video.Views} Views
+                            </Typography>
+                          </div>
+                        </CardContent>
+                      </span>
+                    </Link>
+                  </Card>
+                ))}
+              {topVideos &&
+                sort == "Top Rated" &&
                 topVideos.map((video, index) => (
                   <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
                     <Link to="/video">

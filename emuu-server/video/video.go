@@ -8,14 +8,13 @@ import (
     "google.golang.org/api/option"
     "log"
     "math"
+    "fmt"
     "net/http"
     "reflect"
     "strconv"
-    "fmt"
     "time"
     "google.golang.org/grpc/codes"
     "google.golang.org/grpc/status"
-
 )
 
 //create struct to reflect json values sent from frontend (name and page number)
@@ -52,7 +51,6 @@ type Video struct {
 type User struct {
 	ProfilePicture string `firestore:"ProfilePictureUrl"`
 }
-
 
 //Bubble sort function to sort most viewed videos, sorts in descending order according to views
 func sortMostViewed(videos []Video) []Video {
@@ -97,6 +95,7 @@ func SetVideos(c *gin.Context) {
 		//create an array for most viewed and recently uploaded
 		mostViewedArr := []Video{}
 		recentArr := []Video{}
+		topRatedArr := []Video{}
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) //setting context with timeout 15
 		defer cancel()                                                           //after 15 seconds, if the function is not executed it will cancel and throw an error
 		// Firestore initialized
@@ -139,10 +138,12 @@ func SetVideos(c *gin.Context) {
 			//add each video to both arrays of most viewed and recently uploaded
 			mostViewedArr = append(mostViewedArr, vid)
 			recentArr = append(recentArr, vid)
+			topRatedArr = append(topRatedArr, vid)
 		}
 		//sort both arrays according to their parameter
 		sortMostViewed(mostViewedArr)
 		sortRecent(recentArr)
+		sortTopRated(topRatedArr)
 		//create page amount variable to set the number of pages that exist (8 videos per page; 15 videos = 2 pages)
 		var pageAmount int
 		pageAmount = int(math.Ceil(float64(len(recentArr)) / 8))
@@ -165,15 +166,25 @@ func SetVideos(c *gin.Context) {
 				mostViewedArr = mostViewedArr[(PageNum-1)*8 : len(mostViewedArr)]
 			}
 		}
+		if len(topRatedArr) > 8 {
+        			if len(topRatedArr) > PageNum*8 {
+        				topRatedArr = topRatedArr[(PageNum-1)*8 : (PageNum)*8]
+
+        			} else { //if videos aren't of 8 videos at a time then return only the length that exists
+        				topRatedArr = topRatedArr[(PageNum-1)*8 : len(topRatedArr)]
+        			}
+        		}
 		//send response to frontend for profile pages (creator or user)
 		response := struct {
 			MostViewed   []Video
 			RecentUpload []Video
+			TopRated     []Video
 			Pages        int
 		}{
 
 			MostViewed:   mostViewedArr,
 			RecentUpload: recentArr,
+			TopRated:     topRatedArr,
 			Pages:        pageAmount,
 		}
 
@@ -208,7 +219,6 @@ func SetVideos(c *gin.Context) {
 
 			doc.DataTo(&vid)
 			vid.ID = doc.Ref.ID
-			fmt.Println(doc.Ref.ID)
 			//add profile pic of user of each video
 			iter := client.Collection("Users").Where("Username", "==", vid.Username).Documents(ctx)
 			for {

@@ -30,10 +30,10 @@ function Home({ setVideo }, { setUserProfile }) {
   const [count, setCount] = useState(0);
   const [pages, setPages] = useState(undefined);
   const [page, setPage] = useState(1);
-//function to get firebase data for search bar
+  //function to get firebase data for search bar
   const [firebaseData, setFirebaseData] = useState([]);
   async function getData() {
-  //axios get request receives all firebase data
+    //axios get request receives all firebase data
     const response = await axios.get(
       "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
     );
@@ -43,7 +43,7 @@ function Home({ setVideo }, { setUserProfile }) {
     //array of users and videos data stored in use state array
     setFirebaseData(completeFirebaseData);
   }
-//upon page load run function
+  //upon page load run function
   useEffect(async () => {
     await getData();
   }, []);
@@ -73,9 +73,7 @@ function Home({ setVideo }, { setUserProfile }) {
                 }
                 return firebaseData.filter(
                   (item) =>
-                    item.Title?.toLowerCase().includes(
-                      query.toLowerCase()
-                    ) ||
+                    item.Title?.toLowerCase().includes(query.toLowerCase()) ||
                     item.Username?.toLowerCase().includes(
                       query.toLocaleLowerCase()
                     )
@@ -92,29 +90,31 @@ function Home({ setVideo }, { setUserProfile }) {
       }),
     [count]
   );
-//function to get videos for home page
+  //function to get videos for home page
   async function getVideos() {
-  //sends empty string to video api in server to pull all videos
+    //sends empty string to video api in server to pull all videos
     const display = "";
     const disAndPage = {
       displayName: display,
       pageNumber: page.toString(),
     };
     await axios
-    //axios post sends request with empty string to server
+      //axios post sends request with empty string to server
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/video",
         JSON.stringify({ ...disAndPage })
       )
       .then(function (response) {});
-      //axios get request receives all video data
-    const response = await axios.get("https://emuu-cz5iycld7a-ue.a.run.app/auth/video");
+    //axios get request receives all video data
+    const response = await axios.get(
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/video"
+    );
     //sets top/recent videos, and amount of pages for pagination
     setTopVideos(response.data.message.MostViewed);
     setRecentVideos(response.data.message.RecentUpload);
     setPages(response.data.message.Pages);
   }
-//runs function to get videos upon page load
+  //runs function to get videos upon page load
   useEffect(async () => {
     await getVideos();
   }, [page]);

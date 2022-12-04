@@ -29,7 +29,7 @@ function Register() {
     user_email: email,
     user_password: password,
   };
-//validator to ensure password has more than 8 characters, an uppercase, and a special character
+  //validator to ensure password has more than 8 characters, an uppercase, and a special character
   const validatePassword = (pass) => {
     if (pass.length < 8) {
       setError("At least 8 characters");
@@ -47,15 +47,12 @@ function Register() {
       return false;
     }
 
-    const format = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/
+    const format = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/;
 
-    if(format.test(pass)){
-              specialChar = true;
-
+    if (format.test(pass)) {
+      specialChar = true;
     } else {
-             specialChar = false;
-
-
+      specialChar = false;
     }
 
     if (!specialChar) {
@@ -65,7 +62,7 @@ function Register() {
 
     return true;
   };
-//validates email has format example@test.com
+  //validates email has format example@test.com
   function validateEmail(email) {
     let at = 0;
     let checkDotcom = "";
@@ -75,7 +72,7 @@ function Register() {
         checkDotcom += email[i];
       }
     }
-//sets error message when email is not valid
+    //sets error message when email is not valid
     if (!(checkDotcom == "moc.") || !at || at > 1) {
       setError("The email address is invalid");
       return false;
@@ -83,12 +80,11 @@ function Register() {
 
     return true;
   }
-  function validateUsername(username){
-    if(!username || username.length < 3){
-     setError("The Username must be at least 3 letters long");
-          return false;
+  function validateUsername(username) {
+    if (!username || username.length < 3) {
+      setError("The Username must be at least 3 letters long");
+      return false;
     }
-
 
     return true;
   }
@@ -100,24 +96,19 @@ function Register() {
     if (!validateUsername(userdata.user_userName)) return;
 
     if (!validatePassword(userdata.user_password)) return;
-//sends user to login page
-
+    //sends user to login page
 
     //sends axios post to server of users registration info
-    try{
+    try {
+      await axios.post(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/register",
+        JSON.stringify(userdata)
+      );
 
-     await axios
-          .post(
-            "https://emuu-cz5iycld7a-ue.a.run.app/auth/register",
-            JSON.stringify(userdata)
-          )
-
-           history.push("/login");
-    }catch(e){
-        setError(e.response.data?.error||"Failed to register the User.")
-
+      history.push("/login");
+    } catch (e) {
+      setError(e.response.data?.error || "Failed to register the User.");
     }
-
   };
 
   return (

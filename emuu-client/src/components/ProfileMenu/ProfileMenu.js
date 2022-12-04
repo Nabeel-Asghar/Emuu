@@ -20,9 +20,9 @@ import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-//gets profile image from sidebar.js
+  //gets profile image from sidebar.js
   const ProfilePic = localStorage.getItem("ProfilePictureUrl");
-//sets auth
+  //sets auth
   const [isAuth, setAuth] = useState(true);
   const [displayName, setDisplayName] = useState("");
 

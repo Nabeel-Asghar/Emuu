@@ -67,7 +67,7 @@ function Video({ video, setVideo }) {
       )
       .then(function (response) {});
 
-     //sends get request to receive creators details
+    //sends get request to receive creators details
     const response = await axios.get(
       "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator"
     );
@@ -76,7 +76,6 @@ function Video({ video, setVideo }) {
     setSubscriberCount(user[0].SubscriberCount);
   }
   const [recommendedVideos, setRecommendedVideos] = useState([]);
-
 
   const autocomplete = useMemo(
     () =>
@@ -103,9 +102,7 @@ function Video({ video, setVideo }) {
                 }
                 return firebaseData?.filter(
                   (item) =>
-                    item.Title?.toLowerCase().includes(
-                      query.toLowerCase()
-                    ) ||
+                    item.Title?.toLowerCase().includes(query.toLowerCase()) ||
                     item.Username?.toLowerCase().includes(
                       query.toLocaleLowerCase()
                     )
@@ -162,21 +159,21 @@ function Video({ video, setVideo }) {
 
   const subscribeUser = () => {};
 
-//sends axios post and get request to display recommended videos on video page
+  //sends axios post and get request to display recommended videos on video page
   async function getRecommended() {
-   const VideoURLAndTag = {
-         videoUrl: video.VideoUrl,
-         gameTag: video.GameTag,
-       };
-       //sends video title and game tag for a post request to server
-       await axios
-         .post(
-           "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended",
-           JSON.stringify({ ...VideoURLAndTag })
-         )
+    const VideoURLAndTag = {
+      videoUrl: video.VideoUrl,
+      gameTag: video.GameTag,
+    };
+    //sends video title and game tag for a post request to server
+    await axios
+      .post(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended",
+        JSON.stringify({ ...VideoURLAndTag })
+      )
       .then(function (response) {});
     try {
-    //gets recommended videos as a map string array
+      //gets recommended videos as a map string array
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/recommended"
       );
@@ -185,12 +182,12 @@ function Video({ video, setVideo }) {
     } catch (error) {}
   }
 
-//gets recommended videos and creator data upon page load
+  //gets recommended videos and creator data upon page load
   useEffect(async () => {
     getRecommended();
     await getCreator();
   }, [video]);
-//sends axios post request to check liked status
+  //sends axios post request to check liked status
   async function checkLikeStatus() {
     await axios
       .post(
@@ -203,11 +200,11 @@ function Video({ video, setVideo }) {
       )
       .then(function (response) {});
     try {
-    //response is a get request to determine if a user has previously liked the video or not
+      //response is a get request to determine if a user has previously liked the video or not
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckLikeVideo"
       );
-    //sets whether or not the like button should be checked when a user enters a video
+      //sets whether or not the like button should be checked when a user enters a video
       setChecked(response.data.message.CheckedValue);
     } catch (error) {}
   }
@@ -224,11 +221,11 @@ function Video({ video, setVideo }) {
       )
       .then(function (response) {});
     try {
-        //response is a get request to determine if a user has previously disliked the video or not
+      //response is a get request to determine if a user has previously disliked the video or not
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckDislikeVideo"
       );
-    //sets whether or not the dislike button should be checked when a user enters a video
+      //sets whether or not the dislike button should be checked when a user enters a video
       setDislikeChecked(response.data.message.CheckedValue);
     } catch (error) {}
   }
@@ -254,7 +251,7 @@ function Video({ video, setVideo }) {
     getCreator();
   }, [video]);
 
-//function when a user likes a video
+  //function when a user likes a video
   async function likeVideo(e) {
     //post request sends user/video data to server
     axios.post(
@@ -271,7 +268,7 @@ function Video({ video, setVideo }) {
       video.Likes--;
       sessionStorage.setItem("video", JSON.stringify(video));
     }
-     //if a user has not liked the video already, and clicks the like button, the like count will go up and the button will be checked.
+    //if a user has not liked the video already, and clicks the like button, the like count will go up and the button will be checked.
     else {
       video.Likes++;
       sessionStorage.setItem("video", JSON.stringify(video));
@@ -293,7 +290,7 @@ function Video({ video, setVideo }) {
         DislikedBoolean: !dislikeChecked,
       })
     );
-       //if a user has the video disliked already, and clicks the dislike button again, the dislike count will revert and the button will be unchecked.
+    //if a user has the video disliked already, and clicks the dislike button again, the dislike count will revert and the button will be unchecked.
     if (dislikeChecked === true) {
       video.Dislikes--;
       sessionStorage.setItem("video", JSON.stringify(video));
@@ -302,7 +299,7 @@ function Video({ video, setVideo }) {
     else {
       video.Dislikes++;
       sessionStorage.setItem("video", JSON.stringify(video));
-       //if the user has liked the video, upon disliking, it will uncheck the like button and negate the like count
+      //if the user has liked the video, upon disliking, it will uncheck the like button and negate the like count
       if (checked === true) {
         setChecked(false);
         video.Likes--;
@@ -328,7 +325,6 @@ function Video({ video, setVideo }) {
   }, []);
 
   const [comment, setComment] = useState("");
-
 
   const handleComments = (event) => {
     setComment(event.target.value);

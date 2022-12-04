@@ -39,7 +39,7 @@ function Creator({ setVideo, video }) {
   //function to get firebase data for search bar
   const [firebaseData, setFirebaseData] = useState([]);
   async function getData() {
-  //axios get request to receive firebase data
+    //axios get request to receive firebase data
     const response = await axios.get(
       "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
     );
@@ -49,7 +49,7 @@ function Creator({ setVideo, video }) {
     //stores videos and users data into an array
     setFirebaseData(completeFirebaseData);
   }
-//runs getData function upon page load
+  //runs getData function upon page load
   useEffect(async () => {
     await getData();
   }, []);
@@ -78,9 +78,7 @@ function Creator({ setVideo, video }) {
                 }
                 return firebaseData.filter(
                   (item) =>
-                    item.Title?.toLowerCase().includes(
-                      query.toLowerCase()
-                    ) ||
+                    item.Title?.toLowerCase().includes(query.toLowerCase()) ||
                     item.Username?.toLowerCase().includes(
                       query.toLocaleLowerCase()
                     )
@@ -97,10 +95,10 @@ function Creator({ setVideo, video }) {
       }),
     [count]
   );
-//function to check if a user is subscribed to a creator (this is used to determine if the subscribed button is checked or not)
+  //function to check if a user is subscribed to a creator (this is used to determine if the subscribed button is checked or not)
   async function checkSubStatus() {
     await axios
-    //sends axios post of creators and users name
+      //sends axios post of creators and users name
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckSubscribe",
         JSON.stringify({
@@ -111,20 +109,20 @@ function Creator({ setVideo, video }) {
       )
       .then(function (response) {});
     try {
-    //receives boolean of whether the user is in this creators subscribers list
+      //receives boolean of whether the user is in this creators subscribers list
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckSubscribe"
       );
-//sets the boolean for subscriber button to determine whether the button is checked or not
+      //sets the boolean for subscriber button to determine whether the button is checked or not
       setChecked(response.data.message.CheckedSubValue);
-
     } catch (error) {}
   }
-//runs checkSubStatus upon page load
+
+  //runs checkSubStatus upon page load
   useEffect(() => {
     checkSubStatus();
   }, []);
-//function for when user subscribes to creator
+  //function for when user subscribes to creator
   async function subscribeToUser(e) {
     //Axios post to send user and creator data to backend
     axios.post(
@@ -142,23 +140,23 @@ function Creator({ setVideo, video }) {
       subscriberCount++;
     }
   }
-//function to get creators data
+  //function to get creators data
   async function getUser() {
     const dis = {
       displayName: creatorName,
     };
     await axios
-    //axios post request of creators name to server
+      //axios post request of creators name to server
       .post(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator",
         JSON.stringify({ ...dis })
       )
       .then(function (response) {});
-//axios get request receives creators data
+    //axios get request receives creators data
     const response = await axios.get(
       "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator"
     );
-//creators name, banner, profile picture, and subscriber count is set
+    //creators name, banner, profile picture, and subscriber count is set
     const user = response.data.message.UserDetails;
 
     setBanner(user[0].BannerUrl);
@@ -167,7 +165,7 @@ function Creator({ setVideo, video }) {
 
     setSubscriberCount(user[0].SubscriberCount);
   }
-//creators data is pulled upon page load
+  //creators data is pulled upon page load
   useEffect(async () => {
     await getUser();
   }, []);
