@@ -49,7 +49,7 @@ function App() {
             <Route path="/register">
               <Register />
             </Route>
-            <Route path="/video">
+            <Route path="/video/:id">
               <Video setVideo={setVideo} video={video} />
             </Route>
             <Route path="/creator">

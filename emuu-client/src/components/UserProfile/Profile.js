@@ -299,7 +299,7 @@ function Profile({ setVideo, video }, { classes }) {
                               fontWeight="bold"
                               fontSize="20px"
                             >
-                              <Link to="/video">
+                              <Link to={`/video/${video.ID}`}>
                                 <span
                                   onClick={() => {
                                     setVideo(video);

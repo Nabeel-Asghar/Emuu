@@ -149,7 +149,7 @@ function Feeds({ setVideo, setUserProfile }) {
                 sort == "Recently Uploaded" &&
                 recentVideos.map((video, index) => (
                   <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
-                    <Link to="/video">
+                    <Link to={`/video/${video.ID}`}>
                       <span
                         onClick={() => {
                           setVideo(video);
@@ -211,7 +211,7 @@ function Feeds({ setVideo, setUserProfile }) {
                 sort == "Most Viewed" &&
                 mostViewedVideos.map((video, index) => (
                   <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
-                    <Link to="/video">
+                    <Link to={`/video/${video.ID}`}>
                       <span
                         onClick={() => {
                           setVideo(video);
@@ -273,7 +273,7 @@ function Feeds({ setVideo, setUserProfile }) {
                 sort == "Top Rated" &&
                 topVideos.map((video, index) => (
                   <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
-                    <Link to="/video">
+                    <Link to={`/video/${video.ID}`}>
                       <span
                         onClick={() => {
                           setVideo(video);
