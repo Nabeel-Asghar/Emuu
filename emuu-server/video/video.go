@@ -2,54 +2,54 @@ package video
 
 import (
 	"cloud.google.com/go/firestore"
-    "context"
-    "github.com/gin-gonic/gin"
-    "google.golang.org/api/iterator"
-    "google.golang.org/api/option"
-    "log"
-    "math"
-    "net/http"
-    "reflect"
-    "strconv"
-    "time"
+	"context"
+	"github.com/gin-gonic/gin"
+	"google.golang.org/api/iterator"
+	"google.golang.org/api/option"
+	"log"
+	"math"
+	"net/http"
+	"reflect"
+	"strconv"
+	"time"
 )
 
-//create struct to reflect json values sent from frontend (name and page number)
+// create struct to reflect json values sent from frontend (name and page number)
 type DisplayNameAndPage struct {
 	UserName   string `json:"displayName"`
 	PageNumber string `json:"pageNumber"`
 }
 
-//create three global variables, username and page number, and ID for video
+// create three global variables, username and page number, and ID for video
 var userUN string
 var PageNum int
 
-//create a struct of type Video which reflect document fields in Firestore's Videos collection
+// create a struct of type Video which reflect document fields in Firestore's Videos collection
 type Video struct {
-	Username         string              `firestore:"Username"`
-    Title            string              `firestore:"VideoTitle"`
-    VideoUrl         string              `firestore:"VideoUrl"`
-    ThumbnailUrl     string              `firestore:"thumbnailUrl"`
-    Likes            int                 `firestore:"Likes"`
-    Views            int                 `firestore:"Views"`
-    UploadTime       int                 `firestore:"uploadTime"`
-    Date             string              `firestore:"Date"`
-    GameTag          string              `firestore:"GameTag"`
-    VideoDescription string              `firestore:"VideoDescription"`
-    UsersThatLiked   []string            `firestore:"usersThatLiked"`
-    Comments         []map[string]string `firestore:"Comments,omitempty"`
-    Dislikes            int                 `firestore:"Dislikes"`
-    UsersThatDisliked   []string            `firestore:"usersThatDisliked"`
-    ProfilePic string
-    ID                  string
+	Username          string              `firestore:"Username"`
+	Title             string              `firestore:"VideoTitle"`
+	VideoUrl          string              `firestore:"VideoUrl"`
+	ThumbnailUrl      string              `firestore:"thumbnailUrl"`
+	Likes             int                 `firestore:"Likes"`
+	Views             int                 `firestore:"Views"`
+	UploadTime        int                 `firestore:"uploadTime"`
+	Date              string              `firestore:"Date"`
+	GameTag           string              `firestore:"GameTag"`
+	VideoDescription  string              `firestore:"VideoDescription"`
+	UsersThatLiked    []string            `firestore:"usersThatLiked"`
+	Comments          []map[string]string `firestore:"Comments,omitempty"`
+	Dislikes          int                 `firestore:"Dislikes"`
+	UsersThatDisliked []string            `firestore:"usersThatDisliked"`
+	ProfilePic        string
+	ID                string
 }
 
-//Create struct to retrieve firestore's profile pic of each user
+// Create struct to retrieve firestore's profile pic of each user
 type User struct {
 	ProfilePicture string `firestore:"ProfilePictureUrl"`
 }
 
-//Bubble sort function to sort most viewed videos, sorts in descending order according to views
+// Bubble sort function to sort most viewed videos, sorts in descending order according to views
 func sortMostViewed(videos []Video) []Video {
 
 	for i := 0; i < len(videos)-1; i++ {
@@ -62,7 +62,20 @@ func sortMostViewed(videos []Video) []Video {
 	return videos
 }
 
-//Bubble sort function to sort recently uploaded videos, sorts in descending order according to upload time
+// Bubble sort function to sort top rated videos, sorts in descending order according to likes
+func sortTopRated(videos []Video) []Video {
+
+	for i := 0; i < len(videos)-1; i++ {
+		for j := 0; j < len(videos)-i-1; j++ {
+			if videos[j].Likes < videos[j+1].Likes {
+				videos[j], videos[j+1] = videos[j+1], videos[j]
+			}
+		}
+	}
+	return videos
+}
+
+// Bubble sort function to sort recently uploaded videos, sorts in descending order according to upload time
 func sortRecent(videos []Video) []Video {
 
 	for i := 0; i < len(videos)-1; i++ {
@@ -75,7 +88,7 @@ func sortRecent(videos []Video) []Video {
 	return videos
 }
 
-//set the username and page based off of json input by binding to it
+// set the username and page based off of json input by binding to it
 func SetUsernameAndPage(c *gin.Context) {
 	var res DisplayNameAndPage
 	c.ShouldBindJSON(&res)
@@ -86,12 +99,13 @@ func SetUsernameAndPage(c *gin.Context) {
 
 }
 
-//universal function to set videos on home page, creators page, and profile page
+// universal function to set videos on home page, creators page, and profile page
 func SetVideos(c *gin.Context) {
 	if userUN != "" { //if there is a username
 		//create an array for most viewed and recently uploaded
 		mostViewedArr := []Video{}
 		recentArr := []Video{}
+		topRatedArr := []Video{}
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) //setting context with timeout 15
 		defer cancel()                                                           //after 15 seconds, if the function is not executed it will cancel and throw an error
 		// Firestore initialized
@@ -134,10 +148,12 @@ func SetVideos(c *gin.Context) {
 			//add each video to both arrays of most viewed and recently uploaded
 			mostViewedArr = append(mostViewedArr, vid)
 			recentArr = append(recentArr, vid)
+			topRatedArr = append(topRatedArr, vid)
 		}
 		//sort both arrays according to their parameter
 		sortMostViewed(mostViewedArr)
 		sortRecent(recentArr)
+		sortTopRated(topRatedArr)
 		//create page amount variable to set the number of pages that exist (8 videos per page; 15 videos = 2 pages)
 		var pageAmount int
 		pageAmount = int(math.Ceil(float64(len(recentArr)) / 8))
@@ -160,15 +176,25 @@ func SetVideos(c *gin.Context) {
 				mostViewedArr = mostViewedArr[(PageNum-1)*8 : len(mostViewedArr)]
 			}
 		}
+		if len(topRatedArr) > 8 {
+			if len(topRatedArr) > PageNum*8 {
+				topRatedArr = topRatedArr[(PageNum-1)*8 : (PageNum)*8]
+
+			} else { //if videos aren't of 8 videos at a time then return only the length that exists
+				topRatedArr = topRatedArr[(PageNum-1)*8 : len(topRatedArr)]
+			}
+		}
 		//send response to frontend for profile pages (creator or user)
 		response := struct {
 			MostViewed   []Video
 			RecentUpload []Video
+			TopRated     []Video
 			Pages        int
 		}{
 
 			MostViewed:   mostViewedArr,
 			RecentUpload: recentArr,
+			TopRated:     topRatedArr,
 			Pages:        pageAmount,
 		}
 
@@ -253,7 +279,6 @@ func SetVideos(c *gin.Context) {
 			MostViewed:   mostViewedArr,
 			RecentUpload: recentArr,
 			Pages:        pageAmount,
-
 		}
 
 		c.JSON(http.StatusOK, gin.H{"message": response})
