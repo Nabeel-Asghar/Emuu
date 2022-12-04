@@ -177,7 +177,7 @@ function Home({ setVideo }, { setUserProfile }) {
                                     fontWeight="bold"
                                     fontSize="20px"
                                   >
-                                    <Link to="/video">
+                                    <Link to={`/video/${video.ID}`}>
                                       <span
                                         onClick={() => {
                                           setVideo(video);
@@ -245,7 +245,7 @@ function Home({ setVideo }, { setUserProfile }) {
                         {video ? (
                           <div>
                             <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
-                              <Link to="/video">
+                              <Link to={`/video/${video.ID}`}>
                                 <span
                                   onClick={() => {
                                     setVideo(video);
@@ -336,7 +336,7 @@ function Home({ setVideo }, { setUserProfile }) {
                         {video ? (
                           <div>
                             <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
-                              <Link to="/video">
+                              <Link to={`/video/${video.ID}`}>
                                 <span
                                   onClick={() => {
                                     setVideo(video);

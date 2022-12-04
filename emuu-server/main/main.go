@@ -71,6 +71,7 @@ func main() {
 		auth.POST("/DislikeVideo", dislikes.SetDislikes)
 		auth.POST("/CheckDislikeVideo", dislikes.SetUsernameDislike)
 		auth.GET("/CheckDislikeVideo", dislikes.CheckDislikes)
+		auth.GET("/videoDetails/:id", video.GetAnyVideo)
 
 	}
 

@@ -1,17 +1,21 @@
 package video
 
 import (
-	"cloud.google.com/go/firestore"
 	"context"
-	"github.com/gin-gonic/gin"
-	"google.golang.org/api/iterator"
-	"google.golang.org/api/option"
+	"fmt"
 	"log"
 	"math"
 	"net/http"
 	"reflect"
 	"strconv"
 	"time"
+
+	"cloud.google.com/go/firestore"
+	"github.com/gin-gonic/gin"
+	"google.golang.org/api/iterator"
+	"google.golang.org/api/option"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 // create struct to reflect json values sent from frontend (name and page number)
@@ -283,4 +287,67 @@ func SetVideos(c *gin.Context) {
 
 		c.JSON(http.StatusOK, gin.H{"message": response})
 	}
+}
+
+// created a struct to retrieve profile picture for the creator of a video
+type CustomProfilePic struct {
+	ProfilePictureUrl string `json:"ProfilePictureUrl"`
+}
+
+// function to get video information based on document id in firebase
+func GetAnyVideo(c *gin.Context) {
+	id := c.Param("id")
+
+	var vid Video
+
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second*15) //setting context with timeout 15
+	defer cancel()                                                           //after 15 seconds, if the function is not executed it will cancel and throw an error
+	// Firestore initialized
+	sa := option.WithCredentialsFile("../serviceAccountKey.json")
+	client, err := firestore.NewClient(ctx, "emuu-1ee85", sa)
+	if err != nil {
+		log.Fatalf("firestore client creation error:%s", err)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	defer client.Close()
+
+	docSnap, err := client.Doc("Videos/" + id).Get(ctx)
+	if status.Code(err) == codes.NotFound {
+		log.Println(err)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	if err != nil {
+		log.Println(err)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	if err := docSnap.DataTo(&vid); err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	var pp CustomProfilePic
+	//add profile picture of user of each video to the vid variable
+	userSnap, err := client.Doc("Users/" + vid.Username).Get(ctx)
+	if status.Code(err) == codes.NotFound {
+		log.Println(err)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+	if err != nil {
+		log.Println(err)
+		c.AbortWithStatus(http.StatusBadRequest)
+		return
+	}
+
+	if err := userSnap.DataTo(&pp); err != nil {
+		c.AbortWithStatus(http.StatusInternalServerError)
+		return
+	}
+
+	vid.ProfilePic = pp.ProfilePictureUrl
+
+	c.JSON(http.StatusOK, gin.H{"message": vid})
 }

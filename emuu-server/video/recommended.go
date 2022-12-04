@@ -37,6 +37,7 @@ type Vid struct {
 	UsersThatLiked   []string            `firestore:"usersThatLiked"`
 	Comments         []map[string]string `firestore:"Comments,omitempty"`
 	ProfilePic       string
+	ID                  string
 }
 
 // set global variables from json input
@@ -77,6 +78,7 @@ func SetRecommended(c *gin.Context) {
 		var vid = Vid{}
 
 		doc.DataTo(&vid)
+		vid.ID = doc.Ref.ID
 		//If it's the same video, skip iteration
 		if vid.VideoUrl == RecURL {
 			continue
@@ -117,6 +119,7 @@ func SetRecommended(c *gin.Context) {
 			var vid = Vid{}
 
 			doc.DataTo(&vid)
+			vid.ID = doc.Ref.ID
 			//Add profile picture of the user of each video
 			iter := client.Collection("Users").Where("Username", "==", vid.Username).Documents(ctx)
 			for {

@@ -22,7 +22,12 @@ import ThumbDownIcon from "@mui/icons-material/ThumbDown";
 
 import { Link, useHistory, useLocation } from "react-router-dom";
 import ThumbUpIcon from "@mui/icons-material/ThumbUp";
+import { Redirect, useParams } from "react-router-dom/cjs/react-router-dom.min";
+import CopyToClipboardButton from "../ShareButton/ShareButton";
+
+
 function Video({ video, setVideo }) {
+  let { id } = useParams();
   const [commentList, setCommentList] = useState(video?.Comments || []);
   const displayName = localStorage.getItem("displayName");
   const [checked, setChecked] = useState(false);
@@ -48,10 +53,27 @@ function Video({ video, setVideo }) {
     setFirebaseData(completeFirebaseData);
   }
 
+  const getVideoDetail = async () => {
+      await axios.get(`https://emuu-cz5iycld7a-ue.a.run.app/auth/videoDetails/${id}`).
+      then((response) => {
+        console.log("response", response?.data?.message)
+        video = response?.data?.message
+        setVideo(response?.data?.message);
+        localStorage.setItem("video", JSON.stringify(response?.data?.message));
+      }).catch(err => {
+        console.log("error",err)
+        localStorage.removeItem("video");
+      });
+    }
+
   //calls get data function on page load
   useEffect(async () => {
-    await getData();
-  }, []);
+      await getVideoDetail();
+      await getData();
+      if (!localStorage.getItem("video")) {
+        return <Redirect to='/'/>;
+      }
+    }, [id]);
 
   //creates post and get request for creator data
   async function getCreator() {
@@ -226,6 +248,7 @@ function Video({ video, setVideo }) {
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckDislikeVideo"
       );
       //sets whether or not the dislike button should be checked when a user enters a video
+      console.log({disliked : response.data.message.CheckedValue})
       setDislikeChecked(response.data.message.CheckedValue);
     } catch (error) {}
   }
@@ -318,11 +341,11 @@ function Video({ video, setVideo }) {
       setVideo(JSON.parse(localStorage.getItem("video")));
       //console.log(video);
     }
-    if (!video && !localStorage.getItem("video")) {
-      //if there's no video on this page, redirect to home
-      window.location.pathname = "/";
-    }
-  }, []);
+
+    if (!localStorage.getItem("video")) {
+          return <Redirect to='/'/>;
+        }
+      }, [id]);
 
   const [comment, setComment] = useState("");
 
@@ -368,7 +391,7 @@ function Video({ video, setVideo }) {
                                 fontWeight="bold"
                                 fontSize="20px"
                               >
-                                <Link to="/video">
+                                <Link to={`/video/${video.ID}`}>
                                   <span
                                     onClick={() => {
                                       setVideo(video);
@@ -446,12 +469,22 @@ function Video({ video, setVideo }) {
                     {video.Username}
                   </a>
                   <span className="subs">{subscriberCount} Subscribers</span>
+
+
                 </div>
               </div>
-              {localStorage.getItem("auth") == "true" && (
                 <div className="actions">
+
+                <div className="list-wrapper">
+                    <CopyToClipboardButton/>
+                    {localStorage.getItem("auth") == "true" && (
+                       <div className="status-box">
+
+                      
                   <div className="btn-group">
+
                     <span className="likes action-btn">
+
                       <FormControlLabel
                         control={
                           <Checkbox
@@ -465,6 +498,7 @@ function Video({ video, setVideo }) {
                             onChange={async (e) => {
                               setChecked(!checked);
                               likeVideo(e);
+                              
                             }}
                           />
                         }
@@ -494,7 +528,7 @@ function Video({ video, setVideo }) {
                         label={video.Dislikes > 0 ? video.Dislikes : ""}
                       />
                     </span>
-                  </div>
+                    </div>
                   <div className="bar">
                     <div
                       style={{ width: percentageLikes + "%" }}
@@ -509,8 +543,10 @@ function Video({ video, setVideo }) {
                       {}
                     </div>
                   </div>
+                    </div>    )}
+                  </div>
                 </div>
-              )}
+
             </p>
           </div>
           <div className="about">
@@ -611,7 +647,7 @@ function Video({ video, setVideo }) {
               recommendedVideos.map((video, index) => (
                 <div className="wrapper">
                   <div className="preview">
-                    <Link to="/video">
+                    <Link to={`/video/${video.ID}`}>
                       <img
                         width="168"
                         onClick={() => setVideo(video)}
@@ -622,7 +658,7 @@ function Video({ video, setVideo }) {
                   </div>
 
                   <div class="info">
-                    <Link to="/video">
+                    <Link to={`/video/${video.ID}`}>
                       <Typography
                         onClick={() => setVideo(video)}
                         noWrap

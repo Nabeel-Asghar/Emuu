@@ -26,7 +26,7 @@ type Video struct {
 	VideoDescription string              `firestore:"VideoDescription"`
 	UsersThatLiked   []string            `firestore:"usersThatLiked"`
 	Comments         []map[string]string `firestore:"Comments,omitempty"`
-
+    ID                string
 	ProfilePic string
 }
 
@@ -74,7 +74,7 @@ func SetVideosAndUsers(c *gin.Context) {
 		var vid = Video{}
 
 		doc.DataTo(&vid)
-
+        vid.ID = doc.Ref.ID
 		videoCollection := client.Collection("Users").Where("Username", "==", vid.Username).Documents(ctx)
 		for {
 			doc, err := videoCollection.Next()
