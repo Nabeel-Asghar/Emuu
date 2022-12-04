@@ -42,10 +42,14 @@ function Settings() {
       setError("At least 1 uppercase letter");
       return false;
     }
-    for (let i = 0; i < pass.length; i++) {
-      if (pass[i].charCodeAt(0) >= 33 && pass[i].charCodeAt(0) <= 64)
-        specialChar = true;
+    const format = /^(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,}$/;
+
+    if (format.test(pass)) {
+      specialChar = true;
+    } else {
+      specialChar = false;
     }
+
     if (!specialChar) {
       setError("At least 1 special character");
       return false;
@@ -58,6 +62,10 @@ function Settings() {
     e.preventDefault();
     // store the states in the form data
     if (!validatePassword(newPassword)) return;
+    if(confirmNewPassword!== newPassword){
+      setError("Passwords do not match")
+      return
+    }
     const auth = getAuth();
     //sends axios post to server of users new password info
     await axios
