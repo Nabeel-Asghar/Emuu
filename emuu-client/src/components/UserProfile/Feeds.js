@@ -90,7 +90,7 @@ function LongMenu({ sort, setSort }) {
 
 function Feeds({ setVideo }) {
   const [recentVideos, setRecentVideos] = useState([]);
-    const [mostViewedVideos, setMostViewedVideos] = useState([]);
+  const [mostViewedVideos, setMostViewedVideos] = useState([]);
   const [topVideos, setTopVideos] = useState([]);
   const [likedVideos, setLikedVideos] = useState([]);
   const [sort, setSort] = React.useState("Recently Uploaded");
@@ -138,9 +138,9 @@ function Feeds({ setVideo }) {
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/video"
       );
       //sets top/recent videos into an array, as well as the number of pages for pagination
-            setMostViewedVideos(response.data.message.MostViewed);
-            setRecentVideos(response.data.message.RecentUpload);
-            setTopVideos(response.data.message.TopRated);
+      setMostViewedVideos(response.data.message.MostViewed);
+      setRecentVideos(response.data.message.RecentUpload);
+      setTopVideos(response.data.message.TopRated);
       setPages(response.data.message.Pages);
     } catch (error) {}
   }
@@ -309,68 +309,68 @@ function Feeds({ setVideo }) {
                     </Link>
                   </Card>
                 ))}
-                 {mostViewedVideos &&
-                                sort == "Most Viewed" &&
-                                mostViewedVideos.map((video, index) => (
-                                  <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
-                                    <Link to="/video">
-                                      <span
-                                        onClick={() => {
-                                          setVideo(video);
-                                          const TitleAndTag = {
-                                            title: video.Title,
-                                            gameTag: video.GameTag,
-                                          };
-                                          axios.post(
-                                            "https://emuu-cz5iycld7a-ue.a.run.app/auth/videoPage",
-                                            JSON.stringify({ ...TitleAndTag })
-                                          );
-                                        }}
-                                      >
-                                        <CardMedia component="img" image={video.ThumbnailUrl} />
-                                        <CardContent>
-                                          <CardHeader
-                                            avatar={
-                                              <Avatar
-                                                sx={{ width: 60, height: 60 }}
-                                                src={video.ProfilePic}
-                                              ></Avatar>
-                                            }
-                                            title={
-                                              <Typography
-                                                variant="body2"
-                                                color="text.primary"
-                                                fontWeight="bold"
-                                                fontSize="20px"
-                                              >
-                                                {video.Title}
-                                              </Typography>
-                                            }
-                                          />
+              {mostViewedVideos &&
+                sort == "Most Viewed" &&
+                mostViewedVideos.map((video, index) => (
+                  <Card sx={{ maxWidth: 325, maxHeight: 320 }}>
+                    <Link to="/video">
+                      <span
+                        onClick={() => {
+                          setVideo(video);
+                          const TitleAndTag = {
+                            title: video.Title,
+                            gameTag: video.GameTag,
+                          };
+                          axios.post(
+                            "https://emuu-cz5iycld7a-ue.a.run.app/auth/videoPage",
+                            JSON.stringify({ ...TitleAndTag })
+                          );
+                        }}
+                      >
+                        <CardMedia component="img" image={video.ThumbnailUrl} />
+                        <CardContent>
+                          <CardHeader
+                            avatar={
+                              <Avatar
+                                sx={{ width: 60, height: 60 }}
+                                src={video.ProfilePic}
+                              ></Avatar>
+                            }
+                            title={
+                              <Typography
+                                variant="body2"
+                                color="text.primary"
+                                fontWeight="bold"
+                                fontSize="20px"
+                              >
+                                {video.Title}
+                              </Typography>
+                            }
+                          />
 
-                                          <div className="videoInfo">
-                                            <Typography
-                                              variant="body2"
-                                              color="text.secondary"
-                                              fontWeight="medium"
-                                              fontSize="14px"
-                                            >
-                                              {video.Username}
-                                            </Typography>
-                                            <Typography
-                                              variant="body2"
-                                              color="text.secondary"
-                                              fontWeight="medium"
-                                              fontSize="14px"
-                                            >
-                                              {video.Likes} Likes &#x2022; {video.Views} Views
-                                            </Typography>
-                                          </div>
-                                        </CardContent>
-                                      </span>
-                                    </Link>
-                                  </Card>
-                                ))}
+                          <div className="videoInfo">
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              fontWeight="medium"
+                              fontSize="14px"
+                            >
+                              {video.Username}
+                            </Typography>
+                            <Typography
+                              variant="body2"
+                              color="text.secondary"
+                              fontWeight="medium"
+                              fontSize="14px"
+                            >
+                              {video.Likes} Likes &#x2022; {video.Views} Views
+                            </Typography>
+                          </div>
+                        </CardContent>
+                      </span>
+                    </Link>
+                  </Card>
+                ))}
 
               {topVideos &&
                 sort == "Top Rated" &&
