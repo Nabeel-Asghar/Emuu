@@ -56,12 +56,10 @@ function Video({ video, setVideo }) {
   const getVideoDetail = async () => {
       await axios.get(`https://emuu-cz5iycld7a-ue.a.run.app/auth/videoDetails/${id}`).
       then((response) => {
-        console.log("response", response?.data?.message)
         video = response?.data?.message
         setVideo(response?.data?.message);
         localStorage.setItem("video", JSON.stringify(response?.data?.message));
       }).catch(err => {
-        console.log("error",err)
         localStorage.removeItem("video");
       });
     }
@@ -248,7 +246,6 @@ function Video({ video, setVideo }) {
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckDislikeVideo"
       );
       //sets whether or not the dislike button should be checked when a user enters a video
-      console.log({disliked : response.data.message.CheckedValue})
       setDislikeChecked(response.data.message.CheckedValue);
     } catch (error) {}
   }
@@ -339,7 +336,6 @@ function Video({ video, setVideo }) {
     }
     if (localStorage.getItem("video")) {
       setVideo(JSON.parse(localStorage.getItem("video")));
-      //console.log(video);
     }
 
     if (!localStorage.getItem("video")) {
@@ -583,12 +579,6 @@ function Video({ video, setVideo }) {
                   className="submit-btn"
                   type="submit"
                   onClick={async () => {
-                    console.log({
-                      text: comment,
-                      postedBy: displayName,
-                      videoUrl: video.VideoUrl,
-                      profilePic: ProfilePic,
-                    });
                     await axios
                       .post(
                         "https://emuu-cz5iycld7a-ue.a.run.app/auth/comment",

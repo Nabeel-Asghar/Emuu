@@ -141,15 +141,12 @@ function Profile({ setVideo, video }, { classes }) {
       const response = await axios.get(
         "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator"
       );
-      console.log("user");
       const user = response.data.message.UserDetails;
-      console.log(user);
       setProfileUser(user);
       setBanner(user[0].BannerUrl);
       setProfilePic(user[0].ProfilePictureUrl);
       setSubscriberCount(user[0].SubscriberCount);
     } catch (error) {
-      console.log("er");
     }
   }
 
