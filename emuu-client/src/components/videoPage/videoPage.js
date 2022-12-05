@@ -54,15 +54,15 @@ function Video({ video, setVideo }) {
   }
 
   const getVideoDetail = async () => {
-      await axios.get(`https://emuu-cz5iycld7a-ue.a.run.app/auth/videoDetails/${id}`).
-      then((response) => {
-        video = response?.data?.message
-        setVideo(response?.data?.message);
-        localStorage.setItem("video", JSON.stringify(response?.data?.message));
-      }).catch(err => {
-        localStorage.removeItem("video");
-      });
-    }
+        await axios.get(`https://emuu-cz5iycld7a-ue.a.run.app/auth/videoDetails/${id}`).
+        then((response) => {
+          video = response?.data?.message
+          setVideo(response?.data?.message);
+          localStorage.setItem("video", JSON.stringify(response?.data?.message));
+        }).catch(err => {
+          localStorage.removeItem("video");
+        });
+      }
 
   //calls get data function on page load
   useEffect(async () => {
