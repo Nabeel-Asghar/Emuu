@@ -1,6 +1,6 @@
 import "./ProfileMenu.scss";
 import * as React from "react";
-import { useState, useEffect, useContext } from "react";
+import { useState } from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
@@ -12,26 +12,40 @@ import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Tooltip from "@mui/material/Tooltip";
-import HowToRegIcon from "@mui/icons-material/HowToReg";
 import LoginIcon from "@mui/icons-material/Login";
 import Logout from "@mui/icons-material/Logout";
 import { useHistory, Link } from "react-router-dom";
-import { getAuth, signOut } from "firebase/auth";
-import { collection, getDoc, where, doc } from "firebase/firestore";
-import { db } from "../../Firebase.js";
-import AppContext from "../../AppContext";
+import { getAuth, signOut, onAuthStateChanged } from "firebase/auth";
 
 export default function AccountMenu() {
-  const userName = localStorage.getItem("displayName");
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
-  const docRef = doc(db, "Users", userName);
+  //gets profile image from sidebar.js
+  const ProfilePic = localStorage.getItem("ProfilePictureUrl");
+  //sets auth
+  const [isAuth, setAuth] = useState(true);
+  const [displayName, setDisplayName] = useState("");
 
-  const [ProfilePic, setProfilePic] = useState("");
-  getDoc(docRef).then((docSnap) => {
-    setProfilePic(docSnap.data().ProfilePictureUrl);
+  const auth = getAuth();
+  //authorizes users and sets display name
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      setAuth(true);
+      setDisplayName(user.displayName);
+      localStorage.setItem("displayName", user.displayName);
+      // ...
+    } else {
+      // User is signed out
+      // ...
+      setAuth(false);
+
+      SignedOut();
+      localStorage.setItem("auth", false);
+      localStorage.setItem("user", null);
+      localStorage.setItem("displayName", null);
+    }
   });
-  const profileImage = localStorage.getItem(ProfilePic);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -41,9 +55,6 @@ export default function AccountMenu() {
 
   //Sign Out Function in Nav Bar
   const history = useHistory();
-  const auth = getAuth;
-
-  const navAuth = localStorage.getItem("auth");
   let userFirstInitial;
 
   if (auth === true) {
@@ -55,9 +66,7 @@ export default function AccountMenu() {
 
   const SignedOut = async (e) => {
     signOut(auth)
-      .then(() => {
-        history.push("/");
-      })
+      .then(() => {})
       .catch((error) => {
         // An error happened.
       });
@@ -65,7 +74,7 @@ export default function AccountMenu() {
 
   return (
     <React.Fragment>
-      {navAuth === "true" ? (
+      {isAuth ? (
         <>
           <Box
             sx={{ display: "flex", alignItems: "center", textAlign: "center" }}

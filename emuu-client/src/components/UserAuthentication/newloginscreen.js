@@ -2,8 +2,6 @@ import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import FormControlLabel from "@mui/material/FormControlLabel";
-import Checkbox from "@mui/material/Checkbox";
 import Link from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
@@ -11,20 +9,12 @@ import Grid from "@mui/material/Grid";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import "./login.scss";
-import {
-  getAuth,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { Routes, Route, useHistory } from "react-router-dom";
-import Home from "../home/Home";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { useHistory } from "react-router-dom";
 import "../../Firebase.js";
-import HeaderPostLogin from "../NavbarPostLogin/HeaderPostLogin.js";
-import firebase from "firebase/app";
+import NavBarNoImage from "../NavbarPostLogin/NavBarNoImage.js";
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -34,23 +24,24 @@ function Login() {
   //Sign in feature
   const handleSubmit = async (e) => {
     const auth = getAuth();
-    const user = auth.currentUser;
+    //firebase function to sign in users
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredential) => {
         // Signed in
         const user = userCredential.user;
         localStorage.setItem("user", JSON.stringify(userCredential.user));
         localStorage.setItem("auth", true);
+
         localStorage.setItem("user", JSON.stringify(userCredential.user));
         localStorage.setItem("displayName", user.displayName);
         localStorage.setItem("userProfileImg", user.ProfilePictureUrl);
+        localStorage.setItem("userEmail", email);
         history.push("/");
         window.location.reload();
       })
       .catch((error) => {
-        const errorCode = error.code;
         const errorMessage = error.message;
-
+        //validation errors when user inputs incorrect information
         switch (errorMessage.split(")")[0].split("/")[1]) {
           case "invalid-email":
             setError(
@@ -76,7 +67,7 @@ function Login() {
 
   return (
     <>
-      <HeaderPostLogin />
+      <NavBarNoImage />
       <Grid container component="main" sx={{ height: "100vh" }}>
         <CssBaseline />
         <Grid

@@ -8,61 +8,66 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { Avatar } from "@mui/material";
-
-import { db } from "../../../Firebase.js";
-import { getDoc, getDocs, doc, collection } from "firebase/firestore";
-
-const displayName = localStorage.getItem("displayName");
+import axios from "axios";
+import { getAuth } from "firebase/auth";
 
 function Subscriptions() {
   const [subscribersData, setSubscribersData] = useState([]);
-
   const [count, setCount] = useState(0);
   const history = useHistory();
-
-  const userName = localStorage.getItem("displayName");
-
-  const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
-
+  //function for firebaseData for search bar
+  const [firebaseData, setFirebaseData] = useState([]);
+  async function getData() {
+    //sends axios get request for data
+    const response = await axios.get(
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
+    );
+    const users = response.data.message.Users;
+    const videos = response.data.message.Videos;
+    var completeFirebaseData = videos.concat(users);
+    //sets data of users and videos into an array
+    setFirebaseData(completeFirebaseData);
+  }
+  //upon page load runs getData function
   useEffect(async () => {
-    if (count === 0) {
-      const querySnapshotUsers = await getDocs(collection(db, "Users"));
-      const usersArr = [];
-      querySnapshotUsers.forEach((doc) => {
-        usersArr.push(doc.data());
-      });
-      const subscribersDataArr = usersArr.filter((user) =>
-        user?.SubscriberList?.includes(userName)
-      );
-      setSubscribersData(subscribersDataArr);
-      setCount((count) => count + 1);
-    }
-    if (count === 1) {
-      const timer = async () => {
-        const querySnapshotUsers = await getDocs(collection(db, "Users"));
-        const usersArr = [];
-        querySnapshotUsers.forEach((doc) => {
-          usersArr.push(doc.data());
-        });
-        const subscribersDataArr = usersArr.filter((user) =>
-          user?.SubscriberList?.includes(userName)
-        );
-        setSubscribersData(subscribersDataArr);
-      };
-      const interval = setInterval(() => {
-        timer();
-      }, 500);
-      return () => clearTimeout(interval);
-    }
+    await getData();
   }, []);
+  const auth = getAuth();
+  const user = auth.currentUser;
+  //function to set user display name
+  if (user) {
+    var displayName = user.displayName;
+  } else {
+    var displayName = null;
+  }
 
-  const usersArr = firebaseData.filter(
-    (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
-  );
+  //function to get subscriptions list for user
+  async function getSubscriptions() {
+    const dis = {
+      displayName: displayName,
+    };
+    //sends axios post of users name to server
+    await axios
+      .post(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscription",
+        JSON.stringify({ ...dis })
+      )
+      .then(function (response) {});
+    try {
+      //sends axios get request to receive subscriptions list of users
+      const response = await axios.get(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/Subscription"
+      );
+      //sets subscriptions list into an array
+      setSubscribersData(response.data.message.SubscriptionDetails);
+    } catch (error) {}
+  }
 
-  const videosArr = firebaseData.filter(
-    (obj) => obj.hasOwnProperty("Username") && obj.hasOwnProperty("VideoUrl")
-  );
+  //if statement to only allow subscriptions list to run once
+  if (displayName !== null && count === 0) {
+    getSubscriptions();
+    setCount(1);
+  }
 
   const handleSubscribersProfile = (subscribersName) => {
     localStorage.setItem("Creator", subscribersName);

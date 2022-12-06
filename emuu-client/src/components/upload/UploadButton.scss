@@ -12,9 +12,9 @@
 }
 
 .UploadCard {
-  box-shadow: 2px 2px 5px #777;
+  box-shadow: 2px 2px 5px #000;
   height: 600px;
-  width: 1000px;
+  width: 1000px !important;
   background-color: black;
   border-radius: 5px;
   position: relative;
@@ -24,6 +24,8 @@
   justify-content: center;
   min-height: 600px;
   flex-direction: column;
+  max-height: calc(100% - 64px);
+  max-width: 1000px !important;
 }
 
 .container {
@@ -105,6 +107,22 @@
   display: flex;
 }
 
+.css-i4bv87-MuiSvgIcon-root {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: #ffffff !important;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: 1.5rem;
+}
 .css-1qxadfk-MuiPaper-root-MuiDialog-paper {
   background-color: #121212;
   color: #fff;
@@ -113,10 +131,7 @@
   border-radius: 4px;
   box-shadow: 0px 11px 15px -7px rgb(0 0 0 / 20%),
     0px 24px 38px 3px rgb(0 0 0 / 14%), 0px 9px 46px 8px rgb(0 0 0 / 12%);
-  background-image: linear-gradient(
-    rgba(255, 255, 255, 0.16),
-    rgba(255, 255, 255, 0.16)
-  );
+  background-image: linear-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 1));
   margin: 32px;
   position: relative;
   overflow-y: auto;
@@ -128,21 +143,24 @@
   -ms-flex-direction: column;
   flex-direction: column;
   max-height: calc(100% - 64px);
-  max-width: 1000px;
+  max-width: 1200px;
 }
-.css-i4bv87-MuiSvgIcon-root {
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  width: 1em;
-  height: 1em;
-  display: inline-block;
-  fill: #ffffff;
-  -webkit-flex-shrink: 0;
-  -ms-flex-negative: 0;
-  flex-shrink: 0;
-  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
-  font-size: 1.5rem;
+.css-sd33hq {
+  background-color: rgb(18, 18, 18);
+  color: rgb(255, 255, 255);
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  border-radius: 4px;
+  box-shadow: rgb(0 0 0 / 20%) 0px 11px 15px -7px,
+    rgb(0 0 0 / 14%) 0px 24px 38px 3px, rgb(0 0 0 / 12%) 0px 9px 46px 8px;
+  background-image: linear-gradient(
+    rgba(0, 0, 0, 1),
+    rgba(0, 0, 0, 1)
+  );
+  margin: 32px;
+  position: relative;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100% - 64px);
+  max-width: 1000px !important;
 }

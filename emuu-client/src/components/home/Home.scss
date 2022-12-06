@@ -1,25 +1,8 @@
-.spacer {
-  padding-right: 20px;
-  padding-left: 20px;
-  float: left;
-  margin-bottom: 50px;
-}
-
 .videos__container {
   display: inline-flex;
   flex-wrap: wrap;
-  gap: 20px;
-  padding: 20px;
-}
-
-.break {
-  width: 200px;
-  overflow-wrap: break-word;
-  word-wrap: break-word;
-  word-break: break-word;
-}
-.lineBreak {
-  margin-top: 225px;
+  gap: 20px !important;
+  padding: 20px !important;
 }
 .video__category__title {
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
@@ -38,15 +21,13 @@
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 5px !important;
+  padding: 8px !important;
 }
 .video-row {
   display: flex;
   flex-direction: row;
   gap: 40px;
-  //   flex-wrap: nowrap;
   overflow-x: scroll;
-  //   //padding: 20px;
 
   padding-left: 20px;
   padding-right: 20px;
@@ -65,9 +46,7 @@
 .videoInfo {
   padding-left: 80px;
 }
-.css-46bh2p-MuiCardContent-root {
-  padding: 16px;
-}
+
 .css-et1ao3-MuiTypography-root {
   margin: 0;
   font-family: "Roboto", "Helvetica", "Arial", sans-serif;
@@ -80,4 +59,10 @@
 .MuiPagination-ul {
   margin: auto !important;
   width: fit-content !important;
+}
+.css-faujvq {
+  display: flex;
+  -webkit-box-align: center;
+  align-items: center;
+  padding: 8px !important;
 }

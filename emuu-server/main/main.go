@@ -2,9 +2,24 @@ package main
 
 import (
 	firebaseSer "emuu-server/main/firebase"
+	firebasedata "emuu-server/main/firebase"
+	creator "emuu-server/main/users"
+	cropImage "emuu-server/main/users"
+	likedVideos "emuu-server/main/users"
+	navbar "emuu-server/main/users"
+	profilePic "emuu-server/main/users"
 	register "emuu-server/main/users"
+	settings "emuu-server/main/users"
+	subscriber "emuu-server/main/users"
+	subscriberButton "emuu-server/main/users"
+	subscription "emuu-server/main/users"
 	upload "emuu-server/main/users"
+	comment "emuu-server/main/video"
+	dislikes "emuu-server/main/video"
+	likes "emuu-server/main/video"
+	recommended "emuu-server/main/video"
 	video "emuu-server/main/video"
+	view "emuu-server/main/video"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 )
@@ -28,6 +43,35 @@ func main() {
 		auth.POST("/register", register.CreateUser)
 		auth.POST("/video", video.SetUsernameAndPage)
 		auth.GET("/video", video.SetVideos)
+		auth.POST("/creator", creator.SetUsername)
+		auth.GET("/creator", creator.SetUser)
+		auth.POST("/updateBanner", cropImage.UpdateBanner)
+		auth.POST("/updateProfilePic", profilePic.UpdateProfile)
+		auth.POST("/LikeVideo", likes.SetLikes)
+		auth.POST("/CheckLikeVideo", likes.SetUsernameLike)
+		auth.GET("/CheckLikeVideo", likes.CheckLikes)
+		auth.POST("/Subscribers", subscriber.SetUsernameSub)
+		auth.GET("/Subscribers", subscriber.SetSubscribers)
+		auth.POST("/Subscription", subscription.SetUsernameSubscription)
+		auth.GET("/Subscription", subscriber.SetSubscriptions)
+		auth.POST("/comment", comment.SetComment)
+		auth.GET("/comment", comment.GetComment)
+		auth.POST("/SubscribeButton", subscriberButton.SetSubscribe)
+		auth.POST("/CheckSubscribe", subscriberButton.SetUserAndCreator)
+		auth.GET("/CheckSubscribe", subscriberButton.CheckSub)
+		auth.POST("/navbar", navbar.SetNavUsername)
+		auth.GET("/navbar", navbar.SetNavUser)
+		auth.POST("/likedvideo", likedVideos.SetUsernameLiked)
+		auth.GET("/likedvideo", likedVideos.SetLikedVideos)
+		auth.POST("/view", view.UpdateView)
+		auth.GET("/firebase-data", firebasedata.SetVideosAndUsers)
+		auth.POST("/settings", settings.UpdatePassword)
+		auth.POST("/recommended", recommended.SetGameTag)
+		auth.GET("/recommended", recommended.SetRecommended)
+		auth.POST("/DislikeVideo", dislikes.SetDislikes)
+		auth.POST("/CheckDislikeVideo", dislikes.SetUsernameDislike)
+		auth.GET("/CheckDislikeVideo", dislikes.CheckDislikes)
+		auth.GET("/videoDetails/:id", video.GetAnyVideo)
 
 	}
 

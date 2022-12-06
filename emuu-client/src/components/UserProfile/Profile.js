@@ -3,7 +3,6 @@ import AddIcon from "@mui/icons-material/Add";
 import "./Profile.scss";
 import "../../Firebase.js";
 import Feeds from "./Feeds";
-import UserInfo from "./UserInfo";
 import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
 import { Blob } from "firebase/firestore";
 import { db, storage } from "../../Firebase.js";
@@ -15,6 +14,7 @@ import CardContent from "@mui/material/CardContent";
 import CardActions from "@mui/material/CardActions";
 import Collapse from "@mui/material/Collapse";
 import IconButton from "@mui/material/IconButton";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { Avatar } from "@mui/material";
 import {
   getDoc,
@@ -40,7 +40,7 @@ import { styles } from "./styles";
 import { createAutocomplete } from "@algolia/autocomplete-core";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
 import UserProfileCard from "../common/UserProfileCard/UserProfileCard";
-
+import axios from "axios";
 import { uploadString } from "@firebase/storage";
 import { Link, useHistory, useLocation } from "react-router-dom";
 const ORIENTATION_TO_ANGLE = {
@@ -51,8 +51,6 @@ const ORIENTATION_TO_ANGLE = {
 
 function Profile({ setVideo, video }, { classes }) {
   const [percent, setPercent] = useState(0);
-  const displayName = localStorage.getItem("displayName");
-  const docRef = doc(db, "Users", displayName);
   const [imageSrc, setImageSrc] = React.useState(null);
   const [croppedImageSrc, setCroppedImageSrc] = React.useState(null);
   const [crop, setCrop] = useState({ x: 0, y: 0 });
@@ -61,13 +59,30 @@ function Profile({ setVideo, video }, { classes }) {
   const [croppedAreaPixels, setCroppedAreaPixels] = useState(null);
   const [croppedImage, setCroppedImage] = useState(null);
   const history = useHistory();
-
+  const [Banner, setBanner] = useState("");
+  const [ProfilePic, setProfilePic] = useState("");
+  const [subscriberCount, setSubscriberCount] = useState("");
   const [autocompleteState, setAutocompleteState] = useState({});
   const [searchInput, setSearchInput] = useState("");
   const [count, setCount] = useState(0);
 
-  const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
+  const [profileUser, setProfileUser] = useState([]);
+  const displayName = localStorage.getItem("displayName");
+//function to get firebase data from server for algolia search bar
+  const [firebaseData, setFirebaseData] = useState([]);
+  async function getData() {
+    const response = await axios.get(
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
+    );
+    const users = response.data.message.Users;
+    const videos = response.data.message.Videos;
+    var completeFirebaseData = videos.concat(users);
+    setFirebaseData(completeFirebaseData);
+  }
 
+  useEffect(async () => {
+    await getData();
+  }, []);
   const autocomplete = useMemo(
     () =>
       createAutocomplete({
@@ -113,6 +128,34 @@ function Profile({ setVideo, video }, { classes }) {
     [count]
   );
 
+  //function to get user information for banner/profile pic, and subscriber count
+  async function getUser() {
+    const dis = {
+      displayName: displayName,
+    };
+    await axios
+      .post(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator",
+        JSON.stringify({ ...dis })
+      )
+      .then(function (response) {});
+    try {
+      const response = await axios.get(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator"
+      );
+      const user = response.data.message.UserDetails;
+      setProfileUser(user);
+      setBanner(user[0].BannerUrl);
+      setProfilePic(user[0].ProfilePictureUrl);
+      setSubscriberCount(user[0].SubscriberCount);
+    } catch (error) {
+    }
+  }
+
+  useEffect(async () => {
+    await getUser();
+  }, []);
+
   const dataSet = autocompleteState?.collections?.[0]?.items;
   const searchResultsVideosArr = dataSet?.filter(
     (obj) => obj.hasOwnProperty("VideoUrl") && obj.hasOwnProperty("Username")
@@ -122,8 +165,6 @@ function Profile({ setVideo, video }, { classes }) {
   );
   const showSearchResults =
     searchResultsVideosArr?.length > 0 || searchResultsUsersArr?.length > 0;
-
-  const userName = localStorage.getItem("displayName");
 
   const usersArr = firebaseData.filter(
     (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
@@ -156,7 +197,7 @@ function Profile({ setVideo, video }, { classes }) {
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
-
+//function to upload banner pic
   const showCroppedImage = useCallback(async () => {
     try {
       const croppedImage = await getCroppedImg(
@@ -192,7 +233,8 @@ function Profile({ setVideo, video }, { classes }) {
       return true;
     return false;
   }
-
+  let url;
+  //function that sends banner cropped picture url to server to update database
   function uploadBackground(croppedImage) {
     const storage = getStorage();
     const storageRef = ref(storage, "/images/" + uid());
@@ -200,19 +242,14 @@ function Profile({ setVideo, video }, { classes }) {
     // 'file' comes from the Blob or File API
     uploadString(storageRef, croppedImage, "data_url").then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
-        setDoc(
-          docRef,
-          {
-            BannerUrl: URL,
-          },
-          {
-            merge: true,
-          }
+        axios.post(
+          "https://emuu-cz5iycld7a-ue.a.run.app/auth/updateBanner",
+          JSON.stringify({ displayName: displayName, croppedImageUrl: URL })
         )
       );
     });
   }
-
+//function to send profile picture url to server to update in firebase
   function uploadProfile(e) {
     let file = e.target.files[0];
     if (!verifyJpeg(file.name)) return;
@@ -221,29 +258,15 @@ function Profile({ setVideo, video }, { classes }) {
 
     uploadBytes(storageRef, file).then((snapshot) => {
       getDownloadURL(storageRef).then((URL) =>
-        setDoc(
-          docRef,
-          {
-            ProfilePictureUrl: URL,
-          },
-          {
-            merge: true,
-          }
+        axios.post(
+          "https://emuu-cz5iycld7a-ue.a.run.app/auth/updateProfilePic",
+          JSON.stringify({ displayName: displayName, profileImageUrl: URL })
         )
       );
     });
     setTimeout(() => window.location.reload(), 1500);
     return false;
   }
-
-  const [Banner, setBanner] = useState("");
-  const [ProfilePic, setProfilePic] = useState("");
-  const [subscriberCount, setSubscriberCount] = useState("");
-  getDoc(docRef).then((docSnap) => {
-    setBanner(docSnap.data().BannerUrl);
-    setProfilePic(docSnap.data().ProfilePictureUrl);
-    setSubscriberCount(docSnap.data().SubscriberCount);
-  });
 
   return (
     <>
@@ -260,11 +283,14 @@ function Profile({ setVideo, video }, { classes }) {
                 searchResultsVideosArr.map((video, index) => (
                   <div>
                     <Card sx={{ width: 385, height: 375 }}>
-                      <CardMedia component="img" image={video.thumbnailUrl} />
+                      <CardMedia component="img" image={video.ThumbnailUrl} />
                       <CardContent>
                         <CardHeader
                           avatar={
-                            <Avatar sx={{ width: 60, height: 60 }}></Avatar>
+                            <Avatar
+                              sx={{ width: 60, height: 60 }}
+                              src={video.ProfilePic}
+                            ></Avatar>
                           }
                           title={
                             <Typography
@@ -273,13 +299,13 @@ function Profile({ setVideo, video }, { classes }) {
                               fontWeight="bold"
                               fontSize="20px"
                             >
-                              <Link to="/video">
+                              <Link to={`/video/${video.ID}`}>
                                 <span
                                   onClick={() => {
                                     setVideo(video);
                                   }}
                                 >
-                                  {video.VideoTitle}
+                                  {video.Title}
                                 </span>
                               </Link>
                             </Typography>

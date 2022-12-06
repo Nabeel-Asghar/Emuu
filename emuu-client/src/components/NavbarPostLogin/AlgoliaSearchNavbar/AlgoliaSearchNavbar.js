@@ -7,7 +7,7 @@ import "./AlgoliaSearchNavbar.scss";
 import ProfileMenu from "../../ProfileMenu/ProfileMenu";
 
 import EmuuLogo from "../EmuuLogo.png";
-
+//sets algolia autocomplete and search input
 const AlgoliaSearchNavbar = ({ autocomplete, searchInput }) => {
   const inputFocusRef = useRef(null);
   const inputFocusProp = {

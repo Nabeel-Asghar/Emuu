@@ -1,10 +1,8 @@
 import "./UserInfo.scss";
 import "./Feeds.scss";
 import { Avatar } from "@mui/material";
-import { AxiosContext } from "react-axios/lib/components/AxiosProvider";
 import React, { useState, useEffect, useMemo } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
-import AddIcon from "@mui/icons-material/Add";
 import "./Profile.scss";
 import Checkbox from "@material-ui/core/Checkbox";
 import "../../Firebase.js";
@@ -16,28 +14,10 @@ import Card from "@mui/material/Card";
 import CardHeader from "@mui/material/CardHeader";
 import CardMedia from "@mui/material/CardMedia";
 import CardContent from "@mui/material/CardContent";
-import CardActions from "@mui/material/CardActions";
-import Collapse from "@mui/material/Collapse";
-import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-
-import UserInfo from "./UserInfo";
-import { ref, getStorage, uploadBytes, getDownloadURL } from "firebase/storage";
-import { db, storage } from "../../Firebase.js";
-import {
-  arrayUnion,
-  arrayRemove,
-  getDoc,
-  getDocs,
-  setDoc,
-  doc,
-  collection,
-  query,
-  where,
-  onSnapshot,
-  increment,
-  updateDoc,
-} from "firebase/firestore";
+import axios from "axios";
+import { db } from "../../Firebase.js";
+import { getDoc, doc } from "firebase/firestore";
 import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaSearchNavbar";
 
 //Function to display creator page
@@ -45,19 +25,34 @@ import AlgoliaSearchNavbar from "../NavbarPostLogin/AlgoliaSearchNavbar/AlgoliaS
 function Creator({ setVideo, video }) {
   const history = useHistory();
   const displayName = localStorage.getItem("displayName");
-
   const location = useLocation();
-  const [creatorName, setCreatorName] = useState("Loading...");
+  const creatorName = localStorage.getItem("Creator");
   const [subscriberActionCount, setSubsciberActionCount] = useState(0);
   const [updatedSubscribersList, setUpdateSubscribersList] = useState([]);
   const [autocompleteState, setAutocompleteState] = useState({});
   const [count, setCount] = useState(0);
   const [checked, setChecked] = useState(false);
   const [searchInput, setSearchInput] = useState("");
-  const firebaseData = JSON.parse(localStorage.getItem("firebase-data"));
-
-  const docRef = doc(db, "Users", creatorName);
-
+  const [Banner, setBanner] = useState("");
+  const [CreatorProfilePic, setCreatorProfilePic] = useState("");
+  const [subscriberCount, setSubscriberCount] = useState(0);
+  //function to get firebase data for search bar
+  const [firebaseData, setFirebaseData] = useState([]);
+  async function getData() {
+    //axios get request to receive firebase data
+    const response = await axios.get(
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/firebase-data"
+    );
+    const users = response.data.message.Users;
+    const videos = response.data.message.Videos;
+    var completeFirebaseData = videos.concat(users);
+    //stores videos and users data into an array
+    setFirebaseData(completeFirebaseData);
+  }
+  //runs getData function upon page load
+  useEffect(async () => {
+    await getData();
+  }, []);
   const autocomplete = useMemo(
     () =>
       createAutocomplete({
@@ -83,9 +78,7 @@ function Creator({ setVideo, video }) {
                 }
                 return firebaseData.filter(
                   (item) =>
-                    item.VideoTitle?.toLowerCase().includes(
-                      query.toLowerCase()
-                    ) ||
+                    item.Title?.toLowerCase().includes(query.toLowerCase()) ||
                     item.Username?.toLowerCase().includes(
                       query.toLocaleLowerCase()
                     )
@@ -93,7 +86,7 @@ function Creator({ setVideo, video }) {
               },
               templates: {
                 item({ item }) {
-                  return item.VideoTitle || item.Username;
+                  return item.Title || item.Username;
                 },
               },
             },
@@ -102,6 +95,81 @@ function Creator({ setVideo, video }) {
       }),
     [count]
   );
+  //function to check if a user is subscribed to a creator (this is used to determine if the subscribed button is checked or not)
+  async function checkSubStatus() {
+    await axios
+      //sends axios post of creators and users name
+      .post(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckSubscribe",
+        JSON.stringify({
+          displayName: displayName,
+          creatorName: creatorName,
+          LikedBoolean: !checked,
+        })
+      )
+      .then(function (response) {});
+    try {
+      //receives boolean of whether the user is in this creators subscribers list
+      const response = await axios.get(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/CheckSubscribe"
+      );
+      //sets the boolean for subscriber button to determine whether the button is checked or not
+      setChecked(response.data.message.CheckedSubValue);
+    } catch (error) {}
+  }
+
+  //runs checkSubStatus upon page load
+  useEffect(() => {
+    checkSubStatus();
+  }, []);
+  //function for when user subscribes to creator
+  async function subscribeToUser(e) {
+    //Axios post to send user and creator data to backend
+    axios.post(
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/SubscribeButton",
+      JSON.stringify({
+        displayName: displayName,
+        creatorName: creatorName,
+        SubBoolean: !checked,
+      })
+    );
+    //updates subscribe count
+    if (checked === true) {
+      subscriberCount--;
+    } else {
+      subscriberCount++;
+    }
+  }
+  //function to get creators data
+  async function getUser() {
+    const dis = {
+      displayName: creatorName,
+    };
+    await axios
+      //axios post request of creators name to server
+      .post(
+        "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator",
+        JSON.stringify({ ...dis })
+      )
+      .then(function (response) {});
+    //axios get request receives creators data
+    const response = await axios.get(
+      "https://emuu-cz5iycld7a-ue.a.run.app/auth/creator"
+    );
+    //creators name, banner, profile picture, and subscriber count is set
+    const user = response.data.message.UserDetails;
+
+    setBanner(user[0].BannerUrl);
+
+    setCreatorProfilePic(user[0].ProfilePictureUrl);
+
+    setSubscriberCount(user[0].SubscriberCount);
+  }
+  //creators data is pulled upon page load
+  useEffect(async () => {
+    await getUser();
+  }, []);
+
   const dataSet = autocompleteState?.collections?.[0]?.items;
   const searchResultsVideosArr = dataSet?.filter(
     (obj) => obj.hasOwnProperty("VideoUrl") && obj.hasOwnProperty("Username")
@@ -111,8 +179,6 @@ function Creator({ setVideo, video }) {
   );
   const showSearchResults =
     searchResultsVideosArr?.length > 0 || searchResultsUsersArr?.length > 0;
-
-  const userName = localStorage.getItem("displayName");
 
   const usersArr = firebaseData.filter(
     (obj) => obj.hasOwnProperty("Username") && !obj.hasOwnProperty("VideoUrl")
@@ -142,40 +208,16 @@ function Creator({ setVideo, video }) {
     }
   };
 
-  function checkSubscribed() {
-    let subscribed = creatorsData[0]?.SubscriberList?.includes(displayName); //check if there is a video and if there are users that liked stored
-    if (subscribed) {
-      setChecked(true);
-    } else {
-      setChecked(false);
-    }
-  }
-
   useEffect(async () => {
     const userRefInitial = doc(db, "Users", creatorName);
     const getSubscribersListRefInitial = await getDoc(userRefInitial);
     let subscribersListInitial;
     if (getSubscribersListRefInitial.exists()) {
       subscribersListInitial =
-        getSubscribersListRefInitial.data().SubscriberList;
+        getSubscribersListRefInitial.data()?.SubscriberList;
     }
     setUpdateSubscribersList(subscribersListInitial);
   }, [subscriberActionCount]);
-
-  useEffect(async () => {
-    setCreatorName(localStorage.getItem("Creator"));
-    checkSubscribed();
-  }, []);
-
-  const [Banner, setBanner] = useState("");
-  const [ProfilePic, setProfilePic] = useState("");
-  const [subscriberCount, setSubscriberCount] = useState("");
-
-  getDoc(docRef).then((docSnap) => {
-    setBanner(docSnap.data().BannerUrl);
-    setProfilePic(docSnap.data().ProfilePictureUrl);
-    setSubscriberCount(docSnap.data().SubscriberCount);
-  });
 
   return (
     <>
@@ -192,11 +234,14 @@ function Creator({ setVideo, video }) {
                 searchResultsVideosArr.map((video, index) => (
                   <div>
                     <Card sx={{ width: 385, height: 375 }}>
-                      <CardMedia component="img" image={video.thumbnailUrl} />
+                      <CardMedia component="img" image={video.ThumbnailUrl} />
                       <CardContent>
                         <CardHeader
                           avatar={
-                            <Avatar sx={{ width: 60, height: 60 }}></Avatar>
+                            <Avatar
+                              sx={{ width: 60, height: 60 }}
+                              src={video.ProfilePic}
+                            ></Avatar>
                           }
                           title={
                             <Typography
@@ -205,13 +250,13 @@ function Creator({ setVideo, video }) {
                               fontWeight="bold"
                               fontSize="20px"
                             >
-                              <Link to="/video">
+                              <Link to={`/video/${video.ID}`}>
                                 <span
                                   onClick={() => {
                                     setVideo(video);
                                   }}
                                 >
-                                  {video.VideoTitle}
+                                  {video.Title}
                                 </span>
                               </Link>
                             </Typography>
@@ -267,7 +312,7 @@ function Creator({ setVideo, video }) {
 
             <div className="middle-portion">
               <div className="user-profile-img">
-                <img id="prf-img" src={ProfilePic} alt="" srcSet="" />
+                <img id="prf-img" src={CreatorProfilePic} alt="" srcSet="" />
 
                 <div className={"userName"}> {creatorName} </div>
 
@@ -275,52 +320,31 @@ function Creator({ setVideo, video }) {
                   {" "}
                   {subscriberCount} subscribers{" "}
                 </div>
-                <div className="right-side">
-                  <Checkbox
-                    icon={
-                      <SubscribeButton
-                        color="error"
-                        buttonTitle={"Subscribe"}
-                        buttonStyling={{ marginTop: "-22.5px" }}
-                      />
-                    }
-                    checkedIcon={
-                      <SubscribeButton
-                        color="error"
-                        buttonTitle={"Unsubscribe"}
-                        buttonStyling={{ marginTop: "-22.5px" }}
-                      />
-                    }
-                    checked={checked}
-                    onChange={async (e) => {
-                      setChecked(!checked);
-                      const collectionRef = collection(db, "Users");
-                      const queryData = await query(
-                        collectionRef,
-                        where("Username", "==", creatorName)
-                      );
-                      const _doc = await getDocs(queryData);
-                      let id = "";
-                      _doc.forEach((doc) => (id = doc.id));
-                      const creatorRef = doc(db, "Users", id);
-                      if (e.target.checked) {
-                        await updateDoc(creatorRef, {
-                          SubscriberCount: increment(1),
-                        });
-                        await updateDoc(creatorRef, {
-                          SubscriberList: arrayUnion(displayName),
-                        });
-                      } else {
-                        await updateDoc(creatorRef, {
-                          SubscriberCount: increment(-1),
-                        });
-                        await updateDoc(creatorRef, {
-                          SubscriberList: arrayRemove(displayName),
-                        });
+                {localStorage.getItem("auth") == "true" && (
+                  <div className="right-side">
+                    <Checkbox
+                      icon={
+                        <SubscribeButton
+                          color="error"
+                          buttonTitle={"Subscribe"}
+                          buttonStyling={{ marginTop: "0px" }}
+                        />
                       }
-                    }}
-                  />
-                </div>
+                      checkedIcon={
+                        <SubscribeButton
+                          color="error"
+                          buttonTitle={"Unsubscribe"}
+                          buttonStyling={{ marginTop: "0px" }}
+                        />
+                      }
+                      checked={checked}
+                      onChange={async (e) => {
+                        setChecked(!checked);
+                        subscribeToUser(e);
+                      }}
+                    />
+                  </div>
+                )}
               </div>
             </div>
             <div className="bottom-portion">

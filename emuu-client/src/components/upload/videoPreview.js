@@ -1,6 +1,6 @@
 import React from "react";
 import "./videoPreview.scss";
-
+//code to preview video when selection video file
 const Video = ({ id, height, src, title }) => {
   return (
     <div id={id}>
