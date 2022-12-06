@@ -68,7 +68,7 @@ function Profile({ setVideo, video }, { classes }) {
 
   const [profileUser, setProfileUser] = useState([]);
   const displayName = localStorage.getItem("displayName");
-
+//function to get firebase data from server for algolia search bar
   const [firebaseData, setFirebaseData] = useState([]);
   async function getData() {
     const response = await axios.get(
@@ -127,6 +127,8 @@ function Profile({ setVideo, video }, { classes }) {
       }),
     [count]
   );
+
+  //function to get user information for banner/profile pic, and subscriber count
   async function getUser() {
     const dis = {
       displayName: displayName,
@@ -195,7 +197,7 @@ function Profile({ setVideo, video }, { classes }) {
   const onCropComplete = useCallback((croppedArea, croppedAreaPixels) => {
     setCroppedAreaPixels(croppedAreaPixels);
   }, []);
-
+//function to upload banner pic
   const showCroppedImage = useCallback(async () => {
     try {
       const croppedImage = await getCroppedImg(
@@ -232,6 +234,7 @@ function Profile({ setVideo, video }, { classes }) {
     return false;
   }
   let url;
+  //function that sends banner cropped picture url to server to update database
   function uploadBackground(croppedImage) {
     const storage = getStorage();
     const storageRef = ref(storage, "/images/" + uid());
@@ -246,7 +249,7 @@ function Profile({ setVideo, video }, { classes }) {
       );
     });
   }
-
+//function to send profile picture url to server to update in firebase
   function uploadProfile(e) {
     let file = e.target.files[0];
     if (!verifyJpeg(file.name)) return;
