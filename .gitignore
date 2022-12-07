@@ -69,3 +69,7 @@ stripe/stripe.exe
 stripe/stripe forward.txt
 photospot-client/src/api.js
 /.idea/prettier.xml
+/photospot-backend/functions/keys/admin.dev.json
+/photospot-backend/functions/keys/admin.prod.json
+/photospot-backend/firebase.json
+/photospot-backend/key.json
